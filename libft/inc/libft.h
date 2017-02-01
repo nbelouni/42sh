@@ -6,7 +6,7 @@
 /*   By: nbelouni <nbelouni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/04 14:46:22 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/01 18:32:20 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/02/01 20:18:54 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <fcntl.h>
 # include <sys/types.h>
 # include <sys/stat.h>
+# include <dirent.h>
 # include "error.h"
 
 # define BUFF_SIZE 65
@@ -90,5 +91,7 @@ t_list				*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem));
 int					get_next_line(int const fd, char **line);
 
 int					ft_print_error(char *cmd, char *err);
+char				**ft_env_to_tab(void);
+int					ft_is_valid_dir(const char *pathname);
 
 #endif

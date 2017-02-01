@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_is_valid_dir.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: maissa-b <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/02/01 20:17:36 by maissa-b          #+#    #+#             */
+/*   Updated: 2017/02/01 20:17:54 by maissa-b         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft.h"
 
-int		is_valid_dir(const char *dirname)
+int		ft_is_valid_dir(const char *dirname)
 {
 	DIR			*dir;
 	struct stat st;
