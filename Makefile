@@ -1,10 +1,13 @@
 NAME = 42sh
 CC = gcc
 CC_FLAGS = -Wall -Werror -Wextra
-LIB = -L./libft -lft
+LIB = -L./libft -lft -lcurses
 INC = -I./inc -I./libft/inc
 
-SRC = main.c
+SRC = main.c			\
+	  read.c			\
+	  buf.c				\
+	  term.c
 SRC_DIR = ./src/
 SRCS = $(addprefix $(SRC_DIR), $(SRC))
 

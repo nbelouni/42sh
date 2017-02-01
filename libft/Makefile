@@ -6,7 +6,7 @@
 #    By: nbelouni <nbelouni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/11/05 17:19:47 by nbelouni          #+#    #+#              #
-#    Updated: 2017/02/01 20:16:44 by maissa-b         ###   ########.fr        #
+#    Updated: 2017/02/01 21:36:22 by alallema         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ OBJ=ft_bzero.o ft_isalnum.o ft_isalpha.o ft_isascii.o ft_isdigit.o\
 	ft_putendl.o ft_putnbr.o ft_putchar_fd.o ft_putstr_fd.o ft_putnbr_fd.o\
 	ft_putendl_fd.o ft_lstnew.o ft_lstdelone.o ft_lstdel.o ft_lstadd.o\
 	ft_lstiter.o ft_lstmap.o get_next_line.o ft_print_error.o \
-	ft_env_to_tab.o ft_is_valid_dir.o
+	 ft_is_valid_dir.o
 SRCS=ft_bzero.c ft_isalnum.c ft_isalpha.c ft_isascii.c ft_isdigit.c\
 	 ft_isprint.c ft_memccpy.c ft_memchr.c ft_memcmp.c ft_memcpy.c\
 	 ft_memmove.c ft_memset.c ft_putstr.c ft_strcat.c ft_strchr.c\
@@ -39,7 +39,7 @@ SRCS=ft_bzero.c ft_isalnum.c ft_isalpha.c ft_isascii.c ft_isdigit.c\
 	 ft_itoa.c ft_putchar.c ft_putendl.c ft_putnbr.c ft_putchar_fd.c\
 	 ft_putstr_fd.c ft_putnbr_fd.c ft_putendl_fd.c ft_lstnew.c\
 	 ft_lstdelone.c ft_lstdel.c ft_lstadd.c ft_lstiter.c ft_lstmap.c\
-	 get_next_line.c ft_print_error.c ft_env_to_tab.c ft_is_valid_dir.c
+	 get_next_line.c ft_print_error.c ft_is_valid_dir.c
 
 all: $(NAME)
 
