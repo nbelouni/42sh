@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 18:25:06 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/02 18:40:28 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/02 22:21:10 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ t_bool		init_curs(void)
 		return (FALSE);
 	if (get_win() == FALSE)
 		return (FALSE);
+	clean_pos_curs();
 	return (TRUE);
 }
 

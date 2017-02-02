@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:01:52 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/02 18:44:27 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/02 22:02:43 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,25 @@ t_bool			init_curs(void);
 void			destroy_curs(void);
 void			get_sigwinch(int sig);
 t_bool			get_win();
+void			m_right(t_buf *buf);
+void			m_left(t_buf *buf);
+void			m_up(t_buf *buf);
+void			m_down(t_buf *buf);
+void			m_home(t_buf *buf);
+void			m_end(t_buf *buf);
+void			m_ctrl_r(t_buf *buf);
+void			m_ctrl_l(t_buf *buf);
+
+static void		(*tab_move[8])() = {
+	[0] = m_right,
+	[1] = m_left,
+	[2] = m_up,
+	[3] = m_down,
+	[4] = m_end,
+	[5] = m_home,
+	[6] = m_ctrl_r,
+	[7] = m_ctrl_l,
+};
 
 /*
  * #define PROMPT_LEN	n

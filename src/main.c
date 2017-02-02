@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/02 18:17:30 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/02 22:32:48 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ int main(int argc, char **argv, char **envp)
 	signal(SIGWINCH, get_sigwinch);
 	if (!(buf = init_buf()))
 		return (-1);
+	init_curs();
 	while (read_line(buf) >= 0)
 	{
 		close_termios();
@@ -31,7 +32,10 @@ int main(int argc, char **argv, char **envp)
 		ft_putnbr_fd(buf->size, 1);
 		ft_bzero(buf->line, (size_t)buf->size);
 		buf->size = 0;
+		clean_pos_curs();
 	}
 	close_termios();
+	destroy_curs();
+	free_buf(buf);
 	return (0);
 }
