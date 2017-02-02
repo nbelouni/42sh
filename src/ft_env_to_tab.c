@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env_to_tab.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maissa-b <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 20:17:21 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/02/01 20:17:24 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/02/02 13:27:41 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 char	**ft_env_to_tab(void)
 {
-	t_elem	*tmp;
+	t_env	*tmp;
 	char	**res;
 	int		i;
 
@@ -30,6 +30,7 @@ char	**ft_env_to_tab(void)
 		res[i] = ft_strcat(tmp->name, "-");
 		res[i] = ft_strcat(res[i], tmp->value);
 		i++;
+		tmp = tmp->next;
 	}
 	res[i] = NULL;
 	return (res);

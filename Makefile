@@ -4,7 +4,7 @@ CC_FLAGS = -Wall -Werror -Wextra
 LIB = -L./libft -lft
 INC = -I./inc -I./libft/inc
 
-SRC = main.c
+SRC = main.c ft_env_to_tab.c
 SRC_DIR = ./src/
 SRCS = $(addprefix $(SRC_DIR), $(SRC))
 

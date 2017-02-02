@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:09:30 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/01 18:30:58 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/02/02 14:01:12 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,5 +32,7 @@ typedef struct		s_manage_env
 }					t_manage_env;
 
 t_manage_env		*g_env;
+
+char				**ft_env_to_tab(void);
 
 #endif
