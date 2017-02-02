@@ -6,7 +6,7 @@
 /*   By: nbelouni <nbelouni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/04 14:46:22 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/02 13:59:30 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/02/02 14:27:45 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <sys/stat.h>
 # include <dirent.h>
 # include "error.h"
+# include "color.h"
 
 # define BUFF_SIZE 65
 
