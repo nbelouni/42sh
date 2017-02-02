@@ -1,42 +1,49 @@
 NAME = 42sh
-CC = gcc
-CC_FLAGS = -Wall -Werror -Wextra
-LIB = -L./libft -lft -lcurses
-INC = -I./inc -I./libft/inc
 
-SRC = main.c			\
-	  read.c			\
-	  buf.c				\
-	  term.c
-SRC_DIR = ./src/
-SRCS = $(addprefix $(SRC_DIR), $(SRC))
+IDIR = ./inc/ 
+ILIB = ./libft/inc
+INCS = 42sh.h	\
+	   read.h
+INCC = $(addprefix $(IDIR), $(INCS))
 
-OBJ = $(SRC:.c=.o)
-OBJ_DIR = ./obj/
-OBJS = $(addprefix $(OBJ_DIR), $(OBJ))
+LDIR = ./libft
+LIBS = -lft
 
-.SILENT:
+SDIR = ./src/
+SRCS = main.c			\
+	   read.c			\
+	   buf.c			\
+	   term.c			\
+	   signal.c			\
+	   curs.c
+
+SRCC = $(addprefix $(SDIR),$(SRCS))
+
+ODIR = ./obj/
+OBJS = $(SRCS:.c=.o)
+OBCC = $(addprefix $(ODIR),$(OBJS))
+
+FLAG = -g -Wall -Werror -Wextra
+
+$(NAME): $(OBCC)
+	make -C ./libft/
+	gcc $(FLAG) $(OBCC) -ltermcap -L$(LDIR) $(LIBS) -o $(NAME)
+
+$(ODIR)%.o: $(SDIR)%.c
+	@mkdir -p $(ODIR)
+	gcc $(FLAG) -c $^ -o $@ -I$(IDIR) -I$(ILIB)
 
 all: $(NAME)
 
-lib:
-	make -C libft
-
-$(NAME): lib
-	echo "Compiling $(NAME)"
-	$(CC) -c $(SRCS) $(CC_FLAGS) $(INC)
-	mkdir -p $(OBJ_DIR)
-	mv $(OBJ) $(OBJ_DIR)
-	$(CC) -o $@ $(OBJS) $(CC_FLAGS) $(INC) $(LIB)
-
 clean:
 	echo "Delete all object files"
-	make -C libft clean
-	rm -rf $(OBJ_DIR)
+	@make -C ./libft/ clean
+	/bin/rm -rf $(ODIR)
 
 fclean: clean
 	echo "Delete objects and binary"
-	make -C libft fclean
-	rm -rf $(NAME)
+	@make -C ./libft/ fclean
+	/bin/rm -f $(NAME)
 
 re: fclean all
+

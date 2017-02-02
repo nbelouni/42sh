@@ -6,12 +6,13 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 20:30:33 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/01 20:39:49 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/02 18:34:37 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 #include "read.h"
+
 
 int			t_putchar(int i)
 {
@@ -23,18 +24,18 @@ void	t_puts(char *s, int i)
 {
 	tputs(tgetstr(s, NULL), i, t_putchar);
 }
-/*
-t_win		*get_win(void)
+
+t_bool		get_win()
 {
 	struct winsize	windows;
-	static t_win	win;
 
-	ioctl(0, TIOCGWINSZ, &windows);
-	win.col = windows.ws_col;
-	win.row = windows.ws_row;
-	return (&win);
+	if (ioctl(0, TIOCGWINSZ, &windows) < 0)
+		return (FALSE);
+	g_curs->win_col = windows.ws_col;
+	g_curs->win_row = windows.ws_row;
+	return (TRUE);
 }
-*/
+
 t_term		*get_term(void)
 {
 	static t_term	term;

@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/01 20:54:00 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/02 18:17:30 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int main(int argc, char **argv, char **envp)
 
 	t_buf	*buf;
 
+	signal(SIGWINCH, get_sigwinch);
 	if (!(buf = init_buf()))
 		return (-1);
 	while (read_line(buf) >= 0)

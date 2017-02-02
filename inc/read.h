@@ -6,16 +6,21 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:01:52 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/01 20:59:15 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/02 18:44:27 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef READ_H
-#define READ_H
-#include "42sh.h"
-#include <termios.h>
-#include <term.h>
-#include <curses.h>
+# define READ_H
+# include "42sh.h"
+# include <termios.h>
+# include <term.h>
+# include <curses.h>
+# include <sys/ioctl.h>
+
+/*
+** touche de clavier
+*/
 
 # define LEFT  4479771
 # define RIGHT  4414235
@@ -42,18 +47,29 @@
 # define ALT_X  8948194
 # define ALT_R  1130044187
 # define ALT_L  1146821403
+
 # define PUT1(x) (ft_putstr_fd(x, 1));
 # define PUT2(x) (ft_putstr_fd(x, 2));
 # define E(x) (ft_putnbr_fd(x, 2));
 # define X(x) (ft_putchar_fd(x, 2));
+# define PROMPT_LEN 0
 
 typedef struct	s_win
 {
 	int				col;
 	int				row;
 	int				letter;
-	int				qt;
 }				t_win;
+
+typedef struct	s_curs
+{
+	int col; // pos du curseur init = PROMPT_LEN
+	int row; // pos du curseur 0
+	int win_col;
+	int win_row;
+}				t_curs;
+
+t_curs			*g_curs;
 
 typedef struct	s_term
 {
@@ -75,5 +91,50 @@ void			t_puts(char *s, int i);
 int				init_termios(void);
 int				close_termios(void);
 int				read_line(t_buf *buf);
+void			clean_pos_curs(void);
+t_bool			init_curs(void);
+void			destroy_curs(void);
+void			get_sigwinch(int sig);
+t_bool			get_win();
+
+/*
+ * #define PROMPT_LEN	n
+ * #define CURSOR_POS	(((row) * (max_col)) + col)// dans le tableau
+ * struct affichage
+ * {
+ * .int col; // pos du curseur init = PROMPT_LEN
+ * .int row; // pos du curseur 0
+ * .int max_col;
+ * .int max_row;
+ * }
+ * edition de ligne
+ *
+ * affichage :
+ * .multiligne
+ * .prendre en compte le prompt
+ * .curseur
+ * ->>> history
+ * ->>> completion
+ *
+ * liste de fonction cursor:
+ * left
+ * right
+ * home
+ * end
+ * ctr_l -> word
+ * ctr_r -> word
+ * ctr_up -> line
+ * ctr_do -> line
+ * 
+ * modification de la chaine
+ * insert
+ * delete
+ * cut before
+ * cut after
+ * paste
+ * copy before
+ * copy after
+ *
+*/
 
 #endif

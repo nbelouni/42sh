@@ -1,38 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   curs.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/02/01 18:43:38 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/02 14:50:02 by alallema         ###   ########.fr       */
+/*   Created: 2017/02/02 18:25:06 by alallema          #+#    #+#             */
+/*   Updated: 2017/02/02 18:40:28 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
-t_buf		*init_buf(void)
+void		clean_pos_curs(void)
 {
-	t_buf	*buf;
-
-	if (!(buf = ft_memalloc(sizeof(t_buf))))
-		return (NULL);
-	if (!(buf->line = ft_memalloc(sizeof(BUFF_SIZE))))
-		return (NULL);
-	buf->size = 0;
-	return (buf);
+	g_curs->col = PROMPT_LEN;
+	g_curs->row = 0;
 }
 
-void		free_buf(t_buf *buf)
+t_bool		init_curs(void)
 {
-	free(buf->line);
-	free(buf);
-	buf = NULL;
+	if (!(g_curs = ft_memalloc(sizeof(t_curs))))
+		return (FALSE);
+	if (get_win() == FALSE)
+		return (FALSE);
+	return (TRUE);
 }
 
-void		clear_buf(t_buf *buf)
+void		destroy_curs(void)
 {
-	ft_bzero(buf->line, (size_t)buf->size);
-	buf->size = 0;
+	free(g_curs);
+	g_curs = NULL;
 }

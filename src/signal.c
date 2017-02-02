@@ -1,38 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/02/01 18:43:38 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/02 14:50:02 by alallema         ###   ########.fr       */
+/*   Created: 2017/02/02 18:10:58 by alallema          #+#    #+#             */
+/*   Updated: 2017/02/02 18:35:54 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
-t_buf		*init_buf(void)
+void		get_sigwinch(int sig)
 {
-	t_buf	*buf;
+	int		status;
 
-	if (!(buf = ft_memalloc(sizeof(t_buf))))
-		return (NULL);
-	if (!(buf->line = ft_memalloc(sizeof(BUFF_SIZE))))
-		return (NULL);
-	buf->size = 0;
-	return (buf);
+	waitpid(-1, &status, 0);
+	if (sig == SIGWINCH)
+		get_win();
+	return ;
 }
 
-void		free_buf(t_buf *buf)
-{
-	free(buf->line);
-	free(buf);
-	buf = NULL;
-}
-
-void		clear_buf(t_buf *buf)
-{
-	ft_bzero(buf->line, (size_t)buf->size);
-	buf->size = 0;
-}
