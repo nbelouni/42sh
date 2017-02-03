@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 21:36:00 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/03 22:55:21 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/04 00:03:32 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,20 +60,6 @@ void	m_right(size_t len)
 	}
 }
 
-void	ft_del(size_t len)
-{
-	E(g_curs.col);X('\n');
-	while (len > 0)
-	{
-		m_left(1);
-		t_puts("dm", 1);
-		t_puts("dc", 1);
-		t_puts("ed", 1);
-		len--;
-	}
-	E(g_curs.col);X('\n');X('\n');
-}
-
 void	m_left(size_t len)
 {
 	E(g_curs.col);X('\n');
@@ -89,18 +75,7 @@ void	m_left(size_t len)
 		}
 		len--;
 	}
-}
-
-void	print_post_curs(t_buf *buf)
-{
-	int		i;
-
-	i = 0;
-	while (buf->line[g_curs.col + i])
-	{
-		ft_putchar_fd(buf->line[(g_curs.col - PROMPT_LEN) + i], 1);
-		i++;
-	}
+	E(g_curs.col);X('\n');
 }
 /*
 void	m_home(t_buf *buf)

@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/03 22:28:17 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/03 22:49:18 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/03 23:13:09 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,8 @@ void		vb_del(t_buf *buf, unsigned int x)
 	int		len;
    
 	len = calc_len(buf, x);
-	delete_in_buf(buf, g_curs.win_col * g_curs.row + g_curs.col - PROMPT_LEN, 1);
-	tab_move[2](1);
+	delete_in_buf(buf, g_curs.win_col * g_curs.row + g_curs.col - PROMPT_LEN, len);
+	tab_move[2](len);
 	buf->size = ft_strlen(buf->line);
+	print_post_curs(buf);
 }

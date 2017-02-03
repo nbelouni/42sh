@@ -18,7 +18,8 @@ SRCS = main.c			\
 	   curs.c			\
 	   edit_move.c		\
 	   edit_buf.c		\
-	   edit_line.c
+	   edit_line.c		\
+	   edit_visual.c
 
 SRCC = $(addprefix $(SDIR),$(SRCS))
 
