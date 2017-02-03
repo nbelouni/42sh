@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 18:10:58 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/02 23:50:11 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/03 22:49:34 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ void		get_sigint(int sig)
 {
 	if (sig == SIGINT)
 	{
-		X('*');
 		close_termios();
 		signal(SIGINT, SIG_DFL);
 	}

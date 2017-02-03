@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:03:10 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/03 22:39:05 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/03 22:45:44 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int		read_line(t_buf *buf)
 
 	x = 0;
 	init_termios();
-	ft_putstr_fd("42sh>", 1);
+	ft_putstr_fd("42sh.$ ", 1);
 	while ((ret = read(0, (char *)&x, 4)))
 	{
 		if (ret < 0)

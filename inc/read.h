@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:01:52 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/03 22:38:36 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/03 22:44:44 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@
 # define PUT2(x) (ft_putstr_fd(x, 2));
 # define E(x) (ft_putnbr_fd(x, 2));
 # define X(x) (ft_putchar_fd(x, 2));
-# define PROMPT_LEN 5
+# define PROMPT_LEN 7
 
 typedef struct	s_win
 {
@@ -124,6 +124,8 @@ void			vb_del(t_buf *buf, unsigned int x);
 
 void			insert_in_buf(t_buf *buf, int cursor, char *s, size_t len);
 void			delete_in_buf(t_buf *buf, int cursor, size_t len);
+
+void			print_post_curs(t_buf *buf);
 
 static void		(*tab_move[8])() = {
 	[0] = m_right,
