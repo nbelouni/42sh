@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 23:40:01 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/03 22:19:08 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/03 22:52:45 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void		delete_in_buf(t_buf *buf, int cursor, size_t len)
 	char	tmp[buf->size];
 
 	ft_bzero(tmp, buf->size);
-	if (len == 0 || cursor == PROMPT_LEN)
+	if (len == 0)
 		return ;
 	if (cursor >= buf->size)
 		ft_bzero(buf->line + buf->size - len, len);

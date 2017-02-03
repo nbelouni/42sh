@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:03:10 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/03 22:18:57 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/03 22:39:05 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,26 +30,9 @@ int		read_line(t_buf *buf)
 		if (x == CTRL_D)
 			return (-2);
 		if (x > 31 && x < 127)
-		{
-			t_puts("im", 1);
-			t_puts("ic", 1);
-			ft_putchar_fd((char)x, 1);
-			insert_in_buf(buf, g_curs.win_col * g_curs.row + g_curs.col - PROMPT_LEN, (char *)&x, 1);
-			buf->size++;
-			if (g_curs.col < g_curs.win_col)
-				g_curs.col += 1;
-			else
-			{
-				g_curs.col = 0;
-				g_curs.row++;
-			}
-			E(g_curs.col);X(' ');
-			E(g_curs.win_col);X(' ');
-			E(g_curs.row);X('\n');
-			t_puts("ei", 1);
-		}
+			vb_insert(buf, (char *)&x);
 		if (x == DEL)
-			tab_move[2](calc_len(buf, x));
+			vb_del(buf, x);
 		if (x == LEFT || x == HOME)
 			tab_move[1](calc_len(buf, x));
 		if (x == RIGHT || x == END)

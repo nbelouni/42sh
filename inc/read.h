@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:01:52 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/03 18:49:34 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/03 22:38:36 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,13 @@ size_t			calc_len(t_buf *buf, int x);
 void			m_right(size_t len);
 void			m_left(size_t len);
 void			ft_del(size_t len);
+
+/*
+ * v : visual
+ * b : buf
+ */
+void			vb_insert(t_buf *buf, char *s);
+void			vb_del(t_buf *buf, unsigned int x);
 //void			m_up(t_buf *buf, );
 //void			m_down(t_buf *buf);
 //void			m_home(t_buf *buf);
