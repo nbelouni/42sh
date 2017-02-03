@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:01:52 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/02 23:43:42 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/03 14:32:59 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ typedef struct	s_curs
 	int win_row;
 }				t_curs;
 
-t_curs			*g_curs;
+t_curs			g_curs;
 
 typedef struct	s_term
 {
@@ -86,16 +86,22 @@ typedef struct	s_buf
 t_buf			*init_buf(void);
 void			free_buf(t_buf *buf);
 void			clear_buf(t_buf *buf);
+
 int				t_putchar(int i);
 void			t_puts(char *s, int i);
+
 int				init_termios(void);
 int				close_termios(void);
+
 int				read_line(t_buf *buf);
+
 void			clean_pos_curs(void);
 t_bool			init_curs(void);
-void			destroy_curs(void);
+
 void			get_sigwinch(int sig);
+void			get_sigint(int sig);
 t_bool			get_win();
+
 void			m_right(t_buf *buf);
 void			m_left(t_buf *buf);
 void			m_up(t_buf *buf);
@@ -104,7 +110,9 @@ void			m_home(t_buf *buf);
 void			m_end(t_buf *buf);
 void			m_ctrl_r(t_buf *buf);
 void			m_ctrl_l(t_buf *buf);
-void			get_sigint(int sig);
+
+void			insert_c(t_buf *buf, int cursor, char c);
+void			delete_c(t_buf *buf, int cursor);
 
 static void		(*tab_move[8])() = {
 	[0] = m_right,

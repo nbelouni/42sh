@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 21:36:00 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/02 22:30:26 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/03 14:31:44 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,52 +15,54 @@
 void	m_right(t_buf *buf)
 {
 	E(buf->size);X(' ');
-	E(g_curs->col);X(' ');
-	E(g_curs->row);X(' ');
-	E(g_curs->win_col);X(' ');
-	E(g_curs->win_row);X('\n');X('\n');
-	if (buf->size > (g_curs->win_col * g_curs->row) + g_curs->col + PROMPT_LEN) // a refaire pour le multiligne
+	E(g_curs.col);X(' ');
+	E(g_curs.row);X(' ');
+	E(g_curs.win_col);X(' ');
+	E(g_curs.win_row);X('\n');X('\n');
+	if (buf->size > (g_curs.win_col * g_curs.row) + g_curs.col + PROMPT_LEN) // a refaire pour le multiligne
 	{
 		t_puts("nd", 1);
-		if (g_curs->col < g_curs->win_col)
-			g_curs->col++;
+		if (g_curs.col < g_curs.win_col)
+			g_curs.col++;
 		else
 		{
-			g_curs->col = 0;
-			g_curs->row++;
+				ft_putstr_fd("_________2\n", 2);
+			g_curs.col = 0;
+			g_curs.row++;
 		}
 	}
 	E(buf->size);X(' ');
-	E(g_curs->col);X(' ');
-	E(g_curs->row);X(' ');
-	E(g_curs->win_col);X(' ');
-	E(g_curs->win_row);X('\n');X('\n');
+	E(g_curs.col);X(' ');
+	E(g_curs.row);X(' ');
+	E(g_curs.win_col);X(' ');
+	E(g_curs.win_row);X('\n');X('\n');
 }
 
 void	m_left(t_buf *buf)
 {
 	E(buf->size);X(' ');
-	E(g_curs->col);X(' ');
-	E(g_curs->row);X(' ');
-	E(g_curs->win_col);X(' ');
-	E(g_curs->win_row);X('\n');
+	E(g_curs.col);X(' ');
+	E(g_curs.row);X(' ');
+	E(g_curs.win_col);X(' ');
+	E(g_curs.win_row);X('\n');
 	(void)buf;
-	if ((g_curs->win_col * g_curs->row) + g_curs->col > PROMPT_LEN) // a refaire pour le multiligne
+	if ((g_curs.win_col * g_curs.row) + g_curs.col > PROMPT_LEN) // a refaire pour le multiligne
 	{
 		t_puts("le", 1);
-		if (g_curs->col > 0)
-			g_curs->col--;
-		else if (g_curs->row > 0)
+		if (g_curs.col > 0)
+			g_curs.col--;
+		else if (g_curs.row > 0)
 		{
-			g_curs->col = g_curs->win_col;
-			g_curs->row--;
+				ft_putstr_fd("_________3\n", 2);
+			g_curs.col = g_curs.win_col - 1;
+			g_curs.row--;
 		}
 	}
 	E(buf->size);X(' ');
-	E(g_curs->col);X(' ');
-	E(g_curs->row);X(' ');
-	E(g_curs->win_col);X(' ');
-	E(g_curs->win_row);X('\n');X('\n');
+	E(g_curs.col);X(' ');
+	E(g_curs.row);X(' ');
+	E(g_curs.win_col);X(' ');
+	E(g_curs.win_row);X('\n');X('\n');
 }
 
 void	m_up(t_buf *buf)

@@ -6,7 +6,7 @@
 /*   By: nbelouni <nbelouni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/07 05:04:20 by nbelouni          #+#    #+#             */
-/*   Updated: 2015/01/01 17:28:37 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/03 00:28:47 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,9 @@ void	*ft_memalloc(size_t size)
 
 	if (!size)
 		return (NULL);
-	new = (char *)malloc(sizeof(char) * size);
+	new = malloc(size);
 	if (!new)
 		return (NULL);
+	ft_bzero(new, size);
 	return (new);
 }

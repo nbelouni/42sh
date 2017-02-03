@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:43:38 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/02 14:50:02 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/03 00:17:02 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,6 @@ void		free_buf(t_buf *buf)
 
 void		clear_buf(t_buf *buf)
 {
-	ft_bzero(buf->line, (size_t)buf->size);
+	ft_bzero(buf->line, (size_t)BUFF_SIZE);
 	buf->size = 0;
 }

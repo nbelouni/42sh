@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:03:10 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/03 00:58:53 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/03 14:35:12 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int		read_line(t_buf *buf)
 	init_termios();
 	while ((ret = read(0, (char *)&x, 4)))
 	{
-		E(x);X(' ');
+		E(1);X(':');E(g_curs.col);X('\n');
 		if (ret < 0 || buf->size > BUFF_SIZE)
 			return (-1);
 		if (x == CTRL_D)
@@ -33,16 +33,17 @@ int		read_line(t_buf *buf)
 			t_puts("ic", 1);
 			ft_putchar_fd((char)x, 2);
 			ft_putchar_fd((char)x, 1);
-			buf->line[g_curs->win_col * g_curs->row + g_curs->col] = (char)x;
+			buf->line[g_curs.win_col * g_curs.row + g_curs.col] = (char)x;
 			buf->size++;
-			if (g_curs->col < g_curs->win_col)
-				g_curs->col++;
+			if (g_curs.col < g_curs.win_col)
+				g_curs.col++;
 			else
 			{
-				g_curs->col = 0;
-				g_curs->row++;
+				g_curs.col = 0;
+				g_curs.row++;
 			}
 			t_puts("ei", 1);
+		E(2);X(':');E(g_curs.col);X('\n');
 		}
 		if (x == LEFT)
 			tab_move[1](buf);
@@ -54,6 +55,7 @@ int		read_line(t_buf *buf)
 			return (0);
 		}
 		x = 0;
+		E(3);X(':');E(g_curs.col);X('\n');
 	}
 	close_termios();
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/03 00:59:22 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/03 14:32:22 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ int main(int argc, char **argv, char **envp)
 		clean_pos_curs();
 	}
 	close_termios();
-	destroy_curs();
 	free_buf(buf);
 	return (0);
 }
