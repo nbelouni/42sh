@@ -102,14 +102,15 @@ void			get_sigwinch(int sig);
 void			get_sigint(int sig);
 t_bool			get_win();
 
-void			m_right(t_buf *buf);
-void			m_left(t_buf *buf);
-void			m_up(t_buf *buf);
-void			m_down(t_buf *buf);
-void			m_home(t_buf *buf);
-void			m_end(t_buf *buf);
-void			m_ctrl_r(t_buf *buf);
-void			m_ctrl_l(t_buf *buf);
+size_t			calc_len(t_buf *buf, int x);
+void			m_right(size_t len);
+void			m_left(size_t len);
+//void			m_up(t_buf *buf, );
+//void			m_down(t_buf *buf);
+//void			m_home(t_buf *buf);
+//void			m_end(t_buf *buf);
+//void			m_ctrl_r(t_buf *buf);
+//void			m_ctrl_l(t_buf *buf);
 
 void			insert_in_buf(t_buf *buf, int cursor, char *s, size_t len);
 void			delete_in_buf(t_buf *buf, int cursor, size_t len, t_bool b);
@@ -117,12 +118,12 @@ void			delete_in_buf(t_buf *buf, int cursor, size_t len, t_bool b);
 static void		(*tab_move[8])() = {
 	[0] = m_right,
 	[1] = m_left,
-	[2] = m_up,
-	[3] = m_down,
-	[4] = m_end,
-	[5] = m_home,
-	[6] = m_ctrl_r,
-	[7] = m_ctrl_l,
+//	[2] = m_up,
+//	[3] = m_down,
+//	[4] = m_end,
+//	[5] = m_home,
+//	[6] = m_ctrl_r,
+//	[7] = m_ctrl_l,
 };
 
 /*
@@ -162,6 +163,16 @@ static void		(*tab_move[8])() = {
  * paste
  * copy before
  * copy after
+ *
+*/
+
+/* deplace le cursor
+ * change indice cursor
+ * delete cursor
+ *
+ * copy : 	tmp_buf = cut;
+ * cut :	tmp_buf = cut;
+ * 			del(buf->size)
  *
 */
 

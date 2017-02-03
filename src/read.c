@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:03:10 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/03 17:10:18 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/03 18:12:55 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,15 @@ int		read_line(t_buf *buf)
 			}
 			t_puts("ei", 1);
 		}
-		else if (x == LEFT)
-			tab_move[1](buf);
-		else if (x == RIGHT)
-			tab_move[0](buf);
-		else if (x == RETR)
+//		if (x == HOME)
+//			m_home(buf);
+		if (x == LEFT)
+			tab_move[1](calc_len(buf, x));
+		if (x == RIGHT)
+			tab_move[0](calc_len(buf, x));
+		if (x == RETR)
 		{
+			tab_move[0](calc_len(buf, x));
 			ft_putchar_fd((char)x, 1);
 			return (0);
 		}
