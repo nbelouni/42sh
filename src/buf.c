@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:43:38 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/03 14:43:01 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/03 18:48:37 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,16 @@ t_buf		*init_buf(void)
 	if (!(buf->line = ft_memalloc(sizeof(char) * BUFF_SIZE)))
 		return (NULL);
 	buf->size = 0;
+	buf->to_paste = NULL;
+	buf->to_paste_size = 0;
 	return (buf);
 }
 
 void		free_buf(t_buf *buf)
 {
 	free(buf->line);
+	if (buf->to_paste)
+		free(buf->to_paste);
 	free(buf);
 	buf = NULL;
 }

@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:01:52 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/03 22:06:41 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/03 18:49:34 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,8 @@ typedef struct	s_buf
 {
 	char		*line;
 	int			size;
+	char		*to_paste;
+	int			to_paste_size;
 }				t_buf;
 
 t_buf			*init_buf(void);
@@ -114,7 +116,7 @@ void			ft_del(size_t len);
 //void			m_ctrl_l(t_buf *buf);
 
 void			insert_in_buf(t_buf *buf, int cursor, char *s, size_t len);
-void			delete_in_buf(t_buf *buf, int cursor, size_t len, t_bool b);
+void			delete_in_buf(t_buf *buf, int cursor, size_t len);
 
 static void		(*tab_move[8])() = {
 	[0] = m_right,

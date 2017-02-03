@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 23:40:01 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/03 20:53:04 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/03 22:19:08 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void		insert_in_buf(t_buf *buf, int cursor, char *s, size_t len)
 		return ;
 	if (cursor < buf->size - 1)
 	{
-		ft_strncpy(tmp, buf->line + cursor, buf->size - cursor);
+		ft_strncpy(tmp, buf->line + cursor, buf->size - cursor + 1);
 		tmp[buf->size - cursor] = 0;
 		ft_strncpy(buf->line + cursor, s, len);
 		ft_strncpy(buf->line + cursor + len, tmp, buf->size - cursor);
@@ -31,33 +31,20 @@ void		insert_in_buf(t_buf *buf, int cursor, char *s, size_t len)
 		buf->line[buf->size + len] = 0;
 	}
 }
-/*
-void		delete_in_buf(t_buf *buf, int cursor, size_t len, t_bool go_to_right)
+
+void		delete_in_buf(t_buf *buf, int cursor, size_t len)
 {
 	char	tmp[buf->size];
 
 	ft_bzero(tmp, buf->size);
-	if (len == 0)
+	if (len == 0 || cursor == PROMPT_LEN)
 		return ;
-	if (go_to_right == FALSE)
+	if (cursor >= buf->size)
+		ft_bzero(buf->line + buf->size - len, len);
+	else
 	{
-		if (cursor == PROMPT_LEN)
-			return ;
-		if (cursor >= buf->size - 1)
-			ft_bzero(buf->line - len, len);
-		else
-		{
-			ft_memcpy(tmp, buf->line + cursor, buf->size - cursor);
-			ft_memcpy(buf->line + cursor - len, tmp, buf->size - cursor);
-			ft_bzero(buf->line + cursor, len);
-		}
+		ft_strncpy(tmp, buf->line + cursor, buf->size - cursor);
+		ft_strncpy(buf->line + cursor - len, tmp, buf->size - cursor);
+		ft_bzero(buf->line + buf->size - len, len);
 	}
-	if (go_to_right == TRUE)
-	{
-		if (cursor >= buf->size - 1)
-			return ;
-		ft_memcpy(tmp, buf->line + cursor + len, buf->size - cursor - len);
-		ft_memcpy(buf->line + cursor - 1, tmp, buf->size - cursor - len);
-		ft_bzero(buf->line - len, len);
-	}
-}*/
+}

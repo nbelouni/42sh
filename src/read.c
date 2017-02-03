@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:03:10 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/03 22:16:50 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/03 22:18:57 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,6 @@ int		read_line(t_buf *buf)
 			E(g_curs.row);X('\n');
 			t_puts("ei", 1);
 		}
-//		if (x == HOME)
-//			m_home(buf);
 		if (x == DEL)
 			tab_move[2](calc_len(buf, x));
 		if (x == LEFT || x == HOME)
