@@ -6,7 +6,7 @@
 /*   By: nbelouni <nbelouni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/04 14:46:22 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/01 20:18:54 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/02/03 16:47:50 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include <dirent.h>
 # include "error.h"
 
-# define BUFF_SIZE 65
+# define BUFF_SIZE 2048
 
 typedef struct		s_list
 {

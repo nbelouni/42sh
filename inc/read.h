@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:01:52 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/03 14:32:59 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/03 16:30:15 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,8 +111,8 @@ void			m_end(t_buf *buf);
 void			m_ctrl_r(t_buf *buf);
 void			m_ctrl_l(t_buf *buf);
 
-void			insert_c(t_buf *buf, int cursor, char c);
-void			delete_c(t_buf *buf, int cursor);
+void			insert_in_buf(t_buf *buf, int cursor, char *s, size_t len);
+void			delete_in_buf(t_buf *buf, int cursor, size_t len, t_bool b);
 
 static void		(*tab_move[8])() = {
 	[0] = m_right,

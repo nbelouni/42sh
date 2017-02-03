@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/03 14:32:22 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/03 16:36:16 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,19 @@ int main(int argc, char **argv, char **envp)
 	(void)envp;
 
 	t_buf	*buf;
+	int		read;
 
 	signal(SIGWINCH, get_sigwinch);
 	signal(SIGINT, get_sigint);
 	if (!(buf = init_buf()))
 		return (-1);
 	init_curs();
-	while (read_line(buf) >= 0)
+	while ((read = read_line(buf)) >= 0)
 	{
 		close_termios();
 		ft_putstr_fd(buf->line, 1);
 		X('\n');
-		ft_putnbr_fd(buf->size, 1);
+	//	ft_putnbr_fd(buf->size, 1);
 		ft_bzero(buf->line, (size_t)buf->size);
 		buf->size = 0;
 		clean_pos_curs();
