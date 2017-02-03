@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:01:52 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/02 22:02:43 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/02 23:43:42 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ void			m_home(t_buf *buf);
 void			m_end(t_buf *buf);
 void			m_ctrl_r(t_buf *buf);
 void			m_ctrl_l(t_buf *buf);
+void			get_sigint(int sig);
 
 static void		(*tab_move[8])() = {
 	[0] = m_right,

@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:03:10 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/02 22:41:30 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/03 00:58:53 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ int		read_line(t_buf *buf)
 				g_curs->col = 0;
 				g_curs->row++;
 			}
+			t_puts("ei", 1);
 		}
 		if (x == LEFT)
 			tab_move[1](buf);
@@ -54,5 +55,6 @@ int		read_line(t_buf *buf)
 		}
 		x = 0;
 	}
+	close_termios();
 	return (0);
 }

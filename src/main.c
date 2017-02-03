@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/02 22:32:48 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/03 00:59:22 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ int main(int argc, char **argv, char **envp)
 	t_buf	*buf;
 
 	signal(SIGWINCH, get_sigwinch);
+	signal(SIGINT, get_sigint);
 	if (!(buf = init_buf()))
 		return (-1);
 	init_curs();
