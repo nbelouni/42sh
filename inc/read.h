@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:01:52 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/03 16:30:15 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/03 22:06:41 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@
 # define PUT2(x) (ft_putstr_fd(x, 2));
 # define E(x) (ft_putnbr_fd(x, 2));
 # define X(x) (ft_putchar_fd(x, 2));
-# define PROMPT_LEN 0
+# define PROMPT_LEN 5
 
 typedef struct	s_win
 {
@@ -105,6 +105,7 @@ t_bool			get_win();
 size_t			calc_len(t_buf *buf, int x);
 void			m_right(size_t len);
 void			m_left(size_t len);
+void			ft_del(size_t len);
 //void			m_up(t_buf *buf, );
 //void			m_down(t_buf *buf);
 //void			m_home(t_buf *buf);
@@ -118,14 +119,38 @@ void			delete_in_buf(t_buf *buf, int cursor, size_t len, t_bool b);
 static void		(*tab_move[8])() = {
 	[0] = m_right,
 	[1] = m_left,
-//	[2] = m_up,
+	[2] = ft_del,
 //	[3] = m_down,
 //	[4] = m_end,
 //	[5] = m_home,
 //	[6] = m_ctrl_r,
 //	[7] = m_ctrl_l,
 };
-
+/*
+[LEFT] -> calc_len + m_left;
+RIGHT ->calc_len + m_right;
+UP -> calc_len + m_left;
+DOWN -> calc_len + m_right;
+DEL -> calc_len + del + m_left;
+RETR -> calc_len + del + m_left;
+SUP  2117294875
+HOME  4741915
+END  4610843
+PAGE_UP  2117425947
+PAGE_DOWN  2117491483
+TAB  9
+CRTL  1
+CTRL_D  4
+CTRL_L 12
+CTRL_K 11
+CTRL_W 23
+CTRL_T 20
+ALT_C  42947
+ALT_V  10127586
+ALT_X  8948194
+ALT_R  1130044187
+ALT_L  1146821403
+*/
 /*
  * #define PROMPT_LEN	n
  * #define CURSOR_POS	(((row) * (max_col)) + col)// dans le tableau

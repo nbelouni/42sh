@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:03:10 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/03 18:12:55 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/03 22:16:50 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int		read_line(t_buf *buf)
 
 	x = 0;
 	init_termios();
+	ft_putstr_fd("42sh>", 1);
 	while ((ret = read(0, (char *)&x, 4)))
 	{
 		if (ret < 0)
@@ -42,13 +43,18 @@ int		read_line(t_buf *buf)
 				g_curs.col = 0;
 				g_curs.row++;
 			}
+			E(g_curs.col);X(' ');
+			E(g_curs.win_col);X(' ');
+			E(g_curs.row);X('\n');
 			t_puts("ei", 1);
 		}
 //		if (x == HOME)
 //			m_home(buf);
-		if (x == LEFT)
+		if (x == DEL)
+			tab_move[2](calc_len(buf, x));
+		if (x == LEFT || x == HOME)
 			tab_move[1](calc_len(buf, x));
-		if (x == RIGHT)
+		if (x == RIGHT || x == END)
 			tab_move[0](calc_len(buf, x));
 		if (x == RETR)
 		{

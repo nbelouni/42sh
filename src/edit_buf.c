@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 23:40:01 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/03 17:04:55 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/03 20:53:04 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,29 +16,20 @@ void		insert_in_buf(t_buf *buf, int cursor, char *s, size_t len)
 {
 	char	tmp[buf->size - cursor + 1];
 
-	ft_putstr_fd("____1\n", 2);
 	if (buf->size + len >= BUFF_SIZE)
 		return ;
 	if (cursor < buf->size - 1)
 	{
 		ft_strncpy(tmp, buf->line + cursor, buf->size - cursor);
 		tmp[buf->size - cursor] = 0;
-		ft_putstr_fd("\ntmp : ", 2);ft_putstr_fd(tmp, 2);
 		ft_strncpy(buf->line + cursor, s, len);
-		ft_putstr_fd("\nbuf->line : ", 2);ft_putstr_fd(buf->line, 2);
 		ft_strncpy(buf->line + cursor + len, tmp, buf->size - cursor);
-		ft_putstr_fd("\nbuf->line : ", 2);ft_putstr_fd(buf->line, 2);
-		ft_putstr_fd("\n____4\n", 2);
 	}
 	else
 	{
-		ft_putstr_fd("\nbuf->line : ", 2);ft_putstr_fd(buf->line, 2);
-		E(buf->size);
 		ft_strncpy(buf->line + buf->size, s, len);
 		buf->line[buf->size + len] = 0;
-		ft_putstr_fd("\nbuf->line : ", 2);ft_putstr_fd(buf->line, 2);
 	}
-	ft_putstr_fd("\n____5\n", 2);
 }
 /*
 void		delete_in_buf(t_buf *buf, int cursor, size_t len, t_bool go_to_right)
