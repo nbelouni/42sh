@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:03:10 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/03 22:45:44 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/04 00:30:35 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,9 @@ int		read_line(t_buf *buf)
 			vb_insert(buf, (char *)&x);
 		if (x == DEL)
 			vb_del(buf, x);
-		if (x == LEFT || x == HOME)
+		if (x == LEFT || x == HOME || x == ALT_LEFT)
 			tab_move[1](calc_len(buf, x));
-		if (x == RIGHT || x == END)
+		if (x == RIGHT || x == END || x == ALT_RIGHT)
 			tab_move[0](calc_len(buf, x));
 		if (x == RETR)
 		{

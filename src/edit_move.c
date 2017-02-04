@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 21:36:00 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/04 01:48:33 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/04 01:44:30 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,26 +15,38 @@
 size_t	calc_len(t_buf *buf, int x)
 {
 	size_t	len;
+	size_t	cursor;
 
+	cursor = g_curs.win_col * g_curs.row + g_curs.col;
 	len = 0;
-	if (x == HOME || x == CTRL_W /*copy*/)
+	if (x == HOME)
 		len = (((g_curs.win_col + 1) * g_curs.row) + g_curs.col - PROMPT_LEN);
-	if (x == END || x == CTRL_L || x == RETR/*|| [PAST_AFT]*/)
-		len = (buf->size - (g_curs.win_col * g_curs.row + g_curs.col - PROMPT_LEN));
-	if (x == RIGHT && (g_curs.win_col * g_curs.row + g_curs.col - PROMPT_LEN)
-		< buf->size)
+	else if (x == END || x == RETR)
+		len = (buf->size - cursor - PROMPT_LEN);
+	else if (x == RIGHT && (cursor - PROMPT_LEN) < (size_t)buf->size)
 			return (1);
-	if ((x == LEFT || x == DEL) && (g_curs.win_col * g_curs.row + g_curs.col
-		- PROMPT_LEN > 0))
+	else if ((x == LEFT || x == DEL) && (cursor - PROMPT_LEN > 0))
 		return (1);
-	if (x == CTRL_L)
+	else if (x == ALT_LEFT)
 	{
-		while (buf->line[g_curs.col + len] != ' ')
+		ft_putstr_fd(" buf[0] : -", 2);X(buf->line[cursor - PROMPT_LEN - len - 1]);		ft_putstr_fd("-, ", 2);
+		while (cursor - len > PROMPT_LEN 
+		&& buf->line[cursor - PROMPT_LEN - len - 1] == ' ')
 			len++;
+		ft_putstr_fd("len == ' ' : ", 2);E(len);
+		
+		while (cursor - len > PROMPT_LEN 
+		&& buf->line[cursor - PROMPT_LEN - len - 1] != ' ')
+			len++;
+		ft_putstr_fd(", len != ' ' : ", 2);E(len);X('\n');
 	}
-	if (x == CTRL_L)
+	else if (x == ALT_RIGHT)
 	{
-		while ((int)len < g_curs.col && buf->line[g_curs.col - len] != ' ')
+		while ((int)(cursor + len) < PROMPT_LEN + buf->size
+		&& buf->line[cursor - PROMPT_LEN + len] != ' ')
+			len++;
+		while ((int)(cursor + len) < PROMPT_LEN + buf->size
+		&& buf->line[cursor - PROMPT_LEN + len] == ' ')
 			len++;
 	}
 	return (len);

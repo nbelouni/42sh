@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:01:52 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/03 22:44:44 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/04 00:17:28 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,15 @@
 # define CRTL  1
 # define CTRL_D  4
 # define CTRL_L 12
-# define CTRL_K 11
-# define CTRL_W 23
+# define CTRL_K 11 // cut before
+# define CTRL_W 23 // cut after
+# define CTRL_Y 23 // paste
 # define CTRL_T 20
 # define ALT_C  42947
 # define ALT_V  10127586
 # define ALT_X  8948194
-# define ALT_R  1130044187
-# define ALT_L  1146821403
+# define ALT_RIGHT  1130044187
+# define ALT_LEFT  1146821403
 
 # define PUT1(x) (ft_putstr_fd(x, 1));
 # define PUT2(x) (ft_putstr_fd(x, 2));
