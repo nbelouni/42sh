@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 21:36:00 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/04 00:03:32 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/04 01:48:33 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,15 @@ void	m_left(size_t len)
 	E(g_curs.col);X('\n');
 	while (len > 0)
 	{
-		t_puts("le", 1);
 		if (g_curs.col > 0 || (g_curs.row == 0 && g_curs.col > PROMPT_LEN))
+		{
+			t_puts("le", 1);
 			g_curs.col--;
+		}
 		else if (g_curs.row > 0)
 		{
+			t_puts("up", 1);
+			tputs(tgoto(tgetstr("ch", NULL), 0, g_curs.win_col + 1), 1, t_putchar);
 			g_curs.col = g_curs.win_col;
 			g_curs.row--;
 		}

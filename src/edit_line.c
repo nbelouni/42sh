@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/03 22:28:17 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/03 23:13:09 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/04 02:04:09 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,15 @@ void		vb_insert(t_buf *buf, char *s)
 	{
 		g_curs.col = 0;
 		g_curs.row++;
+		t_puts("cr", 1);
+		t_puts("do", 1);
+		X('*');
 	}
-	E(g_curs.col);X(' ');
-	E(g_curs.win_col);X(' ');
-	E(g_curs.row);X('\n');
+//	E(g_curs.col);X(' ');
+//	E(g_curs.win_col);X(' ');
+//	E(g_curs.row);X('\n');
 	t_puts("ei", 1);
+	print_post_curs(buf);
 }
 
 void		vb_del(t_buf *buf, unsigned int x)

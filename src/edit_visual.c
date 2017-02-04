@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/04 00:00:38 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/04 00:03:34 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/04 02:04:01 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	ft_del(size_t len)
 {
-	E(g_curs.col);X('\n');
 	while (len > 0)
 	{
 		m_left(1);
@@ -23,27 +22,27 @@ void	ft_del(size_t len)
 		t_puts("ed", 1);
 		len--;
 	}
-	E(g_curs.col);X('\n');X('\n');
-}
-
-void	clean_line(void)
-{
-	t_puts("sc", 1);
-	t_puts("cd", 1);
-	t_puts("rc", 1);
 }
 
 void	print_post_curs(t_buf *buf)
 {
-	clean_line();
 	int		i;
 
 	i = 0;
+	(void)buf;
+	(void)i;
+	t_puts("cd", 1);
 	t_puts("sc", 1);
-	while (buf->line[(g_curs.win_col * g_curs.row) + g_curs.col -PROMPT_LEN + i])
+	while (buf->line[(g_curs.win_col * g_curs.row) + g_curs.col - PROMPT_LEN + i])
 	{
+//		if (g_curs.row)
+//		{
+//			t_puts("do", 1);
+//			t_puts("cr", 1);
+//		}
 		ft_putchar_fd(buf->line[((g_curs.win_col * g_curs.row) + g_curs.col - PROMPT_LEN) + i], 1);
 		i++;
+		
 	}
 	t_puts("rc", 1);
 }
