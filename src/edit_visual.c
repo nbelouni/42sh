@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/04 00:00:38 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/04 18:03:42 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/04 21:47:44 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,29 +24,38 @@ void	ft_del(size_t len)
 	}
 }
 
-void	print_post_curs(t_buf *buf)
+void	print_post_curs(t_buf *buf, t_bool insert_mode)
 {
 	int		i;
 	int		cursor;
 
+	(void)insert_mode;
 	cursor = (g_curs.win_col * g_curs.row) + g_curs.col - PROMPT_LEN;
 	i = 0;
 	t_puts("cd", 1);
-	t_puts("sc", 1);
-	if (cursor < buf->size
-		&& (buf->size + PROMPT_LEN) / g_curs.win_col > 0 
-		&& (buf->size + PROMPT_LEN) % g_curs.win_col == 0)
-	{
-		t_puts("do", 1);
-		t_puts("rc", 1);
-		t_puts("up", 1);
-		t_puts("sc", 1);
-	}
 	while (buf->line[cursor + i])
 	{
 		ft_putchar_fd(buf->line[((g_curs.win_col * g_curs.row) + g_curs.col - PROMPT_LEN) + i], 1);
+		if ((cursor + PROMPT_LEN + i + 1) % g_curs.win_col == 0)
+		{
+			t_puts("cr", 1);
+			t_puts("do", 1);
+		}
 		i++;
-		
 	}
-	t_puts("rc", 1);
+	if (i > 0)
+	{
+		while (i > 0)
+		{
+			if ((cursor + i + PROMPT_LEN) % g_curs.win_col > 0 || 
+			((cursor + i + PROMPT_LEN) / g_curs.win_col == 0 && cursor > PROMPT_LEN))
+				t_puts("le", 1);
+			else if ((cursor + i + PROMPT_LEN) / g_curs.win_col > 0)
+			{
+				t_puts("up", 1);
+				tputs(tgoto(tgetstr("ch", NULL), 0, g_curs.win_col - 1), 1, t_putchar);
+			}
+			i--;
+		}
+	}
 }

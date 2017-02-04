@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:01:52 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/04 00:17:28 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/04 19:12:26 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ void			vb_del(t_buf *buf, unsigned int x);
 void			insert_in_buf(t_buf *buf, int cursor, char *s, size_t len);
 void			delete_in_buf(t_buf *buf, int cursor, size_t len);
 
-void			print_post_curs(t_buf *buf);
+void			print_post_curs(t_buf *buf, t_bool insert_mode);
 
 static void		(*tab_move[8])() = {
 	[0] = m_right,

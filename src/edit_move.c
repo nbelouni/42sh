@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 21:36:00 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/04 16:37:02 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/04 18:06:58 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ size_t	calc_len(t_buf *buf, int x)
 	cursor = g_curs.win_col * g_curs.row + g_curs.col;
 	len = 0;
 	if (x == HOME)
-		len = (((g_curs.win_col + 1) * g_curs.row) + g_curs.col - PROMPT_LEN);
+		len = (((g_curs.win_col) * g_curs.row) + g_curs.col - PROMPT_LEN);
 	else if (x == END || x == RETR)
 		 len = ((buf->size - cursor - PROMPT_LEN) > 0) ? (buf->size - cursor - PROMPT_LEN) : 0;
 	else if (x == RIGHT && (cursor - PROMPT_LEN) < (size_t)buf->size)
@@ -57,9 +57,10 @@ void	m_right(size_t len)
 	int		cursor;
 
 	PUT2("\nm_right()\n");
-	cursor = (g_curs.win_col * g_curs.row) + g_curs.col - PROMPT_LEN;
+	cursor = (g_curs.win_col * g_curs.row) + g_curs.col;
 //	E(g_curs.col);X('\n');
 	PUT2("cursor : ");E(cursor);
+	PUT2(", len : ");E(len);
 	PUT2(", cursor + len : ");E(cursor + len);
 	PUT2(", col : ");E(g_curs.col);
 	PUT2(", row");X(' ');E(g_curs.row);X('\n');
@@ -79,6 +80,7 @@ void	m_right(size_t len)
 		}
 		len--;
 	}
+	cursor = (g_curs.win_col * g_curs.row) + g_curs.col;
 	PUT2("cursor : ");E(cursor);
 	PUT2(", cursor + len : ");E(cursor + len);
 	PUT2(", col : ");E(g_curs.col);
@@ -90,7 +92,7 @@ void	m_left(size_t len)
 	int		cursor;
 
 	PUT2("\nm_left()\n");
-	cursor = (g_curs.win_col * g_curs.row) + g_curs.col - PROMPT_LEN;
+	cursor = (g_curs.win_col * g_curs.row) + g_curs.col;
 //	E(g_curs.col);X('\n');
 	PUT2("cursor : ");E(cursor);
 	PUT2(", cursor + len : ");E(cursor + len);
@@ -112,6 +114,7 @@ void	m_left(size_t len)
 		}
 		len--;
 	}
+	cursor = (g_curs.win_col * g_curs.row) + g_curs.col;
 	PUT2("cursor : ");E(cursor);
 	PUT2(", cursor + len : ");E(cursor + len);
 	PUT2(", col : ");E(g_curs.col);

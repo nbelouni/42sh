@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/03 22:28:17 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/04 16:23:00 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/04 20:20:36 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ void		vb_insert(t_buf *buf, char *s)
 //	E(g_curs.col);X(' ');
 //	E(g_curs.win_col);X(' ');
 //	E(g_curs.row);X('\n');
+	print_post_curs(buf, TRUE);
 	t_puts("ei", 1);
-	print_post_curs(buf);
 }
 
 void		vb_del(t_buf *buf, unsigned int x)
@@ -45,5 +45,5 @@ void		vb_del(t_buf *buf, unsigned int x)
 	delete_in_buf(buf, g_curs.win_col * g_curs.row + g_curs.col - PROMPT_LEN, len);
 	tab_move[2](len);
 	buf->size = ft_strlen(buf->line);
-	print_post_curs(buf);
+	print_post_curs(buf, FALSE);
 }
