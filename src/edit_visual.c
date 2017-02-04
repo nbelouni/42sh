@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/04 00:00:38 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/04 02:04:01 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/04 16:15:54 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,25 @@ void	ft_del(size_t len)
 void	print_post_curs(t_buf *buf)
 {
 	int		i;
+	int		cursor;
 
+	cursor = (g_curs.win_col * g_curs.row) + g_curs.col - PROMPT_LEN;
 	i = 0;
-	(void)buf;
-	(void)i;
+	PUT2("\nprint_post_curs\n");
+	PUT2("cursor + i : ");E(cursor + i);
+	PUT2(", buf->size : ");E(buf->size);
+	PUT2(", col : ");E(g_curs.col);
+	PUT2(", row");X(' ');E(g_curs.row);X('\n');
+//	(void)buf;
+//	(void)i;
 	t_puts("cd", 1);
 	t_puts("sc", 1);
-	while (buf->line[(g_curs.win_col * g_curs.row) + g_curs.col - PROMPT_LEN + i])
+	while (buf->line[cursor + i])
 	{
+		PUT2("cursor + i : ");E(cursor + i);
+		PUT2(", buf->size : ");E(buf->size);
+		PUT2(", col : ");E(g_curs.col);
+		PUT2(", row");X(' ');E(g_curs.row);X('\n');
 //		if (g_curs.row)
 //		{
 //			t_puts("do", 1);

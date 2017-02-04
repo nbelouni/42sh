@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/03 22:28:17 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/04 00:08:58 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/04 16:23:00 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void		vb_insert(t_buf *buf, char *s)
 	ft_putchar_fd(*s, 1);
 	insert_in_buf(buf, g_curs.win_col * g_curs.row + g_curs.col - PROMPT_LEN, s, 1);
 	buf->size++;
-	if (g_curs.col < g_curs.win_col)
+	if (g_curs.col + 1 < g_curs.win_col)
 		g_curs.col += 1;
 	else
 	{

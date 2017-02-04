@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:03:10 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/04 00:30:35 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/04 16:08:35 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int		read_line(t_buf *buf)
 	unsigned int	x;
 	int				ret;
 
+	(void)buf;
 	x = 0;
 	init_termios();
 	ft_putstr_fd("42sh.$ ", 1);
@@ -33,13 +34,17 @@ int		read_line(t_buf *buf)
 			vb_insert(buf, (char *)&x);
 		if (x == DEL)
 			vb_del(buf, x);
-		if (x == LEFT || x == HOME || x == ALT_LEFT)
+		if (x == LEFT || x == HOME)// || x == ALT_LEFT)
 			tab_move[1](calc_len(buf, x));
-		if (x == RIGHT || x == END || x == ALT_RIGHT)
+		if (x == RIGHT || x == END)// || x == ALT_RIGHT)
 			tab_move[0](calc_len(buf, x));
 		if (x == RETR)
 		{
-			tab_move[0](calc_len(buf, x));
+/*			
+**			Cette fonction fait partir en boucle infinie, faut fix ca
+**			
+** 			m_right(calc_len(buf, x));
+*/
 			ft_putchar_fd((char)x, 1);
 			return (0);
 		}

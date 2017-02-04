@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 20:30:33 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/04 01:45:12 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/04 16:22:17 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ t_bool		get_win()
 
 	if (ioctl(0, TIOCGWINSZ, &windows) < 0)
 		return (FALSE);
-	g_curs.win_col = windows.ws_col - 1;
+	g_curs.win_col = windows.ws_col;
 	g_curs.win_row = windows.ws_row;
 //	E(g_curs.win_col);X('\n');
 	return (TRUE);

@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 21:36:00 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/04 01:44:30 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/04 16:37:02 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ size_t	calc_len(t_buf *buf, int x)
 	if (x == HOME)
 		len = (((g_curs.win_col + 1) * g_curs.row) + g_curs.col - PROMPT_LEN);
 	else if (x == END || x == RETR)
-		len = (buf->size - cursor - PROMPT_LEN);
+		 len = ((buf->size - cursor - PROMPT_LEN) > 0) ? (buf->size - cursor - PROMPT_LEN) : 0;
 	else if (x == RIGHT && (cursor - PROMPT_LEN) < (size_t)buf->size)
 			return (1);
 	else if ((x == LEFT || x == DEL) && (cursor - PROMPT_LEN > 0))
@@ -54,9 +54,18 @@ size_t	calc_len(t_buf *buf, int x)
 
 void	m_right(size_t len)
 {
+	int		cursor;
+
+	PUT2("\nm_right()\n");
+	cursor = (g_curs.win_col * g_curs.row) + g_curs.col - PROMPT_LEN;
+//	E(g_curs.col);X('\n');
+	PUT2("cursor : ");E(cursor);
+	PUT2(", cursor + len : ");E(cursor + len);
+	PUT2(", col : ");E(g_curs.col);
+	PUT2(", row");X(' ');E(g_curs.row);X('\n');
 	while (len > 0)
 	{
-		if (g_curs.col < g_curs.win_col)
+		if (g_curs.col + 1< g_curs.win_col)
 		{
 			t_puts("nd", 1);
 			g_curs.col++;
@@ -70,11 +79,23 @@ void	m_right(size_t len)
 		}
 		len--;
 	}
+	PUT2("cursor : ");E(cursor);
+	PUT2(", cursor + len : ");E(cursor + len);
+	PUT2(", col : ");E(g_curs.col);
+	PUT2(", row");X(' ');E(g_curs.row);X('\n');
 }
 
 void	m_left(size_t len)
 {
-	E(g_curs.col);X('\n');
+	int		cursor;
+
+	PUT2("\nm_left()\n");
+	cursor = (g_curs.win_col * g_curs.row) + g_curs.col - PROMPT_LEN;
+//	E(g_curs.col);X('\n');
+	PUT2("cursor : ");E(cursor);
+	PUT2(", cursor + len : ");E(cursor + len);
+	PUT2(", col : ");E(g_curs.col);
+	PUT2(", row");X(' ');E(g_curs.row);X('\n');
 	while (len > 0)
 	{
 		if (g_curs.col > 0 || (g_curs.row == 0 && g_curs.col > PROMPT_LEN))
@@ -85,13 +106,16 @@ void	m_left(size_t len)
 		else if (g_curs.row > 0)
 		{
 			t_puts("up", 1);
-			tputs(tgoto(tgetstr("ch", NULL), 0, g_curs.win_col + 1), 1, t_putchar);
-			g_curs.col = g_curs.win_col;
+			tputs(tgoto(tgetstr("ch", NULL), 0, g_curs.win_col - 1), 1, t_putchar);
+			g_curs.col = g_curs.win_col - 1;
 			g_curs.row--;
 		}
 		len--;
 	}
-	E(g_curs.col);X('\n');
+	PUT2("cursor : ");E(cursor);
+	PUT2(", cursor + len : ");E(cursor + len);
+	PUT2(", col : ");E(g_curs.col);
+	PUT2(", row");X(' ');E(g_curs.row);X('\n');
 }
 /*
 void	m_home(t_buf *buf)
