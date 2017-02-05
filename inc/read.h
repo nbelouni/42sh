@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:01:52 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/05 14:12:14 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/05 17:13:36 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,9 +98,8 @@
 # define X(x) (ft_putchar_fd(x, 2));
 
 # define PROMPT1	"42sh.$ "
-# define PROMPT2	"quote> "
-# define PROMPT3	"bquote> "
-# define PROMPT4	"dquote> "
+# define PROMPT2	"> "
+
 typedef struct	s_win
 {
 	int				col;
@@ -124,12 +123,19 @@ typedef struct	s_term
 	struct termios	new;
 }				t_term;
 
+typedef struct	s_prompt
+{
+	char		*s;
+	int			len;
+}				t_prompt;
+
 typedef struct	s_buf
 {
 	char		*line;
 	int			size;
 	char		*to_paste;
 	int			to_paste_size;
+	char		*final_line;
 }				t_buf;
 
 t_buf			*init_buf(void);
@@ -151,6 +157,11 @@ void			get_sigwinch(int sig);
 void			get_sigint(int sig);
 t_bool			get_win();
 
+t_prompt		manage_prompt(char *s, int num);
+char			*get_prompt_str(void);
+size_t			get_prompt_len(void);
+void			set_prompt(char *s, int len);
+
 size_t			calc_len(t_buf *buf, int x);
 void			m_right(size_t len);
 void			m_left(size_t len);
@@ -170,6 +181,8 @@ int				set_to_paste(t_buf *buf, int cursor, size_t len);
 void			paste_in_buf(t_buf *buf, int cursor);
 
 void			print_post_curs(t_buf *buf);
+
+int				is_line_ended(t_buf *buf);
 
 /*
 ** 	edition de ligne

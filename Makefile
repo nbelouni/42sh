@@ -20,7 +20,9 @@ SRCS = main.c			\
 	   edit_buf.c		\
 	   edit_line.c		\
 	   edit_visual.c	\
-	   calc_len.c
+	   calc_len.c		\
+	   prompt.c			\
+	   is_line_ended.c	\
 
 SRCC = $(addprefix $(SDIR),$(SRCS))
 

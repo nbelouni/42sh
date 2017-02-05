@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/03 22:28:17 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/05 14:31:37 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/05 16:43:52 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int			vb_insert(t_buf *buf, char *s)
 	ft_putchar_fd(*s, 1);
 	if (buf->size + ft_strlen(s) >= BUFF_SIZE)
 		return (-1);
-	insert_in_buf(buf, cursor - ft_strlen(PROMPT1), s, 1);
+	insert_in_buf(buf, cursor - get_prompt_len(), s, 1);
 	buf->size += ft_strlen(s);
 	if (g_curs.col + 1 < g_curs.win_col)
 		g_curs.col += 1;
@@ -47,9 +47,9 @@ void		vb_del(t_buf *buf, unsigned int x)
 	tmp_curs = g_curs.win_col * g_curs.row + g_curs.col;
 	len = calc_len(buf, x);
 	if (x == CTRL_E || x == CTRL_W)
-		cursor = tmp_curs - ft_strlen(PROMPT1) + len;
+		cursor = tmp_curs - get_prompt_len() + len;
 	else
-		cursor = tmp_curs - ft_strlen(PROMPT1);
+		cursor = tmp_curs - get_prompt_len();
 	if (cursor < 0)
 		cursor = 0;
 	if (cursor > buf->size)
@@ -70,9 +70,9 @@ int			vb_copy(t_buf *buf, unsigned int x)
 	tmp_curs = g_curs.win_col * g_curs.row + g_curs.col;
 	len = calc_len(buf, x);
 	if (x == CTRL_E || x == CTRL_W || x == CTRL_N || x == CTRL_F)
-		cursor = tmp_curs - ft_strlen(PROMPT1);
+		cursor = tmp_curs - get_prompt_len();
 	else
-		cursor = tmp_curs - ft_strlen(PROMPT1) - len;
+		cursor = tmp_curs - get_prompt_len() - len;
 	if (cursor < 0)
 		cursor = 0;
 	if (cursor > buf->size)
@@ -99,7 +99,7 @@ int			vb_paste(t_buf *buf)
 		return (0);
 	if (buf->size + buf->to_paste_size >= BUFF_SIZE)
 		return (-1);
-	paste_in_buf(buf, cursor - ft_strlen(PROMPT1));
+	paste_in_buf(buf, cursor - get_prompt_len());
 	buf->size += buf->to_paste_size;
 	print_post_curs(buf);
 	return (0);

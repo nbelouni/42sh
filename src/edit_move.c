@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 21:36:00 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/05 14:56:21 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/05 16:44:02 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	m_left(size_t len)
 	while (len > 0)
 	{
 		if (g_curs.col > 0
-		|| (g_curs.row == 0 && g_curs.col > (int)ft_strlen(PROMPT1)))
+		|| (g_curs.row == 0 && g_curs.col > (int)get_prompt_len()))
 		{
 			t_puts("le", 1);
 			g_curs.col--;
@@ -76,7 +76,7 @@ void	m_down(t_buf *buf)
 	size_t	cursor;
 
 	cursor = g_curs.win_col * g_curs.row + g_curs.col;
-	if (buf->size - (cursor - ft_strlen(PROMPT1)) > (size_t)g_curs.win_col)
+	if (buf->size - (cursor - get_prompt_len()) > (size_t)g_curs.win_col)
 		m_right(g_curs.win_col);
 	else
 		m_right(calc_len(buf, END));

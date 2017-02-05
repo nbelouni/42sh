@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:43:38 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/03 18:48:37 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/05 17:11:56 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ t_buf		*init_buf(void)
 	buf->size = 0;
 	buf->to_paste = NULL;
 	buf->to_paste_size = 0;
+	buf->final_line = NULL;
 	return (buf);
 }
 
@@ -31,6 +32,8 @@ void		free_buf(t_buf *buf)
 	free(buf->line);
 	if (buf->to_paste)
 		free(buf->to_paste);
+	if (buf->final_line)
+		free(buf->final_line);
 	free(buf);
 	buf = NULL;
 }
