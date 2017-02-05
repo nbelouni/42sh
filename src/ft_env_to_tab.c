@@ -1,34 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_is_valid_dir.c                                  :+:      :+:    :+:   */
+/*   ft_env_to_tab.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/02/01 20:17:36 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/02/02 12:43:42 by maissa-b         ###   ########.fr       */
+/*   Created: 2017/02/01 20:17:21 by maissa-b          #+#    #+#             */
+/*   Updated: 2017/02/02 13:27:41 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "42sh.h"
 
-int		ft_is_valid_dir(const char *dirname)
+char	**ft_env_to_tab(void)
 {
-	DIR			*dir;
-	struct stat st;
+	t_env	*tmp;
+	char	**res;
+	int		i;
 
-	lstat(dirname, &st);
-	if (S_ISDIR(st.st_mode) || S_ISLNK(st.st_mode))
+	if (!(res = (char **)malloc(sizeof(char *) * (g_env->size + 1))))
 	{
-		if ((dir = opendir(dirname)))
-		{
-			closedir(dir);
-			return (0);
-		}
-		return (ft_print_error("cd", ERR_NO_ACCESS, ERR_NEW_CMD));
+		return (NULL);
 	}
-	else
+	tmp = g_env->head;
+	i = 0;
+	while (tmp != NULL)
 	{
-		return (ft_print_error("cd", ERR_NO_FILE, ERR_NEW_CMD));
+		res[i] = ft_memalloc(ft_strlen(tmp->name) + ft_strlen(tmp->value) + 2);
+		res[i] = ft_strcat(tmp->name, "-");
+		res[i] = ft_strcat(res[i], tmp->value);
+		i++;
+		tmp = tmp->next;
 	}
+	res[i] = NULL;
+	return (res);
 }
