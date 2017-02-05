@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 18:25:06 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/03 14:41:12 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/05 14:13:20 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void		clean_pos_curs(void)
 {
-	g_curs.col = PROMPT_LEN;
+	g_curs.col = ft_strlen(PROMPT1);
 	g_curs.row = 0;
 }
 

@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 23:40:01 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/05 01:02:42 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/05 14:25:36 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int			set_to_paste(t_buf *buf, int cursor, size_t len)
 		return (-1);
 	if (!(buf->to_paste = ft_strtrim(tmp)))
 		return (-1);
-	buf->to_paste_size = ft_strlen(buf->to_paste);;
+	buf->to_paste_size = ft_strlen(buf->to_paste);
 	if (tmp)
 		free(tmp);
 	return (0);
@@ -68,15 +68,17 @@ int			set_to_paste(t_buf *buf, int cursor, size_t len)
 void		paste_in_buf(t_buf *buf, int cursor)
 {
 	char	tmp[buf->size - cursor + 1];
+	int		tmp_len;
 
+	tmp_len = buf->size - cursor;
 	if (buf->size + buf->to_paste_size >= BUFF_SIZE)
 		return ;
 	if (cursor < buf->size - 1)
 	{
-		ft_strncpy(tmp, buf->line + cursor, buf->size - cursor + 1);
-		tmp[buf->size - cursor] = 0;
+		ft_strncpy(tmp, buf->line + cursor, tmp_len + 1);
+		tmp[tmp_len] = 0;
 		ft_strncpy(buf->line + cursor, buf->to_paste, buf->to_paste_size);
-		ft_strncpy(buf->line + cursor + buf->to_paste_size, tmp, buf->size - cursor);
+		ft_strncpy(buf->line + cursor + buf->to_paste_size, tmp, tmp_len);
 	}
 	else
 	{

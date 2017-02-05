@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/03 22:32:42 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/05 14:40:27 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,13 @@ int main(int argc, char **argv, char **envp)
 	signal(SIGWINCH, get_sigwinch);
 	signal(SIGINT, get_sigint);
 	if (!(buf = init_buf()))
-		return (-1);
+		return (ft_print_error("42sh", ERR_MALLOC, ERR_EXIT));
 	init_curs();
-	while (read_line(buf) >= 0)
+	while (read_line(buf) > ERR_EXIT)
 	{
 		close_termios();
-		ft_putstr_fd(buf->line, 1);
-		ft_putchar_fd('\n', 1);
-//		ft_putnbr_fd(buf->size, 1);
+//		ft_putstr_fd(buf->line, 1);
+//		ft_putchar_fd('\n', 1);
 		ft_bzero(buf->line, (size_t)(sizeof(char) * BUFF_SIZE));
 		buf->size = 0;
 		clean_pos_curs();

@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:19:58 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/02/01 21:41:12 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/05 13:52:10 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,31 @@
 **	file where error defines are defined
 */
 
-# define ERR_NB_ARGS	": too many arguments"
-# define ERR_EXPR_SYNT	": Expression Syntax"
-# define ERR_NO_ACCESS	": No Access"
-# define ERR_NO_FILE	": No File"
+/*
+** ft_print_error return
+*/
+# define ERR_WARNING	0
+# define ERR_NEW_CMD	-1
+# define ERR_EXIT		-2
+
+/*
+** System errors
+*/
+# define ERR_MALLOC			": Bad allocation\n"
+# define ERR_READ			": Input error\n"
+
+/*
+**
+*/
+# define ERR_NB_ARGS		": too many arguments\n"
+# define ERR_EXPR_SYNT		": Expression Syntax\n"
+# define ERR_NO_ACCESS		": No Access\n"
+# define ERR_NO_FILE		": No File\n"
+
+/*
+** line edition errors
+*/
+# define ERR_CMD_TOO_LONG	": Command too long\n"
+
 
 #endif

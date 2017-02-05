@@ -6,7 +6,7 @@
 /*   By: nbelouni <nbelouni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/04 14:46:22 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/03 16:30:33 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/05 13:37:31 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void				ft_lstiter(t_list *lst, void (*f)(t_list *elem));
 t_list				*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem));
 int					get_next_line(int const fd, char **line);
 
-int					ft_print_error(char *cmd, char *err);
+int					ft_print_error(char *cmd, char *err, int ret);
 char				**ft_env_to_tab(void);
 int					ft_is_valid_dir(const char *pathname);
 
