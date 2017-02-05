@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:01:52 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/04 19:12:26 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/05 01:12:38 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,16 +38,27 @@
 # define TAB  9
 # define CRTL  1
 # define CTRL_D  4
-# define CTRL_L 12
+
+# define CTRL_B 2 // cut word before
+# define CTRL_E 5 // cut word after 
 # define CTRL_K 11 // cut before
 # define CTRL_W 23 // cut after
-# define CTRL_Y 23 // paste
+
+# define CTRL_I 9 // copy word before
+# define CTRL_N 14 // copy word after 
+# define CTRL_A 1 // copy before
+# define CTRL_F 6 // copy after
+
+# define CTRL_P 16 // paste
+
 # define CTRL_T 20
 # define ALT_C  42947
 # define ALT_V  10127586
 # define ALT_X  8948194
 # define ALT_RIGHT  1130044187
 # define ALT_LEFT  1146821403
+# define ALT_UP 1096489755
+# define ALT_DOWN 1113266971 
 
 # define PUT1(x) (ft_putstr_fd(x, 1));
 # define PUT2(x) (ft_putstr_fd(x, 2));
@@ -108,14 +119,16 @@ t_bool			get_win();
 size_t			calc_len(t_buf *buf, int x);
 void			m_right(size_t len);
 void			m_left(size_t len);
+void			m_up(void);
+void			m_down(t_buf *buf);
 void			ft_del(size_t len);
 
-/*
- * v : visual
- * b : buf
- */
 void			vb_insert(t_buf *buf, char *s);
 void			vb_del(t_buf *buf, unsigned int x);
+int				vb_copy(t_buf *buf, unsigned int x);
+int				vb_cut(t_buf *buf, unsigned int x);
+void			vb_paste(t_buf *buf);
+
 //void			m_up(t_buf *buf, );
 //void			m_down(t_buf *buf);
 //void			m_home(t_buf *buf);
@@ -125,91 +138,17 @@ void			vb_del(t_buf *buf, unsigned int x);
 
 void			insert_in_buf(t_buf *buf, int cursor, char *s, size_t len);
 void			delete_in_buf(t_buf *buf, int cursor, size_t len);
+int				set_to_paste(t_buf *buf, int cursor, size_t len);
+void			paste_in_buf(t_buf *buf, int cursor);
 
-void			print_post_curs(t_buf *buf, t_bool insert_mode);
+void			print_post_curs(t_buf *buf);
 
-static void		(*tab_move[8])() = {
-	[0] = m_right,
-	[1] = m_left,
-	[2] = ft_del,
-//	[3] = m_down,
-//	[4] = m_end,
-//	[5] = m_home,
-//	[6] = m_ctrl_r,
-//	[7] = m_ctrl_l,
-};
 /*
-[LEFT] -> calc_len + m_left;
-RIGHT ->calc_len + m_right;
-UP -> calc_len + m_left;
-DOWN -> calc_len + m_right;
-DEL -> calc_len + del + m_left;
-RETR -> calc_len + del + m_left;
-SUP  2117294875
-HOME  4741915
-END  4610843
-PAGE_UP  2117425947
-PAGE_DOWN  2117491483
-TAB  9
-CRTL  1
-CTRL_D  4
-CTRL_L 12
-CTRL_K 11
-CTRL_W 23
-CTRL_T 20
-ALT_C  42947
-ALT_V  10127586
-ALT_X  8948194
-ALT_R  1130044187
-ALT_L  1146821403
-*/
-/*
- * #define PROMPT_LEN	n
- * #define CURSOR_POS	(((row) * (max_col)) + col)// dans le tableau
- * struct affichage
- * {
- * .int col; // pos du curseur init = PROMPT_LEN
- * .int row; // pos du curseur 0
- * .int max_col;
- * .int max_row;
- * }
  * edition de ligne
  *
  * affichage :
- * .multiligne
- * .prendre en compte le prompt
- * .curseur
  * ->>> history
  * ->>> completion
- *
- * liste de fonction cursor:
- * left
- * right
- * home
- * end
- * ctr_l -> word
- * ctr_r -> word
- * ctr_up -> line
- * ctr_do -> line
- * 
- * modification de la chaine
- * insert
- * delete
- * cut before
- * cut after
- * paste
- * copy before
- * copy after
- *
-*/
-
-/* deplace le cursor
- * change indice cursor
- * delete cursor
- *
- * copy : 	tmp_buf = cut;
- * cut :	tmp_buf = cut;
- * 			del(buf->size)
  *
 */
 

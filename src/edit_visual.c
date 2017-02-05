@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/04 00:00:38 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/04 21:47:44 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/05 00:04:05 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,11 @@ void	ft_del(size_t len)
 	}
 }
 
-void	print_post_curs(t_buf *buf, t_bool insert_mode)
+void	print_post_curs(t_buf *buf)
 {
 	int		i;
 	int		cursor;
 
-	(void)insert_mode;
 	cursor = (g_curs.win_col * g_curs.row) + g_curs.col - PROMPT_LEN;
 	i = 0;
 	t_puts("cd", 1);

@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 23:40:01 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/03 23:54:40 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/05 01:02:42 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,20 @@ void		delete_in_buf(t_buf *buf, int cursor, size_t len)
 	}
 }
 
-void		set_to_past(t_buf *buf, int cursor, size_t len)
+int			set_to_paste(t_buf *buf, int cursor, size_t len)
 {
+	char	*tmp;
+
 	if (buf->to_paste != NULL)
 		free(buf->to_paste);
-	buf->to_paste = ft_strsub(buf->line, cursor, len);
-	buf->to_paste_size = len;
+	if (!(tmp = ft_strsub(buf->line, cursor, len)))
+		return (-1);
+	if (!(buf->to_paste = ft_strtrim(tmp)))
+		return (-1);
+	buf->to_paste_size = ft_strlen(buf->to_paste);;
+	if (tmp)
+		free(tmp);
+	return (0);
 }
 
 void		paste_in_buf(t_buf *buf, int cursor)

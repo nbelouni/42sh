@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:03:10 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/04 16:08:35 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/05 01:13:37 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ int		read_line(t_buf *buf)
 	ft_putstr_fd("42sh.$ ", 1);
 	while ((ret = read(0, (char *)&x, 4)))
 	{
+		E(x);X('\n');
 		if (ret < 0)
 			return (-1);
 		if (buf->size > BUFF_SIZE)
@@ -34,17 +35,25 @@ int		read_line(t_buf *buf)
 			vb_insert(buf, (char *)&x);
 		if (x == DEL)
 			vb_del(buf, x);
-		if (x == LEFT || x == HOME)// || x == ALT_LEFT)
-			tab_move[1](calc_len(buf, x));
-		if (x == RIGHT || x == END)// || x == ALT_RIGHT)
-			tab_move[0](calc_len(buf, x));
+		if (x == ALT_UP)
+			m_up();
+		if (x == ALT_DOWN)
+			m_down(buf);
+		if (x == LEFT || x == HOME || x == ALT_LEFT)
+			m_left(calc_len(buf, x));
+		if (x == RIGHT || x == END || x == ALT_RIGHT)
+			m_right(calc_len(buf, x));
+		if (x == CTRL_F || x == CTRL_N || x == CTRL_A || x == CTRL_I)
+		{
+			if (vb_copy(buf, x) < 0)
+				return (-1);
+		}
+		if (x == CTRL_B || x == CTRL_E || x == CTRL_K || x == CTRL_W)
+			vb_cut(buf, x);
+		if (x == CTRL_P)
+			vb_paste(buf);
 		if (x == RETR)
 		{
-/*			
-**			Cette fonction fait partir en boucle infinie, faut fix ca
-**			
-** 			m_right(calc_len(buf, x));
-*/
 			ft_putchar_fd((char)x, 1);
 			return (0);
 		}

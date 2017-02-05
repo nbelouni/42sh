@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 21:36:00 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/04 18:06:58 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/05 01:18:45 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,28 +19,24 @@ size_t	calc_len(t_buf *buf, int x)
 
 	cursor = g_curs.win_col * g_curs.row + g_curs.col;
 	len = 0;
-	if (x == HOME)
+	if (x == HOME || x == CTRL_A || x == CTRL_K)
 		len = (((g_curs.win_col) * g_curs.row) + g_curs.col - PROMPT_LEN);
-	else if (x == END || x == RETR)
-		 len = ((buf->size - cursor - PROMPT_LEN) > 0) ? (buf->size - cursor - PROMPT_LEN) : 0;
+	else if (x == END || x == CTRL_F || x == CTRL_W)
+		 len = ((buf->size - cursor + PROMPT_LEN) > 0) ? (buf->size - cursor + PROMPT_LEN) : 0;
 	else if (x == RIGHT && (cursor - PROMPT_LEN) < (size_t)buf->size)
 			return (1);
 	else if ((x == LEFT || x == DEL) && (cursor - PROMPT_LEN > 0))
 		return (1);
-	else if (x == ALT_LEFT)
+	else if (x == ALT_LEFT || x == CTRL_I || x == CTRL_B)
 	{
-		ft_putstr_fd(" buf[0] : -", 2);X(buf->line[cursor - PROMPT_LEN - len - 1]);		ft_putstr_fd("-, ", 2);
 		while (cursor - len > PROMPT_LEN 
 		&& buf->line[cursor - PROMPT_LEN - len - 1] == ' ')
 			len++;
-		ft_putstr_fd("len == ' ' : ", 2);E(len);
-		
 		while (cursor - len > PROMPT_LEN 
 		&& buf->line[cursor - PROMPT_LEN - len - 1] != ' ')
 			len++;
-		ft_putstr_fd(", len != ' ' : ", 2);E(len);X('\n');
 	}
-	else if (x == ALT_RIGHT)
+	else if (x == ALT_RIGHT || x == CTRL_N || x == CTRL_E)
 	{
 		while ((int)(cursor + len) < PROMPT_LEN + buf->size
 		&& buf->line[cursor - PROMPT_LEN + len] != ' ')
@@ -120,13 +116,20 @@ void	m_left(size_t len)
 	PUT2(", col : ");E(g_curs.col);
 	PUT2(", row");X(' ');E(g_curs.row);X('\n');
 }
-/*
-void	m_home(t_buf *buf)
+
+void	m_up(void)
 {
-	tputs(tgoto(tgetstr("ch", NULL), 0, PROMPT_LEN), 1, t_putchar);
-//	t_puts("cr", 4);
-	(void)buf;
-	g_curs.col = 0;
-	g_curs.row = 0;
+	if (g_curs.row > 0)
+	{
+		t_puts("up", 1);
+		g_curs.row--;
+	}
 }
-*/
+
+void	m_down(t_buf *buf)
+{
+	if (buf->size - (g_curs.win_col * g_curs.row + g_curs.col - PROMPT_LEN) > g_curs.win_col)
+		m_right(g_curs.win_col);
+	else
+		m_right(calc_len(buf, END));
+}
