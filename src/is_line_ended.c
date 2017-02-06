@@ -6,27 +6,27 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/05 16:50:08 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/05 18:13:34 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/06 19:29:35 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
-int			can_close(int x, int c)
+int			can_close(int x, char *tmp, int i)
 {
 	if (i == 0 || (i > 0 && tmp[i - 1] != '\\'))
 	{
-		if (x == '`' && c == '`')
+		if (x == '`' && tmp[i] == '`')
 			x = 0;
-		else if (x == '\'' && c == '\'')
+		else if (x == '\'' && tmp[i] == '\'')
 			x = 0;
-		else if (x == '"' && c == '"')
+		else if (x == '"' && tmp[i] == '"')
 			x = 0;
-		else if (x == '{' && c == '}')
+		else if (x == '{' && tmp[i] == '}')
 			x = 0;
-		else if (x == '(' && c == ')')
+		else if (x == '(' && tmp[i] == ')')
 			x = 0;
-		else if (x == '[' && c == ']')
+		else if (x == '[' && tmp[i] == ']')
 			x = 0;
 	}
 	return (x);
@@ -49,7 +49,7 @@ int			can_end(char *tmp)
 				x = tmp[i];
 		}
 		else
-			x = can_close(x, tmp[i]);
+			x = can_close(x, tmp, i);
 	}
 	return (x);
 }
