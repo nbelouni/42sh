@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/05 18:09:15 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/07 00:54:58 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,15 @@ int main(int argc, char **argv, char **envp)
 		close_termios();
 		if (is_line_ended(buf) >= 0)
 		{
+			PUT1(buf->final_line);
+			X('\n');
 //			parse();
 			ft_strdel(&(buf->final_line));
+		}
+		else
+		{
+			PUT1(buf->final_line);
+			X('\n');
 		}
 		ft_bzero(buf->line, (size_t)(sizeof(char) * BUFF_SIZE));
 		buf->size = 0;
