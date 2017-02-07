@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 23:40:01 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/05 14:25:36 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/07 19:17:39 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void		insert_in_buf(t_buf *buf, int cursor, char *s, size_t len)
 
 	if (buf->size + len >= BUFF_SIZE)
 		return ;
-	if (cursor < buf->size - 1)
+	if (cursor < buf->size)
 	{
 		ft_strncpy(tmp, buf->line + cursor, buf->size - cursor + 1);
 		tmp[buf->size - cursor] = 0;
