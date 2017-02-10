@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/05 16:50:08 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/06 19:29:35 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/09 19:22:29 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@ int			can_close(int x, char *tmp, int i)
 	{
 		if (x == '`' && tmp[i] == '`')
 			x = 0;
-		else if (x == '\'' && tmp[i] == '\'')
-			x = 0;
 		else if (x == '"' && tmp[i] == '"')
 			x = 0;
 		else if (x == '{' && tmp[i] == '}')
@@ -30,6 +28,15 @@ int			can_close(int x, char *tmp, int i)
 			x = 0;
 	}
 	return (x);
+}
+
+t_bool		is_token(char *tmp, int i)
+{
+	while (tmp[i] && tmp[i] == ' ')
+		i--;
+	if (tmp[i] == '|' || tmp[i] == '&' || tmp[i] == ';')
+		return (TRUE);
+	return (FALSE);
 }
 
 int			can_end(char *tmp)
@@ -48,9 +55,13 @@ int			can_end(char *tmp)
 			|| tmp[i] == '{' || tmp[i] == '(' || tmp[i] == '['))
 				x = tmp[i];
 		}
+		else if (x == '\'' && tmp[i] == '\'')
+			x = 0;
 		else
 			x = can_close(x, tmp, i);
 	}
+	if ((x == '(' || x == '{') && (i != 1 && !is_token(tmp, i)))
+		return (ft_print_error("42sh: ", "command not found : ", ERR_WARNING));
 	return (x);
 }
 

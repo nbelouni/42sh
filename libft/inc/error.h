@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:19:58 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/02/05 16:06:17 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/02/09 19:21:00 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 **	file where error defines are defined
 */
 
-# define ERR_WARING			0
+# define ERR_WARNING		0
 # define ERR_NEW_CMD		-1
 # define ERR_EXIT			-2
 

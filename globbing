@@ -1,0 +1,83 @@
+----------------------------------------------------------------------------
+EXPR
+----------------------------------------------------------------------------
+<redirection token> : |, ||, &, &&, ;, ^.
+
+Regexp :
+	. ^ = debut de ligne
+	. $ = debut de ligne
+	. * = 0 ou + caracteres
+	. + = 1 ou plus caracteres
+	. \w = alphanumeric + '_'
+
+----------------------------------------------------------------------------
+A GERER AVANT LE PARSING
+----------------------------------------------------------------------------
+` :
+	. error : "command substitution: unexpected EOF while looking for matching `<cmd>`" -> truc fermant non ferme
+	. non ferme, quel que soit la situation -> new prompt
+
+# :
+	.commentaire, pris en compte si pas dans "" ou ''
+
+[ :
+	. if ("<redirection token>(<esp>*)(\w+)[" ) -> new prompt, quoi qu'il y ait derniere
+	. else if ("<redirection token>(<esp>*)[$" ) -> [: missing `]'
+	. else # ensemble \w == argument # ->  command not found
+
+( :
+	. if ("<redirection token>(<esp>*)(" ) -> new prompt, quoi qu'il y ait derniere
+	. else -> syntax error near unexpected token `<word>'
+
+{ :
+	.syntaxe speciale : "{<esp>" blabla ";<esp>}"
+	.si "{<esp>" pas conforme : command not found
+	.si ";<esp>}" pas conforme  -> new prompt, brace considere comme faisant partie integrante de la commande
+	SINON :
+	. if ("<redirection token>(<esp>*)'{ '") -> new prompt, quoi qu'il y ait derniere
+	. else # motif fait partie integrante du mot # ->  command not found
+
+\ :
+	. if ("<redirection token>(<esp>*)\") -> new prompt, caractere pas pris en compte
+	. simple string : \ disparait
+
+
+--------------------------------------------------------------------------
+A GERER PENDANT LE PARSING
+----------------------------------------------------------------------------
+...
+--------------------------------------------------------------------------
+A GERER AVANT L'EXECUTION
+----------------------------------------------------------------------------
+
+' :
+#	.les caracteres echappes n'existent pas : '\"' -> \"   ( != "\'")
+#	-> afficher '\'' impossible
+	. \ devient \\
+
+" :
+	. transforme `cmd`, $(cmd) et $var par leur valeur
+	-> \$, \\, \`, \"
+	. transformer $() en ``
+	. \ devient \\
+
+\ :
+	. simple string : \ disparait
+
+wildcards :
+	.? = 1 seul char
+	.[...] = 1 char specifie (si val1-val2, intervale)
+	.[!...] = different de char specifie (si val1-val2, intervale)
+	.{s1,s2,...} = toutes les chaines qui matchent
+	.{a..s} = sequence
+	.* = tout
+	.\ = tu le sais
+	-> ne renvoie jamais d'erreur, tout gere pendant l'execution
+
+replace :
+	.`...` = #define output
+	.$(...) = #define output
+	.$var = set var
+	.~ = $HOME
+
+----------------------------------------------------------------------------
