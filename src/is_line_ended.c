@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/05 16:50:08 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/10 16:01:35 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/10 20:03:34 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,6 @@ void		del_str(char *s, int start, int len)
 	ft_bzero(s + start + len, sizeof(char) * len);
 }
 
-t_bool		is_token(char *tmp, int i)
-{
-	while (tmp[i] && tmp[i] == ' ')
-		i--;
-	if (tmp[i] == '|' || tmp[i] == '&' || tmp[i] == ';')
-		return (TRUE);
-	return (FALSE);
-}
-
 t_bool		is_in_dquotes(char *tmp, int x, int i)
 {
 	if (x == '"' && tmp[i - 1] == '\\' &&
@@ -60,7 +51,7 @@ void		add_str(char *s, char *new, int start, int len)
 	if (s_len <= 0)
 		tmp_len = 0;
 	else
-		tmp_len = s_len - len - start + 1;
+		tmp_len = s_len - start + 1;
 	ft_bzero(tmp, sizeof(char) * BUFF_SIZE);
 	ft_strncpy(tmp, s + start + len, tmp_len);
 	ft_strncpy(s + start, new, len);
@@ -85,9 +76,18 @@ int			can_close(int x, char *tmp, int i)
 
 t_bool		is_token(char *tmp, int i)
 {
-	while (tmp[i] && tmp[i] == ' ')
-		i--;
-	if (tmp[i] == '|' || tmp[i] == '&' || tmp[i] == ';')
+	while (--i >= 0 && tmp[i] == ' ')
+		;
+	if (i < 0 || tmp[i] == '|' || tmp[i] == '&' || tmp[i] == ';')
+		return (TRUE);
+	return (FALSE);
+}
+
+t_bool		is_cmd(char *tmp, int i)
+{
+	while (--i >= 0 && ft_isalnum(tmp[i]))
+		;
+	if (i < 0 || is_token(tmp, i))
 		return (TRUE);
 	return (FALSE);
 }
@@ -97,10 +97,13 @@ int			can_end(char *tmp)
 	int		btq;
 	int		x;
 	int		i;
+	int		i_x;
 
 	btq = 0;
 	x = 0;
 	i = -1;
+	i_x = 0;
+		PUT1(tmp);PUT1(" PAR ICI\n");
 	while (tmp[++i])
 	{
 		if (x == 0)
@@ -110,51 +113,90 @@ int			can_end(char *tmp)
 //				supp_s(tmp, i, 1);
 			if ((i == 0 || (i > 0 && tmp[i - 1] != '\\')) &&
 			(tmp[i] == '\'' || tmp[i] == '"'
-			|| tmp[i] == '(' || tmp[i] == '['))
+			|| tmp[i] == '(' || tmp[i] == '['
+			|| (tmp[i + 1] && tmp[i] == '{' && tmp[i + 1] == ' ')))
+			{
 				x = tmp[i];
+				i_x = i;
+			}
 			else if ((i == 0 || (i > 0 && tmp[i - 1] != '\\')) &&
 			(tmp[i] == '`' ||
 			 (tmp[i - 1] == '$' && tmp[i] == '(')))
-				btq = '`';
-			while (tmp[i] && btq == '`')
 			{
-				if ((i == 0 || (i > 0 && tmp[i - 1] != '\\')) &&
-				(tmp[i] == '`' || tmp[i] == ')'))
-					btq = 0;
-				if (is_in_dquotes(tmp, x, i))
-					del_str(tmp, i, 1);
-				else if (tmp[i] == '\\')
-					del_str(tmp, i, 1);
+				btq = '`';
+				i++;
+				while (tmp[i] && btq == '`')
+				{
+					if ((i == 0 || (i > 0 && tmp[i - 1] != '\\')) &&
+					(tmp[i] == '`' || tmp[i] == ')'))
+						btq = 0;
+					if (is_in_dquotes(tmp, x, i))
+						del_str(tmp, i, 1);
+					else if (tmp[i] == '\\')
+						del_str(tmp, i, 1);
+					i++;
+				}
 			}
 			if (tmp[i] == '\\')
 				del_str(tmp, i, 1);
 		}
 		else if (x == '\'' && tmp[i] == '\'')
+		{
 			x = 0;
+			i_x = 0;
+		}
 		else
 		{
-			x = can_close(x, tmp, i);
-			if (x != '\'' && tmp[i] == '\\')
-				del_str(tmp, i, 1);
+		//	if (x != '\'' && tmp[i] == '\\')
+		//		del_str(tmp, i, 1);
 			if (i == 0 || (i > 0 && tmp[i - 1] != '\\'))
 			{
 				if (x == '`' && tmp[i] == '`')
+				{
 					x = 0;
+					i_x = 0;
+				}
 				else if (x == '"' && tmp[i] == '"')
+				{
 					x = 0;
+					i_x = 0;
+				}
 				else if (x == '(' && tmp[i] == ')')
+				{
 					x = 0;
+					i_x = 0;
+				}
 				else if (x == '[' && tmp[i] == ']')
+				{
 					x = 0;
+					i_x = 0;
+				}
+				else if (x == '{' && tmp[i] == '}' && i > 0 && tmp[i - 1] == ';')
+				{
+					x = 0;
+					i_x = 0;
+				}
 			}
 			else if (x == '\'' && tmp[i] == '\'')
+			{
 				x = 0;
-			if (is_in_dquotes(tmp, x, i))
-				del_str(tmp, i, 1);
+				i_x = 0;
+			}
+		//	if (is_in_dquotes(tmp, x, i))
+		//		del_str(tmp, i, 1);
 		}
 	}
-	if ((x == '(' || x == '{') && (i != 1 && !is_token(tmp, i)))
-		return (ft_print_error("42sh: ", "command not found : ", ERR_WARNING));
+	X(x);X(' ');E(i);X(' ');E(i_x);X('\n');
+	if (btq)
+		return (btq);
+	if ((x == '(' || x == '{') && !is_token(tmp, i_x))
+		return (x);
+	else if (x == '[' && is_token(tmp, i_x))
+		return (ft_print_error("42sh: ", "[: missing `]'", 0));
+	else if (x == '[' && is_cmd(tmp, i_x))
+		return (x);
+	else if (x == '[')
+		return (0);
 	return (x);
 }
 
