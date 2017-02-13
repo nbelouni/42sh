@@ -1,21 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_print_error.c                                   :+:      :+:    :+:   */
+/*   ft_strisdigit.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/02/01 18:29:55 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/02/08 14:56:16 by maissa-b         ###   ########.fr       */
+/*   Created: 2017/02/03 19:07:04 by maissa-b          #+#    #+#             */
+/*   Updated: 2017/02/03 19:23:24 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int		ft_print_error(char *cmd, char *err, int ret)
+int		ft_strisdigit(char *str)
 {
-	write(2, cmd, ft_strlen(cmd));
-	write(2, err, ft_strlen(err));
-	write(2, "\n", 1);
-	return (ret);
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (!ft_isdigit(str[i]))
+			return (0);
+		i++;
+	}
+	return (1);
 }

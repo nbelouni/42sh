@@ -1,39 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strsub.c                                        :+:      :+:    :+:   */
+/*   ft_builtin_unsetenv.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2014/11/06 01:14:11 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/09 21:20:16 by maissa-b         ###   ########.fr       */
+/*   Created: 2017/02/03 18:22:01 by maissa-b          #+#    #+#             */
+/*   Updated: 2017/02/13 17:38:23 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "42sh.h"
 
-char				*ft_strsub(char const *s, unsigned int start, size_t len)
+int		ft_unsetenv(t_lst *env, char *var)
 {
-	char			*new;
-	size_t			i;
+	t_elem	*elem;
+
+	if ((elem = ft_find_elem(var, env)) == NULL)
+		return (-1);
+	ft_del_elem(&elem, env);
+	return (0);
+}
+
+int		ft_builtin_unsetenv(t_lst *env, char *cmd, char **args)
+{
+	int	i;
 
 	i = 0;
-	if (!s)
+	if (args == NULL || args[0] == NULL)
 	{
-		if (!(new = (char *)malloc(sizeof(char) * 1)))
-			return (NULL);
+		return (ft_print_error(cmd, ERR_TOO_FEW_ARGS, ERR_NEW_CMD));
 	}
-	else
+	while (env && args[i] && args[i][0])
 	{
-		if (!(new = (char *)malloc(sizeof(char) * (len + 1))))
-			return (NULL);
-	}
-	while (s && s[start] && i < len)
-	{
-		new[i] = s[start];
-		start++;
+		ft_unsetenv(env, args[i]);
 		i++;
 	}
-	new[i] = '\0';
-	return (new);
+	return (0);
 }

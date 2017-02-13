@@ -1,21 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_print_error.c                                   :+:      :+:    :+:   */
+/*   ft_tablen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
+/*   By: maissa-b <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/02/01 18:29:55 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/02/08 14:56:16 by maissa-b         ###   ########.fr       */
+/*   Created: 2017/02/07 18:20:32 by maissa-b          #+#    #+#             */
+/*   Updated: 2017/02/07 18:20:33 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int		ft_print_error(char *cmd, char *err, int ret)
+size_t	ft_tablen(char **tab)
 {
-	write(2, cmd, ft_strlen(cmd));
-	write(2, err, ft_strlen(err));
-	write(2, "\n", 1);
+	size_t	ret;
+
+	ret = 0;
+	while (tab[ret] != NULL)
+	{
+		ret++;
+	}
 	return (ret);
 }

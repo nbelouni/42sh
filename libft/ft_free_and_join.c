@@ -1,21 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_print_error.c                                   :+:      :+:    :+:   */
+/*   ft_free_and_join.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
+/*   By: maissa-b <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/02/01 18:29:55 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/02/08 14:56:16 by maissa-b         ###   ########.fr       */
+/*   Created: 2017/02/13 20:16:43 by maissa-b          #+#    #+#             */
+/*   Updated: 2017/02/13 20:16:44 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int		ft_print_error(char *cmd, char *err, int ret)
+char	*ft_free_and_join(char *str1, char *str2)
 {
-	write(2, cmd, ft_strlen(cmd));
-	write(2, err, ft_strlen(err));
-	write(2, "\n", 1);
-	return (ret);
+	char	*tmp;
+
+	tmp = NULL;
+	if (str1 && str1[0])
+	{
+		tmp = ft_strdup(str1);
+		ft_strdel(&str1);
+	}
+	str1 = ft_strjoin(tmp, str2);
+	ft_strdel(&tmp);
+	return (str1);
 }

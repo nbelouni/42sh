@@ -1,21 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_print_error.c                                   :+:      :+:    :+:   */
+/*   ft_strcut.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/02/01 18:29:55 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/02/08 14:56:16 by maissa-b         ###   ########.fr       */
+/*   Created: 2017/02/03 19:01:41 by maissa-b          #+#    #+#             */
+/*   Updated: 2017/02/03 19:23:25 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int		ft_print_error(char *cmd, char *err, int ret)
+char	*ft_strcut(char *str, char c)
 {
-	write(2, cmd, ft_strlen(cmd));
-	write(2, err, ft_strlen(err));
-	write(2, "\n", 1);
+	char	*ret;
+
+	ret = (str && str[0]) ? ft_strsub(str, 0, ft_get_index_of(str, c)) : NULL;
 	return (ret);
 }

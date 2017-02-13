@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   42sh.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:09:30 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/02 14:01:12 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/02/13 20:07:06 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,14 @@
 # define FT_42SH_H
 
 # include <stdlib.h>
+# include <sys/syslimits.h>
 # include "libft.h"
+
+# define CD_OPT		"LP"
+# define ENV_OPT	"i"
+# define EXPORT_OPT	"p"
+# define UNSET_OPT	"fv"
+# define HIST_OPT	"cdanrwps"
 
 typedef enum	e_bool
 {
@@ -24,23 +31,98 @@ typedef enum	e_bool
 
 # include "read.h"
 
-typedef struct		s_env
+typedef struct		s_elem
 {
 	char			*name;
 	char			*value;
-	struct s_env	*next;
-	struct s_env	*prev;
-}					t_env;
+	struct s_elem	*next;
+	struct s_elem	*prev;
+}					t_elem;
 
-typedef struct		s_manage_env
+typedef struct		s_lst
 {
-	t_env			*head;
-	t_env			*tail;
 	size_t			size;
-}					t_manage_env;
+	t_elem			*head;
+	t_elem			*tail;
+}					t_lst;
 
-t_manage_env		*g_env;
+typedef struct		s_set
+{
+	t_elem			*head;
+	t_elem			*tail;
+	t_lst			*env;
+}					t_set;
 
-char				**ft_env_to_tab(void);
+/*
+**	ft_builtin_cd.c
+*/
+
+int					ft_builtin_cd(t_lst *env, char *cmd, char **args);
+
+/*
+**	ft_builtin_echo.c
+*/
+
+int					ft_builtin_echo(t_lst *env, char *cmd, char **args);
+
+/*
+**	ft_builtin_env.c
+*/
+
+t_lst				*ft_lstdup(t_lst *to_dup);
+int					ft_builtin_env(t_lst *env, char *cmd, char **args);
+
+/*
+**	ft_builtin_exit.c
+*/
+
+int					ft_builtin_exit(t_lst *env, char *cmd, char **args);
+
+/*
+**	ft_builtin_setenv.c
+*/
+
+int					ft_setenv(t_lst *env, char *var, char *word);
+int					ft_builtin_setenv(t_lst *env, char *cmd, char **args);
+
+/*
+**	ft_builtin_unsetenv.c
+*/
+
+int					ft_unsetenv(t_lst *env, char *var);
+int					ft_builtin_unsetenv(t_lst *env, char *cmd, char **args);
+
+/*
+**	ft_init.c
+*/
+
+t_set				*ft_init_set(void);
+t_lst				*ft_init_list(void);
+t_elem				*ft_init_elem(void);
+char				**ft_env_to_tab(t_lst *lst);
+t_lst				*ft_env_to_list(char **envp, t_lst *lst);
+
+/*
+**	ft_list_tools.c
+*/
+
+void				ft_print_lst(t_lst *lst);
+void				ft_add_elem(t_elem *elem, t_lst *lst);
+void				ft_del_elem(t_elem **elem, t_lst *lst);
+t_elem				*ft_find_elem(char *name, t_lst *lst);
+t_elem				*ft_new_elem(char *str);
+
+/*
+**	ft_norm_tools.c
+*/
+
+void				ft_del_list(t_lst *lst);
+int					ft_pwd_swap(t_lst *env, char *owd, char *cwd);
+
+/*
+**	ft_opt_parse.c
+*/
+
+int					*ft_opt_parse(int *opt, char *opts, char **args, int i);
 
 #endif
