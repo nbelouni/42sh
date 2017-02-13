@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:09:30 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/02 14:01:12 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/02/13 21:33:04 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ typedef enum	e_bool
 }				t_bool;
 
 # include "read.h"
+# include "lex.h"
 
 typedef struct		s_env
 {

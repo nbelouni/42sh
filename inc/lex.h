@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/11 12:30:14 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/13 21:07:28 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/13 21:48:43 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ typedef struct		s_cmd
 {
 	int				token;
 	char			*s;
-	struct s_lst	*prev;
-	struct s_lst	*next;
+	struct s_cmd	*prev;
+	struct s_cmd	*next;
 }					t_cmd;
 
 enum				e_token
@@ -83,6 +83,12 @@ int		find_group_end(char *s, int i, int token);
 int		find_next_word(char *s, int i);
 
 int		lex_buf(t_buf *buf);
+
+void	ft_cmdadd(t_cmd **alst, t_cmd *new);
+void	ft_cmdclear(t_cmd **cmd);
+void	ft_cmdestroy(t_cmd **begin);
+t_cmd	*ft_cmdnew(int token, char *cmd);
+void	ft_cmdpush(t_cmd **begin, t_cmd *new);
 /*
  * . pour les ouvrants/fermants, compter 2 motifs differents
  *

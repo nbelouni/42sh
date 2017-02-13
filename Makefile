@@ -3,7 +3,8 @@ NAME = 42sh
 IDIR = ./inc/ 
 ILIB = ./libft/inc
 INCS = 42sh.h	\
-	   read.h
+	   read.h	\
+	   lex.h
 INCC = $(addprefix $(IDIR), $(INCS))
 
 LDIR = ./libft
@@ -23,6 +24,11 @@ SRCS = main.c			\
 	   calc_len.c		\
 	   prompt.c			\
 	   is_line_ended.c	\
+	   ft_cmdnew.c		\
+	   ft_cmdadd.c		\
+	   ft_cmdclear.c	\
+	   ft_cmdestroy.c	\
+	   ft_cmdpush.c
 
 SRCC = $(addprefix $(SDIR),$(SRCS))
 
