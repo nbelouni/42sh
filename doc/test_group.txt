@@ -1,0 +1,48 @@
+########################################################
+bash-3.2$ {
+>
+
+bash-3.2$ {' '
+>
+
+bash-3.2$ { s
+>
+bash-3.2$ { asd;
+>
+bash-3.2$ {aksjhd;
+bash: {aksjhd: command not found
+
+bash-3.2$ {}
+bash: {}: command not found
+
+bash-3.2$ {;}
+bash: syntax error near unexpected token `;'
+
+bash-3.2$ { ;}
+bash: syntax error near unexpected token `;'
+
+bash-3.2$ }
+bash: syntax error near unexpected token `}'
+
+bash-3.2$ ;}
+bash: syntax error near unexpected token `;'
+
+bash-3.2$ {aksjhd;}
+bash: syntax error near unexpected token `}'
+
+########################################################
+
+bash-3.2$ (
+>
+
+bash-3.2$ ()
+bash: syntax error near unexpected token `)'
+
+bash-3.2$ )
+bash: syntax error near unexpected token `)'
+
+bash-3.2$ (jhasdg
+>
+
+bash-3.2$ (ajshdg)
+bash: ajshdg: command not found

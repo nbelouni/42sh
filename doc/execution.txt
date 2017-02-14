@@ -1,0 +1,9 @@
+bash-3.2$ echo "unjambon123" | cat -e
+unjambon123$
+
+bash-3.2$ echo "unjambon123" | cat -e ~
+cat: /Users/nbelouni: Is a directory
+
+env : fork 
+
+LOL

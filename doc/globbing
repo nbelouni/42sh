@@ -1,0 +1,39 @@
+--------------------------------------------------------------------------
+A GERER PENDANT LE PARSING
+----------------------------------------------------------------------------
+...
+--------------------------------------------------------------------------
+A GERER AVANT L'EXECUTION
+----------------------------------------------------------------------------
+
+' :
+#	.les caracteres echappes n'existent pas : '\"' -> \"   ( != "\'")
+#	-> afficher '\'' impossible
+	. \ devient \\
+
+" :
+	. transforme `cmd`, $(cmd) et $var par leur valeur
+	-> \$, \\, \`, \"
+	. transformer $() en ``
+	. \ devient \\
+
+\ :
+	. simple string : \ disparait
+
+wildcards :
+	.? = 1 seul char
+	.[...] = 1 char specifie (si val1-val2, intervale)
+	.[!...] = different de char specifie (si val1-val2, intervale)
+	.{s1,s2,...} = toutes les chaines qui matchent
+	.{a..s} = sequence
+	.* = tout
+	.\ = tu le sais
+	-> ne renvoie jamais d'erreur, tout gere pendant l'execution
+
+replace :
+	.`...` = #define output
+	.$(...) = #define output
+	.$var = set var
+	.~ = $HOME
+
+----------------------------------------------------------------------------

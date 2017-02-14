@@ -1,0 +1,12 @@
+GENERAL :
+	. la hashtable ne stocke que les binaires contenus dans $PATH
+	. modification du path : vide la hashtable 
+	. le PATH ne joue pas sur les builtins
+	. cmd env n'execute que des binaires
+	. var env ne s'applique qu'aux binaires : si pas de $PATH, nos builtins marchent et c'est normal
+	. si un binaire existe dans la hashtable, $PATH ne sera jamais checke
+
+BUILTIN HASH :
+	. hash -r = vide la table de hash
+	. si utilisation d'une commande plusieurs fois, 1 sel hash et utilisation incrementee
+

@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/05 16:50:08 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/06 19:29:35 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/13 17:05:12 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,20 +56,20 @@ int			can_end(char *tmp)
 
 int			is_line_ended(t_buf *buf)
 {
-	int		x;
+//	int		x;
 	char	*tmp;
 
 	if (!(tmp = ft_strjoin(buf->final_line, buf->line)))
 		return (ft_print_error("42sh", ERR_MALLOC, ERR_EXIT));
-	x = can_end(tmp);
+//	x = can_end(tmp);
 	free(buf->final_line);
 	buf->final_line = 0;
 	buf->final_line = tmp;
-	if (x)
-	{
-		set_prompt(PROMPT2, ft_strlen(PROMPT2));
-		return (ERR_NEW_CMD);
-	}
+//	if (x)
+//	{
+//		set_prompt(PROMPT2, ft_strlen(PROMPT2));
+//		return (ERR_NEW_CMD);
+//	}
 	set_prompt(PROMPT1, ft_strlen(PROMPT1));
 	return (TRUE);
 }

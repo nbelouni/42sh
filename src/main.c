@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/13 15:12:42 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/02/13 23:03:33 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,10 @@ int main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	t_buf	*buf;
+	t_cmd	*lst;
 	t_lst	*env;
 
+	lst = NULL;
 	env = NULL;
 	env = ft_env_to_list(envp, env);
 	signal(SIGWINCH, get_sigwinch);
@@ -56,8 +58,24 @@ int main(int argc, char **argv, char **envp)
 		close_termios();
 		if (is_line_ended(buf) >= 0)
 		{
-			parse(env, buf->final_line);
+	//		parse(env, buf->final_line);
+
+			X(lex_buf(buf, &lst));
+			X('\n');
+			t_cmd *tmp = lst;
+			while (tmp)
+			{
+				PUT1("s : ");
+				PUT1(tmp->s);
+				PUT1(", token : ");
+				E(tmp->token);
+				X('\n');
+				tmp = tmp->next;
+			}
+//			parse();
 			ft_strdel(&(buf->final_line));
+			ft_cmdestroy(&lst);
+			lst = NULL;
 		}
 		ft_bzero(buf->line, (size_t)(sizeof(char) * BUFF_SIZE));
 		buf->size = 0;

@@ -11,13 +11,13 @@ LDIR = ./libft
 LIBS = -lft
 
 SDIR = ./src/
-
 SRCS = 	ft_builtin_cd.c		\
 		ft_builtin_echo.c	\
 		ft_builtin_env.c	\
 		ft_builtin_exit.c	\
 		ft_builtin_setenv.c	\
 		ft_builtin_unsetenv.c\
+		ft_norm_tools.c		\
 		ft_init.c			\
 		ft_list_tools.c		\
 		ft_opt_parse.c		\
@@ -38,7 +38,9 @@ SRCS = 	ft_builtin_cd.c		\
 	    ft_cmdadd.c			\
 	    ft_cmdclear.c		\
 	    ft_cmdestroy.c		\
-	    ft_cmdpush.c
+	    ft_cmdpush.c		\
+		is_token.c			\
+		lex_cmd.c
 
 SRCC = $(addprefix $(SDIR),$(SRCS))
 

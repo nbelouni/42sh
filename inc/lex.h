@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/11 12:30:14 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/13 21:48:43 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/14 17:37:44 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ typedef struct		s_cmd
 
 enum				e_token
 {
-	NONE,
+	NO_TOKEN,
 	O_BRACKET,	// "("
 	C_BRACKET,	// ")"
 	O_BRACE, 	// "{ "
@@ -80,9 +80,8 @@ int		find_btquote_end(char *s, int i, int token);
 int		find_dquote_end(char *s, int i);
 int		find_squote_end(char *s, int i);
 int		find_group_end(char *s, int i, int token);
-int		find_next_word(char *s, int i);
 
-int		lex_buf(t_buf *buf);
+int		lex_buf(t_buf *buf, t_cmd **lst);
 
 void	ft_cmdadd(t_cmd **alst, t_cmd *new);
 void	ft_cmdclear(t_cmd **cmd);

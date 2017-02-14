@@ -1,0 +1,103 @@
+----------------------------------------------------------------------------
+EXPR
+----------------------------------------------------------------------------
+Regexp :
+	. ^ = debut de ligne
+	. $ = fin de ligne
+	. * = 0 ou + caracteres
+	. + = 1 ou plus caracteres
+	. \w = alphanumeric + '_'
+
+___________________________________________________________________________
+VOCABULAIRE
+___________________________________________________________________________
+
+token (== char *):
+	groupe de commandes :
+	( { ; 
+
+	; :
+		. sortie standard
+	( :
+		. sortie standard
+
+	separateurs de commandes :
+	| || &&  ^
+
+	fin de commande :
+	$
+
+	redirections :
+	>> > << < &> &
+
+inhibiteurs :
+" ' ` $(
+
+----------------------------------------------------------------------------
+CAS PAR TOKEN
+----------------------------------------------------------------------------
+
+` :
+	. error : "command substitution: unexpected EOF while looking for matching `<cmd>`" -> truc fermant non ferme
+	. non ferme, quel que soit la situation -> new prompt
+
+# :
+	.commentaire, pris en compte si pas dans "" ou ''
+
+[ :
+	. if ("<separateur>(<esp>*)(\w+)[" ) -> new prompt, quoi qu'il y ait derniere
+	. else if ("<separateur>(<esp>*)[$" ) -> [: missing `]'
+	. else # ensemble \w == argument # -> laisser gerer l'execution
+
+( :
+	. if ("<separateur>(<esp>*)(" ) -> new prompt, quoi qu'il y ait derniere
+	. else -> syntax error near unexpected token `<word>'
+
+| :
+	. if ("\w+ | " ) -> new prompt, quoi qu'il y ait derniere
+	. else -> syntax error near unexpected token `<word>'
+
+|| :
+	. if ("\w+ || " ) -> new prompt, quoi qu'il y ait derniere
+	. else -> syntax error near unexpected token `<word>'
+
+&& :
+	. if ("\w+ && " ) -> new prompt, quoi qu'il y ait derniere
+	. else -> syntax error near unexpected token `<word>'
+
+{ :
+	.syntaxe speciale : "{<esp>" blabla ";}"
+	.si "{<esp>" pas conforme : command not found
+	.si ";}" pas conforme  -> new prompt, brace considere comme faisant partie integrante de la commande
+	SINON :
+	. if ("<separateur>(<esp>*)'{ '") -> new prompt, quoi qu'il y ait derniere
+	. else # motif fait partie integrante du mot # ->  laisser gerer execution
+
+\ :
+	. if ("<separateur>(<esp>*)\") -> new prompt, continue la commande en cours
+
+<< :
+	. \w+ de fin peut etre \w+, '.*' et ".*"
+	. si '"' ou '\'' non ferme : unexpected EOF while looking for matching '<inhibiteur>'
+
+___________________________________________________________________________
+PRIORITES
+___________________________________________________________________________
+new prompt:
+	. || | && ( { " ' `
+
+VRAC :
+	. '\'' && '`' -> priorite absolue
+	. '"' -> ne prend en compte QUE '`'
+	. "<<" -> ne contient aucune grammaire precise
+	. "<<" -> traite a la suite du reste : "<<" == debut, "str" == fin
+
+Groupe de commande :
+	. si dernier caractere != '\' -> ajoute ';'
+
+Redirections :
+	. si dernier caractere != '\' -> syntax error near unexpected token "newline"
+
+si 2 token a la suite : syntax error near unexpected token '<dernier token>'
+
+http://man7.org/linux/man-pages/dir_section_2.html
