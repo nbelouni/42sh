@@ -1,21 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_print_error.c                                   :+:      :+:    :+:   */
+/*   ft_multi_concat.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
+/*   By: maissa-b <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/02/01 18:29:55 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/02/08 14:56:16 by maissa-b         ###   ########.fr       */
+/*   Created: 2017/02/07 18:20:02 by maissa-b          #+#    #+#             */
+/*   Updated: 2017/02/07 18:20:03 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int		ft_print_error(char *cmd, char *err, int ret)
+char	*ft_multi_concat(char *s1, char *s2, char *s3, char *s4)
 {
-	write(2, cmd, ft_strlen(cmd));
-	write(2, err, ft_strlen(err));
-	write(2, "\n", 1);
-	return (ret);
+	s1 = ft_strcat(s1, s2);
+	s1 = ft_strcat(s1, s3);
+	s1 = ft_strcat(s1, s4);
+	return (s1);
 }

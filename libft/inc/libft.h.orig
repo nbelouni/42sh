@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nbelouni <nbelouni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/04 14:46:22 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/13 17:54:43 by maissa-b         ###   ########.fr       */
+<<<<<<< HEAD
+/*   Updated: 2017/02/05 13:37:31 by nbelouni         ###   ########.fr       */
+=======
+/*   Updated: 2017/02/02 14:27:45 by maissa-b         ###   ########.fr       */
+>>>>>>> 71f7abe491db337459707f4e52b16abc87f6d4f0
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,21 +95,12 @@ void				ft_lstiter(t_list *lst, void (*f)(t_list *elem));
 t_list				*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem));
 int					get_next_line(int const fd, char **line);
 
+<<<<<<< HEAD
 int					ft_print_error(char *cmd, char *err, int ret);
+char				**ft_env_to_tab(void);
+=======
+int					ft_print_error(char *cmd, char *err);
+>>>>>>> 71f7abe491db337459707f4e52b16abc87f6d4f0
 int					ft_is_valid_dir(const char *pathname);
-int					ft_get_index_of(char *str, char c);
-char				*ft_strcut(char *str, char c);
-int					ft_strisdigit(char *str);
-char				*ft_epurstr(char *str);
-char				*ft_tabconcat(char **tab);
-void				ft_puttab(char **tab);
-size_t				ft_tablen(char **tab);
-void				ft_multi_free(char *s1, char *s2, char *s3, char *s4);
-char				*ft_multi_concat(char *s1, char *s2, char *s3, char *s4);
-char				*ft_multi_join(char *s1, char *s2, char *s3, char *s4);
-char				*ft_free_and_dup(char *dst, char *src);
-char				*ft_strlchr(char *str, char c);
-char				*ft_free_and_join(char *str1, char *str2);
-void				ft_tabdel(char **tab);
 
 #endif

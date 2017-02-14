@@ -1,6 +1,6 @@
 NAME = 42sh
 
-IDIR = ./inc/ 
+IDIR = ./inc/
 ILIB = ./libft/inc
 INCS = 42sh.h	\
 	   read.h	\
@@ -11,24 +11,34 @@ LDIR = ./libft
 LIBS = -lft
 
 SDIR = ./src/
-SRCS = main.c			\
-	   read.c			\
-	   buf.c			\
-	   term.c			\
-	   signal.c			\
-	   curs.c			\
-	   edit_move.c		\
-	   edit_buf.c		\
-	   edit_line.c		\
-	   edit_visual.c	\
-	   calc_len.c		\
-	   prompt.c			\
-	   is_line_ended.c	\
-	   ft_cmdnew.c		\
-	   ft_cmdadd.c		\
-	   ft_cmdclear.c	\
-	   ft_cmdestroy.c	\
-	   ft_cmdpush.c
+
+SRCS = 	ft_builtin_cd.c		\
+		ft_builtin_echo.c	\
+		ft_builtin_env.c	\
+		ft_builtin_exit.c	\
+		ft_builtin_setenv.c	\
+		ft_builtin_unsetenv.c\
+		ft_init.c			\
+		ft_list_tools.c		\
+		ft_opt_parse.c		\
+		read.c				\
+		buf.c				\
+		term.c				\
+		signal.c			\
+		curs.c				\
+		main.c				\
+	    edit_move.c			\
+	    edit_buf.c			\
+	    edit_line.c			\
+	    edit_visual.c		\
+	    calc_len.c			\
+	    prompt.c			\
+	    is_line_ended.c		\
+	    ft_cmdnew.c			\
+	    ft_cmdadd.c			\
+	    ft_cmdclear.c		\
+	    ft_cmdestroy.c		\
+	    ft_cmdpush.c
 
 SRCC = $(addprefix $(SDIR),$(SRCS))
 
@@ -59,4 +69,3 @@ fclean: clean
 	/bin/rm -f $(NAME)
 
 re: fclean all
-
