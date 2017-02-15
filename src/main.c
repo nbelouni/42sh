@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/13 23:03:33 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/15 21:15:38 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	t_buf	*buf;
-	t_cmd	*lst;
+	t_word	*lst;
 	t_lst	*env;
 
 	lst = NULL;
@@ -58,23 +58,35 @@ int main(int argc, char **argv, char **envp)
 		close_termios();
 		if (is_line_ended(buf) >= 0)
 		{
-	//		parse(env, buf->final_line);
-
-			X(lex_buf(buf, &lst));
+			parse(env, buf->final_line);
+/*
+			char n;
 			X('\n');
-			t_cmd *tmp = lst;
+			n = lex_buf(buf, &lst);
+			if (n < 0)
+				return (-1);
+			else if (n > 0)
+			{
+				X(n);
+			}
+			else
+			{
+				PUT2("\n\n____________\n\n");
+			t_word *tmp = lst;
 			while (tmp)
 			{
-				PUT1("s : ");
-				PUT1(tmp->s);
-				PUT1(", token : ");
-				E(tmp->token);
+				PUT2("s : ");
+				PUT2(tmp->s);
+				PUT2(", token : ");
+				E(tmp->flag);
 				X('\n');
 				tmp = tmp->next;
 			}
+				PUT2("____________\n\n");
+			}
 //			parse();
-			ft_strdel(&(buf->final_line));
-			ft_cmdestroy(&lst);
+*/			ft_strdel(&(buf->final_line));
+			destroy_word(&lst);
 			lst = NULL;
 		}
 		ft_bzero(buf->line, (size_t)(sizeof(char) * BUFF_SIZE));

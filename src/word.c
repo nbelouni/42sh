@@ -6,9 +6,11 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 20:26:22 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/15 20:41:07 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/15 21:13:42 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "42sh.h"
 
 t_word	*create_word(void)
 {
@@ -39,7 +41,7 @@ void		clear_word(t_word *cmd)
 	if (cmd->s)
 		free(cmd->s);
 	cmd->s = NULL;
-	elem->flag = N_QUOTE;
+	cmd->flag = N_QUOTE;
 }
 
 void		destroy_word(t_word **begin)

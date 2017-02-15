@@ -34,12 +34,9 @@ SRCS = 	ft_builtin_cd.c		\
 	    calc_len.c			\
 	    prompt.c			\
 	    is_line_ended.c		\
-	    ft_cmdnew.c			\
-	    ft_cmdadd.c			\
-	    ft_cmdclear.c		\
-	    ft_cmdestroy.c		\
-	    ft_cmdpush.c		\
 		is_token.c			\
+		word.c				\
+		token.c				\
 		lex_cmd.c
 
 SRCC = $(addprefix $(SDIR),$(SRCS))
@@ -71,3 +68,9 @@ fclean: clean
 	/bin/rm -f $(NAME)
 
 re: fclean all
+
+#	    ft_cmdnew.c			\
+#	    ft_cmdadd.c			\
+#	    ft_cmdclear.c		\
+#	    ft_cmdestroy.c		\
+#	    ft_cmdpush.c		\

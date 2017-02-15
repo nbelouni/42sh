@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 20:07:22 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/15 20:43:07 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/15 21:11:33 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,6 @@ enum				e_token
 	DR_DIR,		// ">>"
 	AMP,		// "&"
 	DIR_AMP,	// ">&"
-	D_QUOTE,	// """
-	S_QUOTE,	// "'"
-	BT_QUOTE,	// "`"
 };
 
 typedef struct		s_cmd
@@ -70,22 +67,22 @@ typedef struct		s_cmd
 	struct s_cmd	*right;
 }					t_cmd;
 
-int					create_word();
-int					push_word();
-int					clear_word();
-int					destroy_word();
+t_word				*create_word();
+void				push_word();
+void				clear_word();
+void				destroy_word();
 
-int					create_token();
-int					push_token();
-int					clear_token();
-int					destroy_token();
+t_token				*create_token();
+void				push_token();
+void				clear_token();
+void				destroy_token();
 
 /*
  * PAS IMPLEMENTEES
-int					create_cmd();
-int					push_cmd();
-int					clear_cmd();
-int					destroy_cmd();
+t_cmd				*create_cmd();
+void				push_cmd();
+void				clear_cmd();
+void				destroy_cmd();
  *
  */
 #endif

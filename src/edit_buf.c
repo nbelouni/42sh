@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 23:40:01 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/07 19:17:39 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/14 22:29:07 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void		insert_in_buf(t_buf *buf, int cursor, char *s, size_t len)
 	else
 	{
 		ft_strncpy(buf->line + buf->size, s, len);
-		buf->line[buf->size + len] = 0;
+		ft_bzero(buf->line + buf->size + len + 1, (size_t)(sizeof(char) * (BUFF_SIZE - len)));
 	}
 }
 
