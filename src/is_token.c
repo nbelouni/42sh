@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/12 18:15:50 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/15 15:18:32 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/15 22:42:19 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,15 @@ int		is_btquote(char *s, int i)
 	{
 		if (s[i] == '`')
 			return (1);
-		else if (!ft_strncmp(s + i, "$(", 2))
+	}
+	return (0);
+}
+
+int		is_new_btquote(char *s, int i)
+{
+	if (i == 0 || s[i - 1] != '\\')
+	{
+		if (!ft_strncmp(s + i, "$(", 2))
 			return (2);
 	}
 	return (0);
@@ -79,21 +87,36 @@ int		is_squote(char *s, int i)
 	return (0);
 }
 
-int		find_btquote_end(char *s, int i, int token)
+int		find_btquote_end(char *s, int i)
 {
 	int		len;
-	char	c;
 
-	if (token == '`')
-		c = '`';
-	else
-		c = ')';
 	len = 0;
 	if (i == 0 || s[i - 1] != '\\')
 	{
 		while (s[i + len])
 		{
-			if ((i + len == 0 || s[i + len - 1] != '\\') && s[i + len] == c)
+			if ((i + len == 0 || s[i + len - 1] != '\\') && s[i + len] == '`')
+				break ;
+			len++;
+		}
+		if (!s[i + len])
+			return (-1);
+		return (len);
+	}
+	return (0);
+}
+
+int		find_new_btquote_end(char *s, int i)
+{
+	int		len;
+
+	len = 0;
+	if (i == 0 || s[i - 1] != '\\')
+	{
+		while (s[i + len])
+		{
+			if ((i + len == 0 || s[i + len - 1] != '\\') && s[i + len] == ')')
 				break ;
 			len++;
 		}

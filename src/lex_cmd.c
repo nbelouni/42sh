@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/13 16:49:59 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/15 21:09:51 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/15 23:04:29 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,20 +58,46 @@ int		add_squote(char *s, int *i, t_word **lst)
 	return (0);
 }
 
+int		add_new_btquote(char *s, int *i, t_word **lst)
+{
+	int	start;
+	int	len;
+
+	if ((start = is_new_btquote(s, *i)))
+	{
+		if ((len = find_new_btquote_end(s, *i + start)) > 0)
+		{
+			if (add_new_word(s, *i + start, len, lst, "btquote") < 0)
+				return (ERR_EXIT);
+			*i = *i + start + len + 1;
+		}
+		else if (len < 0)
+			return (s[*i]);
+		else
+			*i += start + 1;
+	}
+	return (0);
+}
+
 int		add_btquote(char *s, int *i, t_word **lst)
 {
 	int	start;
 	int	len;
-	int	btq;
+	int	dollar;
 
 	if ((start = is_btquote(s, *i)))
 	{
-		if (s[*i] == '`')
-			btq = '`';
-		else
-			btq = ')';
-		if ((len = find_btquote_end(s, *i + start, btq)) > 0)
+		if ((len = find_btquote_end(s, *i + start)) > 0)
 		{
+			if ((dollar = find_dollar(s, *i + start)))
+			{
+				int ret;
+				int	tmp_i;
+				tmp_i = *i + start + dollar;
+				if ((ret = add_new_btquote(s, &tmp_i, lst)))
+					return (ret);
+				*i = tmp_i;
+			}
 			if (add_new_word(s, *i + start, len, lst, "btquote") < 0)
 				return (ERR_EXIT);
 			*i = *i + start + len + 1;
@@ -122,7 +148,7 @@ int		add_dquote(char *s, int *i, t_word **lst)
 				if ((len2 = add_btquote(s, i, lst)))
 					return (len2);
 				*i += len2;
-				if ((len = find_btquote_end(s, *i, '`')) <= 0)
+				if ((len = find_btquote_end(s, *i)) <= 0)
 					len = find_dollar(s, *i);
 				if (len > 0 && *i < (int)ft_strlen(s))
 				{
@@ -140,14 +166,12 @@ int		add_dquote(char *s, int *i, t_word **lst)
 	return (0);
 }
 
-int		lex_buf(t_buf *buf, t_word **lst)
+int		lex_buf(char *s, t_word **lst)
 {
 	int	i;
 	int	tmpi;
 	int ret;
-	char	*s;
 
-	s = buf->final_line;
 	i = 0;
 	while (s[i])
 	{
@@ -155,6 +179,8 @@ int		lex_buf(t_buf *buf, t_word **lst)
 		if ((ret = add_squote(s, &i, lst)))
 			return (ret);
 		else if ((ret = add_btquote(s, &i, lst)))
+			return (ret);
+		else if ((ret = add_new_btquote(s, &i, lst)))
 			return (ret);
 		else if ((ret = add_dquote(s, &i, lst)))
 			return (ret);

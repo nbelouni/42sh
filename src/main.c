@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/15 22:55:15 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/15 22:24:06 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,11 @@ int main(int argc, char **argv, char **envp)
 		close_termios();
 		if (is_line_ended(buf) >= 0)
 		{
-			parse(env, buf->final_line, envp);
-/*
+//			parse(env, buf->final_line, envp);
+
 			char n;
 			X('\n');
-			n = lex_buf(buf, &lst);
+			n = lex_buf(buf->final_line, &lst);
 			if (n < 0)
 				return (-1);
 			else if (n > 0)
@@ -88,7 +88,7 @@ int main(int argc, char **argv, char **envp)
 				PUT2("____________\n\n");
 			}
 //			parse();
-*/			ft_strdel(&(buf->final_line));
+			ft_strdel(&(buf->final_line));
 			destroy_word(&lst);
 			lst = NULL;
 		}

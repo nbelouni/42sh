@@ -16,3 +16,5 @@ test sous-shell& accolade
 
  .`` := basktickquote
 	.cmd1 `cmd2` -> cmd1 -> arg(resul cmd2)
+
+	. lexer_parser.h

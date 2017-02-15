@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/11 12:30:14 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/15 21:05:43 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/15 22:41:54 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,16 +50,17 @@ int		is_separator(char *s, int i);
 int		is_redirection(char *s, int i);
 int		is_btquote(char *s, int i);
 int		is_dquote(char *s, int i);
-int		is_dquote(char *s, int i);
 int		is_squote(char *s, int i);
+int		is_new_btquote(char *s, int i);
 
-int		find_btquote_end(char *s, int i, int token);
+int		find_btquote_end(char *s, int i);
 int		find_dquote_end(char *s, int i);
 int		find_squote_end(char *s, int i);
 int		find_group_end(char *s, int i, int token);
 int		find_dollar(char *s, int i);
+int		find_new_btquote_end(char *s, int i);
 
-int		lex_buf(t_buf *buf, t_word **lst);
+int		lex_buf(char *s, t_word **lst);
 
 /*
 void	ft_cmdadd(t_cmd **alst, t_cmd *new);
