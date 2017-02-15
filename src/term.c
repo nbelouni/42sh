@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 20:30:33 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/05 14:42:12 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/15 22:42:18 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,9 @@ int			init_termios(void)
 	t_term			*st_term;
 
 	st_term = get_term();
-	if (tgetent(NULL, getenv("TERM")) < 1)
+	if (!getenv("TERM"))
+		tgetent(NULL, "xterm-256color");
+	else if (tgetent(NULL, getenv("TERM")) < 1)
 		return (-1);
 	if (tcgetattr(0, &st_term->old) == -1)
 		return (-1);
