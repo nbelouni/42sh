@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:03:10 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/07 19:18:13 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/15 22:37:08 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,10 @@ int		mv_and_read(t_buf *buf, int x, int ret)
 	if (ret < 0)
 		return (ft_print_error("\n42sh", ERR_READ, ERR_EXIT));
 	if (x == CTRL_D)
+	{
+		close_termios();
 		return (ERR_EXIT);
+	}
 	if (x > 31 && x < 127)
 	{
 		if (vb_insert(buf, (char *)&x) < 0)
@@ -93,5 +96,6 @@ int		read_line(t_buf *buf)
 		}
 		x = 0;
 	}
+	close_termios();
 	return (0);
 }

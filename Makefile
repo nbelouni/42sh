@@ -4,7 +4,8 @@ IDIR = ./inc/
 ILIB = ./libft/inc
 INCS = 42sh.h	\
 	   read.h	\
-	   lex.h
+	   lex.h	\
+	   exec.h
 INCC = $(addprefix $(IDIR), $(INCS))
 
 LDIR = ./libft
@@ -37,7 +38,8 @@ SRCS = 	ft_builtin_cd.c		\
 		is_token.c			\
 		word.c				\
 		token.c				\
-		lex_cmd.c
+		lex_cmd.c			\
+		ft_exec.c
 
 SRCC = $(addprefix $(SDIR),$(SRCS))
 
