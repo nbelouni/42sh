@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:09:30 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/13 16:51:20 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/15 21:05:35 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ typedef enum	e_bool
 }				t_bool;
 
 # include "read.h"
+# include "lexer_parser.h"
 # include "lex.h"
 
 typedef struct		s_elem

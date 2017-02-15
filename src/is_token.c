@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/12 18:15:50 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/13 23:41:45 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/15 15:18:32 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,27 @@ int		find_btquote_end(char *s, int i, int token)
 			len++;
 		}
 		if (!s[i + len])
-			return (0);
+			return (-1);
+		return (len);
+	}
+	return (0);
+}
+
+int		find_dollar(char *s, int i)
+{
+	int		len;
+
+	len = 0;
+	if (i == 0 || s[i - 1] != '\\')
+	{
+		while (s[i + len])
+		{
+			if ((i + len == 0 || s[i + len - 1] != '\\') && s[i + len] == '$')
+				break ;
+			len++;
+		}
+		if (!s[i + len])
+			return (-1);
 		return (len);
 	}
 	return (0);
