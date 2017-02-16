@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 20:07:22 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/15 21:11:33 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/16 22:12:58 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,9 @@ typedef struct		s_word
 typedef struct		s_token
 {
 	int				type;
-	int				n_word;
-	t_word			*word;
+	char			*word;
+//	int				n_word;
+//	t_word			*word;
 	int				bt_level;	// Parenthese
 	int				bc_level;	// Accolade
 	struct s_token	*next;
@@ -33,28 +34,34 @@ typedef struct		s_token
 
 enum				e_flag
 {
-	N_QUOTE,
+	NO_QUOTE,
 	S_QUOTE,
 	D_QUOTE,
 	BT_QUOTE
 };
 
+/*Ne pas changer l'ordre des tokens please*/
 enum				e_token
 {
 	NO_TOKEN,
-	BRACKET,	// "()"
-	BRACE,		// "{} "
+	CMD,
+	ESPACE,
+	QUOTE,
+	O_BRACKET,	// "("
+	C_BRACKET,	// ")"
 	DOT,		// ";"
 	PIPE,		// '|"
-	OR,			// '||"
-	AND,		// '&&"
 	START,		// "^, debut de ligne" -> utile ?
 	SL_DIR,		// "<"
-	DL_DIR,		// "<<"
 	SR_DIR,		// ">"
-	DR_DIR,		// ">>"
 	AMP,		// "&"
+	OR,			// '||"
+	AND,		// '&&"
+	DL_DIR,		// "<<"
+	DR_DIR,		// ">>"
 	DIR_AMP,	// ">&"
+	O_BRACE, 	// "{ "
+	C_BRACE 	// ";}"
 };
 
 typedef struct		s_cmd

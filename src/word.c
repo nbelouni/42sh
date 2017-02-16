@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 20:26:22 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/15 21:13:42 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/16 18:02:35 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ t_word	*create_word(void)
 	if (!(elem = ft_memalloc(sizeof(t_word))))
 		return (NULL);
 	elem->s = NULL;
-	elem->flag = N_QUOTE;
+	elem->flag = NO_QUOTE;
 	elem->next = NULL;
 	return (elem);
 }
@@ -41,7 +41,7 @@ void		clear_word(t_word *cmd)
 	if (cmd->s)
 		free(cmd->s);
 	cmd->s = NULL;
-	cmd->flag = N_QUOTE;
+	cmd->flag = NO_QUOTE;
 }
 
 void		destroy_word(t_word **begin)

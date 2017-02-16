@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/11 12:30:14 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/15 22:41:54 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/16 19:43:30 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ typedef struct		s_tree
 	struct s_tree	*left;
 	struct s_tree	*right;
 }					t_tree;
-
+/*
 enum				e_token2
 {
 	O_BRACKET,	// "("
@@ -39,9 +39,9 @@ enum				e_token2
 	C_BRACE, 	// ";}"
 	OBT_QUOTE,	// "$("
 	CBT_QUOTE,	// ")" -> == C_BRACKET
-	COMMENT		// "#"
+	COMMENT		// " #"
 };
-
+*/
 /*
 **	return == len de la chaine a strsub -> strsub(s, i, is_*());
 */
@@ -61,6 +61,24 @@ int		find_dollar(char *s, int i);
 int		find_new_btquote_end(char *s, int i);
 
 int		lex_buf(char *s, t_word **lst);
+
+int		parse_buf(t_token **lst, char *s);
+int		is_bracket(char *s, int i);
+int		is_brace(char *s, int i);
+int		is_space(char *s, int i);
+int		is_dot(char *s, int i);
+int		find_bracket_end(char *s, int i);
+int		is_redir(char *s, int i);
+int		is_agreg(char *s, int i);
+int		is_or_and(char *s, int i);
+int		is_quot(char *s, int i);
+
+void	ft_tokenadd(t_token **alst, t_token *new);
+void	ft_tokenclear(t_token **lst);
+void	ft_tokendestroy(t_token **begin);
+t_token	*ft_tokenew(int type, char *word, int *level);
+void	ft_tokenpush(t_token **begin, t_token *new);
+void	ft_print_token_list(t_token **list);
 
 /*
 void	ft_cmdadd(t_cmd **alst, t_cmd *new);

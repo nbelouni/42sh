@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/13 16:49:59 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/15 23:04:29 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/16 22:13:52 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int		add_new_word(char *s, int start, int len, t_word **lst, char *name)
 	if (!(new = create_word()))
 		return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
 	new->s = tmp;
-	new->flag = N_QUOTE;
+	new->flag = NO_QUOTE;
 	if (!*lst)
 		*lst = new;
 	else

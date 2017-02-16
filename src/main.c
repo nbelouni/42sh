@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/15 22:24:06 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/16 22:08:05 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ int main(int argc, char **argv, char **envp)
 	(void)argv;
 	t_buf	*buf;
 	t_word	*lst;
+	t_token	*list;
 	t_lst	*env;
 
 	lst = NULL;
@@ -61,33 +62,13 @@ int main(int argc, char **argv, char **envp)
 		close_termios();
 		if (is_line_ended(buf) >= 0)
 		{
+//			PUT2("\n\n____________\n\n");
+			if (parse_buf(&list, buf->final_line) > 0)// A garder parse list
+			{
+				ft_print_token_list(&list); //debug impression
+				ft_tokendestroy(&list); //clean la list a mettre a la fin
+			}
 //			parse(env, buf->final_line, envp);
-
-			char n;
-			X('\n');
-			n = lex_buf(buf->final_line, &lst);
-			if (n < 0)
-				return (-1);
-			else if (n > 0)
-			{
-				X(n);
-			}
-			else
-			{
-				PUT2("\n\n____________\n\n");
-			t_word *tmp = lst;
-			while (tmp)
-			{
-				PUT2("s : ");
-				PUT2(tmp->s);
-				PUT2(", token : ");
-				E(tmp->flag);
-				X('\n');
-				tmp = tmp->next;
-			}
-				PUT2("____________\n\n");
-			}
-//			parse();
 			ft_strdel(&(buf->final_line));
 			destroy_word(&lst);
 			lst = NULL;

@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 20:26:22 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/15 21:14:46 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/16 22:13:34 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ t_token	*create_token(void)
 	if (!(elem = ft_memalloc(sizeof(t_token))))
 		return (NULL);
 	elem->type = NO_TOKEN;
-	elem->n_word = 0;
-	elem->word = NULL;
+//	elem->n_word = 0;
+//	elem->word = NULL;
 	elem->bt_level = 0;
 	elem->bc_level = 0;
 	elem->next = NULL;
@@ -44,7 +44,7 @@ void	push_token(t_token **begin, t_token *new)
 void		clear_token(t_token *cmd)
 {
 	cmd->type = NO_TOKEN;
-	cmd->n_word = 0;
+//	cmd->n_word = 0;
 	if (cmd->word)
 		destroy_word(cmd->word);
 	cmd->word = NULL;

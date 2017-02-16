@@ -39,7 +39,11 @@ SRCS = 	ft_builtin_cd.c		\
 		word.c				\
 		token.c				\
 		lex_cmd.c			\
-		ft_exec.c
+		ft_exec.c			\
+		ft_tokenlist.c		\
+		lex_buf_line.c		\
+		is_tok.c			\
+		ft_print.c
 
 SRCC = $(addprefix $(SDIR),$(SRCS))
 
