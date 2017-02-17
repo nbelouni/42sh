@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 20:07:22 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/17 12:16:10 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/17 16:33:11 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef struct		s_token
 //	t_word			*word;
 	int				bt_level;	// Parenthese
 	int				bc_level;	// Accolade
+	int				select;
 	struct s_token	*next;
 	struct s_token	*prev;
 }					t_token;

@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/16 12:42:26 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/16 22:11:42 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/17 16:34:13 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ t_token		*ft_tokenew(int type, char *s, int *level)
 	if (s == NULL)
 	{
 		elem->type = type;
+		elem->select = 0;
 		elem->bt_level = level[0];
 		elem->bc_level = level[1];
 		elem->word = NULL;
@@ -29,6 +30,7 @@ t_token		*ft_tokenew(int type, char *s, int *level)
 	{
 		elem->word = s;
 		elem->type = type;
+		elem->select = 0;
 		elem->bt_level = level[0];
 		elem->bc_level = level[1];
 	}
