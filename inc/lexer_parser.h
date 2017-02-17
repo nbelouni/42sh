@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 20:07:22 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/16 22:20:36 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/17 12:16:10 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,9 @@ enum				e_token
 	DR_DIR,		// ">>"
 	DIR_AMP,	// ">&"
 	O_BRACE, 	// "{ "
-	C_BRACE 	// ";}"
+	C_BRACE, 	// ";}"
+	FD_IN,
+	FD_OUT
 };
 
 typedef struct		s_cmd

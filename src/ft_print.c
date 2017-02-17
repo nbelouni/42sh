@@ -6,13 +6,13 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/16 20:44:31 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/16 22:20:09 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/17 12:17:33 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
-static char		*(tab_name[19]) = {
+static char		*(tab_name[21]) = {
 	[NO_TOKEN] = "NO_TOKEN",
 	[CMD] = "CMD",
 	[ESPACE] = "ESPACE",
@@ -29,7 +29,9 @@ static char		*(tab_name[19]) = {
 	[DR_DIR] = "DR_DIR",
 	[DIR_AMP] = "DIR_AMP",
 	[O_BRACE] = "O_BRACE",
-	[C_BRACE] = "C_BRACE"
+	[C_BRACE] = "C_BRACE",
+	[FD_IN] = "FD_IN",
+	[FD_OUT] = "FD_OUT"
 };
 
 void		ft_print_token_list(t_token **list)
