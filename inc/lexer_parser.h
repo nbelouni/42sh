@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 20:07:22 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/16 22:12:58 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/17 12:16:10 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ enum				e_token
 	NO_TOKEN,
 	CMD,
 	ESPACE,
-	QUOTE,
 	O_BRACKET,	// "("
 	C_BRACKET,	// ")"
 	DOT,		// ";"
@@ -61,7 +60,9 @@ enum				e_token
 	DR_DIR,		// ">>"
 	DIR_AMP,	// ">&"
 	O_BRACE, 	// "{ "
-	C_BRACE 	// ";}"
+	C_BRACE, 	// ";}"
+	FD_IN,
+	FD_OUT
 };
 
 typedef struct		s_cmd
