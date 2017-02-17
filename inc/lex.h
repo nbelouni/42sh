@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/11 12:30:14 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/16 19:43:30 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/18 00:25:26 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,16 @@ int		find_btquote_end(char *s, int i);
 int		find_dquote_end(char *s, int i);
 int		find_squote_end(char *s, int i);
 int		find_group_end(char *s, int i, int token);
-int		find_dollar(char *s, int i);
+int		find_next_nbtq(char *s, int i);
 int		find_new_btquote_end(char *s, int i);
+int		find_next_inhibitor(char *s, int i, int *token);
+int		find_next_btq(char *s, int i, int *token);
+
+int		add_no_quote(char *s, int *i, t_word **lst);
+int		add_squote(char *s, int *i, t_word **lst);
+int		add_dquote(char *s, int *i, t_word **lst, int where);
+int		add_new_btquote(t_word *tmp, int *i, t_word **lst);
+int		add_btquote(t_word *tmp, int *i, t_word **lst);
 
 int		lex_buf(char *s, t_word **lst);
 
@@ -80,6 +88,7 @@ t_token	*ft_tokenew(int type, char *word, int *level);
 void	ft_tokenpush(t_token **begin, t_token *new);
 void	ft_print_token_list(t_token **list);
 
+int		add_new_word(t_word *w, int len, t_word **lst);
 /*
 void	ft_cmdadd(t_cmd **alst, t_cmd *new);
 void	ft_cmdclear(t_cmd **cmd);
