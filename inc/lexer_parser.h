@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 20:07:22 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/17 00:11:48 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/18 17:01:33 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,8 @@ enum				e_token
 	O_BRACE, 	// "{ "
 	C_BRACE, 	// ";}"
 	FD_IN,
-	FD_OUT
+	FD_OUT,
+	ARG
 };
 
 typedef struct		s_cmd
