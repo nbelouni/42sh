@@ -6,11 +6,19 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/11 12:30:14 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/16 19:43:30 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/18 17:02:18 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
+
+typedef struct		s_pt
+{
+	int				i;
+	int				len;
+	int				type;
+	int				level[2];
+}					t_pt;
 
 typedef struct		s_tok
 {
@@ -57,29 +65,48 @@ int		find_btquote_end(char *s, int i);
 int		find_dquote_end(char *s, int i);
 int		find_squote_end(char *s, int i);
 int		find_group_end(char *s, int i, int token);
+int		find_next_nbtq(char *s, int i);
 int		find_dollar(char *s, int i);
 int		find_new_btquote_end(char *s, int i);
+int		find_next_inhibitor(char *s, int i, int *token);
+int		find_next_btq(char *s, int i, int *token);
+
+int		add_no_quote(char *s, int *i, t_word **lst);
+int		add_squote(char *s, int *i, t_word **lst);
+int		add_dquote(char *s, int *i, t_word **lst, int where);
+int		add_new_btquote(t_word *tmp, int *i, t_word **lst);
+int		add_btquote(t_word *tmp, int *i, t_word **lst);
 
 int		lex_buf(char *s, t_word **lst);
 
-int		parse_buf(t_token **lst, char *s);
 int		is_bracket(char *s, int i);
 int		is_brace(char *s, int i);
 int		is_space(char *s, int i);
 int		is_dot(char *s, int i);
-int		find_bracket_end(char *s, int i);
 int		is_redir(char *s, int i);
 int		is_agreg(char *s, int i);
 int		is_or_and(char *s, int i);
 int		is_quot(char *s, int i);
+int		find_bracket_end(char *s, int i);
+
+int		parse_buf(t_token **lst, char *s);
+int		cut_space(char *s, int i);
+t_pt	*reset_int_pt(void);
+void	parse_list(t_token **list, char *s, t_pt *p);
+void	cut_cmd(t_token **list, char *s, t_pt *p);
+int		check_tok(char *s, int l);
+int		cut_quote(char *s, t_pt *p);
+int		check_fd_out(t_token **list, char *s, t_pt *p);
 
 void	ft_tokenadd(t_token **alst, t_token *new);
 void	ft_tokenclear(t_token **lst);
 void	ft_tokendestroy(t_token **begin);
 t_token	*ft_tokenew(int type, char *word, int *level);
 void	ft_tokenpush(t_token **begin, t_token *new);
+void	sort_list_token(t_token **list);
 void	ft_print_token_list(t_token **list);
 
+int		add_new_word(t_word *w, int len, t_word **lst);
 /*
 void	ft_cmdadd(t_cmd **alst, t_cmd *new);
 void	ft_cmdclear(t_cmd **cmd);

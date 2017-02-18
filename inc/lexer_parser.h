@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 20:07:22 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/17 16:44:42 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/18 17:01:33 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,17 @@ typedef struct		s_word
 {
 	char			*s;
 	int				flag;
+	int				level;
 	struct s_word	*next;
+	struct s_word	*prev;
 }					t_word;
 
 typedef struct		s_token
 {
 	int				type;
 	char			*word;
-//	int				n_word;
-//	t_word			*word;
+	int				n_string;
+	t_word			*string;
 	int				bt_level;	// Parenthese
 	int				bc_level;	// Accolade
 	int				select;
@@ -38,6 +40,7 @@ enum				e_flag
 	NO_QUOTE,
 	S_QUOTE,
 	D_QUOTE,
+	OBT_QUOTE,	// "$("
 	BT_QUOTE
 };
 
@@ -63,7 +66,8 @@ enum				e_token
 	O_BRACE, 	// "{ "
 	C_BRACE, 	// ";}"
 	FD_IN,
-	FD_OUT
+	FD_OUT,
+	ARG
 };
 
 typedef struct		s_cmd
@@ -79,6 +83,7 @@ typedef struct		s_cmd
 t_word				*create_word();
 void				push_word();
 void				clear_word();
+void				rm_word(t_word **cmd);
 void				destroy_word();
 
 t_token				*create_token();

@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 20:26:22 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/16 18:02:35 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/16 17:14:33 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ t_word	*create_word(void)
 	elem->s = NULL;
 	elem->flag = NO_QUOTE;
 	elem->next = NULL;
+	elem->prev = NULL;
 	return (elem);
 }
 
@@ -34,6 +35,7 @@ void	push_word(t_word **begin, t_word *new)
 	while (elem->next)
 		elem = elem->next;
 	elem->next = new;
+	new->prev = elem;
 }
 
 void		clear_word(t_word *cmd)
@@ -42,6 +44,25 @@ void		clear_word(t_word *cmd)
 		free(cmd->s);
 	cmd->s = NULL;
 	cmd->flag = NO_QUOTE;
+}
+
+void		rm_word(t_word **cmd)
+{
+	t_word	*tmp;
+	t_word	*elem;
+
+	if (cmd == NULL)
+		return ;
+	elem = (*cmd)->prev;
+	tmp = (*cmd)->next;
+	if (!elem)
+		*cmd = (*cmd)->next;
+	else
+	{
+		elem->next = tmp;
+		tmp->prev = elem;
+	}
+	ft_memdel((void *)cmd);
 }
 
 void		destroy_word(t_word **begin)

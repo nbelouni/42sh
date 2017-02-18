@@ -6,17 +6,22 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/16 20:44:31 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/17 12:17:33 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/18 17:02:08 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
-static char		*(tab_name[21]) = {
+/*
+ * fonction de debug pour affichage de la liste chainee
+ **/
+
+static char		*(tab_name[22]) = {
 	[NO_TOKEN] = "NO_TOKEN",
 	[CMD] = "CMD",
 	[ESPACE] = "ESPACE",
 	[O_BRACKET] = "O_BRACKET",
+	[C_BRACKET] = "C_BRACKET",
 	[DOT] = "DOT",
 	[PIPE] = "PIPE,",
 	[START] = "START",
@@ -31,7 +36,8 @@ static char		*(tab_name[21]) = {
 	[O_BRACE] = "O_BRACE",
 	[C_BRACE] = "C_BRACE",
 	[FD_IN] = "FD_IN",
-	[FD_OUT] = "FD_OUT"
+	[FD_OUT] = "FD_OUT",
+	[ARG] = "ARG"
 };
 
 void		ft_print_token_list(t_token **list)

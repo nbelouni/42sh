@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/12 18:15:50 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/16 21:18:17 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/17 21:08:28 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,59 @@ int		is_squote(char *s, int i)
 	return (0);
 }
 
+int		find_next_inhibitor(char *s, int i, int *token)
+{
+	int	len;
+
+	len = 0;
+	while (s[i + len])
+	{
+		if (is_squote(s, i + len))
+		{
+			*token = S_QUOTE;
+			return (len);
+		}
+		if (is_dquote(s, i + len))
+		{
+			*token = D_QUOTE;
+			return (len);
+		}
+		if (is_btquote(s, i + len))
+		{
+			*token = BT_QUOTE;
+			return (len);
+		}
+		if (is_new_btquote(s, i + len))
+		{
+			*token = OBT_QUOTE;
+			return (len);
+		}
+		len++;
+	}
+	return (len);
+}
+
+int		find_next_btq(char *s, int i, int *token)
+{
+	int	len;
+
+	len = 0;
+	while (s[i + len])
+	{
+		if (is_new_btquote(s, i  + len))
+		{
+			*token = OBT_QUOTE;
+			return (len);
+		}
+		else if (is_btquote(s, i + len))
+		{
+			*token = BT_QUOTE;
+			return (len);
+		}
+		len++;
+	}
+	return (len);
+}
 int		find_btquote_end(char *s, int i)
 {
 	int		len;
@@ -96,7 +149,7 @@ int		find_btquote_end(char *s, int i)
 	{
 		while (s[i + len])
 		{
-			if ((i + len == 0 || s[i + len - 1] != '\\') && s[i + len] == '`')
+			if (is_btquote(s, i + len))
 				break ;
 			len++;
 		}
@@ -110,14 +163,23 @@ int		find_btquote_end(char *s, int i)
 int		find_new_btquote_end(char *s, int i)
 {
 	int		len;
+	int		level;
 
 	len = 0;
+	level = 0;
 	if (i == 0 || s[i - 1] != '\\')
 	{
 		while (s[i + len])
 		{
+			if ((i + len == 0 || s[i + len - 1] != '$') && s[i + len] == '(')
+				level += 1;
 			if ((i + len == 0 || s[i + len - 1] != '\\') && s[i + len] == ')')
-				break ;
+			{
+				if (level > 0)
+					level -= 1;
+				else
+					break ;
+			}
 			len++;
 		}
 		if (!s[i + len])
@@ -127,7 +189,7 @@ int		find_new_btquote_end(char *s, int i)
 	return (0);
 }
 
-int		find_dollar(char *s, int i)
+int		find_next_nbtq(char *s, int i)
 {
 	int		len;
 
@@ -136,34 +198,29 @@ int		find_dollar(char *s, int i)
 	{
 		while (s[i + len])
 		{
-			if ((i + len == 0 || s[i + len - 1] != '\\') && s[i + len] == '$')
-				break ;
+			if (is_new_btquote(s, i + len))
+				return (len);
 			len++;
 		}
-		if (!s[i + len])
-			return (-1);
-		return (len);
 	}
-	return (0);
+	return (len);
 }
 
 int		find_dquote_end(char *s, int i)
 {
 	int	len;
-	int	btq;
 
 	len = 0;
 	if (i == 0 || s[i - 1] != '\\')
 	{
-		while (s[i + len] && s[i + len] != '"')
+		while (s[i + len])
 		{
-			if ((btq = is_btquote(s, i + len)))
-				return (-1);
-			else
-				len++;
+			if (is_dquote(s, i + len))
+				break ;
+			len++;
 		}
 		if (!s[i + len])
-			return (0);
+			return (-1);
 		return (len);
 	}
 	return (0);

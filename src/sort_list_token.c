@@ -1,25 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memalloc.c                                      :+:      :+:    :+:   */
+/*   sort_list_token.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/11/24 17:43:03 by alallema          #+#    #+#             */
-/*   Updated: 2017/01/19 23:07:59 by alallema         ###   ########.fr       */
+/*   Created: 2017/02/18 16:51:24 by alallema          #+#    #+#             */
+/*   Updated: 2017/02/18 17:06:28 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include "libft.h"
+#include "42sh.h"
 
-void		*ft_memalloc(size_t size)
+void	sort_list_token(t_token **list)
 {
-	void	*t;
+	t_token		*elem;
 
-	t = (void *)malloc(size);
-	if (t == NULL)
-		return (NULL);
-	ft_bzero(t, size);
-	return (t);
+	elem = *list;
+	while (elem)
+	{
+		if (elem->type == CMD && elem->prev && (elem->prev->type == CMD
+			|| elem->prev->type == ARG))
+			elem->type = ARG;
+		elem = elem->next;
+	}
 }

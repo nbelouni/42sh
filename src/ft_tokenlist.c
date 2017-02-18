@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/16 12:42:26 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/17 16:44:22 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/18 16:48:46 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ t_token		*ft_tokenew(int type, char *s, int *level)
 	return (elem);
 }
 
-void	ft_tokenadd(t_token **begin, t_token *new)
+void		ft_tokenadd(t_token **begin, t_token *new)
 {
 	if (*begin != NULL)
 	{
@@ -68,7 +68,7 @@ void		ft_tokenclear(t_token **list)
 	ft_memdel((void *)list);
 }
 
-void	ft_tokenpush(t_token **begin, t_token *new)
+void		ft_tokenpush(t_token **begin, t_token *new)
 {
 	t_token	*elem;
 
