@@ -1,8 +1,28 @@
 
+
+____________
+
+--LIST--
+token :heftg
+type :CMD
+bt_level :0
+bc_level :0
 ____________
 --LIST--
-token :hfefefe
-type :CMD
+token :lol
+type :ARG
+bt_level :0
+bc_level :0
+____________
+--LIST--
+token :ihfrg
+type :ARG
+bt_level :0
+bc_level :0
+____________
+--LIST--
+token :fuck
+type :ARG
 bt_level :0
 bc_level :0
 ____________

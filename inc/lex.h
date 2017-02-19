@@ -38,6 +38,12 @@ typedef struct		s_tree
 	struct s_tree	*left;
 	struct s_tree	*right;
 }					t_tree;
+
+typedef struct  s_lib
+{
+	int 			toke;
+	int 			priority;
+}						t_lib;
 /*
 enum				e_token2
 {
