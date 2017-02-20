@@ -47,9 +47,11 @@ int main(int argc, char **argv, char **envp)
 //	t_word	*lst;
 	t_token	*list;
 	t_lst	*env;
+	t_tree *ast;
 
 //	lst = NULL;
 	env = NULL;
+	ast = NULL;
 	env = ft_env_to_list(envp, env);
 	signal(SIGWINCH, get_sigwinch);
 	signal(SIGINT, get_sigint);
@@ -59,12 +61,14 @@ int main(int argc, char **argv, char **envp)
 	init_curs();
 	while (read_line(buf) > ERR_EXIT)
 	{
-		close_termios();
+			close_termios();
 			is_line_ended(buf, 0);
 			PUT2("\n\n____________\n\n");
 			if (parse_buf(&list, buf->final_line) > 0)// A garder parse list
 			{
 				ft_print_token_list(&list); //debug impression
+				PUT1("\n \n _________________ \n \n");
+				ft_push_ast(list, &ast);
 				ft_tokendestroy(&list); //clean la list a mettre a la fin
 			}
 

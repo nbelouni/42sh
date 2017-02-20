@@ -48,7 +48,9 @@ SRCS = 	ft_builtin_cd.c		\
 		add_bt_d_quote.c	\
 		is_check.c			\
 		sort_list_token.c	\
+			ast_create.c\
 		ft_print.c
+
 
 SRCC = $(addprefix $(SDIR),$(SRCS))
 

@@ -35,6 +35,8 @@ typedef struct		s_tree
 {
 	int				token;
 	char			**cmd;
+	t_token		*token_or;
+	struct s_tree *father;
 	struct s_tree	*left;
 	struct s_tree	*right;
 }					t_tree;

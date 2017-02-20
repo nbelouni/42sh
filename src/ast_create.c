@@ -12,73 +12,73 @@
 
 #include "42sh.h"
 
-# define LENLIB  13
+# define LENLIB  10
 
 t_tree *init_node(void)
 {
   t_tree *node;
 
-  if (!(node = ft_memalloc((sizeof(t_tree))))
+  if (!(node = ft_memalloc(sizeof(t_tree))))
     return(NULL);
     ft_memset(node, 0, sizeof(node));
-    return (node);
+  return (node);
 }
 
-static  t_lib lib_op[LENLIB]=
+static  t_lib lib_op[LENLIB] =
 {
-  {.token = DOT, .priority = 10};
-  {.token = OR, .priority = 9};
-  {.token = AND, .priority = 9};
-  {.token = PIPE, .priority = 8};
-  {.token = SL_DIR, .priority = 7};
-  {.token = SR_DIR, .priority = 7};
-  {.token = AMP, .priority = 7};
-  {.token = DL_DIR, .priority = 7};
-  {.token = DR_DIR, .priority = 7};
-  {.token = DIR_AMP, .priority = 7};
-}
+  {.toke = DOT, .priority = 10},
+  {.toke = OR, .priority = 9},
+  {.toke = AND, .priority = 9},
+  {.toke = PIPE, .priority = 8},
+  {.toke = SL_DIR, .priority = 7},
+  {.toke = SR_DIR, .priority = 7},
+  {.toke = AMP, .priority = 7},
+  {.toke = DL_DIR, .priority = 7},
+  {.toke = DR_DIR, .priority = 7},
+  {.toke = DIR_AMP, .priority = 7},
+};
 
 t_tree  *add_tree(t_token *lst)
 {
   t_tree *node;
 
-  node = ft_memalloc(sizeof(t_token));
+  node = ft_memalloc(sizeof(t_tree));
 
-  node->token = &lst;
+  node->token_or = lst;
   node->father = NULL;
   node->left = NULL;
   node->right = NULL;
   return (node);
 }
 
-t_lib  cheak_lib(t_token *node)
+t_lib  *cheak_lib(t_token *node)
 {
     int i;
 
     i = 0;
     while (i <= LENLIB)
     {
-      if (node->token == lib_op[i].token)
-        return (lib_op[i]);
+      if (node->type == lib_op[i].toke)
+        return (&lib_op[i]);
         ++i;
     }
     return (NULL);
 }
 
-int  compare_token(t_token *node_lst, t_token *tmp, int lvl)
+int  compare_token_op(t_token *node_lst, t_token *tmp)
 {
-  t_lib  lib_lst;
-  t_lib  lib_tmp;
+  t_lib  *lib_lst;
+  t_lib  *lib_tmp;
 
   lib_lst = NULL;
   lib_lst = cheak_lib(node_lst);
   lib_tmp = NULL;
-  lib_tmp = cheak_lib(node_tmp);
+  lib_tmp = cheak_lib(tmp);
   if (!lib_lst && lib_tmp)
-    return(1)
+    return(1);
   else if (lib_lst && lib_tmp)
   {
-    if (lib_lst.priority < lib_tmp.priority)
+    if (lib_lst->priority < lib_tmp->priority)
       return(1);
     else
       return (0);
@@ -87,20 +87,27 @@ int  compare_token(t_token *node_lst, t_token *tmp, int lvl)
     return (0);
 }
 
-
-int  priority(t_token *node_lst, t_token *tmp, int lvl)
+int  compare_token_com(t_token *node_lst, t_token *tmp)
 {
-  if (node_lst == NULL && node_lst->select == 0 && node->bc_level == lvl)
-    return (1);
-  else if (tmp->bc_level != lvl)
-    return (0);
-  else if (compare_token(node_lst, tmp))
-    return (1);
-  else if ()
+  if(!node_lst && tmp->type == CMD)
+      return (1);
   return (0);
 }
 
-t_token *search_toke(t_token *lst, int bc_lvl)
+int  priority(t_token *node_lst, t_token *tmp, int lvl)
+{
+  if (node_lst == NULL && node_lst->select == 0 && node_lst->bt_level == lvl)
+    return (1);
+  else if (tmp->bt_level != lvl)
+    return (0);
+  else if (compare_token_op(node_lst, tmp))
+    return (1);
+  else if (compare_token_com(node_lst, tmp))
+    return (1);
+  return (0);
+}
+
+t_token *search_toke(t_token *lst, int bt_level)
 {
   t_token   *tmp;
   t_token   *node_lst;
@@ -109,33 +116,68 @@ t_token *search_toke(t_token *lst, int bc_lvl)
   tmp = lst;
   max_lvl = 0;
   node_lst = NULL;
+  if (tmp->select == 1)
+    tmp = tmp->next;
   while (tmp && tmp->select == 0)
   {
-    if (tmp->bt_lvl > max_lvl)
-      max_lvl = tmp->bt_lvl;
-    if (priority(node_lst, tmp, bt_lvl))
+    if (tmp->bt_level > max_lvl)
+      max_lvl = tmp->bt_level;
+    if (priority(node_lst, tmp, bt_level))
       node_lst = tmp;
     tmp = tmp->next;
   }
   if (node_lst == NULL && max_lvl > 0)
   {
-    bc_lvl++;
-    return (search_toke(lst, bt_lvl));
+    return (search_toke(lst, bt_level + 1));
   }
   return (node_lst);
+}
+
+t_tree *creat_left(t_token *lst)
+{
+  t_token  *tmp;
+  tmp = NULL;
+  if (!(tmp = search_toke(lst, 0)))
+  return(NULL);
+  return (add_tree(tmp));
+}
+
+void recurs_tree(t_tree *node, t_token *lst)
+{
+  node->left = creat_left(lst);
 }
 
 t_tree  *new_tree(t_token *lst)
 {
   t_tree  *node;
-  t_tree  *tmp;
+  t_token  *tmp;
 
   node = NULL;
   tmp = NULL;
-
   if (lst)
   {
-    node = search_toke(lst);
+    tmp = search_toke(lst, 0);
+    tmp->select = 1;
+    node = add_tree(tmp);
+    recurs_tree(node, tmp);
+  }
+  return (node);
+}
+
+void print_debug_ast(t_tree *node)
+{
+  if(!node)
+  {
+    PUT1(" node = NULL");
+    return ;
+}
+  else
+  {
+    PUT1("node = ")
+    PUT1(node->token_or->word);
+    if (node->left)
+    PUT1(" \n node->left = ");
+    print_debug_ast(node->left);
   }
 }
 
@@ -143,6 +185,8 @@ void ft_push_ast(t_token *list, t_tree **ast)
 {
   t_tree  *head_node;
 
+  (void)ast;
   head_node = new_tree(list);
 
+  print_debug_ast(head_node);
 }
