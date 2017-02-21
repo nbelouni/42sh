@@ -115,6 +115,13 @@ void	sort_list_token(t_token **list);
 void	ft_print_token_list(t_token **list);
 
 int		add_new_word(t_word *w, int len, t_word **lst);
+
+/*
+**       ast
+*/
+
+t_tree *creat_left(t_token *lst);
+void 	ft_push_ast(t_token *list, t_tree **ast);
 /*
 void	ft_cmdadd(t_cmd **alst, t_cmd *new);
 void	ft_cmdclear(t_cmd **cmd);

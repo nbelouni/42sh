@@ -43,7 +43,6 @@ t_tree  *add_tree(t_token *lst)
   t_tree *node;
 
   node = ft_memalloc(sizeof(t_tree));
-
   node->token_or = lst;
   node->father = NULL;
   node->left = NULL;
@@ -69,6 +68,7 @@ int  compare_token_op(t_token *node_lst, t_token *tmp)
 {
   t_lib  *lib_lst;
   t_lib  *lib_tmp;
+
 
   lib_lst = NULL;
   lib_lst = cheak_lib(node_lst);
@@ -96,12 +96,18 @@ int  compare_token_com(t_token *node_lst, t_token *tmp)
 
 int  priority(t_token *node_lst, t_token *tmp, int lvl)
 {
-  if (node_lst == NULL && node_lst->select == 0 && node_lst->bt_level == lvl)
+  if (!node_lst && tmp->select == 0 && tmp->bt_level == lvl)
+  {
+    PUT2("fuck")
     return (1);
+  }
   else if (tmp->bt_level != lvl)
     return (0);
   else if (compare_token_op(node_lst, tmp))
+  {
+    PUT2("hello");
     return (1);
+  }
   else if (compare_token_com(node_lst, tmp))
     return (1);
   return (0);
@@ -133,18 +139,27 @@ t_token *search_toke(t_token *lst, int bt_level)
   return (node_lst);
 }
 
+t_tree *recurs_creat_tree(t_token *lst)
+{
+  t_token *tmp;
+  t_tree  *node;
+
+  tmp = lst;
+  node = NULL;
+  node = add_tree(tmp);
+  node->left = creat_left(tmp);
+  node = NULL;
+  return (node);
+}
+
 t_tree *creat_left(t_token *lst)
 {
   t_token  *tmp;
   tmp = NULL;
   if (!(tmp = search_toke(lst, 0)))
   return(NULL);
-  return (add_tree(tmp));
-}
-
-void recurs_tree(t_tree *node, t_token *lst)
-{
-  node->left = creat_left(lst);
+  tmp->select = 1;
+  return (recurs_creat_tree(tmp));
 }
 
 t_tree  *new_tree(t_token *lst)
@@ -159,7 +174,7 @@ t_tree  *new_tree(t_token *lst)
     tmp = search_toke(lst, 0);
     tmp->select = 1;
     node = add_tree(tmp);
-    recurs_tree(node, tmp);
+    node->left = creat_left(tmp);
   }
   return (node);
 }
@@ -168,15 +183,15 @@ void print_debug_ast(t_tree *node)
 {
   if(!node)
   {
-    PUT1(" node = NULL");
+    PUT2(" node = NULL");
     return ;
 }
   else
   {
-    PUT1("node = ")
-    PUT1(node->token_or->word);
+    PUT2("node = ")
+    PUT2(node->token_or->word);
     if (node->left)
-    PUT1(" \n node->left = ");
+    PUT2(" \n node->left = ");
     print_debug_ast(node->left);
   }
 }

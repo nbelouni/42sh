@@ -67,7 +67,7 @@ int main(int argc, char **argv, char **envp)
 			if (parse_buf(&list, buf->final_line) > 0)// A garder parse list
 			{
 				ft_print_token_list(&list); //debug impression
-				PUT1("\n \n _________________ \n \n");
+				PUT2("\n \n _________________ \n \n");
 				ft_push_ast(list, &ast);
 				ft_tokendestroy(&list); //clean la list a mettre a la fin
 			}
