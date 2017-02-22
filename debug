@@ -3,8 +3,14 @@
 ____________
 
 --LIST--
-token :njlj
+token :fbknf
 type :CMD
+bt_level :0
+bc_level :0
+____________
+--LIST--
+token :fgj
+type :ARG
 bt_level :0
 bc_level :0
 ____________
@@ -15,7 +21,7 @@ bt_level :0
 bc_level :0
 ____________
 --LIST--
-token :ggjhh
+token :kjvf
 type :CMD
 bt_level :0
 bc_level :0
@@ -36,72 +42,26 @@ ____________
  
  _________________ 
  
-fuckhellohellofucknode = && node = NULL
 
-____________
-
---LIST--
-token :njlj
-type :CMD
-bt_level :0
-bc_level :0
-____________
---LIST--
-token :>>
-type :DR_DIR
-bt_level :0
-bc_level :0
-____________
---LIST--
-token :ggjhh
-type :CMD
-bt_level :0
-bc_level :0
-____________
---LIST--
-token :&&
-type :AND
-bt_level :0
-bc_level :0
-____________
---LIST--
-token :lolfmnfg
-type :CMD
-bt_level :0
-bc_level :0
-____________
---LIST--
-token :>>
-type :DR_DIR
-bt_level :0
-bc_level :0
-____________
---LIST--
-token :fgkfhg
-type :CMD
-bt_level :0
-bc_level :0
-____________
---LIST--
-token :&&
-type :AND
-bt_level :0
-bc_level :0
-____________
---LIST--
-token :ghgjkglhj
-type :CMD
-bt_level :0
-bc_level :0
-____________
---LIST--
-token :>>
-type :DR_DIR
-bt_level :0
-bc_level :0
-____________
-
- 
- _________________ 
- 
-fuckhellohellofuckhellohellofuckhellonode = && node = NULL
+ test 2&&
+ test 2lolwtf
+ test 2&&
+ test 2>>
+ test 2kjvfwtf
+ test 2>>
+ test 2fbknfwtf
+ node = && 
+ node->left = lol 
+ node->right = >>
+ node = lol
+ node->left = NULL
+ node->right = NULL node = NULL node = NULL
+ node = >> 
+ node->left = kjvf 
+ node->right = fbknf
+ node = kjvf
+ node->left = NULL
+ node->right = NULL node = NULL node = NULL
+ node = fbknf
+ node->left = NULL
+ node->right = NULL node = NULL node = NULL

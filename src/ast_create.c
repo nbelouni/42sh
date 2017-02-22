@@ -97,17 +97,11 @@ int  compare_token_com(t_token *node_lst, t_token *tmp)
 int  priority(t_token *node_lst, t_token *tmp, int lvl)
 {
   if (!node_lst && tmp->select == 0 && tmp->bt_level == lvl)
-  {
-    PUT2("fuck")
     return (1);
-  }
   else if (tmp->bt_level != lvl)
     return (0);
   else if (compare_token_op(node_lst, tmp))
-  {
-    PUT2("hello");
     return (1);
-  }
   else if (compare_token_com(node_lst, tmp))
     return (1);
   return (0);
@@ -122,8 +116,14 @@ t_token *search_toke(t_token *lst, int bt_level)
   tmp = lst;
   max_lvl = 0;
   node_lst = NULL;
+  if (lst == NULL)
+  return (NULL);
   if (tmp->select == 1)
+  {
+    PUT2("\n test 2");
+    PUT2(tmp->word);
     tmp = tmp->next;
+  }
   while (tmp && tmp->select == 0)
   {
     if (tmp->bt_level > max_lvl)
@@ -132,11 +132,61 @@ t_token *search_toke(t_token *lst, int bt_level)
       node_lst = tmp;
     tmp = tmp->next;
   }
-  if (node_lst == NULL && max_lvl > 0)
-  {
-    return (search_toke(lst, bt_level + 1));
-  }
+  //if (node_lst == NULL && max_lvl > 0)
+    //return (search_toke(lst, bt_level + 1));
   return (node_lst);
+}
+
+t_token *search_toke_prev(t_token *lst, int bt_lvl)
+{
+  t_token   *tmp;
+
+  tmp = lst;
+  if (lst == NULL)
+  return (NULL);
+  if (tmp->select == 1)
+    tmp = tmp->prev;
+  while (tmp && tmp->prev && tmp->select == 0)
+     tmp  = tmp->prev;
+  return (search_toke(tmp, bt_lvl));
+}
+
+int   cmd_len(t_token *lst)
+{
+  t_token *tmp;
+  int i;
+
+  tmp = lst;
+  i = 0;
+  while (tmp && (tmp->type == CMD || tmp->type == ARG))
+  {
+    tmp = tmp->next;
+    ++i;
+  }
+  return (i);
+}
+
+char  **concate_cmd(t_token *lst)
+ {
+   t_token *tmp;
+   int      i;
+   int       count;
+   char     **argv;
+
+   tmp = lst;
+   count = 0;
+   i = cmd_len(tmp);
+   if (!(argv = (char **)malloc(sizeof(char) * i + 1)))
+      return (NULL);
+   while (tmp && count <= i)
+   {
+     argv[count] = ft_strdup(tmp->word);
+     ++count;
+     tmp->select = 1;
+     tmp = tmp->next;
+   }
+   argv[count] = NULL;
+   return (argv);
 }
 
 t_tree *recurs_creat_tree(t_token *lst)
@@ -147,17 +197,34 @@ t_tree *recurs_creat_tree(t_token *lst)
   tmp = lst;
   node = NULL;
   node = add_tree(tmp);
+  if (tmp->type == CMD)
+  node->cmd = concate_cmd(tmp);
   node->left = creat_left(tmp);
-  node = NULL;
+  node->right= creat_right(tmp);
   return (node);
 }
 
-t_tree *creat_left(t_token *lst)
+t_tree *creat_right(t_token *lst)
 {
   t_token  *tmp;
+
+  tmp = NULL;
+  if (!(tmp = search_toke_prev(lst,0)))
+    return (NULL);
+  tmp->select = 1;
+  return (recurs_creat_tree(tmp));
+}
+
+t_tree   *creat_left(t_token *lst)
+{
+  t_token  *tmp;
+
   tmp = NULL;
   if (!(tmp = search_toke(lst, 0)))
-  return(NULL);
+  {
+    PUT2("wtf");
+    return(NULL);
+  }
   tmp->select = 1;
   return (recurs_creat_tree(tmp));
 }
@@ -175,6 +242,7 @@ t_tree  *new_tree(t_token *lst)
     tmp->select = 1;
     node = add_tree(tmp);
     node->left = creat_left(tmp);
+    node->right = creat_right(tmp);
   }
   return (node);
 }
@@ -188,11 +256,24 @@ void print_debug_ast(t_tree *node)
 }
   else
   {
-    PUT2("node = ")
+    PUT2("\n node = ");
     PUT2(node->token_or->word);
     if (node->left)
-    PUT2(" \n node->left = ");
+    {
+      PUT2(" \n node->left = ");
+      PUT2(node->left->token_or->word);
+  }
+  else
+    PUT2("\n node->left = NULL");
+    if (node->right)
+    {
+      PUT2(" \n node->right = ");
+      PUT2(node->right->token_or->word);
+    }
+    else
+    PUT2("\n node->right = NULL");
     print_debug_ast(node->left);
+    print_debug_ast(node->right);
   }
 }
 

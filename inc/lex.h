@@ -121,6 +121,7 @@ int		add_new_word(t_word *w, int len, t_word **lst);
 */
 
 t_tree *creat_left(t_token *lst);
+t_tree *creat_right(t_token *lst);
 void 	ft_push_ast(t_token *list, t_tree **ast);
 /*
 void	ft_cmdadd(t_cmd **alst, t_cmd *new);
