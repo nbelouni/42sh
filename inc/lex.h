@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/11 12:30:14 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/18 17:02:18 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/21 17:05:28 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,8 @@ int		find_bracket_end(char *s, int i);
 int		parse_buf(t_token **lst, char *s);
 int		cut_space(char *s, int i);
 t_pt	*reset_int_pt(void);
-void	parse_list(t_token **list, char *s, t_pt *p);
-void	cut_cmd(t_token **list, char *s, t_pt *p);
+int		parse_list(t_token **list, char *s, t_pt *p);
+int		cut_cmd(t_token **list, char *s, t_pt *p);
 int		check_tok(char *s, int l);
 int		cut_quote(char *s, t_pt *p);
 int		check_fd_out(t_token **list, char *s, t_pt *p);
@@ -101,12 +101,20 @@ int		check_fd_out(t_token **list, char *s, t_pt *p);
 void	ft_tokenadd(t_token **alst, t_token *new);
 void	ft_tokenclear(t_token **lst);
 void	ft_tokendestroy(t_token **begin);
-t_token	*ft_tokenew(int type, char *word, int *level);
+t_token	*ft_tokenew(t_word *string, int type, char *word, int *level);
 void	ft_tokenpush(t_token **begin, t_token *new);
 void	sort_list_token(t_token **list);
 void	ft_print_token_list(t_token **list);
 
 int		add_new_word(t_word *w, int len, t_word **lst);
+
+int		is_separator_type(int type);
+int		is_open_group_type(int type);
+int		is_close_group_type(int type);
+int		is_dir_type(int type);
+int		is_text_type(int type);
+
+int		return_new_prompt(int ret);
 /*
 void	ft_cmdadd(t_cmd **alst, t_cmd *new);
 void	ft_cmdclear(t_cmd **cmd);

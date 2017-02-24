@@ -37,7 +37,6 @@ SRCS = 	ft_builtin_cd.c		\
 	    is_line_ended.c		\
 		is_token.c			\
 		word.c				\
-		token.c				\
 		lex_cmd.c			\
 		ft_exec.c			\
 		ft_tokenlist.c		\
@@ -48,6 +47,10 @@ SRCS = 	ft_builtin_cd.c		\
 		add_bt_d_quote.c	\
 		is_check.c			\
 		sort_list_token.c	\
+		can_create_tree.c	\
+		is_token_type.c		\
+		return_errors.c		\
+		count_word.c		\
 		ft_print.c
 
 SRCC = $(addprefix $(SDIR),$(SRCS))

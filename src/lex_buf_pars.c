@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 19:31:44 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/18 16:29:29 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/20 18:59:52 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,33 +26,41 @@ t_pt		*reset_int_pt(void)
 	return (pt);
 }
 
-void		parse_list(t_token **list, char *s, t_pt *p)
+int			parse_list(t_token **list, char *s, t_pt *p)
 {
 	t_token	*new;
+	t_word	*tmp;
+	int		ret;
 
-	new = ft_tokenew(p->type, s, p->level);
+	tmp = NULL;
+	if (!s)
+		return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
+	if ((ret = lex_buf(s, &tmp)))
+		return (ret);
+	if (!(new = ft_tokenew(tmp, p->type, s, p->level)))
+		return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
 	if (!(*list))
 		*list = new;
 	else
 		ft_tokenpush(list, new);
+	return (0);
 }
 
 int			check_fd_out(t_token **list, char *s, t_pt *p)
 {
-	int		j;
+	int		ret;
 
-	(void)list;
-	j = 0;
 	while (s[p->i + p->len] && ft_isdigit(s[p->i + p->len]) == 1)
 		p->len++;
 	if (p->len != 0)
 	{
 		p->type = FD_OUT;
-		parse_list(list, ft_strsub(s, p->i, p->len), p);
+		if ((ret = parse_list(list, ft_strsub(s, p->i, p->len), p)))
+			return (ret);
 		p->i = p->i + p->len;
 		p->len = 0;
 	}
-	return (j);
+	return (0);
 }
 
 static int	check_fd_in(char *s, t_pt *p)
@@ -73,11 +81,13 @@ static int	check_fd_in(char *s, t_pt *p)
 	return (j);
 }
 
-void		cut_cmd(t_token **list, char *s, t_pt *p)
+int			cut_cmd(t_token **list, char *s, t_pt *p)
 {
 	int		j;
+	int		ret;
 
 	j = 0;
+	ret = 0;
 	p->i = cut_space(s, p->i);
 	while (s[p->i + p->len] && check_tok(s, p->i + p->len) == NO_TOKEN)
 	{
@@ -89,7 +99,11 @@ void		cut_cmd(t_token **list, char *s, t_pt *p)
 	else
 		p->type = CMD;
 	if (p->len != 0)
-		parse_list(list, ft_strsub(s, p->i, p->len), p);
+	{
+		if ((ret = parse_list(list, ft_strsub(s, p->i, p->len), p)))
+			return (ret);
+	}
 	p->i = p->i + p->len;
 	p->len = 0;
+	return (0);
 }

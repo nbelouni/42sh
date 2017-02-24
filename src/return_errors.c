@@ -1,30 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_bzero.c                                         :+:      :+:    :+:   */
+/*   return_errors.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nbelouni <nbelouni@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2014/11/05 02:07:51 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/19 16:04:28 by nbelouni         ###   ########.fr       */
+/*   Created: 2017/02/21 17:03:05 by nbelouni          #+#    #+#             */
+/*   Updated: 2017/02/21 17:06:13 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "42sh.h"
 
-void	ft_bzero(void *s, size_t n)
+int		return_new_prompt(int ret)
 {
-	unsigned char	*str;
-	size_t			i;
-
-	str = (unsigned char *)s;
-	i = 0;
-	if (n != 0)
+	if (ret == ERR_EXIT)
+		return (ret);
+	else if (ret == ERR_NEW_PROMPT)
 	{
-		while (i < n)
-		{
-			*(str + i) = 0;
-			i++;
-		}
+		set_prompt(PROMPT2, ft_strlen(PROMPT2));
+		return (ERR_NEW_PROMPT);
 	}
+	return (ret);
 }

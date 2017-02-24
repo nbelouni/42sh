@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/02/01 18:03:10 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/15 22:37:08 by alallema         ###   ########.fr       */
+/*   Created: 2017/02/21 16:47:01 by nbelouni          #+#    #+#             */
+/*   Updated: 2017/02/21 19:13:31 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,8 @@ int		mv_and_read(t_buf *buf, int x, int ret)
 	if (ret < 0)
 		return (ft_print_error("\n42sh", ERR_READ, ERR_EXIT));
 	if (x == CTRL_D)
-	{
-		close_termios();
 		return (ERR_EXIT);
-	}
-	if (x > 31 && x < 127)
+	if ((x > 31 && x < 127))
 	{
 		if (vb_insert(buf, (char *)&x) < 0)
 		{
@@ -71,6 +68,10 @@ int		mv_and_read(t_buf *buf, int x, int ret)
 		m_right(calc_len(buf, x));
 	return (0);
 }
+
+/*
+**	Va falloir trouver un autre moyen de recuperer les caracteres speciaux
+*/
 
 int		read_line(t_buf *buf)
 {
@@ -97,5 +98,5 @@ int		read_line(t_buf *buf)
 		x = 0;
 	}
 	close_termios();
-	return (0);
+	return (END_EOT);
 }

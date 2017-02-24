@@ -6,13 +6,13 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 20:26:22 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/16 17:14:33 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/24 16:10:46 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
-t_word	*create_word(void)
+t_word		*create_word(void)
 {
 	t_word	*elem;
 
@@ -25,7 +25,7 @@ t_word	*create_word(void)
 	return (elem);
 }
 
-void	push_word(t_word **begin, t_word *new)
+void		push_word(t_word **begin, t_word *new)
 {
 	t_word	*elem;
 

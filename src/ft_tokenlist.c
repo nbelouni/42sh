@@ -6,33 +6,33 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/16 12:42:26 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/18 16:48:46 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/20 18:49:40 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
-t_token		*ft_tokenew(int type, char *s, int *level)
+t_token		*ft_tokenew(t_word *string, int type, char *s, int *level)
 {
 	t_token	*elem;
 
 	if (!(elem = ft_memalloc(sizeof(t_token))))
 		return (NULL);
-	if (s == NULL)
+	elem->type = type;
+	elem->select = 0;
+	elem->bt_level = level[0];
+	elem->bc_level = level[1];
+	if (s == NULL && string == NULL)
 	{
-		elem->type = type;
-		elem->select = 0;
-		elem->bt_level = level[0];
-		elem->bc_level = level[1];
 		elem->word = NULL;
+		elem->n_string = 0;
+		elem->string = NULL;
 	}
 	else
 	{
 		elem->word = s;
-		elem->type = type;
-		elem->select = 0;
-		elem->bt_level = level[0];
-		elem->bc_level = level[1];
+		elem->n_string = count_word(string);
+		elem->string = string;
 	}
 	elem->next = NULL;
 	elem->prev = NULL;
