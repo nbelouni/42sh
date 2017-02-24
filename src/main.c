@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/24 17:15:40 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/24 17:22:13 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,8 @@ int main(int argc, char **argv, char **envp)
 /*
 **	DECOMMENTER POUR AFFICHER LA LISTE
 */
-		if (ret > 0)
-			ft_print_token_list(&list); //debug impression
+//		if (ret > 0)
+//			ft_print_token_list(&list); //debug impression
 		if (ret != ERR_NEW_PROMPT)
 			ft_strdel(&(buf->final_line));
 		if (list)
