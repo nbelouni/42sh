@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/16 00:50:00 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/21 19:10:49 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/24 17:20:15 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ int			parse_buf(t_token **lst, char *s)
 		}
 	}
 	sort_list_token(lst);
-	free(p);
-	p = NULL;
+	ft_memdel((void *)&p);
+	set_prompt(PROMPT1, ft_strlen(PROMPT1));
 	return (can_create_tree(*lst));
 }
