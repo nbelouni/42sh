@@ -47,11 +47,14 @@ SRCS = 	ft_builtin_cd.c		\
 		add_bt_d_quote.c	\
 		is_check.c			\
 		sort_list_token.c	\
+<<<<<<< HEAD
+			ast_create.c\
+=======
 		can_create_tree.c	\
 		is_token_type.c		\
 		return_errors.c		\
 		count_word.c		\
-		ast_create.c		\
+>>>>>>> c0bd047afef65559ca285d518c12082f262427f5
 		ft_print.c
 
 

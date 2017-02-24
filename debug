@@ -1,67 +1,57 @@
 
+======concate cmd========
 
-____________
+lol 
+ ===================finish=========== 
 
---LIST--
-token :fbknf
-type :CMD
-bt_level :0
-bc_level :0
-____________
---LIST--
-token :fgj
-type :ARG
-bt_level :0
-bc_level :0
-____________
---LIST--
-token :>>
-type :DR_DIR
-bt_level :0
-bc_level :0
-____________
---LIST--
-token :kjvf
-type :CMD
-bt_level :0
-bc_level :0
-____________
---LIST--
-token :&&
-type :AND
-bt_level :0
-bc_level :0
-____________
---LIST--
-token :lol
-type :CMD
-bt_level :0
-bc_level :0
-____________
+======concate cmd========
 
- 
- _________________ 
- 
+o77 
+ ===================finish=========== 
 
- test 2&&
- test 2lolwtf
- test 2&&
- test 2>>
- test 2kjvfwtf
- test 2>>
- test 2fbknfwtf
+======concate cmd========
+
+mrrr
+des
+bare
+he 
+ ===================finish=========== 
+
+======concate cmd========
+
+ls
+-la
+coll
+et
+love 
+ ===================finish=========== 
+
+ node = ; 
+ node->left = && 
+ node->right = &&
  node = && 
  node->left = lol 
- node->right = >>
+ node->right = o77
  node = lol
  node->left = NULL
- node->right = NULL node = NULL node = NULL
- node = >> 
- node->left = kjvf 
- node->right = fbknf
- node = kjvf
+ node->right = NULL
+ node = NULL
+ node = NULL
+ node = o77
  node->left = NULL
- node->right = NULL node = NULL node = NULL
- node = fbknf
+ node->right = NULL
+ node = NULL
+ node = NULL
+ node = && 
+ node->left = mrrr 
+ node->right = ls
+ node = mrrr
  node->left = NULL
- node->right = NULL node = NULL node = NULL
+ node->right = NULL
+ node = NULL
+ node = NULL
+ node = ls
+ node->left = NULL
+ node->right = NULL
+ node = NULL
+ node = NULL

@@ -119,11 +119,7 @@ t_token *search_toke(t_token *lst, int bt_level)
   if (lst == NULL)
   return (NULL);
   if (tmp->select == 1)
-  {
-    PUT2("\n test 2");
-    PUT2(tmp->word);
     tmp = tmp->next;
-  }
   while (tmp && tmp->select == 0)
   {
     if (tmp->bt_level > max_lvl)
@@ -178,14 +174,18 @@ char  **concate_cmd(t_token *lst)
    i = cmd_len(tmp);
    if (!(argv = (char **)malloc(sizeof(char) * i + 1)))
       return (NULL);
-   while (tmp && count <= i)
+  PUT2("\n======concate cmd========\n");
+   while (tmp && (count <= i -1))
    {
      argv[count] = ft_strdup(tmp->word);
+     PUT2("\n");
+     PUT2(argv[count]);
      ++count;
      tmp->select = 1;
      tmp = tmp->next;
    }
    argv[count] = NULL;
+   PUT2(" \n ===================finish=========== \n");
    return (argv);
 }
 
@@ -198,7 +198,9 @@ t_tree *recurs_creat_tree(t_token *lst)
   node = NULL;
   node = add_tree(tmp);
   if (tmp->type == CMD)
-  node->cmd = concate_cmd(tmp);
+    node->cmd = concate_cmd(tmp);
+  else
+    node->cmd = NULL;
   node->left = creat_left(tmp);
   node->right= creat_right(tmp);
   return (node);
@@ -221,10 +223,7 @@ t_tree   *creat_left(t_token *lst)
 
   tmp = NULL;
   if (!(tmp = search_toke(lst, 0)))
-  {
-    PUT2("wtf");
     return(NULL);
-  }
   tmp->select = 1;
   return (recurs_creat_tree(tmp));
 }
@@ -251,7 +250,7 @@ void print_debug_ast(t_tree *node)
 {
   if(!node)
   {
-    PUT2(" node = NULL");
+    PUT2("\n node = NULL");
     return ;
 }
   else
