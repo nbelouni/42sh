@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/19 15:29:18 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/21 18:24:33 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/24 17:13:34 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ int			can_create_tree(t_token *lst)
 	t_token	*prev;
 	int		ret;
 
-	ft_print_token_list(&lst);
 	tmp = lst;
 	while (tmp)
 	{
