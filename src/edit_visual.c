@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/04 00:00:38 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/05 16:44:12 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/21 16:40:16 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ void	reset_cursor(int i, int cursor)
 	int		w_col;
 
 	w_col = g_curs.win_col;
+	if (w_col == 0)
+		w_col = 1;
 	while (i > 0)
 	{
 		if ((cursor + i + get_prompt_len()) % w_col > 0 ||
@@ -55,7 +57,8 @@ void	print_post_curs(t_buf *buf)
 	while (buf->line[cursor + i])
 	{
 		ft_putchar_fd(buf->line[cursor + i], 1);
-		if ((cursor + get_prompt_len() + i + 1) % g_curs.win_col == 0)
+		if ((cursor + get_prompt_len() + i + 1) %
+		((g_curs.win_col) ? g_curs.win_col : 1) == 0)
 		{
 			t_puts("cr", 1);
 			t_puts("do", 1);

@@ -1,30 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_bzero.c                                         :+:      :+:    :+:   */
+/*   count_word.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nbelouni <nbelouni@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2014/11/05 02:07:51 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/19 16:04:28 by nbelouni         ###   ########.fr       */
+/*   Created: 2017/02/21 19:16:16 by nbelouni          #+#    #+#             */
+/*   Updated: 2017/02/21 19:16:47 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "42sh.h"
 
-void	ft_bzero(void *s, size_t n)
+int			count_word(t_word *w)
 {
-	unsigned char	*str;
-	size_t			i;
+	t_word	*tmp;
+	int		i;
 
-	str = (unsigned char *)s;
+	tmp = w;
 	i = 0;
-	if (n != 0)
+	while (tmp)
 	{
-		while (i < n)
-		{
-			*(str + i) = 0;
-			i++;
-		}
+		i++;
+		tmp = tmp->next;
 	}
+	return (i);
 }

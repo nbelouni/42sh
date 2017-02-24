@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/16 13:02:54 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/17 18:01:37 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/21 18:46:17 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,13 @@ int		is_brace(char *s, int i)
 	{
 		if (s[i] == '{' && s[i + 1] && s[i + 1] == ' ')
 			return (O_BRACE);
+		if (s[i] == '}')
+		{
+			if ((i == 0 || is_separator(s, i - 1))
+			&& (i + 1 >= (int)ft_strlen(s) || is_separator(s, i + 1)
+			|| s[i + 1] == ' ' || s[i + 1] == '(' || s[i + 1] == ')'))
+				return (C_BRACE);
+		}
 	}
 	return (0);
 }
@@ -43,8 +50,6 @@ int		is_dot(char *s, int i)
 {
 	if (i == 0 || s[i - 1] != '\\')
 	{
-		if (s[i] == ';' && s[i + 1] == '}')
-			return (C_BRACE);
 		if (s[i] == ';')
 			return (DOT);
 	}

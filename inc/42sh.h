@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:09:30 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/15 13:29:06 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/21 16:11:11 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ typedef enum	e_bool
 # include "lexer_parser.h"
 # include "lex.h"
 # include "exec.h"
+
+# define END_EOT	18
 
 typedef struct		s_elem
 {

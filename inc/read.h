@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:01:52 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/18 00:21:23 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/19 19:53:05 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,7 +182,7 @@ void			paste_in_buf(t_buf *buf, int cursor);
 
 void			print_post_curs(t_buf *buf);
 
-int				is_line_ended(t_buf *buf, int x);
+int				is_line_ended(t_buf *buf);
 
 /*
 ** 	edition de ligne

@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/16 00:50:00 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/18 16:59:08 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/24 17:20:15 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,54 +69,60 @@ int			cut_quote(char *s, t_pt *p)
 	return (0);
 }
 
-static void	choose_pars(t_token **list, char *s, int ret, t_pt *p)
+static int	choose_pars(t_token **list, char *s, int ret, t_pt *p)
 {
+	int		r;
+	int		len;
+
 	p->type = ret;
-	if (ret > ESPACE && ret < OR)
+	if (ret > ESPACE && ret < FD_IN)
 	{
-		if (ret == O_BRACKET)
-			p->level[1]++;
-		parse_list(list, ft_strsub(s, p->i, 1), p);
+		len = (ret >= OR && ret <= O_BRACE) ? 2 : 1;
 		if (ret == C_BRACKET)
-			p->level[1]--;
-	}
-	if (ret > AMP && ret <= C_BRACE)
-	{
-		if (ret == O_BRACE)
-			p->level[0]++;
-		parse_list(list, ft_strsub(s, p->i, 2), p);
-		if (ret == C_BRACE)
 			p->level[0]--;
-		p->i++;
+		if (ret == C_BRACE)
+			p->level[1]--;
+		if ((r = parse_list(list, ft_strsub(s, p->i, len), p)))
+			return (r);
+		if (ret == O_BRACE)
+			p->level[1]++;
+		if (ret == O_BRACKET)
+			p->level[0]++;
+		if (ret >= OR && ret <= O_BRACE)
+			p->i++;
 	}
 	p->i++;
-	if (ret == DIR_AMP)
-		check_fd_out(list, s, p);
+	if (ret == DIR_AMP && (r = check_fd_out(list, s, p)))
+		return (r);
 	p->i = cut_space(s, p->i);
+	return (0);
 }
 
 int			parse_buf(t_token **lst, char *s)
 {
 	int		j;
 	int		ret;
+	int		ret_lex;
 	t_pt	*p;
 
-	p = reset_int_pt();
+	if (!(p = reset_int_pt()))
+		return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
 	ret = 0;
-	while (s[p->i])
+	while (p->i < (int)ft_strlen(s))
 	{
 		j = -1;
-		cut_cmd(lst, s, p);
+		if ((ret_lex = cut_cmd(lst, s, p)))
+			return (return_new_prompt(ret_lex));
 		if ((ret = check_tok(s, p->i + p->len)) != NO_TOKEN)
 		{
 			if (ret == ESPACE)
 				p->i = cut_space(s, p->i);
-			else
-				choose_pars(lst, s, ret, p);
+			else if ((ret_lex = choose_pars(lst, s, ret, p)))
+				return (return_new_prompt(ret_lex));
 		}
 	}
 	sort_list_token(lst);
-	free(p);
-	p = NULL;
-	return (1);
+	ft_memdel((void *)&p);
+	set_prompt(PROMPT1, ft_strlen(PROMPT1));
+	return (can_create_tree(*lst));
 }
