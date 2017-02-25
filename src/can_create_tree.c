@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/19 15:29:18 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/24 19:35:15 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/25 18:07:15 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,11 @@ int			can_create_tree(t_token *lst)
 		if ((ret = is_parse_error(tmp, prev)))
 			return (ret);
 		tmp = tmp->next;
+	}
+	if (!prev && (lst->type == O_BRACKET || lst->type == O_BRACE))
+	{
+		set_prompt(PROMPT2, ft_strlen(PROMPT2));
+		return (ERR_NEW_PROMPT);
 	}
 	return (is_new_prompt(prev));
 }
