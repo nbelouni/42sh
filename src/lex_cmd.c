@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/16 17:33:42 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/20 18:57:35 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/24 19:41:12 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,10 +93,16 @@ int		lex_buf(char *s, t_word **lst)
 	i = 0;
 	if (!s || !s[i])
 		return (0);
-	ret = add_squote(s, &i, lst);
+	ret = add_no_quote(s, &i, lst);
 	if (ret == ERR_EXIT)
+	{
+		destroy_word(lst);
 		return (ERR_EXIT);
+	}
 	else if (ret)
+	{
+		destroy_word(lst);
 		return (ERR_NEW_PROMPT);
+	}
 	return (0);
 }

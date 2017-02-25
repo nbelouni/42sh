@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/16 00:50:00 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/24 17:20:15 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/24 19:44:23 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,13 +112,19 @@ int			parse_buf(t_token **lst, char *s)
 	{
 		j = -1;
 		if ((ret_lex = cut_cmd(lst, s, p)))
+		{
+			ft_memdel((void *)&p);
 			return (return_new_prompt(ret_lex));
+		}
 		if ((ret = check_tok(s, p->i + p->len)) != NO_TOKEN)
 		{
 			if (ret == ESPACE)
 				p->i = cut_space(s, p->i);
 			else if ((ret_lex = choose_pars(lst, s, ret, p)))
+			{
+				ft_memdel((void *)&p);
 				return (return_new_prompt(ret_lex));
+			}
 		}
 	}
 	sort_list_token(lst);

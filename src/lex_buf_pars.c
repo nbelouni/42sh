@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 19:31:44 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/20 18:59:52 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/25 15:21:39 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,10 @@ int			parse_list(t_token **list, char *s, t_pt *p)
 	if (!s)
 		return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
 	if ((ret = lex_buf(s, &tmp)))
+	{
+		ft_strdel(&s);
 		return (ret);
+	}
 	if (!(new = ft_tokenew(tmp, p->type, s, p->level)))
 		return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
 	if (!(*list))
