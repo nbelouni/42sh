@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/26 21:52:46 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/26 22:03:19 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,9 @@ int		complete_final_line(t_buf *buf, t_token *lst)
 	tmp = lst;
 	while (tmp->next)
 		tmp = tmp->next;
-	if (tmp->word[strlen(tmp->word) - 1] == '\\')
+	if (is_backslash(tmp->word, strlen(tmp->word) - 1))
 		return (0);
-	if (tmp->bt_level || tmp->bc_level)
+	if ((tmp->bt_level || tmp->bc_level) && !is_separator_type(tmp->type))
 	{
 		if (!(tmp2 = ft_strjoin(buf->final_line, "; ")))
 			return(ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
@@ -90,9 +90,6 @@ int 	main(int argc, char **argv, char **envp)
 		if (is_line_ended(buf) < 0)
 			return (-1);
 		ret = parse_buf(&list, buf->final_line);
-/*
-**	DECOMMENTER POUR AFFICHER LA LISTE
-*/
 		if (ret > 0)
 			ft_print_token_list(&list); //debug impression
 		if (ret != ERR_NEW_PROMPT)

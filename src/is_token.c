@@ -6,11 +6,21 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/12 18:15:50 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/17 21:08:28 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/26 22:00:40 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
+
+int		is_backslash(char *s, int i)
+{
+	if (i == 0 || s[i - 1] != '\\')
+	{
+		if (s[i] == '\\')
+			return (1);
+	}
+	return (0);
+}
 
 int		is_group(char *s, int i)
 {
