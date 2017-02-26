@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/24 19:49:33 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/26 21:52:46 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,34 @@ void	parse(t_lst *env, char *line, char **envp)
 	}
 }
 
-int main(int argc, char **argv, char **envp)
+int		complete_final_line(t_buf *buf, t_token *lst)
+{
+	t_token	*tmp;
+	char	*tmp2;
+
+	if (!lst || !buf->line[0])
+		return (0);
+	tmp = lst;
+	while (tmp->next)
+		tmp = tmp->next;
+	if (tmp->word[strlen(tmp->word) - 1] == '\\')
+		return (0);
+	if (tmp->bt_level || tmp->bc_level)
+	{
+		if (!(tmp2 = ft_strjoin(buf->final_line, "; ")))
+			return(ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
+	}
+	else
+	{
+		if (!(tmp2 = ft_strjoin(buf->final_line, " ")))
+			return(ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
+	}
+	free(buf->final_line);
+	buf->final_line = tmp2;
+	return (0);
+}
+
+int 	main(int argc, char **argv, char **envp)
 {
 	(void)argc;
 	(void)argv;
@@ -70,6 +97,8 @@ int main(int argc, char **argv, char **envp)
 			ft_print_token_list(&list); //debug impression
 		if (ret != ERR_NEW_PROMPT)
 			ft_strdel(&(buf->final_line));
+		else
+			complete_final_line(buf, list);
 		if (list)
 			ft_tokendestroy(&list); //clean la list a mettre a la fin
 		ft_bzero(buf->line, BUFF_SIZE);
