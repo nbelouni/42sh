@@ -301,10 +301,11 @@ void print_debug_ast(t_tree *node)
 }
   else
   {
-    PUT2("\n node = ");
-    PUT2(node->token_or->word);
+    PUT2("\n node ======>>>>>> ");
     if (node->token == CMD)
-    print_tab(node->cmd);
+        print_tab(node->cmd);
+    else
+      PUT2(node->token_or->word);
     if (node->left)
     {
       PUT2(" \n node->left = ");
@@ -319,8 +320,8 @@ void print_debug_ast(t_tree *node)
     }
     else
       PUT2("\n node->right = NULL");
-    print_debug_ast(node->right);
-    print_debug_ast(node->left);
+      print_debug_ast(node->right);
+      print_debug_ast(node->left);
   }
 }
 
