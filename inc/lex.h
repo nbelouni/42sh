@@ -41,6 +41,12 @@ typedef struct		s_tree
 	struct s_tree	*right;
 }					t_tree;
 
+typedef struct s_lvl
+{
+	int 					bt_lvl;
+	int					 	bc_lvl;
+}							t_lvl;
+
 typedef struct  s_lib
 {
 	int 			toke;

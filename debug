@@ -1,56 +1,57 @@
 
-======concate cmd========
-
-lol 
- ===================finish=========== 
-
-======concate cmd========
-
-o77 
- ===================finish=========== 
-
-======concate cmd========
-
-mrrr
-des
-bare
-he 
- ===================finish=========== 
-
-======concate cmd========
-
-ls
--la
-coll
-et
-love 
- ===================finish=========== 
+ node = >> 
+ node->left = jeee 
+ node->right = occc
+ node = occcoccc   
+ node->left = NULL
+ node->right = NULL
+ node = NULL
+ node = NULL
+ node = jeeejeee   lol   
+ node->left = NULL
+ node->right = NULL
+ node = NULL
+ node = NULL
+ node = >> 
+ node->left = cool 
+ node->right = fuck
+ node = fuckfuck   lol   
+ node->left = NULL
+ node->right = NULL
+ node = NULL
+ node = NULL
+ node = coolcool   
+ node->left = NULL
+ node->right = NULL
+ node = NULL
+ node = NULL42sh: syntax error near unexpected token `('
+42sh: syntax error near unexpected token `('
 
  node = ; 
- node->left = && 
- node->right = &&
- node = && 
- node->left = lol 
- node->right = o77
- node = lol
+ node->left = ls 
+ node->right = (
+ node = (
+ node->left = NULL 
+ node->right = )
+ node = ) 
+ node->left = >>
+ node->right = NULL
+ node = NULL
+ node = >> 
+ node->left = ls 
+ node->right = cool
+ node = coolcool   
  node->left = NULL
  node->right = NULL
  node = NULL
  node = NULL
- node = o77
+ node = lsls   lol   
  node->left = NULL
  node->right = NULL
  node = NULL
  node = NULL
- node = && 
- node->left = mrrr 
- node->right = ls
- node = mrrr
- node->left = NULL
- node->right = NULL
  node = NULL
- node = NULL
- node = ls
+ node = lsls   -ls   
  node->left = NULL
  node->right = NULL
  node = NULL
