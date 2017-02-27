@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/24 17:22:13 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/27 17:34:42 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ void	parse(t_lst *env, char *line, char **envp)
 			ft_builtin_echo(env, args[0], args + 1);
 		else if (ft_strcmp(args[0], "cd") == 0)
 			ft_builtin_cd(env, args[0], args + 1);
-		else
-			ft_waitchild(args, envp);
+//		else
+//			ft_waitchild(args, envp);
 		ft_tabdel(args);
 	}
 }
@@ -72,6 +72,8 @@ int main(int argc, char **argv, char **envp)
 //			ft_print_token_list(&list); //debug impression
 		if (ret == TRUE)
 			ft_push_ast(list, &ast);
+//		print_debug_ast(ast);
+		exec_cmd(ast, env);
 		if (ret != ERR_NEW_PROMPT)
 			ft_strdel(&(buf->final_line));
 		if (list)

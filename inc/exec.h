@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 13:25:54 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/15 22:56:18 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/27 16:14:48 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 
-void			ft_waitchild(char **av, char **envp);
+int				exec_cmd(t_tree *root, t_lst *env);
+void			ft_exec(t_word *string, t_lst *env);
 
 #endif

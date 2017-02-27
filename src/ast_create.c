@@ -6,7 +6,7 @@
 /*   By: dogokar <dogokar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 14:41:10 by dogokar           #+#    #+#             */
-/*   Updated: 2017/02/17 14:42:01 by dogokar          ###   ########.fr       */
+/*   Updated: 2017/02/27 16:42:06 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,14 +208,18 @@ char  **concate_cmd(t_token *lst)
    i = cmd_len(tmp);
    if (!(argv = (char **)malloc(sizeof(char*) * i + 1)))
       return (NULL);
+//  PUT2("\n======concate cmd========\n");
    while (tmp && (count <= i -1))
    {
      argv[count] = ft_strdup(tmp->word);
+//     PUT2("\n");
+//     PUT2(argv[count]);
      ++count;
      tmp->select = 1;
      tmp = tmp->next;
    }
    argv[count] = NULL;
+ //  PUT2(" \n ===================finish=========== \n");
    return (argv);
 }
 
@@ -330,10 +334,7 @@ void ft_push_ast(t_token *list, t_tree **ast)
   t_tree  *head_node;
 
   (void)ast;
-
-  if (list)
-  {
-    head_node = new_tree(list);
-    print_debug_ast(head_node);
-  }
+  head_node = new_tree(list);
+	*ast = head_node;
+//  print_debug_ast(head_node);
 }

@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/11 12:30:14 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/21 17:05:28 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/25 22:37:38 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,7 @@ int		return_new_prompt(int ret);
 t_tree *creat_left(t_token *lst);
 t_tree *creat_right(t_token *lst);
 void 	ft_push_ast(t_token *list, t_tree **ast);
+void	print_debug_ast(t_tree *node);
 /*
 void	ft_cmdadd(t_cmd **alst, t_cmd *new);
 void	ft_cmdclear(t_cmd **cmd);
