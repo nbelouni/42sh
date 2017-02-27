@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 13:08:28 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/27 16:16:28 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/27 23:46:30 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,15 +53,7 @@ void			ft_exec(t_word *string, t_lst *env)
 	while (1)
 	{
 		s2 = ft_cut_path(&s, av[0]);
-/*		if (!s)
-		ft_putstr_fd("END", 2);
-		ft_putstr_fd("--S2--", 2);
-		ft_putstr_fd(s2, 2);
-		ft_putchar_fd('\n', 2);
-		ft_putstr_fd("--S--", 2);
-		ft_putstr_fd(s, 2);
-		ft_putchar_fd('\n', 2);
-*/		if (lstat(av[0], &st) == 0 && st.st_mode & S_IXUSR)
+		if (lstat(av[0], &st) == 0 && st.st_mode & S_IXUSR)
 			execve(av[0], av, envp);
 		if (lstat(s2, &st) == 0 && st.st_mode & S_IXUSR)
 			execve(s2, av, envp);

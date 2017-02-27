@@ -6,29 +6,28 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 16:21:02 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/27 19:59:49 by alallema         ###   ########.fr       */
+/*   Updated: 2017/02/28 00:00:24 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
-static void		ft_exec_node(t_tree *root, t_lst *env);
+static void		ft_exec_node(t_tree *root, t_lst *env, int in_fd);
 
-static void		ft_check_tok(t_tree *node, t_lst *env)
+static void		ft_check_tok(t_tree *node, t_lst *env, int in_fd)
 {
 	int		statval;
 	pid_t	pid;
-//	int		pipefd[2];
 //	int		file;
 
+	(void)in_fd;
 	pid = fork();
-//	pipe(pipefd);
 	if (pid < 0)
 		return ;
 	if (pid > 0)
 	{
 		wait(&statval);
-		ft_exec_node(node, env);
+		ft_exec_node(node, env, in_fd);
 	}
 	if (pid == 0)
 	{
@@ -39,13 +38,24 @@ static void		ft_check_tok(t_tree *node, t_lst *env)
 	}
 }
 
-static void		ft_exec_node(t_tree *root, t_lst *env)
+static void		ft_exec_node(t_tree *root, t_lst *env, int in_fd)
 {
-//	int		statval;
 	t_tree	*node;
+	int		pipefd[2];
 
-	(void)env;
+	(void)in_fd;
 	node = root;
+	if (node->token_or->type == PIPE)
+	{
+		PUT2("PIPE\n");
+		if (pipe(pipefd) < 0)
+			ft_putstr_fd("error pipe\n", 2);
+		dup2(pipefd[0], in_fd);
+//		close(pipefd[0]);
+//		dup2(in_fd, STDIN_FILENO);
+		dup2(pipefd[1], STDOUT_FILENO);
+//		close(pipefd[1]);
+	}
 	if (!node)
 	{
 		PUT2("none node\n");
@@ -54,13 +64,14 @@ static void		ft_exec_node(t_tree *root, t_lst *env)
 	if (node->left)
 	{
 //		PUT2("node left\n");
-		ft_check_tok(node->left, env);
+		ft_check_tok(node->left, env, pipefd[1]);
 	}
 	if (node->right)
 	{
 //		PUT2("node right\n");
-		ft_check_tok(node->right, env);
+		ft_check_tok(node->right, env, pipefd[0]);
 	}
+//	close(pipefd[1]);
 }
 /*
 static void		ft_find_dot(t_tree *root, t_lst *env)
@@ -100,7 +111,7 @@ static void		ft_waitchild(t_tree *root, t_lst *env)
 		if (root->token_or->type == CMD)
 			ft_exec(root->token_or->string, env);
 		else
-			ft_exec_node(root, env);
+			ft_exec_node(root, env, STDIN_FILENO);
 	}
 }
 
