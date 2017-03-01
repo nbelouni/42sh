@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 16:21:02 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/28 00:00:24 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/01 19:37:16 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,19 +18,34 @@ static void		ft_check_tok(t_tree *node, t_lst *env, int in_fd)
 {
 	int		statval;
 	pid_t	pid;
-//	int		file;
+	char	buf[255];
 
 	(void)in_fd;
 	pid = fork();
+	ft_bzero(buf, 255);
 	if (pid < 0)
 		return ;
 	if (pid > 0)
 	{
+		PUT2("wait cmd\n");
 		wait(&statval);
 		ft_exec_node(node, env, in_fd);
 	}
 	if (pid == 0)
 	{
+		PUT2("exec cmd\n");
+		PUT2(node->token_or->word);
+		X('\n');
+		if (ft_strcmp("wc", node->token_or->word) == 0)
+		{
+			PUT2("--READ EXEC--\n");
+//			dup2(in_fd, STDIN_FILENO);
+//			close(in_fd);
+			PUT2(node->token_or->word);
+			read(STDIN_FILENO, &buf, 255);
+//			close(STDIN_FILENO);
+			ft_putstr_fd(buf, 2);
+		}
 		if (node->token_or->type == CMD)
 			ft_exec(node->token_or->string, env);
 		else
@@ -40,21 +55,32 @@ static void		ft_check_tok(t_tree *node, t_lst *env, int in_fd)
 
 static void		ft_exec_node(t_tree *root, t_lst *env, int in_fd)
 {
+	char	buf[255];
 	t_tree	*node;
 	int		pipefd[2];
 
 	(void)in_fd;
 	node = root;
+	ft_bzero(buf, 255);
+	if (node->token_or->type == CMD && in_fd != STDIN_FILENO)
+	{
+		PUT2("CLOSE\n");
+//		dup2(in_fd, STDIN_FILENO);
+//		close(in_fd);
+	}
 	if (node->token_or->type == PIPE)
 	{
 		PUT2("PIPE\n");
 		if (pipe(pipefd) < 0)
 			ft_putstr_fd("error pipe\n", 2);
-		dup2(pipefd[0], in_fd);
 //		close(pipefd[0]);
 //		dup2(in_fd, STDIN_FILENO);
-		dup2(pipefd[1], STDOUT_FILENO);
+//		dup2(pipefd[1], STDOUT_FILENO);
 //		close(pipefd[1]);
+		close(pipefd[1]);
+		dup2(pipefd[0], STDIN_FILENO);
+		dup2(pipefd[1], STDOUT_FILENO);
+		close(pipefd[0]);
 	}
 	if (!node)
 	{
@@ -69,9 +95,11 @@ static void		ft_exec_node(t_tree *root, t_lst *env, int in_fd)
 	if (node->right)
 	{
 //		PUT2("node right\n");
-		ft_check_tok(node->right, env, pipefd[0]);
+		ft_check_tok(node->right, env, pipefd[1]);
 	}
+	PUT2("--END--\n");
 //	close(pipefd[1]);
+//	close(in_fd);
 }
 /*
 static void		ft_find_dot(t_tree *root, t_lst *env)
