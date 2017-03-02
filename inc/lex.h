@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/11 12:30:14 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/26 22:00:55 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/02 22:23:38 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ int		find_bracket_end(char *s, int i);
 
 int		parse_buf(t_token **lst, char *s);
 int		cut_space(char *s, int i);
-t_pt	*reset_int_pt(void);
+void	reset_int_pt(t_pt *pt);
 int		parse_list(t_token **list, char *s, t_pt *p);
 int		cut_cmd(t_token **list, char *s, t_pt *p);
 int		check_tok(char *s, int l);

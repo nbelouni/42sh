@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:01:52 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/01 22:12:50 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/02 20:53:36 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,6 +182,7 @@ int				set_to_paste(t_buf *buf, int cursor, size_t len);
 void			paste_in_buf(t_buf *buf, int cursor);
 
 void			print_post_curs(t_buf *buf);
+void			print_pre_curs(t_buf *buf);
 
 int				is_line_ended(t_buf *buf);
 

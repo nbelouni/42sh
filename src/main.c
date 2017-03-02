@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/02 15:00:11 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/02 22:19:29 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int 	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 
-	t_completion	completion = {NULL, NULL, NULL, NULL, NULL};
+	t_completion	completion = {NULL, NULL, NULL, NULL};
 	t_buf	*buf;
 	t_token	*list;
 	t_lst	*env;

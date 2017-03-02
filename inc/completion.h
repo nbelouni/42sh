@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/27 14:49:27 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/02 13:44:09 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/02 19:55:43 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ typedef struct			s_completion
 	t_sort_list			*username;
 	t_sort_list			*hostname;
 	t_sort_list			*variable;
-	t_sort_list			*file;
 }						t_completion;
 
 t_sort_list			*create_sort_list(char *s);

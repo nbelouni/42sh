@@ -6,24 +6,19 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 19:31:44 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/25 15:21:39 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/02 22:23:11 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
-t_pt		*reset_int_pt(void)
+void		reset_int_pt(t_pt *pt)
 {
-	t_pt	*pt;
-
-	if (!(pt = ft_memalloc(sizeof(t_pt))))
-		return (NULL);
 	pt->i = 0;
 	pt->len = 0;
 	pt->type = 0;
 	pt->level[0] = 0;
 	pt->level[1] = 0;
-	return (pt);
 }
 
 int			parse_list(t_token **list, char *s, t_pt *p)

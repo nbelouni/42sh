@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/01 17:17:28 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/01 23:42:43 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/02 22:05:45 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ int			fill_command(t_sort_list **list, char *path)
 		}
 		closedir(dirp);
 	}
+	ft_tabdel(bin_path);
 	return (0);
 }
 
@@ -58,30 +59,30 @@ int			edit_username_line(char **line)
 	return (0);
 }
 
-int			insert_in_list(t_sort_list **list, char *line)
+int			insert_in_list(t_sort_list **list, char *s)
 {
 	t_sort_list		*tmp;
 	t_sort_list		*tmp_next;
 
-	if (line && !*list)
+	if (s && !*list)
 	{
-		if (!(*list = create_sort_list(ft_strdup(line))))
+		if (!(*list = create_sort_list(ft_strdup(s))))
 			return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
 	}
-	else if (line)
+	else if (s)
 	{
 		tmp = *list;
-		while (tmp->next && ft_strcmp(tmp->next->s, line) > 0)
+		while (tmp->next && ft_strcmp(tmp->next->s, s) > 0)
 			tmp = tmp->next;
-		if (ft_strcmp(tmp->s, line) && (!tmp->next || ft_strcmp(tmp->next->s, line)))
+		if (ft_strcmp(tmp->s, s) && (!tmp->next || ft_strcmp(tmp->next->s, s)))
 		{
 			tmp_next = (tmp->next) ? tmp->next : NULL;
-			if (!(tmp->next = create_sort_list(ft_strdup(line)))) 
+			if (!(tmp->next = create_sort_list(ft_strdup(s))))
 				return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
 			tmp->next->prev = tmp;
 			tmp->next->next = tmp_next;
 			if (tmp_next)
-				tmp_next->prev  = tmp->next;
+				tmp_next->prev = tmp->next;
 		}
 	}
 	return (0);
