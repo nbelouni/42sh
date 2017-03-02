@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:01:52 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/19 19:53:05 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/01 22:12:50 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@
 # define ALT_LEFT  1146821403
 # define ALT_UP 1096489755
 # define ALT_DOWN 1113266971
+# define TAB 9
 
 # define PUT1(x) (ft_putstr_fd(x, 1));
 # define PUT2(x) (ft_putstr_fd(x, 2));
@@ -148,7 +149,7 @@ void			t_puts(char *s, int i);
 int				init_termios(void);
 int				close_termios(void);
 
-int				read_line(t_buf *buf);
+int				read_line(t_buf *buf, t_completion *completion);
 
 void			clean_pos_curs(void);
 t_bool			init_curs(void);

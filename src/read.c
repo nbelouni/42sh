@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/21 16:47:01 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/21 19:13:31 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/02 15:07:25 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,27 +70,34 @@ int		mv_and_read(t_buf *buf, int x, int ret)
 }
 
 /*
-**	Va falloir trouver un autre moyen de recuperer les caracteres speciaux
-*/
+ **	Va falloir trouver un autre moyen de recuperer les caracteres speciaux
+ */
 
-int		read_line(t_buf *buf)
+int		read_line(t_buf *buf, t_completion *completion)
 {
 	unsigned int	x;
 	int				ret;
 	int				err;
+	int				i;
 
+	i = -1;
 	x = 0;
 	err = 0;
 	init_termios();
 	ft_putstr_fd(get_prompt_str(), 1);
+	print_post_curs(buf);
+//	m_right(buf->size);
 	while ((ret = read(0, (char *)&x, 4)))
 	{
 		if ((err = mv_and_read(buf, x, ret)) < 0)
 			return (err);
 		if ((err = cpy_cut_paste(buf, x)) < 0)
 			return (err);
+		if ((err = complete_line(buf, completion, x)) != 0)
+			return (err);
 		if (x == RETR)
 		{
+			PUT2(buf->line);
 			m_right(calc_len(buf, END));
 			ft_putchar_fd((char)x, 1);
 			return (0);

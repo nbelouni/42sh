@@ -51,6 +51,9 @@ SRCS = 	ft_builtin_cd.c		\
 		is_token_type.c		\
 		return_errors.c		\
 		count_word.c		\
+		sort_list.c			\
+		completion.c		\
+		edit_completion.c	\
 		ft_print.c
 
 SRCC = $(addprefix $(SDIR),$(SRCS))
