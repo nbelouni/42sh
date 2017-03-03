@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/19 15:29:18 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/24 17:22:21 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/03 16:27:42 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int			print_err_message(char *s)
 
 int			is_new_prompt(t_token *prev)
 {
-	if (prev)
+	if (prev && prev->next)
 	{
 		prev = prev->next;
 		if (prev->bt_level < 0)
@@ -80,5 +80,6 @@ int			can_create_tree(t_token *lst)
 			return (ret);
 		tmp = tmp->next;
 	}
-	return (is_new_prompt(prev));
+	return (TRUE);
+//	return (is_new_prompt(prev));
 }

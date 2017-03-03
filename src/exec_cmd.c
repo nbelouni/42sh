@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 16:21:02 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/02 20:13:08 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/03 16:29:31 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static void		ft_check_tok(t_tree *node, t_lst *env, int *pipefd, int in_fd)
 		}
 		PUT1("exec\n");
 		if (node->token_or->type == CMD)
-			ft_exec(node->token_or->string, env);
+			ft_exec(node->cmd, env);
 		else
 			exit(0);
 	}
@@ -101,25 +101,7 @@ static void		ft_exec_node(t_tree *root, t_lst *env, int in_fd)
 //	close(pipefd[0]);
 //	close(in_fd);
 }
-/*
-static void		ft_find_dot(t_tree *root, t_lst *env)
-{
-	t_tree	*node;
 
-	(void)env;
-	node = root;
-	if (!node)
-		return ;
-	if (node->type == DOT)
-		(ft_resurs_tree(node->left, env));
-//	if (node->left)
-//		();
-//	if (node->right)
-//		();
-//	ft_find_dot(node->left);
-//	ft_find_dot(node->right);
-}
-*/
 static void		ft_waitchild(t_tree *root, t_lst *env)
 {
 	pid_t	pid;
@@ -137,7 +119,7 @@ static void		ft_waitchild(t_tree *root, t_lst *env)
 	if (pid == 0)
 	{
 		if (root->token_or->type == CMD)
-			ft_exec(root->token_or->string, env);
+			ft_exec(root->cmd, env);
 		else
 			ft_exec_node(root, env, STDOUT_FILENO);
 	}
@@ -148,7 +130,6 @@ int				exec_cmd(t_tree *root, t_lst *env)
 	t_tree	*node;
 
 	node = root;
-//	ft_find_dot(node);
 	ft_waitchild(node, env);
 	ft_putstr_fd("\n", 1);
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 13:08:28 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/27 23:46:30 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/03 16:28:34 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,17 +37,17 @@ static char		*ft_cut_path(char **s, char *av)
 ** s-> path a changer avec la hastable
 */
 
-void			ft_exec(t_word *string, t_lst *env)
+void			ft_exec(char **av, t_lst *env)
 {
 	struct stat	st;
 	char		*s;
 	char		*s2;
-	char		**av;
+//	char		**av;
 	char		**envp;
 
-	av = ft_memalloc(sizeof(char *) * 2);
-	av[0] = string->s;
-	av[1] = NULL;
+//	av = ft_memalloc(sizeof(char *) * 2);
+//	av[0] = string->s;
+//	av[1] = NULL;
 	envp = ft_env_to_tab(env);
 	s = "/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/X11/bin:/usr/local/munki:/Users/alallema/bin:/Users/alallema/.rvm/bin";
 	while (1)

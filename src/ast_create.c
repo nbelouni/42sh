@@ -6,7 +6,7 @@
 /*   By: dogokar <dogokar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 14:41:10 by dogokar           #+#    #+#             */
-/*   Updated: 2017/02/27 16:42:06 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/03 15:30:05 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -353,6 +353,6 @@ void ft_push_ast(t_token *list, t_tree **ast)
   if (list)
   {
     head_node = new_tree(list);
-    print_debug_ast(head_node);
+  //  print_debug_ast(head_node);
   }
 }
