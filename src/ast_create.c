@@ -44,6 +44,7 @@ t_tree  *add_tree(t_token *lst)
 
   node = ft_memalloc(sizeof(t_tree));
   node->token_or = lst;
+  node->cmd = NULL;
   node->father = NULL;
   node->left = NULL;
   node->right = NULL;
@@ -102,6 +103,15 @@ int     test_lvl(int bt_lvl, int bc_lvl, t_lvl *lvl)
   return (1);
 }
 
+int    escape_brac(t_token *lst)
+{
+  if (lst->type == O_BRACE || lst->type == C_BRACE || lst->type == O_BRACKET
+    || lst->type == C_BRACKET)
+    return (1);
+    else
+    return (0);
+  }
+
 int  priority(t_token *node_lst, t_token *tmp, t_lvl *lvl)
 {
   int tmp_bt;
@@ -130,7 +140,6 @@ t_lvl   *initlvl(int bt_lvl, int bc_lvl)
   lvl->bc_lvl = bc_lvl;
   return (lvl);
 }
-
 
 t_token *search_toke(t_token *lst, t_lvl *lvl)
 {
@@ -161,7 +170,7 @@ t_token *search_toke(t_token *lst, t_lvl *lvl)
     tmp = tmp->next;
   }
   if (lvl)
-  ft_memdel((void*)&lvl);
+    ft_memdel((void*)&lvl);
   if (lvl_up && node_lst == NULL)
     node_lst = search_toke(lst, lvl_up);
   return (node_lst);
@@ -247,10 +256,12 @@ t_tree *recurs_creat_tree(t_token *lst)
   node->token = tmp->type;
   if (tmp->type == CMD)
     node->cmd = concate_cmd(tmp);
-  else
-    node->cmd = NULL;
-  node->left = creat_left(tmp);
   node->right= creat_right(tmp);
+  if (node->right)
+      node->right->father = node;
+    node->left = creat_left(tmp);
+  if (node->left)
+    node->left->father = node;
   return (node);
 }
 
@@ -288,13 +299,18 @@ t_tree  *new_tree(t_token *lst)
     tmp = search_toke(lst, NULL);
     tmp->select = 1;
     node = add_tree(tmp);
+    node->token = tmp->type;
+    if (tmp->type == CMD)
+        node->cmd = concate_cmd(tmp);
     node->right = creat_right(tmp);
+    if (node->right)
+      node->right->father = node;
     node->left = creat_left(tmp);
+    if (node->left)
+      node->left->father = node;
   }
   return (node);
 }
-
-
 
 void print_debug_ast(t_tree *node)
 {
@@ -334,7 +350,9 @@ void ft_push_ast(t_token *list, t_tree **ast)
   t_tree  *head_node;
 
   (void)ast;
-  head_node = new_tree(list);
-	*ast = head_node;
-//  print_debug_ast(head_node);
+  if (list)
+  {
+    head_node = new_tree(list);
+    print_debug_ast(head_node);
+  }
 }
