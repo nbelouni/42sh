@@ -133,10 +133,11 @@ int		return_new_prompt(int ret);
 **       ast
 */
 
-t_tree *creat_left(t_token *lst);
-t_tree *creat_right(t_token *lst);
-void 	ft_push_ast(t_token *list, t_tree **ast);
-void	print_debug_ast(t_tree *node);
+t_tree 	*creat_left(t_token *lst, t_lvl *lvl);
+t_tree 	*creat_right(t_token *lst, t_lvl *lvl);
+void 		ft_push_ast(t_token *list, t_tree **ast);
+void 		free_ast(t_tree *ast);
+void 		print_debug_ast(t_tree *node);
 /*
 void	ft_cmdadd(t_cmd **alst, t_cmd *new);
 void	ft_cmdclear(t_cmd **cmd);
