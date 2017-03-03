@@ -219,6 +219,7 @@ char  **concate_cmd(t_token *lst)
       return (NULL);
    while (tmp && (count <= i -1))
    {
+
      argv[count] = ft_strdup(tmp->word);
      ++count;
      tmp->select = 1;
@@ -252,34 +253,40 @@ t_tree *recurs_creat_tree(t_token *lst)
   node->token = tmp->type;
   if (tmp->type == CMD)
     node->cmd = concate_cmd(tmp);
-  node->right= creat_right(tmp);
+  node->right= creat_right(tmp, NULL);
   if (node->right)
       node->right->father = node;
-    node->left = creat_left(tmp);
+    node->left = creat_left(tmp, NULL);
   if (node->left)
     node->left->father = node;
   return (node);
 }
 
-t_tree *creat_left(t_token *lst)
+t_tree *creat_left(t_token *lst, t_lvl *lvl)
 {
   t_token  *tmp;
 
   tmp = NULL;
-  if (!(tmp = search_toke_prev(lst, NULL)))
+  if (!(tmp = search_toke_prev(lst, lvl)))
     return (NULL);
   tmp->select = 1;
   return (recurs_creat_tree(tmp));
 }
 
-t_tree   *creat_right(t_token *lst)
+t_tree   *creat_right(t_token *lst, t_lvl *lvl)
 {
   t_token  *tmp;
 
   tmp = NULL;
-  if (!(tmp = search_toke(lst, NULL)))
+  if (!(tmp = search_toke(lst, lvl)))
     return(NULL);
   tmp->select = 1;
+    if (escape_brac(tmp))
+    {
+      PUT2(tmp->word);
+      PUT2("\n ^^^^^^^^ \n");
+      return (creat_right(tmp, lvl));
+    }
   return (recurs_creat_tree(tmp));
 }
 
@@ -298,10 +305,10 @@ t_tree  *new_tree(t_token *lst)
     node->token = tmp->type;
     if (tmp->type == CMD)
         node->cmd = concate_cmd(tmp);
-    node->right = creat_right(tmp);
+    node->right = creat_right(tmp, NULL);
     if (node->right)
       node->right->father = node;
-    node->left = creat_left(tmp);
+    node->left = creat_left(tmp, NULL);
     if (node->left)
       node->left->father = node;
   }
@@ -341,14 +348,38 @@ void print_debug_ast(t_tree *node)
   }
 }
 
+// void free_content_ast(t_tree *node)
+// {
+//   if (node->cmd != NULL)
+//   ft_tabdel(node->cmd);
+//   //if (node->father);
+//     //ft_memdel((void*)&node->father);
+// }
+//
+// void free_ast(t_tree *ast)
+// {
+//   if (!ast)
+//   {
+//     PUT2("fin de branche");
+//     return ;
+//   }
+//   else
+//   {
+//     free_content_ast(ast);
+//     free_ast(ast->left);
+//     free_ast(ast->right);
+//     ft_memdel((void *)&ast);
+//   }
+// }
+
 void ft_push_ast(t_token *list, t_tree **ast)
 {
   t_tree  *head_node;
 
-  (void)ast;
   if (list)
   {
     head_node = new_tree(list);
-    print_debug_ast(head_node);
+    *ast = head_node;
+
   }
 }

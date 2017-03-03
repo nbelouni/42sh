@@ -71,7 +71,11 @@ int main(int argc, char **argv, char **envp)
 //		if (ret > 0)
 //			ft_print_token_list(&list); //debug impression
 		if (ret == TRUE)
+		{
 			ft_push_ast(list, &ast);
+//			print_debug_ast(ast);
+//			free_ast(&ast);
+		}
 		if (ret != ERR_NEW_PROMPT)
 			ft_strdel(&(buf->final_line));
 		if (list)
