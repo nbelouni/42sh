@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/03 16:34:31 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/03 23:19:21 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ int main(int argc, char **argv, char **envp)
 		{
 			ft_push_ast(list, &ast);
 			exec_cmd(ast, env);
+			ast = NULL;
 //			print_debug_ast(ast);
 //			free_ast(&ast);
 		}
