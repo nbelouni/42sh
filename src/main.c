@@ -73,8 +73,8 @@ int main(int argc, char **argv, char **envp)
 		if (ret == TRUE)
 		{
 			ft_push_ast(list, &ast);
-//			print_debug_ast(ast);
-//			free_ast(&ast);
+			print_debug_ast(ast);
+			free_ast(ast);
 		}
 		if (ret != ERR_NEW_PROMPT)
 			ft_strdel(&(buf->final_line));

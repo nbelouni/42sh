@@ -24,6 +24,17 @@ t_tree *init_node(void)
   return (node);
 }
 
+t_lvl   *initlvl(int bt_lvl, int bc_lvl)
+{
+  t_lvl *lvl;
+
+  if (!(lvl = (t_lvl*)malloc(sizeof(t_lvl))))
+  return (NULL);
+  lvl->bt_lvl = bt_lvl;
+  lvl->bc_lvl = bc_lvl;
+  return (lvl);
+}
+
 static  t_lib lib_op[LENLIB] =
 {
   {.toke = DOT, .priority = 10},
@@ -65,6 +76,10 @@ t_lib  *cheak_lib(t_token *node)
     return (NULL);
 }
 
+/*
+** compare les operateur par rappot à la lib_op
+*/
+
 int  compare_token_op(t_token *node_lst, t_token *tmp)
 {
   t_lib  *lib_lst;
@@ -80,7 +95,7 @@ int  compare_token_op(t_token *node_lst, t_token *tmp)
   else if (lib_lst && lib_tmp)
   {
     if (lib_lst->priority < lib_tmp->priority)
-      return(1);
+      return (1);
     else
       return (0);
   }
@@ -98,19 +113,23 @@ int  compare_token_com(t_token *node_lst, t_token *tmp)
 int     test_lvl(int bt_lvl, int bc_lvl, t_lvl *lvl)
 {
   if (bt_lvl == lvl->bt_lvl && bc_lvl == lvl->bc_lvl)
-  return (0);
+    return (0);
   else
-  return (1);
+    return (1);
 }
 
-int    escape_brac(t_token *lst)
-{
-  if (lst->type == O_BRACE || lst->type == C_BRACE || lst->type == O_BRACKET
-    || lst->type == C_BRACKET)
-    return (1);
-    else
-    return (0);
-  }
+// int    escape_brac(t_token *lst)
+// {
+//   if (lst->type == O_BRACE || lst->type == C_BRACE || lst->type == O_BRACKET
+//     || lst->type == C_BRACKET)
+//     return (1);
+//     else
+//     return (0);
+//   }
+
+/*
+**    regle pour parser la liste et inserer les token au bon endroit
+*/
 
 int  priority(t_token *node_lst, t_token *tmp, t_lvl *lvl)
 {
@@ -130,16 +149,10 @@ int  priority(t_token *node_lst, t_token *tmp, t_lvl *lvl)
   return (0);
 }
 
-t_lvl   *initlvl(int bt_lvl, int bc_lvl)
-{
-  t_lvl *lvl;
-
-  if (!(lvl = (t_lvl*)malloc(sizeof(t_lvl))))
-    return (NULL);
-  lvl->bt_lvl = bt_lvl;
-  lvl->bc_lvl = bc_lvl;
-  return (lvl);
-}
+/*
+** fonction qui va chercher le bon element dans la list
+** recursive lorsqu'il trouve plus d'element et que le bt ou bc lvl est incrementer
+*/
 
 t_token *search_toke(t_token *lst, t_lvl *lvl)
 {
@@ -176,6 +189,10 @@ t_token *search_toke(t_token *lst, t_lvl *lvl)
   return (node_lst);
 }
 
+/*
+** remonte la liste
+*/
+
 t_token *search_toke_prev(t_token *lst, t_lvl *lvl)
 {
   t_token   *tmp;
@@ -190,44 +207,56 @@ t_token *search_toke_prev(t_token *lst, t_lvl *lvl)
   return (search_toke(tmp, lvl));
 }
 
-int   cmd_len(t_token *lst)
+/*
+** cree le char **  ex: ls -la tmp
+*/
+
+void cmd_len(t_token *lst, int *i, int *j)
 {
   t_token *tmp;
-  int i;
+  int tmpi;
 
   tmp = lst;
-  i = 0;
+  tmpi = 0;
   while (tmp && (tmp->type == CMD || tmp->type == ARG))
   {
+    if ((tmpi = ft_strlen(tmp->word)) >= *j)
+        *j = tmpi;
+    *i = *i + 1;
     tmp = tmp->next;
-    ++i;
   }
-  return (i);
 }
 
 char  **concate_cmd(t_token *lst)
  {
    t_token *tmp;
-   int      i;
+   int     i;
+   int      j;
    int       count;
    char     **argv;
 
    tmp = lst;
    count = 0;
-   i = cmd_len(tmp);
-   if (!(argv = (char **)malloc(sizeof(char*) * i + 1)))
+   i = 0;
+   j = 0;
+   cmd_len(tmp, &i, &j);
+   argv = NULL;
+   if (!(argv = (char **)malloc(sizeof(char*) * (i * j))))
       return (NULL);
    while (tmp && (count <= i -1))
    {
-
      argv[count] = ft_strdup(tmp->word);
-     ++count;
+      ++count;
      tmp->select = 1;
      tmp = tmp->next;
    }
    argv[count] = NULL;
    return (argv);
 }
+
+/*
+** print le char ** pour le debug
+*/
 
 void print_tab(char **tabol)
 {
@@ -241,6 +270,10 @@ void print_tab(char **tabol)
     ++i;
   }
 }
+
+/*
+** recursive de creation de ast
+*/
 
 t_tree *recurs_creat_tree(t_token *lst)
 {
@@ -262,6 +295,10 @@ t_tree *recurs_creat_tree(t_token *lst)
   return (node);
 }
 
+/*
+** branche de gauche
+*/
+
 t_tree *creat_left(t_token *lst, t_lvl *lvl)
 {
   t_token  *tmp;
@@ -273,6 +310,10 @@ t_tree *creat_left(t_token *lst, t_lvl *lvl)
   return (recurs_creat_tree(tmp));
 }
 
+/*
+** branche de droite
+*/
+
 t_tree   *creat_right(t_token *lst, t_lvl *lvl)
 {
   t_token  *tmp;
@@ -281,15 +322,12 @@ t_tree   *creat_right(t_token *lst, t_lvl *lvl)
   if (!(tmp = search_toke(lst, lvl)))
     return(NULL);
   tmp->select = 1;
-    if (escape_brac(tmp))
-    {
-      PUT2(tmp->word);
-      PUT2("\n ^^^^^^^^ \n");
-      return (creat_right(tmp, lvl));
-    }
   return (recurs_creat_tree(tmp));
 }
 
+/*
+** cree la tete de ast
+*/
 t_tree  *new_tree(t_token *lst)
 {
   t_tree  *node;
@@ -314,6 +352,11 @@ t_tree  *new_tree(t_token *lst)
   }
   return (node);
 }
+
+/*
+**       print ast pour le debug
+**
+*/
 
 void print_debug_ast(t_tree *node)
 {
@@ -348,29 +391,29 @@ void print_debug_ast(t_tree *node)
   }
 }
 
-// void free_content_ast(t_tree *node)
-// {
-//   if (node->cmd != NULL)
-//   ft_tabdel(node->cmd);
-//   //if (node->father);
-//     //ft_memdel((void*)&node->father);
-// }
-//
-// void free_ast(t_tree *ast)
-// {
-//   if (!ast)
-//   {
-//     PUT2("fin de branche");
-//     return ;
-//   }
-//   else
-//   {
-//     free_content_ast(ast);
-//     free_ast(ast->left);
-//     free_ast(ast->right);
-//     ft_memdel((void *)&ast);
-//   }
-// }
+
+void free_content_ast(t_tree *node)
+{
+  if (node->cmd != NULL)
+    ft_tabdel(node->cmd);
+  node->cmd = NULL;
+}
+
+void free_ast(t_tree *ast)
+{
+  if (!ast)
+  {
+    PUT2("fin de branche");
+    return ;
+  }
+  else
+  {
+    free_content_ast(ast);
+    free_ast(ast->left);
+    free_ast(ast->right);
+    ft_memdel((void *)&ast);
+  }
+}
 
 void ft_push_ast(t_token *list, t_tree **ast)
 {
@@ -380,6 +423,5 @@ void ft_push_ast(t_token *list, t_tree **ast)
   {
     head_node = new_tree(list);
     *ast = head_node;
-
   }
 }
