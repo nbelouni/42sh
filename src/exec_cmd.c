@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 16:21:02 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/01 19:37:16 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/02 20:13:08 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,38 +14,43 @@
 
 static void		ft_exec_node(t_tree *root, t_lst *env, int in_fd);
 
-static void		ft_check_tok(t_tree *node, t_lst *env, int in_fd)
+static void		ft_check_tok(t_tree *node, t_lst *env, int *pipefd, int in_fd)
 {
 	int		statval;
 	pid_t	pid;
 	char	buf[255];
 
 	(void)in_fd;
+	(void)pipefd;
+	(void)statval;
+	PUT1("fork\n");
 	pid = fork();
 	ft_bzero(buf, 255);
 	if (pid < 0)
 		return ;
 	if (pid > 0)
 	{
-		PUT2("wait cmd\n");
+		PUT1("recurs\n");
 		wait(&statval);
+		if (ft_strcmp("wc", node->token_or->word) == 0)
+		close(pipefd[0]);
+		close(pipefd[1]);
+		PUT1("recurs wait\n");
 		ft_exec_node(node, env, in_fd);
 	}
 	if (pid == 0)
 	{
-		PUT2("exec cmd\n");
-		PUT2(node->token_or->word);
+		PUT1("exec cmd\n");
+		PUT1(node->token_or->word);
 		X('\n');
 		if (ft_strcmp("wc", node->token_or->word) == 0)
 		{
-			PUT2("--READ EXEC--\n");
-//			dup2(in_fd, STDIN_FILENO);
-//			close(in_fd);
-			PUT2(node->token_or->word);
-			read(STDIN_FILENO, &buf, 255);
-//			close(STDIN_FILENO);
+			PUT1("--READ EXEC--\n");
+			PUT1(node->token_or->word);
+			read(0, &buf, 255);
 			ft_putstr_fd(buf, 2);
 		}
+		PUT1("exec\n");
 		if (node->token_or->type == CMD)
 			ft_exec(node->token_or->string, env);
 		else
@@ -62,43 +67,38 @@ static void		ft_exec_node(t_tree *root, t_lst *env, int in_fd)
 	(void)in_fd;
 	node = root;
 	ft_bzero(buf, 255);
-	if (node->token_or->type == CMD && in_fd != STDIN_FILENO)
+	if (node->token_or->type == CMD/* && in_fd != STDIN_FILENO*/)
 	{
-		PUT2("CLOSE\n");
-//		dup2(in_fd, STDIN_FILENO);
 //		close(in_fd);
 	}
 	if (node->token_or->type == PIPE)
 	{
-		PUT2("PIPE\n");
+		PUT1("pipefd\n");
 		if (pipe(pipefd) < 0)
 			ft_putstr_fd("error pipe\n", 2);
-//		close(pipefd[0]);
-//		dup2(in_fd, STDIN_FILENO);
-//		dup2(pipefd[1], STDOUT_FILENO);
-//		close(pipefd[1]);
-		close(pipefd[1]);
-		dup2(pipefd[0], STDIN_FILENO);
-		dup2(pipefd[1], STDOUT_FILENO);
-		close(pipefd[0]);
 	}
 	if (!node)
 	{
-		PUT2("none node\n");
+		PUT1("none node\n");
 		return ;
 	}
 	if (node->left)
 	{
-//		PUT2("node left\n");
-		ft_check_tok(node->left, env, pipefd[1]);
+		PUT2("dup left\n");
+		dup2(pipefd[1], STDOUT_FILENO);
+//		close(pipefd[1]);
+		ft_check_tok(node->left, env, pipefd, in_fd);
 	}
 	if (node->right)
 	{
-//		PUT2("node right\n");
-		ft_check_tok(node->right, env, pipefd[1]);
+		PUT2("dup right\n");
+		dup2(pipefd[0], STDIN_FILENO);
+//		close(pipefd[0]);
+		ft_check_tok(node->right, env, pipefd, in_fd);
 	}
-	PUT2("--END--\n");
+//	PUT2("--END--\n");
 //	close(pipefd[1]);
+//	close(pipefd[0]);
 //	close(in_fd);
 }
 /*
@@ -139,7 +139,7 @@ static void		ft_waitchild(t_tree *root, t_lst *env)
 		if (root->token_or->type == CMD)
 			ft_exec(root->token_or->string, env);
 		else
-			ft_exec_node(root, env, STDIN_FILENO);
+			ft_exec_node(root, env, STDOUT_FILENO);
 	}
 }
 
