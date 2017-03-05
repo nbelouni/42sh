@@ -26,3 +26,10 @@ test sous-shell& accolade
 
 
 	>, <, ||, && --> pas de out
+  // opts -> chaine d'options dans define
+  // args -> arguments au builtins (options incluses)
+  // au retour, opt[0] contient soit le code d'erreur, soit la position dans args
+  // de la fin des options.
+  //int *ft_opt_parse(char *opts, char **args, size_t overwrite)
+  #define UNSET_OPT "iu" -> opt{pos/code erreur, 1/0, 1/0}
+   exemple opt[1] -> 1
