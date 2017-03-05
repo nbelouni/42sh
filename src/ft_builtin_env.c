@@ -6,106 +6,144 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/07 18:24:17 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/02/13 17:52:43 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/05 15:14:02 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
 /*
-**	ft_lstdup cree une copie d'une liste et la retourne.
+**	ft_parse_env est une fonction qui va parcourir args afin d'y trouver 
+**	le format var=value, si il ne trouve pas var=value, il retourne ret qui est
+**	l'index dans les args où l'export de type var=value se termine, sinon
+**	il export la chaine contenu dans args.
 */
 
-t_lst		*ft_lstdup(t_lst *to_dup)
+static int	ft_parse_env(t_lst *lst, char **args)
 {
-	t_lst	*dup_lst;
-	t_elem	*tmp;
-	t_elem	*tmp2;
+	int	ret;
+	int	ret2;
 
-	tmp = to_dup->head;
-	if ((dup_lst = ft_init_list()) == NULL)
+	ret = 0;
+	ret2 = 0;
+	if (args != NULL && args[ret] != NULL)
+	{
+		while (args[ret] != NULL)
+		{
+			if (ft_strchr(args[ret], '=') == NULL)
+			{
+				return (ret);
+			}
+			else
+			{
+				if ((ret2 = ft_export(lst, args[ret])) != 0)
+					return (ret2);
+			}
+			++ret;
+		}
+		++ret;
+	}
+	return (ret);
+}
+
+/*
+**	ft_getlst_env permet simplement d'initialisé et/ou de de copier la liste
+**	dans dup, puis de la retourner, selon si env est remplis ou non.
+*/
+
+static t_lst	*ft_getlst_env(t_lst *env, int *opt)
+{
+	t_lst	*dup;
+
+	dup = NULL;
+	if ((dup = ft_init_list()) == NULL)
+	{
 		return (NULL);
-	tmp2 = dup_lst->head;
-	while (tmp != NULL)
-	{
-		if ((tmp2 = ft_init_elem()) == NULL)
-			return (NULL);
-		tmp2->name = ft_strdup(tmp->name);
-		tmp2->value = (tmp->value) ? ft_strdup(tmp->value) : NULL;
-		ft_add_elem(tmp2, dup_lst);
-		tmp = tmp->next;
-		tmp2 = tmp2->next;
 	}
-	return (dup_lst);
+	if (env != NULL && opt[1] != 1)
+	{
+		if ((dup = ft_lstcpy(dup, env)) == NULL)
+		{
+			ft_del_list(dup);
+		}
+	}
+	return (dup);
+	// if (env != NULL && opt[1] == 0)
+	// {
+	// 	if ((dup = ft_lstdup(env)) == NULL)
+	// 	{
+	// 		return (NULL);
+	// 	}
+	// }
+	// else
+	// {
+	// 	if ((dup = ft_init_list()) == NULL)
+	// 	{
+	// 		return (NULL);
+	// 	}
+	// }
+	// return (dup);
 }
 
 /*
-**	ft_parse_env va parser les arguments par rapport a un index i
-**	et renvoyer ce meme index, incrémenté ou non. Si les arguments
-**	possedent un caractere '=' et qu'il n'est pas en premiere position,
-**	la chaine est considéré comme valide et on appelle notre ft_setenv
-**	afin de l'ajouter sous forme de maillon dans la liste d'env temporaire.
+**	ft_exec_env est appellée par ft_builtin_env afin de gerer ce dernier,
+**	il va verifier que les erreurs d'options ne sont pas présents, ainsi
+**	que verifier si l'allocation/duplication de la liste s'est bien déroulé,
+**	selon si l'option i est set ou non, auquel cas il retourne une erreur.
+**	Si tout s'est bien passé, ft_parse_env est appelé avec les arguments
+**	partant de la fin des options.
 */
 
-static int	ft_parse_env(t_lst **lst, char **args, int i)
+static int		ft_exec_env(t_lst *env, char **args)
 {
-	char	*name;
-	char	*value;
-
-	if (!(*lst) && ft_strchr(args[i], '=') && args[i][0] != '=')
-	{
-		if (((*lst) = ft_init_list()) == NULL)
-			return (ERR_EXIT);
-	}
-	while (args[i] != NULL)
-	{
-		if (!ft_strchr(args[i], '='))
-			break ;
-		if (args[i][0] == '=')
-			return (ft_print_error(args[i], ERR_ARG_INVALID, ERR_NEW_CMD));
-		value = NULL;
-		name = ft_strsub(args[i], 0, ft_get_index_of(args[i], '='));
-		if (ft_strlen(name) < ft_strlen(args[i]) + 1)
-			value = ft_strdup(args[i] + ft_strlen(name) + 1);
-		if (ft_setenv((*lst), name, value) == ERR_EXIT)
-			return (ERR_EXIT);
-		(value) ? ft_multi_free(name, value, NULL, NULL) : ft_strdel(&name);
-		i++;
-	}
-	return (i);
-}
-
-/*
-**	ft_builtin_env est le builtin gerant la commande "env" de notre shell,
-**	elle affiche la liste d'environnement si aucun parametre ne lui est passé
-**	ou fait du traitement sur un dup de cette liste si des arguments
-**	autres que l'option -i lui sont passé.
-*/
-
-int			ft_builtin_env(t_lst *env, char *cmd, char **args)
-{
+	int		ret;
 	int		*opt;
-	t_lst	*dup_env;
+	t_lst	*dup;
 
-	opt = NULL;
-	dup_env = NULL;
-	(void)cmd;
-	if ((!args || !args[0]))
-		(env && env->head) ? ft_print_lst(env) : 0;
+	if ((opt = ft_opt_parse(ENV_OPT, args, 0)) == NULL)
+		return (ERR_EXIT);
+	if (opt[0] == -1)
+		return (ft_free_and_return(ERR_NEW_CMD, opt, NULL));
+	if ((dup = ft_getlst_env(env, opt)) == NULL)
+		return (ft_free_and_return(ERR_EXIT, opt, NULL));
+	if (args[opt[0]] != NULL && args[opt[0]][0] != '\0')
+	{
+		ret = ft_parse_env(dup, &(args[opt[0]]));
+		if (ret < 0)
+			return (ft_free_and_return(ret, opt, NULL));
+		if (ret > (int)ft_tablen(args) || !args[ret] || !args[ret][0])
+			(dup != NULL) ? ft_print_lst(dup) : 0;
+		else
+			ft_putendl("bin execution");
+	}
+	else
+		(dup != NULL) ? ft_print_lst(dup) : 0;
+	free(opt);
+	(dup != NULL) ? ft_del_list(dup) : 0;
+	return (0);
+}
+
+/*
+**	la fonction ft_builtin_env permet de gerer le builtin selon les arguments,
+**	s'il n'y en a pas, la liste pointée par env est affichée,
+**	sinon, ft_exec_env est appellé pour gerer les cas specifiques au builtin.
+*/
+
+int			ft_builtin_env(t_lst *env, char **args)
+{
+	int	ret;
+
+	ret = 0;
+	if (args == NULL || *args == NULL)
+	{
+		if (env != NULL && env->head != NULL)
+		{
+			ft_print_lst(env);
+		}
+	}
 	else
 	{
-		opt = ft_opt_parse(opt, ENV_OPT, args, 0);
-		if (opt == (int *)-1 || opt == (int *)-2)
-			return ((int)opt);
-		if (env && (opt && !opt[0]))
-		{
-			if ((dup_env = ft_lstdup(env)) == NULL)
-				return (ERR_EXIT);
-		}
-		if ((opt[0] = ft_parse_env(&dup_env, args, opt[0])) != -1)
-			(args[opt[0]]) ? ft_putendl("bin func") : ft_print_lst(dup_env);
-		(dup_env) ? ft_del_list(dup_env) : NULL;
-		free(opt);
+		ret = ft_exec_env(env, args);
 	}
-	return ((opt && opt == (int *)-1) ? -1 : 0);
+	return (ret);
 }

@@ -21,6 +21,8 @@ SRCS = 	ft_builtin_cd.c		\
 		ft_norm_tools.c		\
 		ft_init.c			\
 		ft_list_tools.c		\
+		ft_list_tools2.c	\
+		ft_tools.c			\
 		ft_opt_parse.c		\
 		read.c				\
 		buf.c				\

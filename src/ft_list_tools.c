@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 20:00:04 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/02/13 20:06:36 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/04 20:27:54 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,17 @@ void		ft_print_lst(t_lst *lst)
 {
 	t_elem	*elem;
 
-	if (lst)
+	if (lst != NULL)
 	{
 		elem = lst->head;
-		while (elem)
+		while (elem != NULL)
 		{
 			write(1, elem->name, ft_strlen(elem->name));
 			write(1, "=", 1);
 			if (elem->value != NULL)
+			{
 				write(1, elem->value, ft_strlen(elem->value));
+			}
 			write(1, "\n", 1);
 			elem = elem->next;
 		}
@@ -40,12 +42,12 @@ void		ft_print_lst(t_lst *lst)
 **	pointé par g_set->env.
 */
 
-void		ft_add_elem(t_elem *elem, t_lst *lst)
+void		ft_insert_elem(t_elem *elem, t_lst *lst)
 {
-	if (elem && lst)
+	if (elem != NULL && lst != NULL)
 	{
 		lst->size++;
-		if (lst->head)
+		if (lst->head != NULL)
 		{
 			lst->tail->next = elem;
 			elem->prev = lst->tail;
@@ -63,29 +65,43 @@ void		ft_add_elem(t_elem *elem, t_lst *lst)
 **	(cette fonction est une dumb function (se referer au README))
 */
 
-void		ft_del_elem(t_elem **elem, t_lst *lst)
+void		ft_extract_elem(t_elem **elem, t_lst *lst)
 {
-	if ((*elem)->next && (*elem)->prev)
+	if ((*elem)->next != NULL && (*elem)->prev != NULL)
 	{
 		(*elem)->prev->next = (*elem)->next;
 		(*elem)->next->prev = (*elem)->prev;
 	}
-	else if ((*elem)->next && !(*elem)->prev)
+	else if ((*elem)->next != NULL && (*elem)->prev == NULL)
 	{
 		lst->head = (*elem)->next;
 		(*elem)->next->prev = NULL;
 	}
-	else if (!(*elem)->next && (*elem)->prev)
+	else if ((*elem)->next == NULL && (*elem)->prev != NULL)
 	{
 		lst->tail = (*elem)->prev;
 		(*elem)->prev->next = NULL;
 	}
-	if ((*elem)->name)
+}
+
+void		ft_clear_elem(t_elem **elem)
+{
+	if ((*elem)->name != NULL)
+	{
 		ft_strdel(&((*elem)->name));
-	if ((*elem)->value)
+	}
+	if ((*elem)->value != NULL)
+	{
 		ft_strdel(&((*elem)->value));
-	lst->size = lst->size - 1;
+	}
 	free(*elem);
+}
+
+void		ft_del_elem(t_elem **elem, t_lst *lst)
+{
+	ft_extract_elem(elem, lst);
+	ft_clear_elem(elem);
+	lst->size = lst->size - 1;
 }
 
 /*
@@ -120,21 +136,42 @@ t_elem		*ft_find_elem(char *name, t_lst *lst)
 **	elem->name et elem->value, pour enfin retourner le nouvel element.
 */
 
-t_elem		*ft_new_elem(char *str)
+t_elem		*ft_new_elem(char *s)
 {
 	t_elem	*elem;
 
 	if ((elem = ft_init_elem()) == NULL)
-	{
 		return (NULL);
-	}
-	if (ft_strchr(str, '='))
+	if ((elem->name = ft_strsub(s, 0, ft_get_index_of(s, '='))) != NULL)
 	{
-		elem->name = ft_strsub(str, 0, ft_get_index_of(str, '='));
-		if (elem->name && ft_strlen(str) != (ft_strlen(elem->name) + 1))
+		if (elem->name && ft_strlen(s) != (ft_strlen(elem->name) + 1))
 		{
-			elem->value = ft_strdup(str + ft_strlen(elem->name) + 1);
+			if (!(elem->value = ft_strdup(s + ft_strlen(elem->name) + 1)))
+			{
+				ft_clear_elem(&elem);
+				return (NULL);
+			}
+		}
+		return (elem);
+	}
+	ft_clear_elem(&elem);
+	return (NULL);
+}
+
+int			ft_add_elem(t_lst *lst, char *s)
+{
+	t_elem	*elem;
+
+	elem = NULL;
+	if (s && s[0])
+	{
+		if (ft_strchr(s, '='))
+		{
+			if ((elem = ft_new_elem(s)) == NULL)
+				return (ERR_EXIT);
+			ft_insert_elem(elem, lst);
+			return (0);
 		}
 	}
-	return (elem);
+	return (-1);
 }

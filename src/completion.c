@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 15:10:02 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/02 22:17:03 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/05 16:31:08 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,10 @@ int		is_any_quote(char *s, int i)
 
 int		is_cmd(char *s, int i)
 {
-	if (i < 0)
-		return (1);
 	while (i >= 0 && (is_char(s, i, ' ') || is_any_quote(s, i)))
 		i--;
+	if (i < 0)
+		return (1);
 	if (i >= 0 &&
 	(is_separator(s, i) || is_char(s, i, '(') || is_char(s, i, '{')))
 		return (1);
@@ -50,6 +50,20 @@ int		is_arg(char *s, int i)
 		i--;
 	if (i >= 0 && !is_separator(s, i) && !is_group(s, i))
 		return (1);
+	return (0);
+}
+
+int		find_prev_char(char *s, int len, char c)
+{
+	int		i;
+
+	i = 0;
+	while (len - i > 0)
+	{
+		if (is_char(s, len - i, c))
+			return (i);
+		i++;
+	}
 	return (0);
 }
 
@@ -183,22 +197,111 @@ int		replace_cplt(t_buf *buf, char *ref, int bg)
 	return (0);
 }
 
-int		fill_file(char *s, t_sort_list **lst, int begin)
+int		open_abs_path(char *s, DIR **dirp, int *bg)
 {
-	char			*path;
+	char			*extend_path;
+	char			*final_path;
+	int				len;
+
+	len = (g_curs.win_col * g_curs.row + g_curs.col) - get_prompt_len() - *bg;
+	if (!(extend_path = ft_strsub(s, *bg, len)))
+		return (ft_print_error("42sh: ", ERR_MALLOC, 0));
+	final_path = extend_path;
+	if ((*dirp = opendir(final_path)) == NULL)
+	{
+		while (len > 0 && final_path[len] != '/')
+		{
+			final_path[len] = 0;
+			len--;
+		}
+		free(*dirp);
+		if ((*dirp = opendir(final_path)) == NULL)
+			return (ft_print_error("42sh: ", "No directory.", 0));
+	}
+	if (ft_strlen(final_path) > 0)
+		*bg += ft_strlen(final_path);
+	ft_strdel(&final_path);
+	return (TRUE);
+}
+
+void	supp_last_path_part(char *s)
+{
+	int				len;
+
+	len = ft_strlen(s);
+	while (len > 0 && s[len] != '/')
+	{
+		s[len] = 0;
+		len--;
+	}
+}
+
+DIR		*can_open_path(char *fpath, char *cpath, char *extend_path, int *begin)
+{
+	DIR	*dirp;
+
+	if ((dirp = opendir(fpath)) == NULL)
+	{
+		supp_last_path_part(fpath);
+		if ((dirp = opendir(fpath)) == NULL)
+		{
+			if ((dirp = opendir(cpath)) == NULL)
+				return (NULL);
+		}
+		else if (find_prev_char(extend_path, ft_strlen(extend_path) - 1, '/'))
+		{
+			supp_last_path_part(extend_path);
+			if (ft_strlen(extend_path) > 0)
+				*begin += ft_strlen(extend_path);
+		}
+	}
+	else if (ft_strlen(extend_path) > 0)
+		*begin += ft_strlen(extend_path);
+	return (dirp);
+}
+
+int		open_rel_path(char *s, DIR **dirp, int *bg)
+{
+	char			*curr_path;
+	char			*extend_path;
+	char			*final_path;
+	int				len;
+	int				final_len;
+
+	len = (g_curs.win_col * g_curs.row + g_curs.col) - get_prompt_len() - *bg;
+	if (!(curr_path = getcwd(NULL, 1024)))
+		return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
+	if (!(extend_path = ft_strsub(s, *bg, len)))
+		return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
+	final_len = ft_strlen(curr_path) + ft_strlen(extend_path) + 2;
+	if (!(final_path = ft_strnew(final_len)))
+		return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
+	ft_multi_concat(final_path, curr_path, "/", extend_path);
+	if (!(*dirp = can_open_path(final_path, curr_path, extend_path, bg)))
+		return (0);
+	ft_strdel(&curr_path);
+	ft_strdel(&extend_path);
+	ft_strdel(&final_path);
+	return (TRUE);
+}
+
+int		fill_file(t_buf *buf, t_sort_list **lst, int *bg)
+{
 	DIR				*dirp;
 	struct dirent	*dp;
 	int				n_lst;
+	int				len;
 
-	(void)s;
-	(void)begin;
 	*lst = NULL;
-	path = NULL;
 	n_lst = 0;
-	if (!(path = getcwd(NULL, 1024)))
-		return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
-	if ((dirp = opendir(path)) == NULL)
-		return (ft_print_error("42sh: ", "No directory.", ERR_NEW_CMD));
+	len = (g_curs.win_col * g_curs.row + g_curs.col) - get_prompt_len() - *bg;
+	if (buf->line[*bg] == '/')
+	{
+		if (open_abs_path(buf->line, &dirp, bg) != TRUE)
+			return (ERR_EXIT);
+	}
+	else if (open_rel_path(buf->line, &dirp, bg) != TRUE)
+		return (ERR_EXIT);
 	while ((dp = readdir(dirp)) != NULL)
 	{
 		if (insert_in_list(lst, dp->d_name) == ERR_EXIT)
@@ -206,7 +309,6 @@ int		fill_file(char *s, t_sort_list **lst, int begin)
 		n_lst++;
 	}
 	closedir(dirp);
-	ft_strdel(&path);
 	return (n_lst);
 }
 
@@ -253,7 +355,7 @@ int		complete_line(t_buf *buf, t_completion *cplt, char x)
 		return (replace_or_print(buf, cplt->command, begin));
 	if (is_arg(buf->line, begin - 1))
 	{
-		if ((ret = fill_file(buf->line, &ref, begin)) < 0)
+		if ((ret = fill_file(buf, &ref, &begin)) < 0)
 			return (ret);
 		ret = replace_or_print(buf, ref, begin);
 		if (ref)
