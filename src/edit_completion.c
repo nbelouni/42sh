@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/01 17:17:28 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/02 22:05:45 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/05 18:08:02 by dogokar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,18 @@ int			fill_command(t_sort_list **list, char *path)
 	i = -1;
 	if (!(bin_path = ft_strsplit(path, ':')))
 		return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
+
 	while (bin_path[++i])
 	{
-		if ((dirp = opendir(bin_path[i])) == NULL)
-			return (ft_print_error("42sh: ", ERR_READ, ERR_EXIT));
-		while ((dp = readdir(dirp)) != NULL)
+		if ((dirp = opendir(bin_path[i])) != NULL)
 		{
-			if (insert_in_list(list, dp->d_name) == ERR_EXIT)
-				return (ERR_EXIT);
+			while ((dp = readdir(dirp)) != NULL)
+			{
+				if (insert_in_list(list, dp->d_name) == ERR_EXIT)
+					return (ERR_EXIT);
+			}
+			closedir(dirp);
 		}
-		closedir(dirp);
 	}
 	ft_tabdel(bin_path);
 	return (0);
@@ -94,7 +96,10 @@ int			fill_username(t_sort_list **list, char *path)
 	char			*line;
 
 	if ((fd = open(path, O_RDONLY)) < 0)
+		{
+			PUT2("TA RACE 2\n");
 		return (ft_print_error("42sh: ", ERR_READ, ERR_EXIT));
+		}
 	while (get_next_line(fd, &line) > 0)
 	{
 		if (edit_username_line(&line) == ERR_EXIT)
@@ -148,7 +153,10 @@ int			fill_hostname(t_sort_list **list, char *path)
 	char			*line;
 
 	if ((fd = open(path, O_RDONLY)) < 0)
+		{
+			PUT2("TA RACE 3\n");
 		return (ft_print_error("42sh: ", ERR_READ, ERR_EXIT));
+		}
 	while (get_next_line(fd, &line) > 0)
 	{
 		if (edit_hostname_line(*list, &line) == ERR_EXIT)

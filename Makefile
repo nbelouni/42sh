@@ -18,9 +18,12 @@ SRCS = 	ft_builtin_cd.c		\
 		ft_builtin_exit.c	\
 		ft_builtin_setenv.c	\
 		ft_builtin_unsetenv.c\
+		ft_bultin_export.c	\
 		ft_norm_tools.c		\
 		ft_init.c			\
 		ft_list_tools.c		\
+		ft_list_tools2.c	\
+		ft_tools.c			\
 		ft_opt_parse.c		\
 		read.c				\
 		buf.c				\
@@ -28,6 +31,7 @@ SRCS = 	ft_builtin_cd.c		\
 		signal.c			\
 		curs.c				\
 		main.c				\
+	    edit_completion.c	\
 	    edit_move.c			\
 	    edit_buf.c			\
 	    edit_line.c			\
@@ -46,8 +50,10 @@ SRCS = 	ft_builtin_cd.c		\
 		add_new_btquote.c	\
 		add_bt_d_quote.c	\
 		is_check.c			\
+		sort_list.c	\
 		sort_list_token.c	\
 		can_create_tree.c	\
+		completion.c		\
 		is_token_type.c		\
 		return_errors.c		\
 		count_word.c		\
