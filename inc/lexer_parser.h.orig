@@ -6,7 +6,11 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 20:07:22 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/21 18:35:54 by nbelouni         ###   ########.fr       */
+<<<<<<< HEAD
+/*   Updated: 2017/02/17 16:44:42 by alallema         ###   ########.fr       */
+=======
+/*   Updated: 2017/02/18 17:01:33 by alallema         ###   ########.fr       */
+>>>>>>> master
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +68,7 @@ enum				e_token
 	DR_DIR,		// ">>"
 	DIR_AMP,	// ">&"
 	O_BRACE, 	// "{ "
-	C_BRACE, 	// "}"
+	C_BRACE, 	// ";}"
 	FD_IN,
 	FD_OUT,
 	ARG
@@ -84,7 +88,6 @@ t_word				*create_word();
 void				push_word();
 void				clear_word();
 void				rm_word(t_word **cmd);
-int					count_word(t_word *w);
 void				destroy_word();
 
 t_token				*create_token();
@@ -92,7 +95,6 @@ void				push_token();
 void				clear_token();
 void				destroy_token();
 
-int					can_create_tree(t_token	*lst);
 /*
  * PAS IMPLEMENTEES
 t_cmd				*create_cmd();
@@ -101,7 +103,4 @@ void				clear_cmd();
 void				destroy_cmd();
  *
  */
-
-
-
 #endif

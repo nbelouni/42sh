@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/11 12:30:14 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/02 22:23:38 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/21 17:05:28 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,6 @@ typedef struct		s_tree
 	struct s_tree	*right;
 }					t_tree;
 
-typedef struct s_lvl
-{
-	int 					bt_lvl;
-	int					 	bc_lvl;
-}							t_lvl;
-
 typedef struct  s_lib
 {
 	int 			toke;
@@ -74,7 +68,6 @@ int		is_btquote(char *s, int i);
 int		is_dquote(char *s, int i);
 int		is_squote(char *s, int i);
 int		is_new_btquote(char *s, int i);
-int		is_backslash(char *s, int i);
 
 int		find_btquote_end(char *s, int i);
 int		find_dquote_end(char *s, int i);
@@ -106,7 +99,7 @@ int		find_bracket_end(char *s, int i);
 
 int		parse_buf(t_token **lst, char *s);
 int		cut_space(char *s, int i);
-void	reset_int_pt(t_pt *pt);
+t_pt	*reset_int_pt(void);
 int		parse_list(t_token **list, char *s, t_pt *p);
 int		cut_cmd(t_token **list, char *s, t_pt *p);
 int		check_tok(char *s, int l);
@@ -123,6 +116,15 @@ void	ft_print_token_list(t_token **list);
 
 int		add_new_word(t_word *w, int len, t_word **lst);
 
+<<<<<<< HEAD
+/*
+**       ast
+*/
+
+t_tree *creat_left(t_token *lst);
+t_tree *creat_right(t_token *lst);
+void 	ft_push_ast(t_token *list, t_tree **ast);
+=======
 int		is_separator_type(int type);
 int		is_open_group_type(int type);
 int		is_close_group_type(int type);
@@ -130,15 +132,7 @@ int		is_dir_type(int type);
 int		is_text_type(int type);
 
 int		return_new_prompt(int ret);
-/*
-**       ast
-*/
-
-t_tree 	*creat_left(t_token *lst, t_lvl *lvl);
-t_tree 	*creat_right(t_token *lst, t_lvl *lvl);
-void 		ft_push_ast(t_token *list, t_tree **ast);
-void 		free_ast(t_tree *ast);
-void 		print_debug_ast(t_tree *node);
+>>>>>>> c0bd047afef65559ca285d518c12082f262427f5
 /*
 void	ft_cmdadd(t_cmd **alst, t_cmd *new);
 void	ft_cmdclear(t_cmd **cmd);

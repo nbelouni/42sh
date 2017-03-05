@@ -43,17 +43,18 @@ int main(int argc, char **argv, char **envp)
 {
 	(void)argc;
 	(void)argv;
-
-	t_completion	completion = {NULL, NULL, NULL, NULL};
 	t_buf	*buf;
 	t_token	*list;
 	t_lst	*env;
+<<<<<<< HEAD
+	t_tree *ast;
+=======
 	int		ret;
 	int		ret_read;
-	t_tree	*ast;
+>>>>>>> c0bd047afef65559ca285d518c12082f262427f5
 
-	ast = NULL;
 	env = NULL;
+	ast = NULL;
 	env = ft_env_to_list(envp, env);
 	signal(SIGWINCH, get_sigwinch);
 	signal(SIGINT, get_sigint);
@@ -63,6 +64,49 @@ int main(int argc, char **argv, char **envp)
 	init_curs();
 	while ((ret_read = read_line(buf)) != ERR_EXIT)
 	{
+<<<<<<< HEAD
+			close_termios();
+			is_line_ended(buf, 0);
+			PUT2("\n\n____________\n\n");
+			if (parse_buf(&list, buf->final_line) > 0)// A garder parse list
+			{
+				ft_print_token_list(&list); //debug impression
+				PUT2("\n \n _________________ \n \n");
+				ft_push_ast(list, &ast);
+				ft_tokendestroy(&list); //clean la list a mettre a la fin
+			}
+
+//			parse(env, buf->final_line, envp);
+/*			char n;
+			X('\n');
+			n = lex_buf(buf->final_line, &lst);
+		if (is_line_ended(buf, n) >= 0)
+		{
+			if (n < 0)
+				return (-1);
+			else if (n > 0)
+			{
+				X(n);
+			}
+			else
+			{
+				PUT2("\n\n____________\n\n");
+				t_word *tmp = lst;
+				while (tmp)
+				{
+					PUT2("s : ");
+					PUT2(tmp->s);
+					PUT2(", token : ");
+					E(tmp->flag);
+					PUT2(", level : ");
+					E(tmp->level);
+					X('\n');
+					tmp = tmp->next;
+				}
+				PUT2("____________\n\n");
+			}
+//                     parse();
+=======
 		close_termios();
 		if (is_line_ended(buf) < 0)
 			return (-1);
@@ -72,13 +116,8 @@ int main(int argc, char **argv, char **envp)
 */
 //		if (ret > 0)
 //			ft_print_token_list(&list); //debug impression
-		if (ret == TRUE)
-		{
-			ft_push_ast(list, &ast);
-			print_debug_ast(ast);
-			free_ast(ast);
-		}
 		if (ret != ERR_NEW_PROMPT)
+>>>>>>> c0bd047afef65559ca285d518c12082f262427f5
 			ft_strdel(&(buf->final_line));
 		if (list)
 			ft_tokendestroy(&list); //clean la list a mettre a la fin
