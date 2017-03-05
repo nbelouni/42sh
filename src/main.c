@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/05 17:47:45 by dogokar          ###   ########.fr       */
+/*   Updated: 2017/03/05 18:14:14 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,13 +116,6 @@ int 	main(int argc, char **argv, char **envp)
 			buf->size = 0;
 			clean_pos_curs();
 		}
-		if (ret != ERR_NEW_PROMPT)
-			ft_strdel(&(buf->final_line));
-		if (list)
-			ft_tokendestroy(&list); //clean la list a mettre a la fin
-		ft_bzero(buf->line, BUFF_SIZE);
-		buf->size = 0;
-		clean_pos_curs();
 		if (ret_read == END_EOT)
 			break ;
 	}

@@ -1,0 +1,33 @@
+autocomplete:
+
+IMPORTANT :
+
+ls $[tab]:
+	-> bash : variables du set et de l'env
+	-> 42sh : variables de l'env
+
+ls $T[tab] :
+	-> bash : $TERM                  $TERM_PROGRAM          $TERM_PROGRAM_VERSION  $TERM_SESSION_ID       $TMPDIR
+	-> 42sh : TERM_SESSION_ID           __CF_USER_TEXT_ENCODING   _                         XPC_SERVICE_NAME          XPC_FLAGS
+
+output : 
+	-> mettre dans le bon ordre
+	-> leger bug avec le '.' (duplicat, pas avant '..' etc)
+
+OPTIONEL :
+
+Mettre les symboles d'identification sur les outputs ($, @, ~, etc).
+
+ls .[tab] :
+	-> bash : affiche les fichiers et dossiers caches du dossier courant
+	-> 42sh : affiche les dossiers contenus dans .
+
+.[tab] : 
+	-> bash : affiche le contenu de .
+	-> 42sh : .        zsh      zprint
+
+..[tab] :
+	-> bash : affiche le contenu de ..
+	-> 42sh : pas d'output (probablement parce qu'aucun binaire contenant '..')
+
+
