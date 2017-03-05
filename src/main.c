@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/24 19:49:33 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/05 15:44:37 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ void	parse(t_lst *env, char *line, char **envp)
 	(void)envp;
 	args = NULL;
 	args = ft_strsplit(line, ' ');
-	if (args && args[0])
+	if (args != NULL && args[0] != NULL)
 	{
 		if (ft_strcmp(args[0], "exit") == 0)
 			ft_builtin_exit(env, args[0], args + 1);
 		else if (ft_strcmp(args[0], "env") == 0)
-			ft_builtin_env(env, args[0], &args[1]);
+			ft_builtin_env(env, &args[1]);
 		else if (ft_strcmp(args[0], "setenv") == 0)
 			ft_builtin_setenv(env, args[0], args + 1);
 		else if (ft_strcmp(args[0], "unsetenv") == 0)
@@ -65,9 +65,10 @@ int main(int argc, char **argv, char **envp)
 		ret = parse_buf(&list, buf->final_line);
 /*
 **	DECOMMENTER POUR AFFICHER LA LISTE
-*/
-		if (ret > 0)
-			ft_print_token_list(&list); //debug impression
+*/		
+		parse(env, buf->final_line, envp);
+	//	if (ret > 0)
+	//		ft_print_token_list(&list); //debug impression
 		if (ret != ERR_NEW_PROMPT)
 			ft_strdel(&(buf->final_line));
 		if (list)

@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 14:13:58 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/02/12 18:16:30 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/05 15:00:25 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,16 @@
 
 t_set	*ft_init_set(void)
 {
-	t_set	*set;
+	t_set			*set;
 
 	set = NULL;
-	if ((set = malloc(sizeof(t_set))) != NULL)
+	if ((set = malloc(sizeof(t_set))) == NULL)
 	{
-		set->env = NULL;
-		set->head = NULL;
-		set->tail = NULL;
-		return (set);
+		return (NULL);
 	}
-	return (NULL);
+	set->env = NULL;
+	set->set = NULL;
+	return (set);
 }
 
 /*
@@ -39,17 +38,16 @@ t_set	*ft_init_set(void)
 
 t_lst	*ft_init_list(void)
 {
-	t_lst	*lst;
+	t_lst			*lst;
 
 	lst = NULL;
-	if ((lst = malloc(sizeof(t_lst))) != NULL)
-	{
-		lst->head = NULL;
-		lst->tail = NULL;
-		lst->size = 0;
-		return (lst);
-	}
-	return (NULL);
+	lst = malloc(sizeof(t_lst));
+	if (lst == NULL)
+		return (NULL);
+	lst->head = NULL;
+	lst->tail = NULL;
+	lst->size = 0;
+	return (lst);
 }
 
 /*
@@ -59,18 +57,18 @@ t_lst	*ft_init_list(void)
 
 t_elem	*ft_init_elem(void)
 {
-	t_elem	*elem;
+	t_elem			*elem;
 
 	elem = NULL;
-	if ((elem = malloc(sizeof(t_elem))) != NULL)
+	if ((elem = malloc(sizeof(t_elem))) == NULL)
 	{
-		elem->name = NULL;
-		elem->value = NULL;
-		elem->next = NULL;
-		elem->prev = NULL;
-		return (elem);
+		return (NULL);
 	}
-	return (NULL);
+	elem->name = NULL;
+	elem->value = NULL;
+	elem->next = NULL;
+	elem->prev = NULL;
+	return (elem);
 }
 
 /*
@@ -79,25 +77,44 @@ t_elem	*ft_init_elem(void)
 **	<name> + = + <value>.
 */
 
+char	**ft_envv_to_str(char **res, t_elem *elem)
+{
+	unsigned int	i;
+	size_t			name_len;
+
+	i = 0;
+	name_len = ft_strlen(elem->name);
+	if ((res[i] = ft_strnew(name_len + ft_strlen(elem->value) + 1)) == NULL)
+	{
+		return (NULL);
+	}
+	ft_strcpy(res[i], elem->name);
+	res[i][name_len] = '=';
+	res[i] = ft_strcat(res[i], elem->value);
+	++i;
+	return (res);
+}
+
 char	**ft_env_to_tab(t_lst *lst)
 {
-	t_elem	*tmp;
-	char	**res;
-	int		i;
+	t_elem			*tmp;
+	char			**res;
 
-	if (!(res = (char **)malloc(sizeof(char *) * (lst->size + 1))))
+	res = NULL;
+	if ((res = (char **)malloc(sizeof(char *) * (lst->size + 1))) == NULL)
+	{
 		return (NULL);
+	}
 	ft_memset(res, 0, sizeof(res));
 	tmp = lst->head;
-	i = 0;
 	while (tmp != NULL)
 	{
-		res[i] = ft_strnew(ft_strlen(tmp->name) + ft_strlen(tmp->value) + 1);
-		ft_strcpy(res[i], tmp->name);
-		res[i][ft_strlen(tmp->name)] = '=';
-		res[i] = ft_strcat(res[i], tmp->value);
+		if ((res = ft_envv_to_str(res, tmp)) == NULL)
+		{
+			ft_tabdel(res);
+			return (NULL);
+		}
 		tmp = tmp->next;
-		i++;
 	}
 	return (res);
 }
@@ -109,17 +126,27 @@ char	**ft_env_to_tab(t_lst *lst)
 
 t_lst	*ft_env_to_list(char **envp, t_lst *lst)
 {
-	t_elem	*elem;
-	int		i;
+	int				ret;
 
 	if ((lst = ft_init_list()) == NULL)
-		return (NULL);
-	i = 0;
-	while (envp[i] != NULL)
 	{
-		elem = ft_new_elem(envp[i]);
-		ft_add_elem(elem, lst);
-		i++;
+		return (NULL);
+	}
+	ret = 0;
+	if (*envp != NULL)
+	{
+		while (*envp != NULL)
+		{
+			if ((ret = ft_add_elem(lst, *envp)) != 0)
+			{
+				if (ret == ERR_EXIT)
+				{
+					(lst) ? ft_del_list(lst) : 0;
+				}
+				return (NULL);
+			}
+			++envp;
+		}
 	}
 	return (lst);
 }
