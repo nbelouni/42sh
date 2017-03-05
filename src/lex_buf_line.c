@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/16 00:50:00 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/24 17:20:15 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/02 22:24:49 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,26 +103,24 @@ int			parse_buf(t_token **lst, char *s)
 	int		j;
 	int		ret;
 	int		ret_lex;
-	t_pt	*p;
+	t_pt	p;
 
-	if (!(p = reset_int_pt()))
-		return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
+	reset_int_pt(&p);
 	ret = 0;
-	while (p->i < (int)ft_strlen(s))
+	while (p.i < (int)ft_strlen(s))
 	{
 		j = -1;
-		if ((ret_lex = cut_cmd(lst, s, p)))
+		if ((ret_lex = cut_cmd(lst, s, &p)))
 			return (return_new_prompt(ret_lex));
-		if ((ret = check_tok(s, p->i + p->len)) != NO_TOKEN)
+		if ((ret = check_tok(s, p.i + p.len)) != NO_TOKEN)
 		{
 			if (ret == ESPACE)
-				p->i = cut_space(s, p->i);
-			else if ((ret_lex = choose_pars(lst, s, ret, p)))
+				p.i = cut_space(s, p.i);
+			else if ((ret_lex = choose_pars(lst, s, ret, &p)))
 				return (return_new_prompt(ret_lex));
 		}
 	}
 	sort_list_token(lst);
-	ft_memdel((void *)&p);
 	set_prompt(PROMPT1, ft_strlen(PROMPT1));
 	return (can_create_tree(*lst));
 }

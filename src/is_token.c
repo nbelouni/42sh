@@ -6,11 +6,21 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/12 18:15:50 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/17 21:08:28 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/02 22:35:02 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
+
+int		is_backslash(char *s, int i)
+{
+	if (i == 0 || s[i - 1] != '\\')
+	{
+		if (s[i] == '\\')
+			return (1);
+	}
+	return (0);
+}
 
 int		is_group(char *s, int i)
 {
@@ -95,25 +105,15 @@ int		find_next_inhibitor(char *s, int i, int *token)
 	while (s[i + len])
 	{
 		if (is_squote(s, i + len))
-		{
 			*token = S_QUOTE;
-			return (len);
-		}
-		if (is_dquote(s, i + len))
-		{
+		else if (is_dquote(s, i + len))
 			*token = D_QUOTE;
-			return (len);
-		}
-		if (is_btquote(s, i + len))
-		{
+		else if (is_btquote(s, i + len))
 			*token = BT_QUOTE;
-			return (len);
-		}
-		if (is_new_btquote(s, i + len))
-		{
+		else if (is_new_btquote(s, i + len))
 			*token = OBT_QUOTE;
+		if (*token)
 			return (len);
-		}
 		len++;
 	}
 	return (len);
@@ -126,7 +126,7 @@ int		find_next_btq(char *s, int i, int *token)
 	len = 0;
 	while (s[i + len])
 	{
-		if (is_new_btquote(s, i  + len))
+		if (is_new_btquote(s, i + len))
 		{
 			*token = OBT_QUOTE;
 			return (len);
@@ -140,6 +140,7 @@ int		find_next_btq(char *s, int i, int *token)
 	}
 	return (len);
 }
+
 int		find_btquote_end(char *s, int i)
 {
 	int		len;
@@ -262,52 +263,4 @@ int		find_next_separator(char *s, int i)
 		len++;
 	}
 	return (len);
-}
-
-int		find_group_end(char *s, int i, int token)
-{
-	int	len;
-	int	dot;
-
-	dot = 0;
-	len = 0;
-	if (token == C_BRACKET || token == C_BRACE)
-		return (-1);
-	if (i > 0 || s[i - 1] != '\\')
-	{
-		if (token == O_BRACKET) // '('
-		{
-			while (s[i + len])
-			{
-				if ((i + len <= 0 || s[i + len - 1] != '\\') && s[i + len] == ')')
-					break;
-				len ++;
-			}
-			if (!s[i + len])
-				return (-1);
-			return (len);
-		}
-		else if (token == O_BRACE)
-		{
-			while (s[i + len])
-			{
-				if ((i + len <= 0 || s[i + len - 1] != '\\') && s[i + len] == '}')
-					break;
-				len ++;
-			}
-			dot = len;
-			while (dot >= 0)
-			{
-				if ((i + dot <= 0 || s[i + dot - 1] != '\\') && s[i + dot] == ';')
-					break;
-				dot--;
-			}
-			if (dot < 0)
-				return (-1);
-			if (!s[i + len])
-				return (-1);
-			return (len);
-		}
-	}
-	return (0);
 }

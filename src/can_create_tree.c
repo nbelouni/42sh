@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/19 15:29:18 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/24 17:22:21 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/26 21:40:50 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ int			is_new_prompt(t_token *prev)
 {
 	if (prev)
 	{
-		prev = prev->next;
+		if (!(prev = prev->next))
+			return (TRUE);
 		if (prev->bt_level < 0)
 			return (print_err_message(")"));
 		if (prev->bc_level < 0)
@@ -72,13 +73,21 @@ int			can_create_tree(t_token *lst)
 	t_token	*prev;
 	int		ret;
 
+	if (!lst)
+		return (0);
 	tmp = lst;
+	prev = NULL;
 	while (tmp)
 	{
 		prev = tmp->prev;
 		if ((ret = is_parse_error(tmp, prev)))
 			return (ret);
 		tmp = tmp->next;
+	}
+	if (!prev && (lst->type == O_BRACKET || lst->type == O_BRACE))
+	{
+		set_prompt(PROMPT2, ft_strlen(PROMPT2));
+		return (ERR_NEW_PROMPT);
 	}
 	return (is_new_prompt(prev));
 }

@@ -24,6 +24,28 @@ test sous-shell& accolade
 
 	. lexer_parser.h
 
+ .in & out
+	.in + << + eof --> stdout: Bad file descriptor;
+
+	>  >> -> in, no out;
+	<  << -> (no in ?), no out, (in a voir)
+	&& || | -> no in no out
+	>& <& -> in, out
+
+bash-3.2$ ls 2147483648>la
+bash: file descriptor out of range: Bad file descriptor
+bash-3.2$ ls 2147483647>la
+bash: 2147483647: Bad file descriptor
+
+
+	cmd'cmd'cdm |cmd<>
+	cmd'cmd' cmd
+	'cmd'cmd cmd
+	'cmd'cmd|
+	'cmd' cmd
+
+	$(cmd)|cmd -> no
+
 
 	>, <, ||, && --> pas de out
   // opts -> chaine d'options dans define

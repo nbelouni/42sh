@@ -43,6 +43,8 @@ int main(int argc, char **argv, char **envp)
 {
 	(void)argc;
 	(void)argv;
+
+	t_completion	completion = {NULL, NULL, NULL, NULL};
 	t_buf	*buf;
 	t_token	*list;
 	t_lst	*env;
