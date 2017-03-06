@@ -1,87 +1,83 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line.'\n'                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nbelouni <nbelouni@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2014/11/18 02:10:38 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/01 17:49:39 by nbelouni         ###   ########.fr       */
+/*   Created: 2016/04/13 13:38:42 by alallema          #+#    #+#             */
+/*   Updated: 2017/03/01 19:45:54 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static char		*add_buff(char **dst, char *src)
+static char		*ft_join(char *tmp, char *buf)
 {
-	char		*tmp;
-	int			len_src;
-	int			len_dst;
+	int			i;
+	int			len;
+	char		*s;
 
-	len_src = ft_strlen(src);
-	if (!*dst)
+	i = 0;
+	if (tmp == NULL && buf == NULL)
+		return (NULL);
+	len = ft_strlen(tmp) + ft_strlen(buf);
+	if (!(s = ft_memalloc(sizeof(char *) * (len + 1))))
+		return (NULL);
+	while (tmp && tmp[i])
 	{
-		tmp = (char *)malloc(sizeof(char) * (len_src + 1));
-		if (!tmp)
-			return (NULL);
-		ft_strcpy(tmp, src);
+		s[i] = tmp[i];
+		i++;
 	}
+	free(tmp);
+	tmp = NULL;
+	while (*buf && i < len)
+	{
+		s[i] = *buf;
+		i++;
+		buf++;
+	}
+	s[i] = '\0';
+	return (s);
+}
+
+static void		ft_cpytmp(char *tmp, char **line)
+{
+	int			i;
+	int			len;
+
+	i = 0;
+	len = ft_strlen(tmp);
+	while (tmp[i] && tmp[i] != '\n')
+		i++;
+	if (tmp[i] == '\n')
+	{
+		*line = ft_memalloc(sizeof(char *) * ft_strlen(*line) + i + 1);
+		*line = ft_strncpy(*line, (const char *)tmp, (size_t)i);
+	}
+	if (len - i != 0)
+		tmp = ft_strncpy(tmp, (const char *)&tmp[i + 1], (size_t)len - i);
 	else
-	{
-		len_dst = ft_strlen(*dst);
-		tmp = (char *)malloc(sizeof(char) * (len_dst + len_src + 1));
-		if (!tmp)
-			return (NULL);
-		ft_strcpy(tmp, *dst);
-		ft_strcpy(tmp + len_dst, src);
-		free(*dst);
-		*dst = NULL;
-	}
-	return (tmp);
+		free(tmp);
+	tmp = NULL;
 }
 
-static int		parse_line(char **line, char **rst)
-{
-	char		*tmp1;
-	char		*tmp2;
-
-	if (!*rst)
-		return (0);
-	tmp1 = ft_strchr(*rst, '\n');
-	if (tmp1)
-	{
-		tmp1[0] = '\0';
-		*line = ft_strdup(*rst);
-		tmp2 = tmp1 + 1;
-		free(*rst);
-		*rst = NULL;
-		*rst = ft_strdup(tmp2);
-		return (1);
-	}
-	return (0);
-}
-
-int				get_next_line(int const fd, char **line)
+int				get_next_line(const int fd, char **line)
 {
 	char		buf[BUFF_SIZE + 1];
-	static char	*stat;
-	char		*tmp;
+	static char	*tmp;
 	int			ret;
 
-	if (fd < 0)
-		return (0);
-	if (parse_line(line, &stat))
-		return (1);
-	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
-	{
-		buf[ret] = '\0';
-		stat = add_buff(&stat, buf);
-		tmp = ft_strchr(stat, '\n');
-		if (tmp)
-			if (parse_line(line, &stat))
-				return (1);
-	}
-	if (ret < 0)
+	ret = read(fd, &buf, BUFF_SIZE);
+	buf[ret] = '\0';
+	if (fd < 0 || ret < 0 || BUFF_SIZE <= 0 || !line)
 		return (-1);
-	return (0);
+	if (ret == 0 && ft_strcmp(tmp, "") == 0)
+		return (0);
+	tmp = ft_join(tmp, buf);
+	if (!ft_strchr(tmp, '\n'))
+		get_next_line(fd, line);
+	else
+		ft_cpytmp(tmp, line);
+	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/11 12:30:14 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/25 22:37:38 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/05 19:52:24 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ enum				e_token2
 	COMMENT		// " #"
 };
 */
+
 /*
 **	return == len de la chaine a strsub -> strsub(s, i, is_*());
 */
@@ -74,6 +75,7 @@ int		is_btquote(char *s, int i);
 int		is_dquote(char *s, int i);
 int		is_squote(char *s, int i);
 int		is_new_btquote(char *s, int i);
+int		is_backslash(char *s, int i);
 
 int		find_btquote_end(char *s, int i);
 int		find_dquote_end(char *s, int i);
@@ -105,7 +107,7 @@ int		find_bracket_end(char *s, int i);
 
 int		parse_buf(t_token **lst, char *s);
 int		cut_space(char *s, int i);
-t_pt	*reset_int_pt(void);
+void	reset_int_pt(t_pt *pt);
 int		parse_list(t_token **list, char *s, t_pt *p);
 int		cut_cmd(t_token **list, char *s, t_pt *p);
 int		check_tok(char *s, int l);

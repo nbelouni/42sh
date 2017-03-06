@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:01:52 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/19 19:53:05 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/05 20:43:35 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@
 # define TAB  9
 # define CRTL  1
 # define CTRL_D  4
+# define TAB 9
 
 /*
 ** cut word before
@@ -138,63 +139,257 @@ typedef struct	s_buf
 	char		*final_line;
 }				t_buf;
 
+/*
+**	*********************************************************************
+*/
+/*
+**	Fonctions de base ; struct t_buf
+**	buf.c
+*/
+
+/*
+**	Aloue t_buf en debut de programme
+*/
 t_buf			*init_buf(void);
+
+/*
+**	detruit t_buf en fin de programme
+*/
 void			free_buf(t_buf *buf);
+
+/*
+**	clear ligne a la fin d'une commande
+*/
 void			clear_buf(t_buf *buf);
 
+
+/*
+**	*********************************************************************
+*/
+/*
+**	Fonctions base termcaps
+**	term.c
+*/
+
+/*
+**	Imprime un caractere, surcouchees dans d'autres fonctions
+*/
 int				t_putchar(int i);
+/*
+**	Imprime un caractere, surcouchees dans d'autres fonctions
+*/
 void			t_puts(char *s, int i);
 
+/*
+**	initialise termcaps,
+**	appele a chaque edition de ligne
+*/
 int				init_termios(void);
+
+/*
+**	finit la phase termcaps,
+**	appele apres chaque edition de ligne
+*/
 int				close_termios(void);
 
-int				read_line(t_buf *buf);
 
+/*
+**	*********************************************************************
+*/
+/*
+**	Fonctions edition de ligne
+**	read.c
+*/
+
+/*
+**	Lit et edite ligne (visuel) + buffer (buf.line) si changements necessaires
+*/
+int				read_line(t_buf *buf, t_completion *completion);
+
+
+/*
+**	*********************************************************************
+*/
+/*
+**	Fonctions base struct t_cursor
+**	curs.c
+*/
+
+/*
+**	Initialise curseur en debut de ligne, appele avant chaque "read_line()"
+*/
 void			clean_pos_curs(void);
+/*
+**	Premiere initialisation curseur, debut de programme
+*/
 t_bool			init_curs(void);
 
+/*
+**	*********************************************************************
+*/
+/*
+**	Voir avec amelie
+*/
 void			get_sigwinch(int sig);
 void			get_sigint(int sig);
 t_bool			get_win();
 
+/*
+**	*********************************************************************
+*/
+/*
+**	Fonctions base struct prompt
+**	singleton pour qu'on puisse changer de prompt pendant l'execution
+**	prompt.c
+*/
+
+/*
+**	initialise prompt et le retourne
+*/
 t_prompt		manage_prompt(char *s, int num);
+
+/*
+**	retourne prompt.char *
+*/
 char			*get_prompt_str(void);
+
+/*
+**	retourne prompt.ft_strlen(char *)
+*/
 size_t			get_prompt_len(void);
+
+/*
+**	initialise prompt
+*/
 void			set_prompt(char *s, int len);
 
+/*
+**	calcule la longueur de la chaine a couper/coller/parcourir selon
+**	caractere lut
+**	calc_len.c
+*/
 size_t			calc_len(t_buf *buf, int x);
-void			m_right(size_t len);
-void			m_left(size_t len);
-void			m_up(void);
-void			m_down(t_buf *buf);
-void			ft_del(size_t len);
 
+/*
+**	*********************************************************************
+*/
+/*
+**	Mouvements du curseur
+**	edit_move.c
+**	len = nombre de deplacements
+*/
+
+/*
+**	deplace le curseur a droite
+*/
+void			m_right(size_t len);
+
+/*
+**	deplace le curseur a gauche
+*/
+void			m_left(size_t len);
+
+/*
+**	deplace le curseur en haut
+*/
+void			m_up(void);
+
+/*
+**	deplace le curseur en bas
+*/
+void			m_down(t_buf *buf);
+
+/*
+**	*********************************************************************
+*/
+/*
+**	modifie la position du curseur et le buffer (buf.line) selon input
+**	edit_visual.c
+*/
+
+/*
+**	insere un caractere a curs.pos et bouge le curseur de 1 sur la droite
+*/
 int				vb_insert(t_buf *buf, char *s);
+/*
+**	supprime le caractere a gauche de curs.pos et bouge le curseur de 1 sur la gauche
+*/
 void			vb_del(t_buf *buf, unsigned int x);
+
+/*
+**	garde en memoire le caractere / mot / bout de ligne (selon input) buf.to_paste
+*/
 int				vb_copy(t_buf *buf, unsigned int x);
+
+/*
+**	garde en memoire le caractere / mot / bout de ligne (selon input) buf.to_paste
+**	supprime la string de buf.line
+*/
 int				vb_cut(t_buf *buf, unsigned int x);
+
+/*
+**	insere buf.to_paste dans buf.line,
+**	le curseur ne bouge pas
+*/
 int				vb_paste(t_buf *buf);
 
+
+/*
+**	*********************************************************************
+*/
+/*
+**	Fonctions base edition du buffer
+**	edit_buf.c
+*/
+
+/*
+**	insere une string dans buf.line
+*/
 void			insert_in_buf(t_buf *buf, int cursor, char *s, size_t len);
+
+/*
+**	supprime une string dans buf.line
+*/
 void			delete_in_buf(t_buf *buf, int cursor, size_t len);
+
+/*
+**	copie  le caractere / mot / bout de ligne (selon input) de buf.line
+**	dans buf.to_paste
+*/
 int				set_to_paste(t_buf *buf, int cursor, size_t len);
+
+/*
+**	copie  le caractere / mot / bout de ligne (selon input) de buf.to_paste
+**	dans buf.line
+*/
 void			paste_in_buf(t_buf *buf, int cursor);
 
+/*
+**	*********************************************************************
+*/
+/*
+**	imprime buf.line
+**	edit_visual.c
+*/
+/*
+**	imprime buf.line avant le curseur
+*/
 void			print_post_curs(t_buf *buf);
+/*
+**	imprime buf.line apres le curseur
+*/
+void			print_pre_curs(t_buf *buf);
 
+/*
+**	*********************************************************************
+*/
+/*
+**	is_line_ended.c
+**	si ligne finie : 
+**		met buf.line dans buf.final_line
+**	sinon
+**		concatene buf.final_line et buf.line
+*/
 int				is_line_ended(t_buf *buf);
-
-/*
-** 	edition de ligne
-*/
-/*
-**	affichage :
-*/
-/*
-** ->>> history
-*/
-/*
-** ->>> completion
-*/
 
 #endif

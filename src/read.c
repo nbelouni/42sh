@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/21 16:47:01 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/21 19:13:31 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/02 22:29:29 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,21 +73,30 @@ int		mv_and_read(t_buf *buf, int x, int ret)
 **	Va falloir trouver un autre moyen de recuperer les caracteres speciaux
 */
 
-int		read_line(t_buf *buf)
+void	init_line(t_buf *buf)
+{
+	init_termios();
+	ft_putstr_fd(get_prompt_str(), 1);
+	print_pre_curs(buf);
+	print_post_curs(buf);
+}
+
+int		read_line(t_buf *buf, t_completion *cplt)
 {
 	unsigned int	x;
 	int				ret;
 	int				err;
+	int				i;
 
+	i = -1;
 	x = 0;
 	err = 0;
-	init_termios();
-	ft_putstr_fd(get_prompt_str(), 1);
+	init_line(buf);
 	while ((ret = read(0, (char *)&x, 4)))
 	{
-		if ((err = mv_and_read(buf, x, ret)) < 0)
-			return (err);
-		if ((err = cpy_cut_paste(buf, x)) < 0)
+		if ((err = mv_and_read(buf, x, ret)) < 0 ||
+		(err = cpy_cut_paste(buf, x)) < 0 ||
+		(err = complete_line(buf, cplt, x)) != 0)
 			return (err);
 		if (x == RETR)
 		{

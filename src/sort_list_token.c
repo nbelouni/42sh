@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 16:51:24 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/21 19:14:02 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/01 22:33:23 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 /*
 **	Faut faire des check avant de trier la liste, pour l'instant on garde ca
+**	On oublie les commentaires, c'est beaucoup trop chiant
 */
 
 void	sort_list_token(t_token **list)

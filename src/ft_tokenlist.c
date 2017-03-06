@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/16 12:42:26 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/20 18:49:40 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/02/24 19:39:33 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ void		ft_tokendestroy(t_token **begin)
 			tmp = NULL;
 		free(list->word);
 		list->word = NULL;
+		destroy_word(&(list->string));
 		free(list);
 		list = tmp;
 	}

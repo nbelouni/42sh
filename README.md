@@ -24,4 +24,34 @@ test sous-shell& accolade
 
 	. lexer_parser.h
 
+ .in & out
+	.in + << + eof --> stdout: Bad file descriptor;
+
+	>  >> -> in, no out;
+	<  << -> (no in ?), no out, (in a voir)
+	&& || | -> no in no out
+	>& <& -> in, out
+
+bash-3.2$ ls 2147483648>la
+bash: file descriptor out of range: Bad file descriptor
+bash-3.2$ ls 2147483647>la
+bash: 2147483647: Bad file descriptor
+
+
+	cmd'cmd'cdm |cmd<>
+	cmd'cmd' cmd
+	'cmd'cmd cmd
+	'cmd'cmd|
+	'cmd' cmd
+
+	$(cmd)|cmd -> no
+
+
 	>, <, ||, && --> pas de out
+  // opts -> chaine d'options dans define
+  // args -> arguments au builtins (options incluses)
+  // au retour, opt[0] contient soit le code d'erreur, soit la position dans args
+  // de la fin des options.
+  //int *ft_opt_parse(char *opts, char **args, size_t overwrite)
+  #define UNSET_OPT "iu" -> opt{pos/code erreur, 1/0, 1/0}
+   exemple opt[1] -> 1
