@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/05 18:14:14 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/06 14:01:03 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ int 	main(int argc, char **argv, char **envp)
 			{
 				ft_print_token_list(&list); //debug impression
 				ft_push_ast(list, &ast);
-				print_debug_ast(ast);
+//				print_debug_ast(ast);
 				free_ast(ast);
 			}
 			if (ret != ERR_NEW_PROMPT)
