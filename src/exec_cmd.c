@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 16:21:02 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/03 23:51:00 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/06 14:02:25 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ static void	 	ft_redir_right(t_tree *node, t_lst *env)
 		PUT2(node->right->cmd[0]);
 //		read(pipefd[0], &buf, 255);
 //		PUT2(buf);
-		if ((file = open(node->right->cmd[0], O_WRONLY | O_TRUNC | O_CREAT, 0777)) != -1)
+		if ((file = open(node->right->cmd[0], O_WRONLY|O_TRUNC|O_CREAT, 0777)) != -1)
 		{
 //			if (close(pipefd[1]) < 0)
 //				PUT2("error close pipe[1]\n");
