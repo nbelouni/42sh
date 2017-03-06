@@ -55,13 +55,86 @@ static void		ft_or_and(t_tree *node, t_lst *env, int token)
 	}
 	return ;
 }
+
+static void	 	ft_pipe(t_tree *node, t_lst *env)
+{
+	int		pipefd[2];
+	int		fd;
+	int		fd2;
+
+	if (node->token == PIPE)
+	{
+		if (pipe(pipefd) < 0)
+			ft_putstr_fd("error pipe\n", 2);
+		fd = dup(STDOUT_FILENO);
+		fd2 = dup(STDIN_FILENO);
+		dup2(pipefd[1], STDOUT_FILENO);
+	}
+	if (node->left)
+	{
+		ft_exec_node(node->left, env);
+		dup2(fd, STDOUT_FILENO);
+	}
+	if (node->right)
+	{
+		if (close(pipefd[1]) < 0)
+			PUT2("error close pipe[1]\n");
+		dup2(pipefd[0], STDIN_FILENO);
+		ft_exec_node(node->right, env);
+		dup2(fd2, STDIN_FILENO);
+	}
+}
+
+static void	 	ft_redir_right(t_tree *node, t_lst *env)
+{
+	char	buf[255];
+	int		fd;
+	int		pipefd[2];
+	int		file;
+
+	ft_bzero(buf, 255);
+	if (node->token == SR_DIR)
+	{
+		PUT2("\n_________dup______________\n");
+		if (pipe(pipefd) < 0)
+			ft_putstr_fd("error pipe\n", 2);
+		fd = dup(STDOUT_FILENO);
+//		fd2 = dup(STDIN_FILENO);
+		dup2(pipefd[1], STDOUT_FILENO);
+	}
+	if (node->left)
+	{
+		PUT2("\n______________dup left__________\n");
+		ft_exec_node(node->left, env);
+		dup2(fd, STDOUT_FILENO);
+	}
+	if (node->right)
+	{
+		PUT2(node->right->cmd[0]);
+//		read(pipefd[0], &buf, 255);
+//		PUT2(buf);
+		if ((file = open(node->right->cmd[0], O_WRONLY | O_TRUNC | O_CREAT, 0777)) != -1)
+		{
+//			if (close(pipefd[1]) < 0)
+//				PUT2("error close pipe[1]\n");
+			PUT2("\n________________dup right_________\n");
+//			dup2(pipefd[0], file);
+//			if (node->out)
+//			dup2(STDOUT_FILENO, out);
+			dup2(file, pipefd[0]);
+//			if (close(pipefd[0]) < 0)
+//				PUT2("error close pipe[1]\n");
+//@			ft_exec_node(node->right, env);
+		}
+//		dup2(fd2, STDIN_FILENO);
+	}
+//	PUT2("\n__________end____________\n");
+}
+
 /*check les token et renvoie a la fonctione dediee pour chaque token*/
 static void		ft_check_tok(t_tree *root, t_lst *env)
 {
 	t_tree	*node;
-	int		pipefd[2];
-	int		fd;
-	int		fd2;
 
 	node = root;
 	if (!node)
@@ -73,31 +146,13 @@ static void		ft_check_tok(t_tree *root, t_lst *env)
 		return (ft_dot(node, env));
 	if (node->token == OR || node->token == AND)
 		return (ft_or_and(node, env, node->token - 11));
+	if (node->token == SR_DIR)
+	{
+		PUT2("\n_________redir______________\n");
+		ft_redir_right(node, env);
+	}
 	if (node->token == PIPE)
-	{
-//		PUT2("\n_________pipe______________\n");
-		if (pipe(pipefd) < 0)
-			ft_putstr_fd("error pipe\n", 2);
-		fd = dup(STDOUT_FILENO);
-		fd2 = dup(STDIN_FILENO);
-		dup2(pipefd[1], STDOUT_FILENO);
-	}
-	if (node->left)
-	{
-//		PUT2("\n______________dup left__________\n");
-		ft_exec_node(node->left, env);
-		dup2(fd, STDOUT_FILENO);
-	}
-	if (node->right)
-	{
-		if (close(pipefd[1]) < 0)
-			PUT2("error close pipe[1]\n");
-//		PUT2("\n________________dup right_________\n");
-		dup2(pipefd[0], STDIN_FILENO);
-		ft_exec_node(node->right, env);
-		dup2(fd2, STDIN_FILENO);
-	}
-//	PUT2("\n__________end____________\n");
+		ft_pipe(node, env);
 }
 /*fork le premier processus ou l'arbre et renvoie TRUE pour chaque vraie commande*/
 static int		ft_waitchild(t_tree *root, t_lst *env)
