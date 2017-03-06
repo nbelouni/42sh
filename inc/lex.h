@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/11 12:30:14 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/02 22:23:38 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/05 19:52:24 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ enum				e_token2
 	COMMENT		// " #"
 };
 */
+
 /*
 **	return == len de la chaine a strsub -> strsub(s, i, is_*());
 */

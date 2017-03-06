@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/01 17:17:28 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/05 18:08:02 by dogokar          ###   ########.fr       */
+/*   Updated: 2017/03/05 20:59:22 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int			insert_in_list(t_sort_list **list, char *s)
 	else if (s)
 	{
 		tmp = *list;
-		while (tmp->next && ft_strcmp(tmp->next->s, s) > 0)
+		while (tmp->next && ft_strcmp(tmp->next->s, s) < 0)
 			tmp = tmp->next;
 		if (ft_strcmp(tmp->s, s) && (!tmp->next || ft_strcmp(tmp->next->s, s)))
 		{
@@ -96,10 +96,7 @@ int			fill_username(t_sort_list **list, char *path)
 	char			*line;
 
 	if ((fd = open(path, O_RDONLY)) < 0)
-		{
-			PUT2("TA RACE 2\n");
 		return (ft_print_error("42sh: ", ERR_READ, ERR_EXIT));
-		}
 	while (get_next_line(fd, &line) > 0)
 	{
 		if (edit_username_line(&line) == ERR_EXIT)
@@ -153,10 +150,7 @@ int			fill_hostname(t_sort_list **list, char *path)
 	char			*line;
 
 	if ((fd = open(path, O_RDONLY)) < 0)
-		{
-			PUT2("TA RACE 3\n");
 		return (ft_print_error("42sh: ", ERR_READ, ERR_EXIT));
-		}
 	while (get_next_line(fd, &line) > 0)
 	{
 		if (edit_hostname_line(*list, &line) == ERR_EXIT)

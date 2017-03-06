@@ -6,23 +6,11 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/04 00:00:38 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/02 20:56:16 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/05 20:12:55 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
-
-void	ft_del(size_t len)
-{
-	while (len > 0)
-	{
-		m_left(1);
-		t_puts("dm", 1);
-		t_puts("dc", 1);
-		t_puts("ed", 1);
-		len--;
-	}
-}
 
 void	reset_cursor(int i, int cursor)
 {
