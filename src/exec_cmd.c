@@ -6,14 +6,16 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 16:21:02 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/08 21:55:59 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/08 22:08:40 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
 static void		ft_check_tok(t_tree *root, t_lst *env);
-/*fork pour execute les cmd char ** */
+/*
+ **fork pour execute les cmd
+ */
 void			ft_exec_node(t_tree *node, t_lst *env)
 {
 	int		statval;
@@ -29,14 +31,17 @@ void			ft_exec_node(t_tree *node, t_lst *env)
 	}
 	if (pid == 0)
 	{
-		if (node->token == CMD && ft_check_built_fork(env, node->cmd) != 0)
+		if (node->token == CMD && ft_exec_built(env, node->cmd) != 0)
  			ft_check_exec(node->cmd, env);
 		else
 			exit(0);
 	}
 }
 
-/*check les token et renvoie a la fonctione dediee pour chaque token*/
+/*
+ **check les token pour chaque noeud et renvoie 
+ **sur la fonction dediee pour chaque token
+ */
 static void		ft_check_tok(t_tree *root, t_lst *env)
 {
 	t_tree	*node;
@@ -60,8 +65,10 @@ static void		ft_check_tok(t_tree *root, t_lst *env)
 		ft_pipe(node, env);
 }
 
-/*fork si c'est une cmd et envoie a la fonction de fork de
- ** l'arbre et renvoie retour de cmd pour chaque cmd reussie*/
+/*
+ **fork si c'est une cmd ou envoie a la fonction de check des noeuds
+ **retourne le retour de cmd pour chaque cmd reussie
+ */
 int			ft_waitchild(t_tree *root, t_lst *env)
 {
 	pid_t	pid;
@@ -95,7 +102,9 @@ int			ft_waitchild(t_tree *root, t_lst *env)
 	return (TRUE);
 }
 
-/*lance chaque commande*/
+/*
+ **lancement de l'arbre
+ */
 int				exec_cmd(t_tree *root, t_lst *env)
 {
 	t_tree	*node;

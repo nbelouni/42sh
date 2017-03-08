@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 13:08:28 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/08 21:54:08 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/08 22:11:11 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,9 @@ static char		*ft_cut_path(char **s, char *av)
 }
 
 /*
-** fonction d'execution des commandes via execve
-** s-> path a changer avec l'env
-*/
+ **verifie si la cmd est un builting
+ */
+
 int			ft_check_built(char **args)
 {
 	int		ret;
@@ -62,7 +62,10 @@ int			ft_check_built(char **args)
 	return (FALSE);
 }
 
-int			ft_check_built_fork(t_lst *env, char **args)
+/*
+ **execute la cmd si est un builtin
+ */
+int			ft_exec_built(t_lst *env, char **args)
 {
 	int		ret;
 
@@ -86,6 +89,9 @@ int			ft_check_built_fork(t_lst *env, char **args)
 	return (FALSE);
 }
 
+/*
+** fonction d'execution des commandes via execve
+*/
 void			ft_exec(char **av, t_lst *env)
 {
 	struct stat	st;
@@ -128,24 +134,16 @@ void			ft_exec(char **av, t_lst *env)
 	}
 }
 
+/*
+**sert a retourner si la cmd est un builtin
+*/
+
 int		ft_check_exec(char **cmd, t_lst *env)
 {
 	int		ret;
 
 	ret = TRUE;
-/*	if ((ret = ft_check_built(cmd)) == 0)
-	{
-		PUT2("\n_________built______________\n");
-		ft_check_built_fork(env, cmd);
-	}
-	else
-*/	if ((ret = ft_check_built_fork(env, cmd)) != 0)
-	{
-		PUT2("\n_________exec______________\n");
+	if ((ret = ft_exec_built(env, cmd)) != 0)
 		ft_exec(cmd, env);
-		return (FALSE);
-	}
-	PUT2(cmd[0]);
-	X('\n');
 	return (ret);
 }
