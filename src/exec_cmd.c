@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 16:21:02 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/08 13:24:49 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/08 21:55:59 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ void			ft_exec_node(t_tree *node, t_lst *env)
 	}
 	if (pid == 0)
 	{
-		if (node->token == CMD)
-			ft_check_exec(node->cmd, env);
+		if (node->token == CMD && ft_check_built_fork(env, node->cmd) != 0)
+ 			ft_check_exec(node->cmd, env);
 		else
 			exit(0);
 	}
@@ -53,15 +53,15 @@ static void		ft_check_tok(t_tree *root, t_lst *env)
 		return (ft_or_and(node, env, node->token - 11));
 	if (node->token == SR_DIR)
 	{
-		PUT2("\n_________redir______________\n");
+//		PUT2("\n_________redir______________\n");
 		ft_redir_right(node, env);
 	}
 	if (node->token == PIPE)
 		ft_pipe(node, env);
-	PUT2("\n_________end node____________\n");
 }
 
-/*fork si c'est une cmd et envoie a la fonction de fork de l'arbre et renvoie retour de cmd pour chaque cmd reussie*/
+/*fork si c'est une cmd et envoie a la fonction de fork de
+ ** l'arbre et renvoie retour de cmd pour chaque cmd reussie*/
 int			ft_waitchild(t_tree *root, t_lst *env)
 {
 	pid_t	pid;

@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 13:08:28 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/08 13:11:00 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/08 21:54:08 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,9 +92,13 @@ void			ft_exec(char **av, t_lst *env)
 	char		*s;
 	char		*s2;
 	char		**envp;
+	t_elem		*tmp;
 
 	envp = ft_env_to_tab(env);
-	s = ft_strdup("/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/X11/bin:/usr/local/munki:/Users/alallema/bin:/Users/alallema/.rvm/bin");
+	if (!(tmp = ft_find_elem("PATH", env)))
+		s = ft_strdup("");
+	else
+		s = ft_strdup(tmp->value);
 	while (s)
 	{
 		s2 = ft_cut_path(&s, av[0]);
@@ -129,9 +133,19 @@ int		ft_check_exec(char **cmd, t_lst *env)
 	int		ret;
 
 	ret = TRUE;
-	if ((ret = ft_check_built_fork(env, cmd)) != 0)
+/*	if ((ret = ft_check_built(cmd)) == 0)
+	{
+		PUT2("\n_________built______________\n");
+		ft_check_built_fork(env, cmd);
+	}
+	else
+*/	if ((ret = ft_check_built_fork(env, cmd)) != 0)
+	{
+		PUT2("\n_________exec______________\n");
 		ft_exec(cmd, env);
-	PUT2("\n_________exec______________\n");
+		return (FALSE);
+	}
 	PUT2(cmd[0]);
+	X('\n');
 	return (ret);
 }

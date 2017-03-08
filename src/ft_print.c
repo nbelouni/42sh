@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/16 20:44:31 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/18 17:02:08 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/08 16:25:17 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,5 +54,43 @@ void		ft_print_token_list(t_token **list)
 		PUT2("bc_level :");E(elem->bc_level);X('\n');
 		PUT2("____________\n");
 		elem = elem->next;
+	}
+}
+
+void	print_tree(t_tree *root)
+{
+	t_tree	*node;
+
+	node = root;
+	if (!node)
+	{
+		PUT2("none");
+		return;
+	}
+	if (node->left)
+	{
+		PUT2("left");
+		if (node->token == CMD)
+		{
+			PUT2(node->cmd[0]);
+		}
+		else
+		{
+			PUT2("type :");PUT2(tab_name[node->token]);X('\n');
+		}
+		print_tree(node->left);
+	}
+	if (node->right)
+	{
+		PUT2("right");
+		if (node->token == CMD)
+		{
+			PUT2(node->cmd[0]);
+		}
+		else
+		{
+			PUT2("type :");PUT2(tab_name[node->token]);X('\n');
+		}
+		print_tree(node->right);
 	}
 }

@@ -62,7 +62,6 @@ SRCS = 	ft_builtin_cd.c		\
 		ft_exec.c			\
 		ft_exec_token.c
 
-
 SRCC = $(addprefix $(SDIR),$(SRCS))
 
 ODIR = ./obj/
