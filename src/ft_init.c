@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 14:13:58 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/05 15:00:25 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/06 18:42:27 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,14 +84,14 @@ char	**ft_envv_to_str(char **res, t_elem *elem)
 
 	i = 0;
 	name_len = ft_strlen(elem->name);
-	if ((res[i] = ft_strnew(name_len + ft_strlen(elem->value) + 1)) == NULL)
+	if ((res[i] = ft_strnew(name_len + ft_strlen(elem->value) + 2)) == NULL)
 	{
 		return (NULL);
 	}
 	ft_strcpy(res[i], elem->name);
 	res[i][name_len] = '=';
 	res[i] = ft_strcat(res[i], elem->value);
-	++i;
+//	++i;
 	return (res);
 }
 
@@ -105,7 +105,7 @@ char	**ft_env_to_tab(t_lst *lst)
 	{
 		return (NULL);
 	}
-	ft_memset(res, 0, sizeof(res));
+	ft_memset(res, 0, sizeof(lst->size + 1));
 	tmp = lst->head;
 	while (tmp != NULL)
 	{

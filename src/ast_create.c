@@ -6,7 +6,7 @@
 /*   By: dogokar <dogokar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 14:41:10 by dogokar           #+#    #+#             */
-/*   Updated: 2017/03/05 19:44:24 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/06 18:57:57 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,10 +166,10 @@ t_token *search_toke(t_token *lst, t_lvl *lvl)
 	first_time = 0;
 	node_lst = NULL;
 	lvl_up = NULL;
-	if (lvl == NULL)
-		lvl = initlvl(0,0);
 	if (lst == NULL)
 		return (NULL);
+	if (lvl == NULL)
+		lvl = initlvl(0,0);
 	if (tmp->select == 1)
 		tmp = tmp->next;
 	while (tmp && tmp->select == 0)
@@ -177,6 +177,8 @@ t_token *search_toke(t_token *lst, t_lvl *lvl)
 		if (first_time == 0 && test_lvl(tmp->bt_level, tmp->bc_level, lvl))
 		{
 			first_time = 1;
+			if (lvl_up)
+				free(lvl_up);
 			lvl_up = initlvl(tmp->bt_level, tmp->bc_level);
 		}
 		if (priority(node_lst, tmp, lvl))
@@ -395,17 +397,14 @@ void free_content_ast(t_tree *node)
 void free_ast(t_tree *ast)
 {
 	if (!ast)
-	{
-		PUT2("fin de branche");
 		return ;
-	}
-	else
-	{
-		free_content_ast(ast);
+	if (ast->left)
 		free_ast(ast->left);
+	if (ast->right)
 		free_ast(ast->right);
-		ft_memdel((void *)&ast);
-	}
+//		ft_memdel((void *)&ast);
+	free_content_ast(ast);
+	free(ast);
 }
 
 void ft_push_ast(t_token *list, t_tree **ast)

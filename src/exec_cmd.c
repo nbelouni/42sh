@@ -6,16 +6,15 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 16:21:02 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/06 20:52:55 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/08 13:24:49 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
 
 static void		ft_check_tok(t_tree *root, t_lst *env);
-static int		ft_waitchild(t_tree *root, t_lst *env);
-/*fork pour execute les cmd char ***/
-static void		ft_exec_node(t_tree *node, t_lst *env)
+/*fork pour execute les cmd char ** */
+void			ft_exec_node(t_tree *node, t_lst *env)
 {
 	int		statval;
 	pid_t	pid;
@@ -35,100 +34,6 @@ static void		ft_exec_node(t_tree *node, t_lst *env)
 		else
 			exit(0);
 	}
-}
-
-static void		ft_dot(t_tree *node, t_lst *env)
-{
-	if (node->left)
-		ft_waitchild(node->left, env);
-	if (node->right)
-		ft_waitchild(node->right, env);
-	return ;
-}
-
-static void	 	ft_pipe(t_tree *node, t_lst *env)
-{
-	int		pipefd[2];
-	int		fd;
-	int		fd2;
-
-	if (node->token == PIPE)
-	{
-		if (pipe(pipefd) < 0)
-			ft_putstr_fd("error pipe\n", 2);
-		fd = dup(STDOUT_FILENO);
-		fd2 = dup(STDIN_FILENO);
-		dup2(pipefd[1], STDOUT_FILENO);
-	}
-	if (node->left)
-	{
-		ft_exec_node(node->left, env);
-		dup2(fd, STDOUT_FILENO);
-	}
-	if (node->right)
-	{
-		if (close(pipefd[1]) < 0)
-			PUT2("error close pipe[1]\n");
-		dup2(pipefd[0], STDIN_FILENO);
-		ft_exec_node(node->right, env);
-		dup2(fd2, STDIN_FILENO);
-	}
-}
-
-static void	 	ft_redir_right(t_tree *node, t_lst *env)
-{
-	char	buf[255];
-	int		fd;
-	int		pipefd[2];
-	int		file;
-
-	ft_bzero(buf, 255);
-	if (node->token == SR_DIR)
-	{
-		PUT2("\n_________dup______________\n");
-		if (pipe(pipefd) < 0)
-			ft_putstr_fd("error pipe\n", 2);
-		fd = dup(STDOUT_FILENO);
-//		fd2 = dup(STDIN_FILENO);
-		dup2(pipefd[1], STDOUT_FILENO);
-	}
-	if (node->left)
-	{
-		PUT2("\n______________dup left__________\n");
-		ft_exec_node(node->left, env);
-		dup2(fd, STDOUT_FILENO);
-	}
-	if (node->right)
-	{
-		PUT2(node->right->cmd[0]);
-//		read(pipefd[0], &buf, 255);
-//		PUT2(buf);
-		if ((file = open(node->right->cmd[0], O_WRONLY|O_TRUNC|O_CREAT, 0777)) != -1)
-		{
-//			if (close(pipefd[1]) < 0)
-//				PUT2("error close pipe[1]\n");
-			PUT2("\n________________dup right_________\n");
-//			dup2(pipefd[0], file);
-//			if (node->out)
-//			dup2(STDOUT_FILENO, out);
-			dup2(file, pipefd[0]);
-//			if (close(pipefd[0]) < 0)
-//				PUT2("error close pipe[1]\n");
-//@			ft_exec_node(node->right, env);
-		}
-//		dup2(fd2, STDIN_FILENO);
-	}
-//	PUT2("\n__________end____________\n");
-}
-
-static void		ft_or_and(t_tree *node, t_lst *env, int token)
-{
-	if (node->left && ft_waitchild(node->left, env) == token)
-	{
-		if (node->right)
-			ft_waitchild(node->right, env);
-	}
-	return ;
 }
 
 /*check les token et renvoie a la fonctione dediee pour chaque token*/
@@ -153,10 +58,11 @@ static void		ft_check_tok(t_tree *root, t_lst *env)
 	}
 	if (node->token == PIPE)
 		ft_pipe(node, env);
+	PUT2("\n_________end node____________\n");
 }
 
-/*fork le premier processus ou l'arbre et renvoie TRUE pour chaque vraie commande*/
-static int		ft_waitchild(t_tree *root, t_lst *env)
+/*fork si c'est une cmd et envoie a la fonction de fork de l'arbre et renvoie retour de cmd pour chaque cmd reussie*/
+int			ft_waitchild(t_tree *root, t_lst *env)
 {
 	pid_t	pid;
 //	int		status;
@@ -188,6 +94,7 @@ static int		ft_waitchild(t_tree *root, t_lst *env)
 	}
 	return (TRUE);
 }
+
 /*lance chaque commande*/
 int				exec_cmd(t_tree *root, t_lst *env)
 {
@@ -195,6 +102,5 @@ int				exec_cmd(t_tree *root, t_lst *env)
 
 	node = root;
 	ft_waitchild(node, env);
-	ft_putstr_fd("\n", 1);
 	return (0);
 }

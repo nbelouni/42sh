@@ -59,7 +59,8 @@ SRCS = 	ft_builtin_cd.c		\
 		ast_create.c		\
 		ft_print.c			\
 		exec_cmd.c			\
-		ft_exec.c
+		ft_exec.c			\
+		ft_exec_token.c
 
 
 SRCC = $(addprefix $(SDIR),$(SRCS))
