@@ -55,3 +55,4 @@ bash: 2147483647: Bad file descriptor
   //int *ft_opt_parse(char *opts, char **args, size_t overwrite)
   #define UNSET_OPT "iu" -> opt{pos/code erreur, 1/0, 1/0}
    exemple opt[1] -> 1
+
