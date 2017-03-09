@@ -3,8 +3,8 @@
 test sous-shell& accolade
 
  .() := sous-shell
-	. n'applieque pqs les changements au shell
-	. child scope
+	. n'applique pas les changements au shell
+	. child scope (env)
 
  .{} := accolade
  	.applique les changements au shell

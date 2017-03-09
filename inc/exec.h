@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 13:25:54 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/08 22:09:48 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/09 17:38:13 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,10 @@
 # include <sys/stat.h>
 # include <sys/uio.h>
 # include <signal.h>
+# include <stdio.h>
 
 int				exec_cmd(t_tree *root, t_lst *env);
-int				ft_waitchild(t_tree *root, t_lst *env);
+int				ft_init_gpr(t_tree *root, t_lst *env);
 //void			ft_exec(char **s, t_lst *env);
 int				ft_check_exec(char **cmd, t_lst *env);
 int				ft_check_built(char **av);

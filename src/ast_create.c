@@ -6,7 +6,7 @@
 /*   By: dogokar <dogokar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 14:41:10 by dogokar           #+#    #+#             */
-/*   Updated: 2017/03/06 18:57:57 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/09 17:06:05 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,9 @@ t_lvl   *initlvl(int bt_lvl, int bc_lvl)
 
 static  t_lib lib_op[LENLIB] =
 {
-	{.toke = DOT, .priority = 10},
+	{.toke = DOT, .priority = 11},
 	{.toke = OR, .priority = 9},
-	{.toke = AND, .priority = 9},
+	{.toke = AND, .priority = 10},
 	{.toke = PIPE, .priority = 8},
 	{.toke = SL_DIR, .priority = 7},
 	{.toke = SR_DIR, .priority = 7},

@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/11 12:30:14 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/05 19:52:24 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/09 17:14:24 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,7 @@ typedef struct		s_tok
 {
 	int				tok;
 }					t_tok;
-/*
-typedef struct		s_cmd
-{
-	int				token;
-	char			**cmd;
-}					s_cmd;
-*/
+
 typedef struct		s_tree
 {
 	int				token;

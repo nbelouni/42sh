@@ -6,13 +6,28 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 16:21:02 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/08 22:08:40 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/09 18:12:00 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
+#include <errno.h>
 
 static void		ft_check_tok(t_tree *root, t_lst *env);
+
+void			print_gpid()
+{
+	char	*s;
+
+	s = NULL;
+	PUT2("\ntty - terminal: ");
+	PUT2(ctermid(s));X('\n');
+	PUT2("\npgid groupe process parent: ");
+	E(tcgetsid(STDIN_FILENO));X('\n');
+	strerror(tcgetsid(STDIN_FILENO));X('\n');
+	PUT2("\npid process: ");
+	E(getpid());X('\n');
+}
 /*
  **fork pour execute les cmd
  */
@@ -22,6 +37,7 @@ void			ft_exec_node(t_tree *node, t_lst *env)
 	pid_t	pid;
 
 	pid = fork();
+	print_gpid();
 	if (pid < 0)
 		return ;
 	if (pid > 0)
@@ -66,14 +82,31 @@ static void		ft_check_tok(t_tree *root, t_lst *env)
 }
 
 /*
+ **attend la fin de l'execution du processus fils
+ */
+int			ft_waitchild(void)
+{
+	int		statval;
+//	int		status;
+
+		wait(&statval);
+		if (WIFEXITED(statval))
+		{
+			if (WEXITSTATUS(statval) != 0)
+				return (FALSE);
+		}
+		return (TRUE);
+//		waitpid(pid, &status, 0);
+}
+
+/*
  **fork si c'est une cmd ou envoie a la fonction de check des noeuds
  **retourne le retour de cmd pour chaque cmd reussie
  */
-int			ft_waitchild(t_tree *root, t_lst *env)
+int			ft_init_gpr(t_tree *root, t_lst *env)
 {
 	pid_t	pid;
-//	int		status;
-	int		statval;
+//	int		statval;
 
 	if (root && root->token == CMD && ft_check_built(root->cmd) != 0)
 		pid = fork();
@@ -83,15 +116,7 @@ int			ft_waitchild(t_tree *root, t_lst *env)
 	if (pid < 0)
 		return (FALSE);
 	if (pid > 0)
-	{
-		wait(&statval);
-		if (WIFEXITED(statval))
-		{
-			if (WEXITSTATUS(statval) != 0)
-				return (FALSE);
-		}
-//		waitpid(pid, &status, 0);
-	}
+		return (ft_waitchild());
 	if (pid == 0)
 	{
 		if (root && root->token == CMD)
@@ -110,6 +135,6 @@ int				exec_cmd(t_tree *root, t_lst *env)
 	t_tree	*node;
 
 	node = root;
-	ft_waitchild(node, env);
+	ft_init_gpr(node, env);
 	return (0);
 }
