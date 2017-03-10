@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 12:49:02 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/10 21:48:08 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/10 22:03:40 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,16 @@ int		is_end(char *s, int *i, char c)
 	return (TRUE);
 }
 
-int		btq_in_dquote(char *s, int *i, int *n_quote)
+int		btq_in_dquote(char *s, int *i, int *n_dquote)
 {
-	*n_dquote++;
+	(*n_dquote) += 1;
 	while (++(*i) < (int)ft_strlen(s))
 	{
 		if (is_end(s, i, '`') == FALSE)
 			return (FALSE);
 		else if (is_char(s, *i, '"'))
 		{
-			*n_dquote++;
+			(*n_dquote) += 1;
 			break ;
 		}
 	}
