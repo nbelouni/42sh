@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 16:21:02 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/09 18:12:00 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/10 10:57:18 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void			ft_exec_node(t_tree *node, t_lst *env)
 	pid_t	pid;
 
 	pid = fork();
-	print_gpid();
+//	print_gpid();
 	if (pid < 0)
 		return ;
 	if (pid > 0)

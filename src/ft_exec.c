@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 13:08:28 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/09 18:14:34 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/10 10:55:29 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,9 +109,9 @@ void			ft_exec(char **av, t_lst *env)
 	{
 		s2 = ft_cut_path(&s, av[0]);
 		if (lstat(av[0], &st) == 0 && st.st_mode & S_IXUSR)
-			execve(av[0], av, envp);
+			execve(av[0], av, NULL);
 		if (lstat(s2, &st) == 0 && st.st_mode & S_IXUSR)
-			execve(s2, av, envp);
+			execve(s2, av, NULL);
 		if (!ft_strchr(s, ':'))
 		{
 			if (lstat(av[0], &st) == 0 && st.st_mode & S_IXUSR)
