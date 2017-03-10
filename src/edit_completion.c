@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/01 17:17:28 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/05 20:59:22 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/07 19:47:31 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,25 @@ int			edit_username_line(char **line)
 	return (0);
 }
 
+int			insert_next(t_sort_list *tmp, char *s)
+{
+	t_sort_list		*tmp_next;
+
+	while (tmp->next && ft_strcmp(tmp->next->s, s) < 0)
+		tmp = tmp->next;
+	if (ft_strcmp(tmp->s, s) && (!tmp->next || ft_strcmp(tmp->next->s, s)))
+	{
+		tmp_next = (tmp->next) ? tmp->next : NULL;
+		if (!(tmp->next = create_sort_list(ft_strdup(s))))
+			return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
+		tmp->next->prev = tmp;
+		tmp->next->next = tmp_next;
+		if (tmp_next)
+			tmp_next->prev = tmp->next;
+	}
+	return (0);
+}
+
 int			insert_in_list(t_sort_list **list, char *s)
 {
 	t_sort_list		*tmp;
@@ -74,18 +93,16 @@ int			insert_in_list(t_sort_list **list, char *s)
 	else if (s)
 	{
 		tmp = *list;
-		while (tmp->next && ft_strcmp(tmp->next->s, s) < 0)
-			tmp = tmp->next;
-		if (ft_strcmp(tmp->s, s) && (!tmp->next || ft_strcmp(tmp->next->s, s)))
+		if (tmp && ft_strcmp(tmp->s, s) > 0)
 		{
-			tmp_next = (tmp->next) ? tmp->next : NULL;
-			if (!(tmp->next = create_sort_list(ft_strdup(s))))
+			if (!(tmp_next = create_sort_list(ft_strdup(s))))
 				return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
-			tmp->next->prev = tmp;
-			tmp->next->next = tmp_next;
-			if (tmp_next)
-				tmp_next->prev = tmp->next;
+			tmp_next->next = tmp;
+			tmp->prev = tmp_next;
+			*list = tmp_next;
 		}
+		else if (insert_next(tmp, s) == ERR_EXIT)
+			return (ERR_EXIT);
 	}
 	return (0);
 }

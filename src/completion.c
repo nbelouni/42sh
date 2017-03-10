@@ -6,21 +6,11 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 15:10:02 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/05 16:31:08 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/07 20:09:54 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
-
-int		is_char(char *s, int i, char c)
-{
-	if (i == 0 || s[i - 1] != '\\')
-	{
-		if (s[i] == c)
-			return (1);
-	}
-	return (0);
-}
 
 int		is_any_quote(char *s, int i)
 {
@@ -50,20 +40,6 @@ int		is_arg(char *s, int i)
 		i--;
 	if (i >= 0 && !is_separator(s, i) && !is_group(s, i))
 		return (1);
-	return (0);
-}
-
-int		find_prev_char(char *s, int len, char c)
-{
-	int		i;
-
-	i = 0;
-	while (len - i > 0)
-	{
-		if (is_char(s, len - i, c))
-			return (i);
-		i++;
-	}
 	return (0);
 }
 
@@ -152,7 +128,7 @@ int		max_len_sort_lst(t_sort_list *lst, int n)
 	return (len);
 }
 
-void	print_sort_list(t_sort_list *lst, int n)
+void	print_sort_list(t_sort_list *lst, int n, char c)
 {
 	t_sort_list	*tmp;
 	int			word_per_line;
@@ -166,16 +142,14 @@ void	print_sort_list(t_sort_list *lst, int n)
 	ft_putchar_fd('\n', 1);
 	while (n-- && tmp)
 	{
+		write(1, &c, 1);
 		ft_putstr_fd(tmp->s, 1);
 		i = -1;
 		while ((int)ft_strlen(tmp->s) + ++i < max_len)
 			ft_putchar_fd(' ', 1);
 		word_per_line--;
 		if (word_per_line == 0)
-		{
-			ft_putchar_fd('\n', 1);
-			word_per_line = g_curs.win_col / max_len;
-		}
+			word_per_line = g_curs.win_col / max_len + ft_putchar_fd('\n', 1);
 		tmp = tmp->next;
 	}
 	ft_putchar_fd('\n', 1);
@@ -312,7 +286,7 @@ int		fill_file(t_buf *buf, t_sort_list **lst, int *bg)
 	return (n_lst);
 }
 
-int		replace_or_print(t_buf *buf, t_sort_list *ref, int begin)
+int		replace_or_print(t_buf *buf, t_sort_list *ref, int begin, char c)
 {
 	int			n_lst;
 	int			len;
@@ -332,7 +306,7 @@ int		replace_or_print(t_buf *buf, t_sort_list *ref, int begin)
 	if (n_lst == 1)
 		replace_cplt(buf, lst->s, begin);
 	else if (n_lst > 1)
-		print_sort_list(lst, n_lst);
+		print_sort_list(lst, n_lst, c);
 	return (n_lst > 1 ? TAB : 0);
 }
 
@@ -346,18 +320,18 @@ int		complete_line(t_buf *buf, t_completion *cplt, char x)
 		return (0);
 	begin = find_word_begin(buf->line);
 	if (is_char(buf->line, begin, '$'))
-		return (replace_or_print(buf, cplt->variable, begin + 1));
+		return (replace_or_print(buf, cplt->variable, begin + 1, '$'));
 	if (is_char(buf->line, begin, '~'))
-		return (replace_or_print(buf, cplt->username, begin + 1));
+		return (replace_or_print(buf, cplt->username, begin + 1, '~'));
 	if (is_char(buf->line, begin, '@'))
-		return (replace_or_print(buf, cplt->hostname, begin + 1));
+		return (replace_or_print(buf, cplt->hostname, begin + 1, '@'));
 	if (is_cmd(buf->line, begin - 1))
-		return (replace_or_print(buf, cplt->command, begin));
+		return (replace_or_print(buf, cplt->command, begin, 0));
 	if (is_arg(buf->line, begin - 1))
 	{
 		if ((ret = fill_file(buf, &ref, &begin)) < 0)
 			return (ret);
-		ret = replace_or_print(buf, ref, begin);
+		ret = replace_or_print(buf, ref, begin, 0);
 		if (ref)
 			destroy_sort_list(&ref);
 		return (ret);

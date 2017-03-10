@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/12 18:15:50 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/02 22:35:02 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/10 13:17:09 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,44 @@ int		is_backslash(char *s, int i)
 			return (1);
 	}
 	return (0);
+}
+
+int		is_char(char *s, int i, char c)
+{
+	if (i == 0 || s[i - 1] != '\\')
+	{
+		if (s[i] == c)
+			return (1);
+	}
+	return (0);
+}
+
+int		find_prev_char(char *s, int len, char c)
+{
+	int		i;
+
+	i = 0;
+	while (len - i > 0)
+	{
+		if (is_char(s, len - i, c))
+			return (i);
+		i++;
+	}
+	return (0);
+}
+
+int		find_next_char(char *s, int len, char c)
+{
+	int		i;
+
+	i = 0;
+	while (len + i < (int)ft_strlen(s))
+	{
+		if (is_char(s, len + i, c))
+			return (i);
+		i++;
+	}
+	return (-1);
 }
 
 int		is_group(char *s, int i)

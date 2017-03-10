@@ -6,14 +6,15 @@
 /*   By: nbelouni <nbelouni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/06 18:37:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2014/11/18 01:17:37 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/07 20:08:35 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void		ft_putchar_fd(char c, int fd)
+int			ft_putchar_fd(char c, int fd)
 {
 	if (c && fd)
 		write(fd, &c, 1);
+	return (0);
 }

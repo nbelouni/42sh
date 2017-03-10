@@ -40,24 +40,22 @@ SRCS = 	ft_builtin_cd.c		\
 	    prompt.c			\
 	    is_line_ended.c		\
 		is_token.c			\
-		word.c				\
-		lex_cmd.c			\
 		ft_exec.c			\
 		ft_tokenlist.c		\
 		lex_buf_line.c		\
 		lex_buf_pars.c		\
 		is_tok.c			\
-		add_new_btquote.c	\
-		add_bt_d_quote.c	\
 		is_check.c			\
-		sort_list.c	\
+		sort_list.c			\
 		sort_list_token.c	\
 		can_create_tree.c	\
 		completion.c		\
 		is_token_type.c		\
 		return_errors.c		\
-		count_word.c		\
 		ast_create.c		\
+		find_quote_end.c	\
+		globbing.c			\
+		here_doc.c			\
 		ft_print.c
 
 
