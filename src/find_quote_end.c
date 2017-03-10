@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 12:49:02 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/10 17:01:29 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/10 21:48:08 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,24 @@ int		is_end(char *s, int *i, char c)
 	return (TRUE);
 }
 
+int		btq_in_dquote(char *s, int *i, int *n_quote)
+{
+	*n_dquote++;
+	while (++(*i) < (int)ft_strlen(s))
+	{
+		if (is_end(s, i, '`') == FALSE)
+			return (FALSE);
+		else if (is_char(s, *i, '"'))
+		{
+			*n_dquote++;
+			break ;
+		}
+	}
+	if (*n_dquote % 2 == 1)
+		return (FALSE);
+	return (TRUE);
+}
+
 int		find_quote_end(char *s)
 {
 	int		i;
@@ -42,18 +60,7 @@ int		find_quote_end(char *s)
 			return (FALSE);
 		else if (is_char(s, i, '"'))
 		{
-			n_dquote++;
-			while (++i < (int)ft_strlen(s))
-			{
-				if (is_end(s, &i, '`') == FALSE)
-					return (FALSE);
-				else if (is_char(s, i, '"'))
-				{
-					n_dquote++;
-					break ;
-				}
-			}
-			if (n_dquote % 2 == 1)
+			if (btq_in_dquote(s, &i, &n_dquote))
 				return (FALSE);
 		}
 	}

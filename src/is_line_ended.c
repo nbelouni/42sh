@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/05 16:50:08 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/10 19:01:58 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/10 21:59:35 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,12 @@ int		complete_final_line(t_buf *buf, t_token *lst)
 	if ((tmp->bt_level || tmp->bc_level) && !is_separator_type(tmp->type))
 	{
 		if (!(tmp2 = ft_strjoin(buf->final_line, "; ")))
-			return(ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
+			return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
 	}
 	else
 	{
 		if (!(tmp2 = ft_strjoin(buf->final_line, " ")))
-			return(ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
+			return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
 	}
 	free(buf->final_line);
 	buf->final_line = tmp2;

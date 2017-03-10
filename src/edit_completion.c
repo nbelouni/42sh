@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/01 17:17:28 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/07 19:47:31 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/10 21:50:08 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ int			fill_command(t_sort_list **list, char *path)
 	i = -1;
 	if (!(bin_path = ft_strsplit(path, ':')))
 		return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
-
 	while (bin_path[++i])
 	{
 		if ((dirp = opendir(bin_path[i])) != NULL)

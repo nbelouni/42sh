@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/10 20:08:48 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/10 22:00:57 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,14 +72,15 @@ int 	main(int argc, char **argv, char **envp)
 				return (-1);
 			complete_final_line(buf, list);
 //			parse(env, buf->final_line, envp);
-		PUT2("buf->line : ");PUT2(buf->line);X('\n');
-		PUT2("buf->final_line : ");PUT2(buf->final_line);X('\n');
 			ret = parse_buf(&list, buf->final_line, &completion);
 			if (ret > 0 && list)
 			{
 
-				ft_print_token_list(&list); //debug impression
-				edit_cmd(list, env);
+//				ft_print_token_list(&list); //debug impression
+/*				
+ *				enleve les quotes et les backslash -> va changer de place
+ *				edit_cmd(list, env); 
+ */
 //				ft_push_ast(list, &ast);
 //				print_debug_ast(ast);
 //				free_ast(ast);
