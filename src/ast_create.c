@@ -6,7 +6,7 @@
 /*   By: dogokar <dogokar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 14:41:10 by dogokar           #+#    #+#             */
-/*   Updated: 2017/03/09 17:06:05 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/10 12:44:14 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static  t_lib lib_op[LENLIB] =
 	{.toke = PIPE, .priority = 8},
 	{.toke = SL_DIR, .priority = 7},
 	{.toke = SR_DIR, .priority = 7},
-	{.toke = AMP, .priority = 7},
+	{.toke = AMP, .priority = 11},
 	{.toke = DL_DIR, .priority = 7},
 	{.toke = DR_DIR, .priority = 7},
 	{.toke = DIR_AMP, .priority = 7},
