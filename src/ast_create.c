@@ -6,7 +6,7 @@
 /*   By: dogokar <dogokar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 14:41:10 by dogokar           #+#    #+#             */
-/*   Updated: 2017/03/10 12:44:14 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/03/11 16:57:13 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -385,7 +385,6 @@ void print_debug_ast(t_tree *node)
 	}
 	PUT2(" \n up");
 }
-
 
 void free_content_ast(t_tree *node)
 {

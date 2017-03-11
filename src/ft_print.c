@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/16 20:44:31 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/09 17:34:48 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/11 15:19:22 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,5 +54,37 @@ void		ft_print_token_list(t_token **list)
 		PUT2("bc_level :");E(elem->bc_level);X('\n');
 		PUT2("____________\n");
 		elem = elem->next;
+	}
+}
+
+void		print_job(t_job *list)
+{
+	t_job		*job;
+	t_process	*process;
+	int			i;
+	int			j;
+
+	i = 1;
+	j = 1;
+	job = list;
+	process = NULL;
+	job = list;
+	while (job)
+	{
+		process = job->process;
+		PUT2("\n--- job");
+		E(i);
+		PUT2("--\n");
+		while (process)
+		{
+			PUT2("\n--- process ");
+			E(j);
+			PUT2(process->cmd[0]);
+			PUT2("--\n");
+			process = process->next;
+			j++;
+		}
+		i++;
+		job = job->next;
 	}
 }

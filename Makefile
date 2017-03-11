@@ -5,7 +5,8 @@ ILIB = ./libft/inc
 INCS = 42sh.h	\
 	   read.h	\
 	   lex.h	\
-	   exec.h
+	   exec.h	\
+	   job.h
 INCC = $(addprefix $(IDIR), $(INCS))
 
 LDIR = ./libft

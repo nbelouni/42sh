@@ -6,85 +6,73 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 13:52:27 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/10 19:06:46 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/03/11 15:08:15 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "42sh.h"
 #define is ==
+#define isnot !=
 #define token(x) (x->token)
 
-
-void	export_job(t_tree *root, job *job_list)
+void		create_process(t_tree *node, t_process **proc, int token)
 {
-	t_tree *ptr;
-	job	*job_iterator;
+	t_process	*new;
+
+	PUT2("\n--create process--\n")
+	new = init_process(node->cmd, token);
+	process_push(proc, new);
+}
+
+void		export_process(t_tree *root, t_process **proc, int token)
+{
+	t_tree		*ptr;
 
 	ptr = root;
+	PUT2("\n--export process--\n")
+	if (!ptr)
+		return ;
+	token = token(ptr);
+	if (token(ptr) is CMD)
+	{
+		PUT2("\n--create cmd--\n")
+		create_process(ptr, proc, token);
+	}
+	if (ptr->left)
+		export_process(ptr->left, proc, token);
+	if (ptr->right)
+		export_process(ptr->right, proc, token);
+}
+
+void		create_job(t_tree *root, int foreground, t_job **job_list)
+{
+	t_job		*job;
+	t_process	*proc;
+
+	PUT2("\n--create job--\n")
+	if (!root)
+		return ;
+	job = init_job(foreground);
+	export_process(root, &proc, 0);
+	job->process = proc;
+	job_push(job_list, job);
+}
+
+void		export_job(t_tree *root, t_job **job_list)
+{
+	t_tree		*ptr;
+
+	ptr = root;
+	PUT2("\n--export job--\n")
 	while (ptr)
 	{
-		if (token(ptr) is not AMP or is not DOT)
-			create_job(ptr, 0);
+		if ((token(ptr) isnot AMP) || (token(ptr) isnot DOT))
+			create_job(ptr, 0, job_list);
 		else
 		{
 			ptr = ptr->left;
-			create_job(ptr, token(AMP));
+			create_job(ptr, 1, job_list);
 		}
 		ptr = ptr->right;
 	}
-}
-
-job	*create_job(t_tree *root, int foreground)
-{
-	t_job	*job;
-
-	job = ft_memalloc(sizeof(t_job));
-	job->foreground = foreground;
-	create_process_tree(ptr, env);
-}
-
-void	 create_process_tree(t_tree *root)
-{
-	Node_p *process_tree;
-	Node_p current_node;
-	t_tree *ptr;
-
-	ptr = root;
-	*process_tree = create_node();
-	current_node = *process_tree;
-	while (ptr)
-	{
-		if (token(ptr) is AND)
-			create_conditionIf(IF_AND);
-		else if (token(ptr) is OR)
-			;
-		ptr = ptr->right;
-	}
-}
-
-ConditionIf_p create_ConditonIf()
-{
-
-}
-
-Node_p create_node()
-{
-
-}
-
-Process_p	create_process()
-{
-	Process_p process;
-	
-	return (process);
-}
-
-void	check_tok(t_tree *node)
-{
-	if (token(node) is OR || token(node) is AND)
-		
-	/*
-	if (token(node) is SR_DIR)
-		ft_redir_right(node, env);
-	if (token(node) is PIPE)
-	ft_pipe(node, env);*/
 }
