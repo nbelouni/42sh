@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 19:31:44 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/11 21:03:06 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/12 00:04:50 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void		reset_int_pt(t_pt *pt)
 	pt->level[0] = 0;
 	pt->level[1] = 0;
 }
+
 
 int			parse_list(t_token **list, char *s, t_pt *p)
 {
@@ -42,12 +43,8 @@ int			check_fd_out(t_token **list, char *s, t_pt *p)
 {
 	int		ret;
 
-	PUT2("\n----\n");
-	while (s[p->i + p->len] && ft_isdigit(s[p->i + p->len]) == 1)
-	{
-		X(s[p->len]);
+	while (s[p->i + p->len] && ft_isalnum(s[p->i + p->len]) == 1)
 		p->len++;
-	}
 	if (p->len != 0)
 	{
 		p->type = FD_OUT;
@@ -59,12 +56,13 @@ int			check_fd_out(t_token **list, char *s, t_pt *p)
 	return (0);
 }
 
-static int	check_fd_in(char *s, t_pt *p)
+static int	check_fd_in(t_token **list, char *s, t_pt *p)
 {
 	int		j;
 	int		ret;
 	int		ret2;
 
+	(void)list;
 	j = 0;
 	ret = is_redir(s, p->i + p->len);
 	ret2 = is_agreg(s, p->i + p->len);
@@ -74,20 +72,13 @@ static int	check_fd_in(char *s, t_pt *p)
 		j++;
 	if ((p->i + p->len - j) != 0 && s[p->i + p->len - j - 1] != ' ')
 		return (0);
-	p->len++;
-	if (ret2 == DIR_AMP)
-	{
-		p->len++;
-		return (ret2);
-	}
-	return (ret);
+	return (j);
 }
 
 int			cut_cmd(t_token **list, char *s, t_pt *p)
 {
 	int		j;
 	int		ret;
-	int		ret2;
 
 	j = 0;
 	ret = 0;
@@ -97,8 +88,8 @@ int			cut_cmd(t_token **list, char *s, t_pt *p)
 		cut_quote(s, p);
 		p->len++;
 	}
-	if ((ret2 = check_fd_in(s, p)) > 0)
-		p->type = ret2;
+	if (check_fd_in(list, s, p) > 0)
+		p->type = FD_IN;
 	else
 		p->type = CMD;
 	if (p->len != 0)
