@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 19:31:44 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/11 17:36:01 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/11 21:03:06 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,12 @@ int			check_fd_out(t_token **list, char *s, t_pt *p)
 {
 	int		ret;
 
+	PUT2("\n----\n");
 	while (s[p->i + p->len] && ft_isdigit(s[p->i + p->len]) == 1)
+	{
+		X(s[p->len]);
 		p->len++;
+	}
 	if (p->len != 0)
 	{
 		p->type = FD_OUT;
@@ -70,13 +74,20 @@ static int	check_fd_in(char *s, t_pt *p)
 		j++;
 	if ((p->i + p->len - j) != 0 && s[p->i + p->len - j - 1] != ' ')
 		return (0);
-	return (j);
+	p->len++;
+	if (ret2 == DIR_AMP)
+	{
+		p->len++;
+		return (ret2);
+	}
+	return (ret);
 }
 
 int			cut_cmd(t_token **list, char *s, t_pt *p)
 {
 	int		j;
 	int		ret;
+	int		ret2;
 
 	j = 0;
 	ret = 0;
@@ -86,8 +97,8 @@ int			cut_cmd(t_token **list, char *s, t_pt *p)
 		cut_quote(s, p);
 		p->len++;
 	}
-	if (check_fd_in(s, p) > 0)
-		p->type = FD_IN;
+	if ((ret2 = check_fd_in(s, p)) > 0)
+		p->type = ret2;
 	else
 		p->type = CMD;
 	if (p->len != 0)

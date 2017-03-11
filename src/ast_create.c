@@ -6,7 +6,7 @@
 /*   By: dogokar <dogokar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 14:41:10 by dogokar           #+#    #+#             */
-/*   Updated: 2017/03/11 16:57:13 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/11 20:54:37 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int  compare_token_op(t_token *node_lst, t_token *tmp)
 		return(1);
 	else if (lib_lst && lib_tmp)
 	{
-		if (lib_lst->priority < lib_tmp->priority)
+		if (lib_lst->priority <= lib_tmp->priority)
 			return (1);
 		else
 			return (0);

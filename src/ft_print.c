@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/16 20:44:31 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/11 15:19:22 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/11 18:54:54 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void		ft_print_token_list(t_token **list)
 		elem = elem->next;
 	}
 }
-
+/*
 void		print_job(t_job *list)
 {
 	t_job		*job;
@@ -87,4 +87,4 @@ void		print_job(t_job *list)
 		i++;
 		job = job->next;
 	}
-}
+}*/
