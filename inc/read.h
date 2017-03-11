@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:01:52 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/05 20:43:35 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/07 19:24:01 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -391,5 +391,9 @@ void			print_pre_curs(t_buf *buf);
 **		concatene buf.final_line et buf.line
 */
 int				is_line_ended(t_buf *buf);
+
+typedef	struct	s_token	t_token;
+
+int				complete_final_line(t_buf *buf, t_token *lst);
 
 #endif

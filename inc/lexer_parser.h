@@ -6,28 +6,17 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 20:07:22 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/27 15:02:48 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/10 14:42:57 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LEXER_PARSER_H
 # define LEXER_PARSER_H
 
-typedef struct		s_word
-{
-	char			*s;
-	int				flag;
-	int				level;
-	struct s_word	*next;
-	struct s_word	*prev;
-}					t_word;
-
 typedef struct		s_token
 {
 	int				type;
 	char			*word;
-	int				n_string;
-	t_word			*string;
 	int				bt_level;	// Parenthese
 	int				bc_level;	// Accolade
 	int				select;
@@ -80,19 +69,15 @@ typedef struct		s_cmd
 	struct s_cmd	*right;
 }					t_cmd;
 
-t_word				*create_word();
-void				push_word();
-void				clear_word();
-void				rm_word(t_word **cmd);
-int					count_word(t_word *w);
-void				destroy_word();
-
 t_token				*create_token();
 void				push_token();
 void				clear_token();
 void				destroy_token();
 
 int					can_create_tree(t_token	*lst);
+int					is_end(char *s, int *i, char c);
+int					find_quote_end(char *s);
+
 /*
  * PAS IMPLEMENTEES
 t_cmd				*create_cmd();

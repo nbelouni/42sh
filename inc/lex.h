@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/11 12:30:14 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/09 17:14:24 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/10 20:09:22 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,10 @@ enum				e_token2
 /*
 **	return == len de la chaine a strsub -> strsub(s, i, is_*());
 */
+int		is_char(char *s, int i, char c);
+int		find_prev_char(char *s, int len, char c);
+int		find_next_char(char *s, int len, char c);
+
 int		is_group(char *s, int i);
 int		is_separator(char *s, int i);
 int		is_redirection(char *s, int i);
@@ -80,7 +84,7 @@ int		find_dollar(char *s, int i);
 int		find_new_btquote_end(char *s, int i);
 int		find_next_inhibitor(char *s, int i, int *token);
 int		find_next_btq(char *s, int i, int *token);
-
+/*
 int		add_no_quote(char *s, int *i, t_word **lst);
 int		add_squote(char *s, int *i, t_word **lst);
 int		add_dquote(char *s, int *i, t_word **lst, int where);
@@ -88,7 +92,7 @@ int		add_new_btquote(t_word *tmp, int *i, t_word **lst);
 int		add_btquote(t_word *tmp, int *i, t_word **lst);
 
 int		lex_buf(char *s, t_word **lst);
-
+*/
 int		is_bracket(char *s, int i);
 int		is_brace(char *s, int i);
 int		is_space(char *s, int i);
@@ -99,7 +103,7 @@ int		is_or_and(char *s, int i);
 int		is_quot(char *s, int i);
 int		find_bracket_end(char *s, int i);
 
-int		parse_buf(t_token **lst, char *s);
+int		parse_buf(t_token **lst, char *s, t_completion *completion);
 int		cut_space(char *s, int i);
 void	reset_int_pt(t_pt *pt);
 int		parse_list(t_token **list, char *s, t_pt *p);
@@ -111,13 +115,13 @@ int		check_fd_out(t_token **list, char *s, t_pt *p);
 void	ft_tokenadd(t_token **alst, t_token *new);
 void	ft_tokenclear(t_token **lst);
 void	ft_tokendestroy(t_token **begin);
-t_token	*ft_tokenew(t_word *string, int type, char *word, int *level);
+t_token	*ft_tokenew(int type, char *word, int *level);
 void	ft_tokenpush(t_token **begin, t_token *new);
-void	sort_list_token(t_token **list);
+void	sort_list_token(t_token **list, t_completion *completion);
 void	ft_print_token_list(t_token **list);
-
+/*
 int		add_new_word(t_word *w, int len, t_word **lst);
-
+*/
 int		is_separator_type(int type);
 int		is_open_group_type(int type);
 int		is_close_group_type(int type);
@@ -128,6 +132,7 @@ int		return_new_prompt(int ret);
 /*
 **       ast
 */
+int		here_doc(t_token *elemi, t_completion *completion);
 
 t_tree 	*creat_left(t_token *lst, t_lvl *lvl);
 t_tree 	*creat_right(t_token *lst, t_lvl *lvl);

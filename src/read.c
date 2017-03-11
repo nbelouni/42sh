@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/21 16:47:01 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/06 14:36:15 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/10 20:24:26 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int		mv_and_read(t_buf *buf, int x, int ret)
 }
 
 /*
-**	Va falloir trouver un autre moyen de recuperer les caracteres speciaux
+**	Y faut trouver un autre moyen de recuperer les caracteres speciaux
 */
 
 void	init_line(t_buf *buf)

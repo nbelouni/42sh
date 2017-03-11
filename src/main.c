@@ -6,42 +6,41 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/10 12:42:50 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/03/10 22:00:57 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
-int		complete_final_line(t_buf *buf, t_token *lst)
+void	parse(t_lst *env, char *line, char **envp)
 {
-	t_token	*tmp;
-	char	*tmp2;
+	char	**args;
 
-	if (!lst || !buf->line[0])
-		return (0);
-	tmp = lst;
-	while (tmp->next)
-		tmp = tmp->next;
-	if (is_backslash(tmp->word, strlen(tmp->word) - 1))
-		return (0);
-	if ((tmp->bt_level || tmp->bc_level) && !is_separator_type(tmp->type))
+	(void)envp;
+	args = NULL;
+	args = ft_strsplit(line, ' ');
+	if (args != NULL && args[0] != NULL)
 	{
-		if (!(tmp2 = ft_strjoin(buf->final_line, "; ")))
-			return(ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
+		if (ft_strcmp(args[0], "exit") == 0)
+			ft_builtin_exit(env, args[0], args + 1);
+		else if (ft_strcmp(args[0], "env") == 0)
+			ft_builtin_env(env, &args[1]);
+		else if (ft_strcmp(args[0], "setenv") == 0)
+			ft_builtin_setenv(env, args[0], args + 1);
+		else if (ft_strcmp(args[0], "unsetenv") == 0)
+			ft_builtin_unsetenv(env, args[0], &args[1]);
+		else if (ft_strcmp(args[0], "echo") == 0)
+			ft_builtin_echo(env, args[0], args + 1);
+		else if (ft_strcmp(args[0], "cd") == 0)
+			ft_builtin_cd(env, args[0], args + 1);
+		else
+			ft_waitchild(args, envp);
+		ft_tabdel(args);
 	}
-	else
-	{
-		if (!(tmp2 = ft_strjoin(buf->final_line, " ")))
-			return(ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
-	}
-	free(buf->final_line);
-	buf->final_line = tmp2;
-	return (0);
 }
 
 int 	main(int argc, char **argv, char **envp)
 {
-
 	(void)argc;
 	(void)argv;
 	t_completion	completion = {NULL, NULL, NULL, NULL};
@@ -71,7 +70,9 @@ int 	main(int argc, char **argv, char **envp)
 		{
 			if (is_line_ended(buf) < 0)
 				return (-1);
-			ret = parse_buf(&list, buf->final_line);
+			complete_final_line(buf, list);
+//			parse(env, buf->final_line, envp);
+			ret = parse_buf(&list, buf->final_line, &completion);
 			if (ret > 0 && list)
 			{
 //				ft_print_token_list(&list); //debug impression
