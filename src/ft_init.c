@@ -23,11 +23,10 @@ t_set	*ft_init_set(void)
 
 	set = NULL;
 	if ((set = malloc(sizeof(t_set))) == NULL)
-	{
 		return (NULL);
-	}
 	set->env = NULL;
 	set->set = NULL;
+	set->exp = NULL;
 	return (set);
 }
 

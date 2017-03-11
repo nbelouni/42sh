@@ -112,7 +112,7 @@ void		ft_del_elem(t_elem **elem, t_lst *lst)
 t_elem		*ft_find_elem(char *name, t_lst *lst)
 {
 	t_elem	*ptr;
-
+	
 	ptr = NULL;
 	if (lst)
 	{

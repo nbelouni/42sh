@@ -52,10 +52,18 @@ typedef struct		s_lst
 	t_elem			*tail;
 }					t_lst;
 
+typedef struct		s_sort_lst
+{
+		void  		*content;
+		struct s_sort_lst *next;
+		struct s_sort_lst *prev;
+}									t_sort_lst;
+
 typedef struct		s_set
 {
 	t_lst			*set;
 	t_lst			*env;
+	t_lst			*exp;
 }					t_set;
 
 
@@ -147,5 +155,11 @@ int					ft_pwd_swap(t_lst *env, char *owd, char *cwd);
 */
 
 int					*ft_opt_parse(char *opts, char **args, size_t overwrite);
+
+/*
+**						ft_bultin_export
+*/
+
+int 				ft_builtin_export(char **argv, t_set *m_env);
 
 #endif
