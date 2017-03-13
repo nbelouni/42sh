@@ -126,6 +126,8 @@ int					ft_add_elem(t_lst *lst, char *s);
 void				ft_del_elem(t_elem **elem, t_lst *lst);
 t_elem				*ft_find_elem(char *name, t_lst *lst);
 t_elem				*ft_new_elem(char *str);
+void 				ft_extract_elem(t_elem **elem, t_lst *lst);
+
 
 /*
 **	ft_list_tools2.c

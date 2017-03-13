@@ -17,35 +17,12 @@
 
 #include "42sh.h"
 
-void print_lst(t_set *node, int mode)
-{
-  t_elem *head;
-  if (mode == 1)
-    head = node->set->head;
-  else if (mode == 2)
-    head = node->env->head;
-  else
-    head = node->exp->head;
-  while (head)
-  {
-    PUT2(head->name);
-    PUT2("\n");
-    head = head->next;
-  }
-}
-
 /*
 **          va trier les differents list a la vole (pas le choix trop prise de tete)
+**          sois utiliser un struc de tri avec un void content
+**          (=) exseption quand c'est une vars export
+**          supposition export fais un arbre
 */
-// t_lst       *lst_sort_ascii(t_lst *node)
-// {
-//   t_sort_lst *head;
-//   t_lst       *tmp;
-//
-//   head = NULL;
-//   tmp = node;
-//
-// }
 
 // int			ft_export(t_lst *lst, char *arg)
 // {
@@ -70,50 +47,13 @@ void print_lst(t_set *node, int mode)
 // 	return (ret);
 // }
 
-// int  is_word(char *argv, t_set *m_env)
-// {
-//   int    i;
-//   char  name;
-//
-//   i = ft_get_index_of(argv, '=');
-//   if (argv[0] == '=')
-//   {
-//     ft_putendl("string not format");
-//     return (FALSE);
-//   }
-//   if (i > 0)
-//     return (0);
-//
-// }
-
-t_elem *cut_lst(t_elem *lst)
+void move_to_env(t_elem *lst, t_lst *env, t_lst *type_env)
 {
-  t_elem *tmp;
-
-  tmp = lst;
-  if (tmp->next)
-    tmp->next->prev = tmp->prev;
-  if (tmp->prev)
-    tmp->prev->next = tmp->next;
-  tmp->next = NULL;
-  tmp->prev = NULL;
-  return (tmp);
+  ft_extract_elem(&lst, type_env);
+  ft_insert_elem(lst, env);
 }
 
-void move_to_env(t_elem *lst, t_lst *env)
-{
-  t_elem *node;
-  t_elem *tmp;
-
-  tmp = env->head;
-  node = cut_lst(lst);
-  while(tmp->next != NULL)
-    tmp = tmp->next;
-  tmp->next = node;
-  node->prev = tmp;
-}
-
-int insert_to_env(t_elem *node, char *arg, t_lst *env)
+int insert_to_env(t_elem *node, char *arg, t_lst *env, t_lst *type_env)
 {
   char *val;
   int  ret;
@@ -130,36 +70,58 @@ int insert_to_env(t_elem *node, char *arg, t_lst *env)
     {
       ft_strdel(&node->value);
       node->value = ft_strdup(val);
+      ft_strdel(&val);
     }
-    move_to_env(node, env);
-  //ret = ft_setenv(env)
+    if (type_env)
+    move_to_env(node, env, type_env);
     return (0);
 }
 
 t_elem  *search_var(char *arg, t_lst *type_env)
 {
-  t_elem *node;
   t_elem *tmp;
   char  *name;
 
   tmp = NULL;
-  node = type_env->head;
-	name = ft_strsub(arg, 0, ft_get_index_of(arg, '='));
+  if (ft_strchr(arg, '='))
+  {
+    if (!(name = ft_strsub(arg, 0, ft_get_index_of(arg, '='))))
+    return (NULL);
+  }
+  else
+  name = ft_strdup(arg);
   if (name == NULL || name[0] == '\0' || name[0] == '=')
     return (NULL);
-  while (node)
+  if (!(tmp = ft_find_elem(name, type_env)))
   {
-    if (ft_strcmp(node->name, name) == 0)
-    {
-      tmp = node;
-      break;
-    }
-      node = node->next;
+    ft_strdel(&name);
+    return (NULL);
   }
   ft_strdel(&name);
-  if (!tmp)
-      return (NULL);
   return (tmp);
+}
+
+int			ft_add_elemo(t_lst *lst, char *s)
+{
+	t_elem	*elem;
+
+	elem = NULL;
+	if (s && s[0])
+	{
+			if ((elem = ft_new_elem(s)) == NULL)
+				return (ERR_EXIT);
+			ft_insert_elem(elem, lst);
+			return (0);
+	}
+	return (-1);
+}
+
+int insert_to_exp(char *argv, t_lst *l_exp, t_lst *env)
+{
+  if (!ft_strchr(argv, '='))
+    return (ft_add_elemo(l_exp, argv));
+  else
+    ft_export(env, argv);
 }
 
 int multi_var_cheak(char *argv, t_set *m_env)
@@ -168,11 +130,13 @@ int multi_var_cheak(char *argv, t_set *m_env)
 
   tmp = NULL;
   if ((tmp = search_var(argv, m_env->exp)))
-    return (insert_to_env(tmp, argv, m_env->env));
+    return (insert_to_env(tmp, argv, m_env->env, m_env->exp));
   else if ((tmp = search_var(argv, m_env->set)))
-    return (insert_to_env(tmp, argv, m_env->env));
+    return (insert_to_env(tmp, argv, m_env->env, m_env->set));
   else if ((tmp = search_var(argv, m_env->env)))
-    return (insert_to_env(tmp, argv, m_env->env));
+    return (insert_to_env(tmp, argv, m_env->env, NULL));
+  else if (!tmp && argv)
+    return (insert_to_exp(argv, m_env->exp, m_env->env));
   return (-1);
 }
 
@@ -185,11 +149,10 @@ int ft_builtin_export(char **argv, t_set *m_env)
   opt = ft_opt_parse(EXPORT_OPT, argv, 0);
   i = 0;
   i = opt[1];
+  i++;
   result = 0;
   while (argv[i] != NULL)
   {
-    // if (is_word(arv, m_env))
-    //   return (TRUE);
     result = multi_var_cheak(argv[i], m_env);
     ++i;
   }

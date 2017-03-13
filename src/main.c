@@ -106,13 +106,13 @@ int 	main(int argc, char **argv, char **envp)
 			if (is_line_ended(buf) < 0)
 				return (-1);
 			ret = parse_buf(&list, buf->final_line);
-			parse(multi_var_env, buf->final_line, envp)
+			parse(multi_var_env, buf->final_line, envp);
 			if (ret > 0 && list)
 			{
 				ft_print_token_list(&list); //debug impression
-				ft_push_ast(list, &ast);
+	//			ft_push_ast(list, &ast);
 //				print_debug_ast(ast);
-				free_ast(ast);
+//				free_ast(ast);
 			}
 			if (ret != ERR_NEW_PROMPT)
 				ft_strdel(&(buf->final_line));
