@@ -109,7 +109,7 @@ int 	main(int argc, char **argv, char **envp)
 			parse(multi_var_env, buf->final_line, envp);
 			if (ret > 0 && list)
 			{
-				ft_print_token_list(&list); //debug impression
+	//			ft_print_token_list(&list); //debug impression
 	//			ft_push_ast(list, &ast);
 //				print_debug_ast(ast);
 //				free_ast(ast);

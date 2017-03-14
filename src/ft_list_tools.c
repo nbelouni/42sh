@@ -83,6 +83,11 @@ void		ft_extract_elem(t_elem **elem, t_lst *lst)
 		lst->tail = (*elem)->prev;
 		(*elem)->prev->next = NULL;
 	}
+	else if ((*elem)->next == NULL && (*elem)->prev == NULL)
+	{
+		lst->tail = NULL;
+		lst->head = NULL;
+	}
 }
 
 void		ft_clear_elem(t_elem **elem)

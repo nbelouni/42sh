@@ -24,29 +24,6 @@
 **          supposition export fais un arbre
 */
 
-// int			ft_export(t_lst *lst, char *arg)
-// {
-// 	char	*name;
-// 	char	*val;
-// 	int		ret;
-//
-// 	if ((name = ft_strsub(arg, 0, ft_get_index_of(arg, '='))) == NULL)
-// 		return (ERR_EXIT);
-// 	ret = 0;
-// 	if (name == NULL || name[0] == '\0' || name[0] == '=')
-// 		return (ft_print_error("42sh", ERR_ARG_INVALID, ERR_NEW_CMD));
-// 	val = NULL;
-// 	if ((ft_strlen(name) + 1) < ft_strlen(arg))
-// 	{
-// 		if ((val = ft_strsub(arg, ft_strlen(name) + 1, \
-// 				(ft_strlen(arg) - ft_strlen(name) + 1))) == NULL)
-// 			return (ft_free_and_return(ERR_EXIT, name, NULL));
-// 	}
-// 	ret = ft_setenv(lst, name, val);
-// 	(val != NULL) ? ft_multi_free(val, name, NULL, NULL) : ft_strdel(&name);
-// 	return (ret);
-// }
-
 void move_to_env(t_elem *lst, t_lst *env, t_lst *type_env)
 {
   ft_extract_elem(&lst, type_env);
@@ -108,20 +85,39 @@ int			ft_add_elemo(t_lst *lst, char *s)
 	elem = NULL;
 	if (s && s[0])
 	{
-			if ((elem = ft_new_elem(s)) == NULL)
-				return (ERR_EXIT);
+			if ((elem = ft_init_elem()) == NULL)
+        return (ERR_EXIT);
+      elem->name = ft_strdup(s);
 			ft_insert_elem(elem, lst);
 			return (0);
 	}
 	return (-1);
 }
 
-int insert_to_exp(char *argv, t_lst *l_exp, t_lst *env)
+int insert_to_exp(char *argv, t_set *m_env)
 {
+  char *tmp;
+  int   result;
+
+  tmp = NULL;
+  result = 0;
   if (!ft_strchr(argv, '='))
-    return (ft_add_elemo(l_exp, argv));
+  {
+    if (!m_env->exp)
+      m_env->exp = ft_init_list();
+      ft_add_elemo(m_env->exp, argv);
+      return (0);
+  }
   else
-    ft_export(env, argv);
+    ft_export(m_env->env, argv);
+  return (0);
+}
+
+void concatlst(t_lst *head, t_lst *tail)
+{
+  head->tail->next = tail->head;
+  tail->head->prev = head->tail;
+  head->size += tail->size;
 }
 
 int multi_var_cheak(char *argv, t_set *m_env)
@@ -136,8 +132,86 @@ int multi_var_cheak(char *argv, t_set *m_env)
   else if ((tmp = search_var(argv, m_env->env)))
     return (insert_to_env(tmp, argv, m_env->env, NULL));
   else if (!tmp && argv)
-    return (insert_to_exp(argv, m_env->exp, m_env->env));
+    return (insert_to_exp(argv, m_env));
   return (-1);
+}
+
+t_elem   *sort_node(t_lst *node)
+{
+  t_elem *tmp;
+  t_elem *elem;
+
+  tmp = node->head;
+  elem = node->head;
+  while (tmp)
+  {
+    if (ft_strcmp(tmp->name,elem->name) < 0)
+      elem = tmp;
+    tmp = tmp->next;
+  }
+  if (elem)
+  ft_extract_elem(&elem, node);
+  return (elem);
+}
+
+t_elem    *lst_sort_ascii(t_lst *lsthead)
+{
+  t_elem *node;
+  t_elem *tmp;
+  int i;
+  int y;
+
+  y = 0;
+  node = NULL;
+  i = lsthead->size;
+  node = sort_node(lsthead);
+  tmp = node;
+  while (y < (i - 1))
+  {
+    node->next = sort_node(lsthead);
+    node->next->prev = node;
+    node = node->next;
+    y++;
+  }
+  lsthead->head = tmp;
+  return (tmp);
+}
+
+void ft_print_lst_ex(t_lst *lst, int t)
+{
+  t_elem *elem;
+
+  if (lst != NULL)
+  {
+    elem = lst_sort_ascii(lst);
+    while (elem != NULL)
+    {
+      if (t >= 1)
+      ft_putstr("declare -x ");
+      write(1, elem->name, ft_strlen(elem->name));
+      write(1, "=", 1);
+      if (elem->value != NULL)
+      {
+        write(1, elem->value, ft_strlen(elem->value));
+      }
+      write(1, "\n", 1);
+      elem = elem->next;
+    }
+  }
+}
+
+void ft_print_export(t_set *m_env)
+{
+  t_lst *env;
+  t_lst *export;
+
+  env = ft_lstdup(m_env->env);
+  if (m_env->exp && m_env->exp->head)
+  {
+    export = ft_lstdup(m_env->exp);
+    concatlst(env, export);
+  }
+  ft_print_lst_ex(env, 1);
 }
 
 int ft_builtin_export(char **argv, t_set *m_env)
@@ -151,6 +225,8 @@ int ft_builtin_export(char **argv, t_set *m_env)
   i = opt[1];
   i++;
   result = 0;
+  if (argv[1] == NULL)
+    ft_print_export(m_env);
   while (argv[i] != NULL)
   {
     result = multi_var_cheak(argv[i], m_env);
