@@ -55,6 +55,7 @@ typedef struct		s_lst
 typedef struct		s_sort_lst
 {
 		void  		*content;
+		int 			type;
 		struct s_sort_lst *next;
 		struct s_sort_lst *prev;
 }									t_sort_lst;
@@ -162,6 +163,15 @@ int					*ft_opt_parse(char *opts, char **args, size_t overwrite);
 **						ft_bultin_export
 */
 
+int					ft_add_elemo(t_lst *lst, char *s);
+void				move_to_env(t_elem *lst, t_lst *env, t_lst *type_env);
 int 				ft_builtin_export(char **argv, t_set *m_env);
+void 				ft_print_export(t_set *m_env);
+
+/*
+**					ft_builtin_unset
+*/
+
+int   ft_builtin_unset(t_set *set, char **args);
 
 #endif

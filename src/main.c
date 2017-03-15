@@ -37,6 +37,8 @@ void	parse(t_set *m_env, char *line, char **envp)
 			ft_builtin_cd(env, args[0], args + 1);
 		else if (ft_strcmp(args[0], "export") == 0)
 			ft_builtin_export(args, m_env);
+		else if (ft_strcmp(args[0], "unset") == 0)
+			ft_builtin_unset(m_env, args);
 		else
 			ft_waitchild(args, envp);
 		ft_tabdel(args);

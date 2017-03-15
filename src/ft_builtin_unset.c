@@ -21,7 +21,7 @@ int   ft_builtin_unset(t_set *set, char **args)
 
   if (args == NULL || *args == NULL || **args == '\0')
       return (0);
-  if ((opt = ft_parse_opt(UNSET_OPT, args, 0)) == NULL)
+  if ((opt = ft_opt_parse(UNSET_OPT, args, 0)) == NULL)
     return (ERR_EXIT);
   ret = ft_unset(set, &(args[opt[0]]));
   free(opt);
