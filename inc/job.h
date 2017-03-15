@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 17:03:19 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/15 16:47:08 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/15 18:13:22 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ********************************************************)****************** */
 
@@ -96,5 +96,7 @@ Node_p	createProcess(t_tree *nodeProcess);
 Node_p	createConditionIf(t_tree *nodeConditionIf, Node_p rightNode, Node_p leftNode);
 Node_p	createPipe(Node_p rightNode, Node_p leftNode);
 Node_p	createRedir(t_tree *nodeRedir, Node_p leftNode);
+
+void test_func(t_tree *root);
 
 #endif

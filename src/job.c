@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 13:52:27 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/15 16:56:01 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/15 18:33:44 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ Node_p	createProcessTree(t_tree *root)
 	List_p	stock;
 
 	stock = NULL;
+	stack = NULL;
 	while (true)
 	{
 		if (token(top(stock)) is CMD)
@@ -49,7 +50,7 @@ Node_p	createProcessTree(t_tree *root)
 		if (((t_tree *)top(stock))->right)
 			push(&stock,iterAst(root));
 		if (!stock)
-			break;
+		break;
 	}
 	return (pop(&stack));
 }
@@ -170,7 +171,7 @@ Node_p	createProcess(t_tree *nodeProcess)
 	Node_p ptr;
 
 	ptr = newNode(PROCESS, sizeof(struct Process));
-	ptr->data = newProcess(nodeProcess->cmd);
+	ptr->data = newLink(newProcess(nodeProcess->cmd), sizeof(struct Node));
 	return (ptr);
 }
 
@@ -181,13 +182,13 @@ Node_p	createConditionIf(t_tree *nodeConditionIf, Node_p rightNode, Node_p leftN
 	ptr = newNode(IF, sizeof(struct ConditionIf));
 	ptr->left = leftNode;
 	ptr->right = rightNode;
-	ptr->data = newConditionIf((token(nodeConditionIf) is OR)? IF_OR: IF_AND);
+	ptr->data = newConditionIf((token(nodeConditionIf) is OR)? IF_OR : IF_AND);
 	return (ptr);
 }
 
 Node_p	createPipe(Node_p rightNode, Node_p leftNode)
 {
-	insertLinkBottom(&((Process_p)leftNode->data)->next, rightNode->data);
+	insertLinkBottom(&((List_p)leftNode->data)->next, rightNode->data);
 	deleteNode(rightNode);
 	return (leftNode);
 }
@@ -213,7 +214,7 @@ Node_p createRedir(t_tree *nodeRedir, Node_p leftNode)
 	return (leftNode);
 }
 
-void	listIter(List_p list, (void)f(void *))
+void	listIter(List_p list, void (f)(void *))
 {
 	while (list)
 	{
@@ -222,11 +223,11 @@ void	listIter(List_p list, (void)f(void *))
 	}
 }
 
-void spacer(char *Param, int io);
+void spacer(int io)
 {
 	static int depth;
 	
-	for (int i = 0; i < dept ; i++)
+	for (int i = 0; i < depth ; i++)
 	{
 		putchar('|');
 		putchar('\t');
@@ -234,9 +235,46 @@ void spacer(char *Param, int io);
 	depth += io;
 }
 
-void printJobList(List_p jobList)
+void printProcess(Process_p process)
 {
-	listIter(jobList, &printJob);
+	spacer(1);
+	printf("[PROCESS]\t");
+	printf("command : <%s>\t", (process->argv)[0]);
+	for (int i = 1; (process->argv)[i];  i++)
+		printf("A%d: <%s>\t", i, (process->argv)[i]);
+	printf("self: <%p>\t", &process);
+	printf("Next Process 0xAdd : <%p>\n", process->next);
+	spacer(-1);
+}
+
+void printConditionIf(ConditionIf_p condition)
+{
+	spacer(1);
+	printf("[CONDITION]\t");
+	printf("if : <%s>\t", (condition->type == IF_OR)? "OR": "AND");
+	printf("self: <%p>\t", &condition);
+	spacer(-1);
+}
+
+
+void printProcessList(List_p processList)
+{
+	listIter(processList, (void *)&printProcess);
+}
+
+void printNode(Node_p processTree)
+{
+	spacer(1);
+	printf("[NODE]\n");
+	if (processTree->type is PROCESS)
+		printProcessList(processTree->data);
+	else
+	{
+		printConditionIf(processTree->data);
+		printNode(processTree->left);
+		printNode(processTree->right);
+	}
+	spacer(-1);
 }
 
 void printJob(t_job *job)
@@ -250,47 +288,15 @@ void printJob(t_job *job)
 	spacer(-1);
 }
 
-void printNode(Node_p processTree)
+void printJobList(List_p jobList)
 {
-	spacer(1);
-	printf("[NODE]\n");
-	if (processTree->type is PROCESS)
-		printProcessList(ProcessTree->data);
-	else
-	{
-		printConditionIf(processTree->data);
-		printNode(processTree->left);
-		printNode(processTree->right);
-	}
-	spacer(-1);
+	listIter(jobList, (void *)&printJob);
 }
 
-void printProcessList(List_p processList)
+void test_func(t_tree *root)
 {
-	listIter(processList, &printProcess);
-}
+	List_p Jobs = NULL;
 
-void printProcess(Process_p process)
-{
-	spacer(1);
-	printf("[PROCESS]\t");
-	printf("command : <%s>\t", (process->argv)[0]);
-	for (int i = 1; (process->argv)[i];  i++)
-		printf("A%d: <%s>\t", (process->argv)[i]);
-	printf("self: <%p>\t", &process);
-	printf("Next Process 0xAdd : <%p>\n", process->next);
-	printNode(job->process_tree);
-	spacer(-1);
+	export_job(root, &Jobs);
+	printJobList(Jobs);
 }
-
-void printConditionIf(ConditionIf_p condition)
-{
-	spacer(1);
-	printf("[CONDITION]\t");
-	printf("Command : <%s>\t", job->command);
-	printf("self: <%p>\t", &job);
-	printf("left: <%p>\t", job->left);
-	printf("right: <%p>\n", job->right);
-	printNode(job->process_tree);
-	spacer(-1);
-}	
