@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 19:31:44 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/13 16:31:32 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/15 13:59:38 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ void		reset_int_pt(t_pt *pt)
 	pt->level[0] = 0;
 	pt->level[1] = 0;
 }
-
 
 int			parse_list(t_token **list, char *s, t_pt *p)
 {
