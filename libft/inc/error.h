@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:19:58 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/02/21 16:10:19 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/13 17:14:55 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # define ERR_NEW_CMD			-1
 # define ERR_EXIT				-2
 # define ERR_NEW_PROMPT			-3
+# define ERR_FD					-4
 
 /*
 ** System errors
@@ -44,5 +45,6 @@
 # define ERR_HOME_NOT_SET		": HOME not set"
 # define ERR_OLDPWD_NOT_SET		": OLDPWD not set"
 # define ERR_CMD_TOO_LONG		": command too long"
+# define ERR_FD_AMB				": ambigous redirect"
 
 #endif

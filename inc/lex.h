@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/11 12:30:14 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/11 18:47:22 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/15 11:27:42 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ typedef struct		s_tree
 {
 	int				token;
 	char			**cmd;
-	t_token		*token_or;
-	struct s_tree *father;
+	t_token			*token_or;
+	struct s_tree	*father;
 	struct s_tree	*left;
 	struct s_tree	*right;
 }					t_tree;
@@ -117,7 +117,7 @@ void	ft_tokenclear(t_token **lst);
 void	ft_tokendestroy(t_token **begin);
 t_token	*ft_tokenew(int type, char *word, int *level);
 void	ft_tokenpush(t_token **begin, t_token *new);
-void	sort_list_token(t_token **list, t_completion *completion);
+int		sort_list_token(t_token **list, t_completion *completion);
 void	ft_print_token_list(t_token **list);
 /*
 int		add_new_word(t_word *w, int len, t_word **lst);

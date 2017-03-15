@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 19:31:44 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/12 00:04:50 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/13 16:31:32 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int			check_fd_out(t_token **list, char *s, t_pt *p)
 		p->len++;
 	if (p->len != 0)
 	{
-		p->type = FD_OUT;
+		p->type = TARGET;
 		if ((ret = parse_list(list, ft_strsub(s, p->i, p->len), p)))
 			return (ret);
 		p->i = p->i + p->len;

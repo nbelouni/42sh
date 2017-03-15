@@ -56,3 +56,6 @@ bash: 2147483647: Bad file descriptor
   #define UNSET_OPT "iu" -> opt{pos/code erreur, 1/0, 1/0}
    exemple opt[1] -> 1
 
+	TOKEN A FAIRE
+	<> -> == < a voir
+	<& && >& sont differents a changer a checker
