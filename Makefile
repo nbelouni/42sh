@@ -4,6 +4,7 @@ IDIR = ./inc/
 ILIB = ./libft/inc
 INCS = 42sh.h	\
 	   read.h	\
+	   job.h	\
 	   lex.h
 INCC = $(addprefix $(IDIR), $(INCS))
 
@@ -55,7 +56,8 @@ SRCS = 	ft_builtin_cd.c		\
 		find_quote_end.c	\
 		globbing.c			\
 		here_doc.c			\
-		ft_print.c
+		ft_print.c			\
+		job.c
 
 SRCC = $(addprefix $(SDIR),$(SRCS))
 
