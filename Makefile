@@ -56,6 +56,8 @@ SRCS = 	ft_builtin_cd.c		\
 		find_quote_end.c	\
 		globbing.c			\
 		here_doc.c			\
+		replace_expansions.c\
+		replace_regex.c		\
 		ft_print.c
 
 

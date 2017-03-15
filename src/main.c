@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/10 22:00:57 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/13 18:54:13 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,11 @@ int 	main(int argc, char **argv, char **envp)
 			if (ret > 0 && list)
 			{
 
-//				ft_print_token_list(&list); //debug impression
-/*				
- *				enleve les quotes et les backslash -> va changer de place
- *				edit_cmd(list, env); 
- */
+				ft_print_token_list(&list); //debug impression
+				
+//				enleve les quotes et les backslash -> va changer de place
+				edit_cmd(list, env); 
+
 //				ft_push_ast(list, &ast);
 //				print_debug_ast(ast);
 //				free_ast(ast);

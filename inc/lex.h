@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/11 12:30:14 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/10 20:09:22 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/12 18:53:20 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ int		is_dquote(char *s, int i);
 int		is_squote(char *s, int i);
 int		is_new_btquote(char *s, int i);
 int		is_backslash(char *s, int i);
+int		is_any_quote(char *s, int i);
 
 int		find_btquote_end(char *s, int i);
 int		find_dquote_end(char *s, int i);
