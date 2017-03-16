@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/11 16:24:49 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/14 16:24:35 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/16 18:05:29 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int		count_slashs(char *s)
 	return (n_slash);
 }
 
-int		regex(char *s)
+int		regex(t_token *lst)
 {
 	t_reg_paths	*all_paths;
 	t_reg_paths	*tmp;
@@ -55,30 +55,31 @@ int		regex(char *s)
 	int			curr_dir;;
 	int			i;
 
-	char		**expansions;
+	t_token		*expansions;
 
-	if (is_regex_in_text(s) == FALSE)
+	if (is_regex_in_text(lst->word) == FALSE)
 		return (0);
-	if (!(expansions = find_expansions(&s)))
+	if (!(expansions = find_expansions(lst)))
 		return (-1);
 
 	i = -1;
-	while (expansions[++i])
+	while (expansions)
 	{
-		PUT2("expansions[i] : ");PUT2(expansions[i]);X('\n');
+		PUT2("expansions[i] : ");PUT2(expansions->word);X('\n');
+		expansions = expansions->next;
 	}
 	return (TRUE);
-	all_paths_len = count_slashs(s);
+	all_paths_len = count_slashs(lst->word);
 	if (!(all_paths = ft_memalloc(sizeof(t_reg_paths))))
 		return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
-	if (s[0] == '/')
+	if (lst->word[0] == '/')
 	{
 		if (!(all_paths->path = ft_strdup("/")))
 			return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
 	}
 	else if (!(all_paths->path = getcwd(NULL, 1024)))
 		return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
-	if (!(split_path = ft_strsplit(s, '/')))
+	if (!(split_path = ft_strsplit(lst->word, '/')))
 		return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
 	i = -1;
 	curr_dir = 0;

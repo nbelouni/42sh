@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 12:49:02 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/12 19:21:33 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/16 17:56:04 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,21 @@ int		is_end(char *s, int *i, char c)
 			return (FALSE);
 		else
 			*i += len;
+	}
+	return (TRUE);
+}
+
+int		is_begin(char *s, int *i, char c)
+{
+	int		len;
+
+	if (is_char(s, *i, c))
+	{
+		*i -= 1;
+		if ((len = find_prev_char(s, *i, c)) < 0)
+			return (FALSE);
+		else
+			*i -= len;
 	}
 	return (TRUE);
 }
