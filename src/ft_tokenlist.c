@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/16 12:42:26 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/13 12:35:24 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/11 23:58:11 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,20 +44,22 @@ void		ft_tokenadd(t_token **begin, t_token *new)
 void		ft_tokenclear(t_token **list)
 {
 	t_token	*tmp;
-	t_token	*elem;
+	t_token	*p;
+	t_token	*n;
 
-	if (list == NULL)
+	tmp = *list;
+	if (!tmp)
 		return ;
-	elem = (*list)->prev;
-	tmp = (*list)->next;
-	if (!elem)
-		*list = (*list)->next;
+	p = tmp->prev;
+	n = tmp->next;
+	if (n)
+		n->prev = p;
+	if (p)
+		p->next = n;
 	else
-	{
-		elem->next = tmp;
-		tmp->prev = elem;
-	}
-	ft_memdel((void *)list);
+		*list = n;
+	free(tmp->word);
+	free(tmp);
 }
 
 void		ft_tokenpush(t_token **begin, t_token *new)

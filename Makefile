@@ -4,8 +4,8 @@ IDIR = ./inc/
 ILIB = ./libft/inc
 INCS = 42sh.h	\
 	   read.h	\
-	   lex.h	\
-	   exec.h
+	   job.h	\
+	   lex.h
 INCC = $(addprefix $(IDIR), $(INCS))
 
 LDIR = ./libft
@@ -58,8 +58,9 @@ SRCS = 	ft_builtin_cd.c		\
 		here_doc.c			\
 		replace_expansions.c\
 		replace_regex.c		\
-		ft_print.c
-
+		ft_print.c			\
+		ft_print.c			\
+		job.c
 
 SRCC = $(addprefix $(SDIR),$(SRCS))
 
@@ -67,7 +68,7 @@ ODIR = ./obj/
 OBJS = $(SRCS:.c=.o)
 OBCC = $(addprefix $(ODIR),$(OBJS))
 
-FLAG = -g -Wall -Werror -Wextra
+FLAG = -g -fsanitize=address -Wall -Werror -Wextra
 
 $(NAME): $(OBCC)
 	make -C ./libft/

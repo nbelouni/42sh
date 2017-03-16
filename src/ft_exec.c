@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 13:08:28 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/15 22:58:27 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/10 10:55:29 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,67 +28,122 @@ static char		*ft_cut_path(char **s, char *av)
 	ft_strncpy(&s2[i + 1], av, ft_strlen(av));
 	if (s1[i] == ':')
 		i++;
-	*s = &s1[i];
+	s1 = ft_strdup(&s1[i]);
+	free(*s);
+	*s = s1;
 	return (s2);
 }
 
 /*
-** fonction d'execution des commandes via execve
-** s-> path a changer avec la hastable
-*/
+ **verifie si la cmd est un builting
+ */
 
-static void		ft_exec(char **av, char **envp)
+int			ft_check_built(char **args)
+{
+	int		ret;
+
+	ret = TRUE;
+	if (args != NULL && args[0] != NULL)
+	{
+		if (ft_strcmp(args[0], "exit") == FALSE)
+			ret = FALSE;
+		else if (ft_strcmp(args[0], "cd") == FALSE)
+			ret = FALSE;
+		else if ((ret = ft_strcmp(args[0], "env")) == FALSE)
+			ret = FALSE;
+		else if ((ret = ft_strcmp(args[0], "setenv")) == FALSE)
+			ret = FALSE;
+		else if ((ret = ft_strcmp(args[0], "unsetenv")) == FALSE)
+			ret = FALSE;
+		else if ((ret = ft_strcmp(args[0], "echo")) == FALSE)
+			ret = FALSE;
+		return (ret);
+	}
+	return (FALSE);
+}
+
+/*
+ **execute la cmd si est un builtin
+ */
+int			ft_exec_built(t_lst *env, char **args)
+{
+	int		ret;
+
+	ret = TRUE;
+	if (args != NULL && args[0] != NULL)
+	{
+		if ((ret = ft_strcmp(args[0], "exit")) == FALSE)
+			ft_builtin_exit(env, args[0], args + 1);
+		else if ((ret = ft_strcmp(args[0], "env")) == FALSE)
+			ft_builtin_env(env, &args[1]);
+		else if ((ret = ft_strcmp(args[0], "setenv")) == FALSE)
+			ft_builtin_setenv(env, args[0], args + 1);
+		else if ((ret = ft_strcmp(args[0], "unsetenv")) == FALSE)
+			ft_builtin_unsetenv(env, args[0], &args[1]);
+		else if ((ret = ft_strcmp(args[0], "echo")) == FALSE)
+			ft_builtin_echo(env, args[0], args + 1);
+		else if ((ret = ft_strcmp(args[0], "cd")) == FALSE)
+			ft_builtin_cd(env, args[0], args + 1);
+		return (ret);
+	}
+	return (FALSE);
+}
+
+/*
+** fonction d'execution des commandes via execve
+*/
+void			ft_exec(char **av, t_lst *env)
 {
 	struct stat	st;
 	char		*s;
 	char		*s2;
+	char		**envp;
+	t_elem		*tmp;
 
-	s = "/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/X11/bin:/usr/local/munki:/Users/alallema/bin:/Users/alallema/.rvm/bin";
-	while (1)
+	envp = ft_env_to_tab(env);
+	if (!(tmp = ft_find_elem("PATH", env)))
+		s = ft_strdup("");
+	else
+		s = ft_strdup(tmp->value);
+	while (s)
 	{
 		s2 = ft_cut_path(&s, av[0]);
-/*		if (!s)
-		ft_putstr_fd("END", 2);
-		ft_putstr_fd("--S2--", 2);
-		ft_putstr_fd(s2, 2);
-		ft_putchar_fd('\n', 2);
-		ft_putstr_fd("--S--", 2);
-		ft_putstr_fd(s, 2);
-		ft_putchar_fd('\n', 2);
-*/		if (lstat(av[0], &st) == 0 && st.st_mode & S_IXUSR)
-			execve(av[0], av, envp);
+		if (lstat(av[0], &st) == 0 && st.st_mode & S_IXUSR)
+			execve(av[0], av, NULL);
 		if (lstat(s2, &st) == 0 && st.st_mode & S_IXUSR)
-			execve(s2, av, envp);
+			execve(s2, av, NULL);
 		if (!ft_strchr(s, ':'))
 		{
 			if (lstat(av[0], &st) == 0 && st.st_mode & S_IXUSR)
-				ft_putstr_fd("21sh: exec format error: ", 2);
+				ft_putstr_fd("42sh: exec format error: ", 2);
 			else if (lstat(av[0], &st) == 0)
-				ft_putstr_fd("21sh: permission denied: ", 2);
-			else if (!ft_strchr(s, ':'))
-				ft_putstr_fd("21sh: command not found: ", 2);
+				ft_putstr_fd("42sh: permission denied: ", 2);
+			else if (!ft_strchr(s2, ':'))
+			{
+				ft_putstr_fd("42sh: command not found: ", 2);
+				ft_putendl_fd(av[0], 2);
+				exit (127);
+			}
 			else
-				ft_putstr_fd("21sh: no such file or directory: ", 2);
+				ft_putstr_fd("42sh: no such file or directory: ", 2);
 			ft_putendl_fd(av[0], 2);
-			return ;
+			free(s);
+			s = NULL;
+			exit(1);
 		}
 	}
 }
 
-void		ft_waitchild(char **av, char **envp)
-{
-	pid_t	pid;
-	int		status;
+/*
+**sert a retourner si la cmd est un builtin
+*/
 
-	pid = fork();
-	close_termios();
-	if (pid < 0)
-		return ;
-	if (pid > 0)
-	{
-//		wait(&statval);
-		waitpid(pid, &status, 0);
-	}
-	if (pid == 0)
-		ft_exec(av, envp);
+int		ft_check_exec(char **cmd, t_lst *env)
+{
+	int		ret;
+
+	ret = TRUE;
+	if ((ret = ft_exec_built(env, cmd)) != 0)
+		ft_exec(cmd, env);
+	return (ret);
 }

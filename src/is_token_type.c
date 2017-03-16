@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/19 19:27:07 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/08 13:24:47 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/13 16:32:10 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int			is_dir_type(int type)
 
 int			is_text_type(int type)
 {
-	if (type == CMD || type == ARG || type == FD_IN || type == FD_OUT)
+	if (type == CMD || type == ARG || type == FD_IN || type == TARGET)
 		return (1);
 	return (0);
 }

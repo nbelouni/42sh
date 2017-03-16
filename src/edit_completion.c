@@ -202,8 +202,12 @@ int			fill_variable(t_sort_list **list, t_elem *env)
 int			init_completion(t_completion *cplt, t_lst *env)
 {
 	char	*s;
+	t_elem	*tmp;
 
-	s = ft_find_elem("PATH", env)->value;
+	if (!(tmp = ft_find_elem("PATH", env)))
+		s = NULL;
+	else
+		s = tmp->value;
 	if (fill_command(&(cplt->command), s) == ERR_EXIT)
 		return (ERR_EXIT);
 	if (fill_username(&(cplt->username), "/etc/passwd") == ERR_EXIT)

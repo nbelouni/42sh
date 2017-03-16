@@ -6,7 +6,7 @@
 /*   By: dogokar <dogokar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 14:41:10 by dogokar           #+#    #+#             */
-/*   Updated: 2017/03/05 19:44:24 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/11 20:54:37 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,13 @@ t_lvl   *initlvl(int bt_lvl, int bc_lvl)
 
 static  t_lib lib_op[LENLIB] =
 {
-	{.toke = DOT, .priority = 10},
+	{.toke = DOT, .priority = 11},
 	{.toke = OR, .priority = 9},
-	{.toke = AND, .priority = 9},
+	{.toke = AND, .priority = 10},
 	{.toke = PIPE, .priority = 8},
 	{.toke = SL_DIR, .priority = 7},
 	{.toke = SR_DIR, .priority = 7},
-	{.toke = AMP, .priority = 7},
+	{.toke = AMP, .priority = 11},
 	{.toke = DL_DIR, .priority = 7},
 	{.toke = DR_DIR, .priority = 7},
 	{.toke = DIR_AMP, .priority = 7},
@@ -94,7 +94,7 @@ int  compare_token_op(t_token *node_lst, t_token *tmp)
 		return(1);
 	else if (lib_lst && lib_tmp)
 	{
-		if (lib_lst->priority < lib_tmp->priority)
+		if (lib_lst->priority <= lib_tmp->priority)
 			return (1);
 		else
 			return (0);
@@ -166,10 +166,10 @@ t_token *search_toke(t_token *lst, t_lvl *lvl)
 	first_time = 0;
 	node_lst = NULL;
 	lvl_up = NULL;
-	if (lvl == NULL)
-		lvl = initlvl(0,0);
 	if (lst == NULL)
 		return (NULL);
+	if (lvl == NULL)
+		lvl = initlvl(0,0);
 	if (tmp->select == 1)
 		tmp = tmp->next;
 	while (tmp && tmp->select == 0)
@@ -177,6 +177,8 @@ t_token *search_toke(t_token *lst, t_lvl *lvl)
 		if (first_time == 0 && test_lvl(tmp->bt_level, tmp->bc_level, lvl))
 		{
 			first_time = 1;
+			if (lvl_up)
+				free(lvl_up);
 			lvl_up = initlvl(tmp->bt_level, tmp->bc_level);
 		}
 		if (priority(node_lst, tmp, lvl))
@@ -384,7 +386,6 @@ void print_debug_ast(t_tree *node)
 	PUT2(" \n up");
 }
 
-
 void free_content_ast(t_tree *node)
 {
 	if (node->cmd != NULL)
@@ -395,17 +396,14 @@ void free_content_ast(t_tree *node)
 void free_ast(t_tree *ast)
 {
 	if (!ast)
-	{
-		PUT2("fin de branche");
 		return ;
-	}
-	else
-	{
-		free_content_ast(ast);
+	if (ast->left)
 		free_ast(ast->left);
+	if (ast->right)
 		free_ast(ast->right);
-		ft_memdel((void *)&ast);
-	}
+//		ft_memdel((void *)&ast);
+	free_content_ast(ast);
+	free(ast);
 }
 
 void ft_push_ast(t_token *list, t_tree **ast)
