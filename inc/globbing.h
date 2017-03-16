@@ -1,20 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar_fr.c                                    :+:      :+:    :+:   */
+/*   globbing.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nbelouni <nbelouni@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2014/11/06 18:37:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/07 20:08:35 by nbelouni         ###   ########.fr       */
+/*   Created: 2017/03/06 15:31:30 by nbelouni          #+#    #+#             */
+/*   Updated: 2017/03/11 16:29:59 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#ifndef	GLOBBING_H
+# define GLOBBING_H
 
-int			ft_putchar_fd(char c, int fd)
-{
-	if (c && fd)
-		write(fd, &c, 1);
-	return (0);
-}
+#include "42sh.h"
+
+int		edit_cmd(t_token *list, t_lst *env);
+
+#endif

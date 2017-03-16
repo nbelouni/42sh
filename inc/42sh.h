@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:09:30 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/05 15:37:57 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/06 15:32:44 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef enum	e_bool
 # include "lexer_parser.h"
 # include "lex.h"
 # include "exec.h"
+# include "globbing.h"
 
 # define END_EOT	18
 

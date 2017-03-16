@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 14:13:58 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/05 15:00:25 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/06 19:02:45 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,21 +76,19 @@ t_elem	*ft_init_elem(void)
 **	<name> + = + <value>.
 */
 
-char	**ft_envv_to_str(char **res, t_elem *elem)
+static char	*ft_envv_to_str(t_elem *elem)
 {
-	unsigned int	i;
 	size_t			name_len;
+	char			*res;
 
-	i = 0;
 	name_len = ft_strlen(elem->name);
-	if ((res[i] = ft_strnew(name_len + ft_strlen(elem->value) + 1)) == NULL)
+	if ((res = ft_strnew(name_len + ft_strlen(elem->value) + 1)) == NULL)
 	{
 		return (NULL);
 	}
-	ft_strcpy(res[i], elem->name);
-	res[i][name_len] = '=';
-	res[i] = ft_strcat(res[i], elem->value);
-	++i;
+	ft_strcpy(res, elem->name);
+	res[name_len] = '=';
+	res = ft_strcat(res, elem->value);
 	return (res);
 }
 
@@ -98,23 +96,27 @@ char	**ft_env_to_tab(t_lst *lst)
 {
 	t_elem			*tmp;
 	char			**res;
+	unsigned int	i;
 
 	res = NULL;
 	if ((res = (char **)malloc(sizeof(char *) * (lst->size + 1))) == NULL)
 	{
 		return (NULL);
 	}
-	ft_memset(res, 0, sizeof(res));
+	ft_memset(res, 0, sizeof(lst->size + 1));
 	tmp = lst->head;
+	i = 0;
 	while (tmp != NULL)
 	{
-		if ((res = ft_envv_to_str(res, tmp)) == NULL)
+		if ((res[i] = ft_envv_to_str(tmp)) == NULL)
 		{
 			ft_tabdel(res);
 			return (NULL);
 		}
+		i++;
 		tmp = tmp->next;
 	}
+	res[i] = NULL;
 	return (res);
 }
 
