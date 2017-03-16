@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 13:52:27 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/15 18:33:44 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/03/16 19:58:39 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,37 @@
 #define isCondition(x) (x == OR || x == AND)
 #define isRedir(x) (x == DIR_AMP || x == SR_DIR || x == SL_DIR || x == DR_DIR || x == DL_DIR)
 
-void	*iterAst(t_tree *ptr)
-{
-	List_p	stock;
+void	listIter(List_p list, void (f)(void *));
 
-	stock = NULL;
-	while (ptr)
+void	printStack(t_tree *elem)
+{
+	printf("\tToken : <%d>\n", elem->token);
+}
+
+int	iterPostOrd(t_tree **ptr, List_p *stock)
+{
+	while (*ptr)
 	{
-		push(&stock, ptr);
-		ptr = ptr->left;
+		puts("Bottom");
+		if ((*ptr)->right)
+			push(stock, (*ptr)->right);
+		push(stock, *ptr);
+		*ptr = (*ptr)->left;
 	}
-	return (stock);
+/*	printf("=--Stack-1-=\n");
+	listIter(*stock, (void *)&printStack);*/
+	*ptr = pop(stock);
+	if (*stock && (*ptr)->right && top((*stock)) == (*ptr)->right)
+	{
+		pop(stock);
+		push(stock, *ptr);
+		*ptr = (*ptr)->right;
+/*		printf("=--Stack-B-=\n");
+		listIter(*stock, (void *)&printStack);*/
+		return (0);
+	}
+	return (1);
+//	return (pop(stock));
 }
 
 Node_p	createProcessTree(t_tree *root)
@@ -39,23 +59,27 @@ Node_p	createProcessTree(t_tree *root)
 	stack = NULL;
 	while (true)
 	{
-		if (token(top(stock)) is CMD)
-			push(&stack, createProcess(pop(&stock)));
-		if (isCondition(token(top(stock))))
-			push(&stack, createConditionIf(pop(&stock), pop(&stack), pop(&stack)));//Condition, rightNode, leftNode
-		if (token(top(stock)) is PIPE)
-			push(&stack, createPipe(pop(&stack), pop(&stack)));//rightNode, leftNode
-		if (isRedir(token(top(stock))))
-			push(&stack, createRedir(pop(&stock), pop(&stack)));//Redir, targetNode, leftNode		
-		if (((t_tree *)top(stock))->right)
-			push(&stock,iterAst(root));
+		if (iterPostOrd(&root, &stock))
+		{
+/*			printf("=--Stack--=\n");
+			listIter(stock, (void *)&printStack);*/
+			if (token(root) is CMD)
+				push(&stack, createProcess(root));
+			else if (isCondition(token(root)))
+				push(&stack, createConditionIf(root, pop(&stack), pop(&stack)));//Condition, rightNode, leftNode
+			else if (token(root) is PIPE)
+				push(&stack, createPipe(pop(&stack), pop(&stack)));//rightNode, leftNode
+			else if (isRedir(token(root)))
+				push(&stack, createRedir(root, pop(&stack)));//Redir, targetNode, leftNode
+			root = NULL;
+		}
 		if (!stock)
-		break;
+			break;
 	}
 	return (pop(&stack));
 }
 
-t_job	*create_job(t_tree *root, int foreground)
+t_job	*createJob(t_tree *root, int foreground)
 {
 	t_job	*job;
 
@@ -67,20 +91,12 @@ t_job	*create_job(t_tree *root, int foreground)
 
 void	export_job(t_tree *root, List_p *job_list)
 {
-	t_tree	*ptr;
-
-	ptr = root;
-	while (ptr)
+	while (token(root) is AMP || token(root) is DOT)
 	{
-		if (token(ptr) != AMP && token(ptr) != DOT)
-			insertLinkBottom(job_list, newLink(create_job(ptr, 0), sizeof(**job_list)));
-		else
-		{
-			ptr = ptr->left;
-			insertLinkBottom(job_list, newLink(create_job(ptr, 1), sizeof(**job_list)));
-		}
-		ptr = ptr->right;
+		insertLinkBottom(job_list, newLink(createJob(root->left, (token(root) is DOT) ? 1: 0), sizeof(t_job)));
+		root = root->right;
 	}
+	insertLinkBottom(job_list, newLink(createJob(root, 1), sizeof(t_job)));
 }
 
 ConditionIf_p newConditionIf(enum typeIf type)
@@ -227,10 +243,10 @@ void spacer(int io)
 {
 	static int depth;
 	
-	for (int i = 0; i < depth ; i++)
+	for (int i = 0; io >0 && i < depth ; i++)
 	{
 		putchar('|');
-		putchar('\t');
+		putchar(' ');
 	}
 	depth += io;
 }
@@ -242,8 +258,7 @@ void printProcess(Process_p process)
 	printf("command : <%s>\t", (process->argv)[0]);
 	for (int i = 1; (process->argv)[i];  i++)
 		printf("A%d: <%s>\t", i, (process->argv)[i]);
-	printf("self: <%p>\t", &process);
-	printf("Next Process 0xAdd : <%p>\n", process->next);
+	printf("self: <%p>\t\n", &process);
 	spacer(-1);
 }
 
@@ -252,7 +267,7 @@ void printConditionIf(ConditionIf_p condition)
 	spacer(1);
 	printf("[CONDITION]\t");
 	printf("if : <%s>\t", (condition->type == IF_OR)? "OR": "AND");
-	printf("self: <%p>\t", &condition);
+	printf("self: <%p>\t\n", &condition);
 	spacer(-1);
 }
 
@@ -282,8 +297,7 @@ void printJob(t_job *job)
 	spacer(1);
 	printf("[JOB]\t");
 	printf("Command : <%s>\t", job->command);
-	printf("Foreground : <%d>\t", job->foreground);
-	printf("Next Job 0xAdd : <%p>\n", job->next);
+	printf("Foreground : <%d>\t\n", job->foreground);
 	printNode(job->process_tree);
 	spacer(-1);
 }
