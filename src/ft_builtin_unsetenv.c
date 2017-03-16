@@ -25,6 +25,7 @@ int		ft_unsetenv(t_lst *env, char *var)
 	if ((elem = ft_find_elem(var, env)) != NULL)
 	{
 		ft_del_elem(&elem, env);
+		return (1);
 	}
 	return (0);
 }

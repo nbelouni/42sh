@@ -108,4 +108,5 @@ char				*ft_strlchr(char *str, char c);
 char				*ft_free_and_join(char *str1, char *str2);
 void				ft_tabdel(char **tab);
 
+
 #endif

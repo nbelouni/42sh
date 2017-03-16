@@ -18,7 +18,10 @@ SRCS = 	ft_builtin_cd.c		\
 		ft_builtin_exit.c	\
 		ft_builtin_setenv.c	\
 		ft_builtin_unsetenv.c\
-		ft_bultin_export.c	\
+		ft_builtin_export.c	\
+		ft_builtin_export_tools.c\
+		ft_builtin_unset.c\
+		ft_export_print.c\
 		ft_norm_tools.c		\
 		ft_init.c			\
 		ft_list_tools.c		\
