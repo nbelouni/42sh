@@ -6,29 +6,36 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/15 20:40:34 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/15 23:57:30 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/16 16:47:37 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
-t_token		*is_local_var(t_token *lst)
+int			is_var_val(char *s)
 {
-	t_token	*tmp;
+	int		i;
+	int		s_len;
+
+	i = -1;
+	s_len = ft_strlen(s);
+	while (++i < s_len)
+	{
+		is_end(s, &i, '\'');
+		is_end(s, &i, '`');
+		is_end(s, &i, '"');
+		if (i < s_len && s[i] == '=')
+			return (TRUE);
+	}
+	return (FALSE);
+}
+
+t_token		*insert_env_export_in_list(t_token *tmp, t_token *lst)
+{
 	t_token	*new;
-	int		n_tmp;
 	int		lvl[2];
 	char	*cmd;
 
-	n_tmp = 0;
-	tmp = lst;
-	if (!ft_strchr(lst->word, '='))
-		return (lst);
-	while (tmp && ft_strchr(tmp->word, '='))
-	{
-		tmp = tmp->next;
-		n_tmp++;
-	}
 	if (tmp && is_text_type(tmp->type))
 		cmd = "env";
 	else
@@ -43,5 +50,26 @@ t_token		*is_local_var(t_token *lst)
 	lst->prev = new;
 	new->next = lst;
 	return (new);
+}
 
+t_token		*is_local_var(t_token *lst)
+{
+	t_token	*tmp;
+	int		n_tmp;
+	int		ret;
+
+	n_tmp = 0;
+	tmp = lst;
+	if (!ft_strchr(lst->word, '='))
+		return (lst);
+	while (tmp)
+	{
+		if (!(ret = is_var_val(tmp->word)))
+			break ;
+		tmp = tmp->next;
+		n_tmp++;
+	}
+	if (n_tmp == 0 && ret == FALSE)
+		return (lst);
+	return (insert_env_export_in_list(tmp, lst));
 }
