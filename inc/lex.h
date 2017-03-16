@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/11 12:30:14 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/15 11:27:42 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/15 23:55:35 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,8 @@ t_tree 	*creat_right(t_token *lst, t_lvl *lvl);
 void 		ft_push_ast(t_token *list, t_tree **ast);
 void 		free_ast(t_tree *ast);
 void 		print_debug_ast(t_tree *node);
+
+t_token		*is_local_var(t_token *lst);
 /*
 void	ft_cmdadd(t_cmd **alst, t_cmd *new);
 void	ft_cmdclear(t_cmd **cmd);

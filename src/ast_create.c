@@ -6,7 +6,7 @@
 /*   By: dogokar <dogokar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 14:41:10 by dogokar           #+#    #+#             */
-/*   Updated: 2017/03/11 20:54:37 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/16 15:05:58 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ t_lib  *cheak_lib(t_token *node)
 	int i;
 
 	i = 0;
-	while (i <= LENLIB)
+	while (i < LENLIB)
 	{
 		if (node->type == lib_op[i].toke)
 			return (&lib_op[i]);
@@ -77,8 +77,8 @@ t_lib  *cheak_lib(t_token *node)
 }
 
 /*
- ** compare les operateur par rappot à la lib_op
- */
+** compare les operateur par rappot à la lib_op
+*/
 
 int  compare_token_op(t_token *node_lst, t_token *tmp)
 {
@@ -105,7 +105,7 @@ int  compare_token_op(t_token *node_lst, t_token *tmp)
 
 int  compare_token_com(t_token *node_lst, t_token *tmp)
 {
-	if(!node_lst && tmp->type == CMD)
+	if (!node_lst && tmp->type == CMD)
 		return (1);
 	return (0);
 }
@@ -128,15 +128,15 @@ int     test_lvl(int bt_lvl, int bc_lvl, t_lvl *lvl)
 //   }
 
 /*
- **    regle pour parser la liste et inserer les token au bon endroit
- */
+**    regle pour parser la liste et inserer les token au bon endroit
+*/
 
 int  priority(t_token *node_lst, t_token *tmp, t_lvl *lvl)
 {
 	int tmp_bt;
 	int tmp_bc;
 
-	(void)lvl;
+//	(void)lvl;
 	tmp_bt = tmp->bt_level;
 	tmp_bc = tmp->bc_level;
 	if (!node_lst && tmp->select == 0 && (test_lvl(tmp_bt, tmp_bc, lvl) == 0))
@@ -151,9 +151,9 @@ int  priority(t_token *node_lst, t_token *tmp, t_lvl *lvl)
 }
 
 /*
- ** fonction qui va chercher le bon element dans la list
- ** recursive lorsqu'il trouve plus d'element et que le bt ou bc lvl est incrementer
- */
+** fonction qui va chercher le bon element dans la list
+** recursive lorsqu'il trouve plus d'element et que le bt ou bc lvl est incrementer
+*/
 
 t_token *search_toke(t_token *lst, t_lvl *lvl)
 {
@@ -193,8 +193,8 @@ t_token *search_toke(t_token *lst, t_lvl *lvl)
 }
 
 /*
- ** remonte la liste
- */
+** remonte la liste
+*/
 
 t_token *search_toke_prev(t_token *lst, t_lvl *lvl)
 {
@@ -211,8 +211,8 @@ t_token *search_toke_prev(t_token *lst, t_lvl *lvl)
 }
 
 /*
- ** cree le char **  ex: ls -la tmp
- */
+** cree le char **  ex: ls -la tmp
+*/
 
 void cmd_len(t_token *lst, int *i, int *j)
 {
@@ -244,8 +244,9 @@ char  **concate_cmd(t_token *lst)
 	j = 0;
 	cmd_len(tmp, &i, &j);
 	argv = NULL;
-	if (!(argv = (char **)malloc(sizeof(char*) * (i * j))))
+	if (!(argv = (char **)malloc(sizeof(char*) * (i * j + 1))))
 		return (NULL);
+	argv[i * j] = NULL;
 	while (tmp && (count <= i -1))
 	{
 		argv[count] = ft_strdup(tmp->word);
@@ -258,8 +259,8 @@ char  **concate_cmd(t_token *lst)
 }
 
 /*
- ** print le char ** pour le debug
- */
+** print le char ** pour le debug
+*/
 
 void print_tab(char **tabol)
 {
@@ -275,8 +276,8 @@ void print_tab(char **tabol)
 }
 
 /*
- ** recursive de creation de ast
- */
+** recursive de creation de ast
+*/
 
 t_tree *recurs_creat_tree(t_token *lst)
 {
@@ -299,8 +300,8 @@ t_tree *recurs_creat_tree(t_token *lst)
 }
 
 /*
- ** branche de gauche
- */
+** branche de gauche
+*/
 
 t_tree *creat_left(t_token *lst, t_lvl *lvl)
 {
@@ -314,8 +315,8 @@ t_tree *creat_left(t_token *lst, t_lvl *lvl)
 }
 
 /*
- ** branche de droite
- */
+** branche de droite
+*/
 
 t_tree   *creat_right(t_token *lst, t_lvl *lvl)
 {
@@ -329,8 +330,8 @@ t_tree   *creat_right(t_token *lst, t_lvl *lvl)
 }
 
 /*
- ** cree la tete de ast
- */
+** cree la tete de ast
+*/
 t_tree  *new_tree(t_token *lst)
 {
 	t_tree  *node;
@@ -357,9 +358,9 @@ t_tree  *new_tree(t_token *lst)
 }
 
 /*
- **       print ast pour le debug
- **
- */
+**       print ast pour le debug
+**
+*/
 
 void print_debug_ast(t_tree *node)
 {

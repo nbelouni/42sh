@@ -55,20 +55,22 @@ void		ft_print_token_list(t_token **list)
 		PUT2("____________\n");
 		elem = elem->next;
 	}
-	elem = *list;
-	PUT2("\n______PREV______\n");
-	while (elem && elem->next)
-		elem = elem->next;
-	while (elem)
-	{
-		PUT2("--LIST--\n");
-		PUT2("token :");PUT2(elem->word);X('\n');
-		PUT2("type :");PUT2(tab_name[elem->type]);X('\n');
-		PUT2("bt_level :");E(elem->bt_level);X('\n');
-		PUT2("bc_level :");E(elem->bc_level);X('\n');
-		PUT2("____________\n");
-		elem = elem->prev;
-	}
+	
+// 	elem = *list;
+//	PUT2("\n______PREV______\n");
+//	while (elem && elem->next)
+//		elem = elem->next;
+//	while (elem)
+//	{
+//		PUT2("--LIST--\n");
+//		PUT2("token :");PUT2(elem->word);X('\n');
+//		PUT2("type :");PUT2(tab_name[elem->type]);X('\n');
+//		PUT2("bt_level :");E(elem->bt_level);X('\n');
+//		PUT2("bc_level :");E(elem->bc_level);X('\n');
+//		PUT2("____________\n");
+//		elem = elem->prev;
+//	}
+
 }
 /*
 void		print_job(t_job *list)
