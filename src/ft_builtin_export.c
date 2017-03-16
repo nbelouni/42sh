@@ -83,6 +83,8 @@ int			multi_var_cheak(char *argv, t_set *m_env)
 	t_elem	*tmp;
 
 	tmp = NULL;
+	if (argv[0] == '=' || ft_isdigit(argv[0]))
+		return (ft_print_error(&argv[0], ERR_VAR_BEG_NO_ALPHA, -1)); 
 	if ((tmp = search_var(argv, m_env->exp)))
 		return (insert_to_env(tmp, argv, m_env->env, m_env->exp));
 	else if ((tmp = search_var(argv, m_env->set)))
@@ -100,9 +102,10 @@ int			ft_builtin_export(char **argv, t_set *m_env)
 	int		i;
 	int		result;
 
-	opt = ft_opt_parse(EXPORT_OPT, argv + 1, 0);
+	if (!(opt = ft_opt_parse(EXPORT_OPT, argv + 1, 0)))
+			return (ERR_EXIT);
 	if (opt[0] == -1)
-		return (-1);
+		return (ERR_NEW_CMD);
 	i = opt[0] + 1;
 	result = 0;
 	if (argv[1] == NULL)
@@ -110,7 +113,7 @@ int			ft_builtin_export(char **argv, t_set *m_env)
 	while (argv[i] != NULL)
 	{
 		if (multi_var_cheak(argv[i], m_env) == -1)
-			result = -1;
+			result = ERR_NEW_CMD;
 		++i;
 	}
 	free(opt);
