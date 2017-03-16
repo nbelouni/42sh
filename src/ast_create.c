@@ -6,7 +6,7 @@
 /*   By: dogokar <dogokar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 14:41:10 by dogokar           #+#    #+#             */
-/*   Updated: 2017/03/11 20:54:37 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/16 14:21:54 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,8 @@ t_tree  *add_tree(t_token *lst)
 
 	node = ft_memalloc(sizeof(t_tree));
 	node->token_or = lst;
-	node->cmd = NULL;
+//	node->cmd = NULL;
+	node->argv = concate_argv(lst);
 	node->father = NULL;
 	node->left = NULL;
 	node->right = NULL;
@@ -211,9 +212,7 @@ t_token *search_toke_prev(t_token *lst, t_lvl *lvl)
 }
 
 /*
- ** cree le char **  ex: ls -la tmp
- */
-
+** ancienne fonction concate_cmd qui cree le char** cmd a enlever ?
 void cmd_len(t_token *lst, int *i, int *j)
 {
 	t_token *tmp;
@@ -256,11 +255,27 @@ char  **concate_cmd(t_token *lst)
 	argv[count] = NULL;
 	return (argv);
 }
+*/
+t_list	*concate_argv(t_token *lst)
+{
+	t_token	*tmp;
+	t_list	*elem;
 
+	tmp = lst;
+	if (!(elem = ft_lstnew(tmp->word, ft_strlen(tmp->word))))
+		return (NULL);
+	tmp = tmp->next;
+	while (tmp && tmp->type == ARG)
+	{
+		ft_lstpush(&elem, tmp->word, (size_t)ft_strlen(tmp->word));
+		tmp->select = 1;
+		tmp = tmp->next;
+	}
+	return (elem);
+}
 /*
- ** print le char ** pour le debug
- */
-
+** print le char ** pour le debug
+*/
 void print_tab(char **tabol)
 {
 	int i;
@@ -287,8 +302,8 @@ t_tree *recurs_creat_tree(t_token *lst)
 	node = NULL;
 	node = add_tree(tmp);
 	node->token = tmp->type;
-	if (tmp->type == CMD)
-		node->cmd = concate_cmd(tmp);
+//	if (tmp->type == CMD)
+//		node->cmd = concate_cmd(tmp);
 	node->right= creat_right(tmp, NULL);
 	if (node->right)
 		node->right->father = node;
@@ -344,8 +359,8 @@ t_tree  *new_tree(t_token *lst)
 		tmp->select = 1;
 		node = add_tree(tmp);
 		node->token = tmp->type;
-		if (tmp->type == CMD)
-			node->cmd = concate_cmd(tmp);
+//		if (tmp->type == CMD)
+//			node->cmd = concate_cmd(tmp);
 		node->right = creat_right(tmp, NULL);
 		if (node->right)
 			node->right->father = node;
@@ -361,7 +376,20 @@ t_tree  *new_tree(t_token *lst)
  **
  */
 
-void print_debug_ast(t_tree *node)
+void	print_lst(t_list *list)
+{
+	t_list	*elem;
+
+	elem = list;
+	while (elem)
+	{
+		PUT2(elem->content);
+		X('\n');
+		elem = elem->next;
+	}
+}
+
+void	print_debug_ast(t_tree *node)
 {
 	if(!node)
 	{
@@ -374,10 +402,9 @@ void print_debug_ast(t_tree *node)
 		print_debug_ast(node->left);
 	}
 		PUT2("\n node ======>>>>>> ");
-	if (node->token == CMD)
-		print_tab(node->cmd);
-	else
-		PUT2(node->token_or->word);
+	print_lst(node->argv);
+//	else
+//		PUT2(node->token_or->word);
 	if (node->right)
 	{
 		PUT2(" \n node->right");
@@ -385,24 +412,43 @@ void print_debug_ast(t_tree *node)
 	}
 	PUT2(" \n up");
 }
-
+/*
 void free_content_ast(t_tree *node)
 {
 	if (node->cmd != NULL)
 		ft_tabdel(node->cmd);
 	node->cmd = NULL;
 }
+*/
+void	free_list_ast(t_tree *node)
+{
+	t_list	*elem;
+	t_list	*tmp;
 
-void free_ast(t_tree *ast)
+	elem = node->argv;
+	while (elem)
+	{
+		tmp = elem->next;
+		ft_memdel((void *)&(elem->content));
+		ft_memdel((void *)&elem);
+		elem = tmp;
+	}
+	node->argv = NULL;
+}
+
+void	free_ast(t_tree *ast)
 {
 	if (!ast)
+	{
+//		PUT2("fin de branche");
 		return ;
+	}
 	if (ast->left)
 		free_ast(ast->left);
 	if (ast->right)
 		free_ast(ast->right);
 //		ft_memdel((void *)&ast);
-	free_content_ast(ast);
+	free_list_ast(ast);
 	free(ast);
 }
 

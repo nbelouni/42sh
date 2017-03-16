@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/11 12:30:14 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/15 11:27:42 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/16 13:34:55 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,24 +28,24 @@ typedef struct		s_tok
 typedef struct		s_tree
 {
 	int				token;
-	char			**cmd;
+	t_list			*argv;
 	t_token			*token_or;
 	struct s_tree	*father;
 	struct s_tree	*left;
 	struct s_tree	*right;
 }					t_tree;
 
-typedef struct s_lvl
+typedef struct		s_lvl
 {
-	int 					bt_lvl;
-	int					 	bc_lvl;
-}							t_lvl;
+	int 			bt_lvl;
+	int				bc_lvl;
+}					t_lvl;
 
-typedef struct  s_lib
+typedef struct 		s_lib
 {
 	int 			toke;
 	int 			priority;
-}						t_lib;
+}					t_lib;
 /*
 enum				e_token2
 {
@@ -134,8 +134,9 @@ int		return_new_prompt(int ret);
 */
 int		here_doc(t_token *elemi, t_completion *completion);
 
-t_tree 	*creat_left(t_token *lst, t_lvl *lvl);
-t_tree 	*creat_right(t_token *lst, t_lvl *lvl);
+t_list		*concate_argv(t_token *lst);
+t_tree 		*creat_left(t_token *lst, t_lvl *lvl);
+t_tree 		*creat_right(t_token *lst, t_lvl *lvl);
 void 		ft_push_ast(t_token *list, t_tree **ast);
 void 		free_ast(t_tree *ast);
 void 		print_debug_ast(t_tree *node);

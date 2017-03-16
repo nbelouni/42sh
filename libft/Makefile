@@ -6,7 +6,7 @@
 #    By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/11/05 17:19:47 by nbelouni          #+#    #+#              #
-#    Updated: 2017/02/14 17:18:35 by nbelouni         ###   ########.fr        #
+#    Updated: 2017/03/16 11:36:49 by alallema         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ OBJ=ft_bzero.o ft_isalnum.o ft_isalpha.o ft_isascii.o ft_isdigit.o\
 	ft_is_valid_dir.o ft_get_index_of.o ft_strcut.o ft_strisdigit.o\
 	ft_epurstr.o ft_tabconcat.o ft_puttab.o ft_tablen.o ft_multi_join.o\
 	ft_multi_concat.o ft_multi_free.o ft_strlchr.o ft_free_and_dup.o\
-	ft_tabdel.o ft_free_and_join.o
+	ft_tabdel.o ft_free_and_join.o ft_lstpush.o
 
 SRCS=ft_bzero.c ft_isalnum.c ft_isalpha.c ft_isascii.c ft_isdigit.c\
 	 ft_isprint.c ft_memccpy.c ft_memchr.c ft_memcmp.c ft_memcpy.c\
@@ -47,7 +47,7 @@ SRCS=ft_bzero.c ft_isalnum.c ft_isalpha.c ft_isascii.c ft_isdigit.c\
 	 ft_get_index_of.c ft_strisdigit.c ft_epurstr.c ft_tabconcat.c\
 	 ft_puttab.c ft_tablen.c ft_multi_join.c ft_multi_concat.c\
 	 ft_multi_free.c ft_strlchr.c ft_free_and_dup.c ft_tabdel.c\
-	 ft_free_and_join.c
+	 ft_free_and_join.c ft_lstpush.c
 
 all: $(NAME)
 
