@@ -6,7 +6,7 @@
 /*   By: dogokar <dogokar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 14:41:10 by dogokar           #+#    #+#             */
-/*   Updated: 2017/03/16 14:21:54 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/16 15:20:23 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ t_tree  *add_tree(t_token *lst)
 
 	node = ft_memalloc(sizeof(t_tree));
 	node->token_or = lst;
-//	node->cmd = NULL;
+	node->cmd = NULL;
 	node->argv = concate_argv(lst);
 	node->father = NULL;
 	node->left = NULL;
@@ -68,7 +68,7 @@ t_lib  *cheak_lib(t_token *node)
 	int i;
 
 	i = 0;
-	while (i <= LENLIB)
+	while (i < LENLIB)
 	{
 		if (node->type == lib_op[i].toke)
 			return (&lib_op[i]);
@@ -78,8 +78,8 @@ t_lib  *cheak_lib(t_token *node)
 }
 
 /*
- ** compare les operateur par rappot à la lib_op
- */
+** compare les operateur par rappot à la lib_op
+*/
 
 int  compare_token_op(t_token *node_lst, t_token *tmp)
 {
@@ -106,7 +106,7 @@ int  compare_token_op(t_token *node_lst, t_token *tmp)
 
 int  compare_token_com(t_token *node_lst, t_token *tmp)
 {
-	if(!node_lst && tmp->type == CMD)
+	if (!node_lst && tmp->type == CMD)
 		return (1);
 	return (0);
 }
@@ -129,15 +129,15 @@ int     test_lvl(int bt_lvl, int bc_lvl, t_lvl *lvl)
 //   }
 
 /*
- **    regle pour parser la liste et inserer les token au bon endroit
- */
+**    regle pour parser la liste et inserer les token au bon endroit
+*/
 
 int  priority(t_token *node_lst, t_token *tmp, t_lvl *lvl)
 {
 	int tmp_bt;
 	int tmp_bc;
 
-	(void)lvl;
+//	(void)lvl;
 	tmp_bt = tmp->bt_level;
 	tmp_bc = tmp->bc_level;
 	if (!node_lst && tmp->select == 0 && (test_lvl(tmp_bt, tmp_bc, lvl) == 0))
@@ -152,9 +152,9 @@ int  priority(t_token *node_lst, t_token *tmp, t_lvl *lvl)
 }
 
 /*
- ** fonction qui va chercher le bon element dans la list
- ** recursive lorsqu'il trouve plus d'element et que le bt ou bc lvl est incrementer
- */
+** fonction qui va chercher le bon element dans la list
+** recursive lorsqu'il trouve plus d'element et que le bt ou bc lvl est incrementer
+*/
 
 t_token *search_toke(t_token *lst, t_lvl *lvl)
 {
@@ -194,8 +194,8 @@ t_token *search_toke(t_token *lst, t_lvl *lvl)
 }
 
 /*
- ** remonte la liste
- */
+** remonte la liste
+*/
 
 t_token *search_toke_prev(t_token *lst, t_lvl *lvl)
 {
@@ -212,7 +212,9 @@ t_token *search_toke_prev(t_token *lst, t_lvl *lvl)
 }
 
 /*
-** ancienne fonction concate_cmd qui cree le char** cmd a enlever ?
+** cree le char **  ex: ls -la tmp
+*/
+
 void cmd_len(t_token *lst, int *i, int *j)
 {
 	t_token *tmp;
@@ -243,8 +245,9 @@ char  **concate_cmd(t_token *lst)
 	j = 0;
 	cmd_len(tmp, &i, &j);
 	argv = NULL;
-	if (!(argv = (char **)malloc(sizeof(char*) * (i * j))))
+	if (!(argv = (char **)malloc(sizeof(char*) * (i * j + 1))))
 		return (NULL);
+	argv[i * j] = NULL;
 	while (tmp && (count <= i -1))
 	{
 		argv[count] = ft_strdup(tmp->word);
@@ -255,7 +258,7 @@ char  **concate_cmd(t_token *lst)
 	argv[count] = NULL;
 	return (argv);
 }
-*/
+
 t_list	*concate_argv(t_token *lst)
 {
 	t_token	*tmp;
@@ -276,6 +279,7 @@ t_list	*concate_argv(t_token *lst)
 /*
 ** print le char ** pour le debug
 */
+
 void print_tab(char **tabol)
 {
 	int i;
@@ -290,8 +294,8 @@ void print_tab(char **tabol)
 }
 
 /*
- ** recursive de creation de ast
- */
+** recursive de creation de ast
+*/
 
 t_tree *recurs_creat_tree(t_token *lst)
 {
@@ -302,8 +306,8 @@ t_tree *recurs_creat_tree(t_token *lst)
 	node = NULL;
 	node = add_tree(tmp);
 	node->token = tmp->type;
-//	if (tmp->type == CMD)
-//		node->cmd = concate_cmd(tmp);
+	if (tmp->type == CMD)
+		node->cmd = concate_cmd(tmp);
 	node->right= creat_right(tmp, NULL);
 	if (node->right)
 		node->right->father = node;
@@ -314,8 +318,8 @@ t_tree *recurs_creat_tree(t_token *lst)
 }
 
 /*
- ** branche de gauche
- */
+** branche de gauche
+*/
 
 t_tree *creat_left(t_token *lst, t_lvl *lvl)
 {
@@ -329,8 +333,8 @@ t_tree *creat_left(t_token *lst, t_lvl *lvl)
 }
 
 /*
- ** branche de droite
- */
+** branche de droite
+*/
 
 t_tree   *creat_right(t_token *lst, t_lvl *lvl)
 {
@@ -344,8 +348,8 @@ t_tree   *creat_right(t_token *lst, t_lvl *lvl)
 }
 
 /*
- ** cree la tete de ast
- */
+** cree la tete de ast
+*/
 t_tree  *new_tree(t_token *lst)
 {
 	t_tree  *node;
@@ -359,8 +363,8 @@ t_tree  *new_tree(t_token *lst)
 		tmp->select = 1;
 		node = add_tree(tmp);
 		node->token = tmp->type;
-//		if (tmp->type == CMD)
-//			node->cmd = concate_cmd(tmp);
+		if (tmp->type == CMD)
+			node->cmd = concate_cmd(tmp);
 		node->right = creat_right(tmp, NULL);
 		if (node->right)
 			node->right->father = node;
@@ -372,9 +376,9 @@ t_tree  *new_tree(t_token *lst)
 }
 
 /*
- **       print ast pour le debug
- **
- */
+**       print ast pour le debug
+**
+*/
 
 void	print_lst(t_list *list)
 {
@@ -412,14 +416,14 @@ void	print_debug_ast(t_tree *node)
 	}
 	PUT2(" \n up");
 }
-/*
+
 void free_content_ast(t_tree *node)
 {
 	if (node->cmd != NULL)
 		ft_tabdel(node->cmd);
 	node->cmd = NULL;
 }
-*/
+
 void	free_list_ast(t_tree *node)
 {
 	t_list	*elem;
@@ -448,6 +452,7 @@ void	free_ast(t_tree *ast)
 	if (ast->right)
 		free_ast(ast->right);
 //		ft_memdel((void *)&ast);
+	free_content_ast(ast);
 	free_list_ast(ast);
 	free(ast);
 }

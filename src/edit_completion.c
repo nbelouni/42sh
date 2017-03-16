@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/01 17:17:28 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/10 21:50:08 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/15 20:02:57 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ int			fill_command(t_sort_list **list, char *path)
 	int				i;
 
 	i = -1;
+	if (!path)
+		return (0);
 	if (!(bin_path = ft_strsplit(path, ':')))
 		return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
 	while (bin_path[++i])
@@ -112,7 +114,7 @@ int			fill_username(t_sort_list **list, char *path)
 	char			*line;
 
 	if ((fd = open(path, O_RDONLY)) < 0)
-		return (ft_print_error("42sh: ", ERR_READ, ERR_EXIT));
+		return (ft_print_error("42sh: ", ERR_READ, 0));
 	while (get_next_line(fd, &line) > 0)
 	{
 		if (edit_username_line(&line) == ERR_EXIT)

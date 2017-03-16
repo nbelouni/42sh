@@ -6,7 +6,7 @@
 /*   By: maissa-b <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/13 17:50:49 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/02/13 17:50:51 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/15 19:49:23 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,14 @@ void		ft_tabdel(char **tab)
 	int		i;
 
 	i = -1;
-	while (tab[++i])
+	if (tab && *tab)
 	{
-		ft_strdel(&tab[i]);
+		while (tab[++i])
+		{
+			ft_strdel(&tab[i]);
+		}
 	}
-	free(tab);
+	if (tab)
+		free(tab);
 	tab = NULL;
 }

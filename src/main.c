@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/15 18:13:35 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/03/16 15:05:10 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,6 @@ int 	main(int argc, char **argv, char **envp)
 			}
 			if (ret != ERR_NEW_PROMPT)
 				ft_strdel(&(buf->final_line));
-			else
-				complete_final_line(buf, list);
 			if (list)
 				ft_tokendestroy(&list); //clean la list a mettre a la fin
 			ft_bzero(buf->line, BUFF_SIZE);

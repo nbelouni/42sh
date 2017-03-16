@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/11 12:30:14 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/16 13:34:55 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/16 15:20:58 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef struct		s_tok
 typedef struct		s_tree
 {
 	int				token;
+	char			**cmd;
 	t_list			*argv;
 	t_token			*token_or;
 	struct s_tree	*father;
@@ -74,6 +75,7 @@ int		is_dquote(char *s, int i);
 int		is_squote(char *s, int i);
 int		is_new_btquote(char *s, int i);
 int		is_backslash(char *s, int i);
+int		is_any_quote(char *s, int i);
 
 int		find_btquote_end(char *s, int i);
 int		find_dquote_end(char *s, int i);
@@ -140,6 +142,8 @@ t_tree 		*creat_right(t_token *lst, t_lvl *lvl);
 void 		ft_push_ast(t_token *list, t_tree **ast);
 void 		free_ast(t_tree *ast);
 void 		print_debug_ast(t_tree *node);
+
+t_token		*is_local_var(t_token *lst);
 /*
 void	ft_cmdadd(t_cmd **alst, t_cmd *new);
 void	ft_cmdclear(t_cmd **cmd);
