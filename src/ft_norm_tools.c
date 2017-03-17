@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/13 20:05:40 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/04 20:27:53 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/15 16:23:26 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void	ft_del_list(t_lst *lst)
 		}
 		head = tmp;
 	}
-	ft_memset(lst, 0, sizeof(t_lst));
+	ft_memset(lst, 0, sizeof(t_lst) * lst->size);
 	free(lst);
 	lst = NULL;
 }

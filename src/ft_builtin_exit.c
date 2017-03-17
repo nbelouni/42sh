@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/03 18:21:52 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/05 15:15:30 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/15 16:30:48 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 **	contenu dans args[0] (plus d'arguments provoque une erreur).
 */
 
-int		ft_builtin_exit(t_lst *env, char *cmd, char **args)
+int		ft_builtin_exit(t_set *core, char *cmd, char **args)
 {
 	int	ret;
 
@@ -37,7 +37,8 @@ int		ft_builtin_exit(t_lst *env, char *cmd, char **args)
 		ret = (unsigned char)ret;
 		ret = ft_atoi(args[0]);
 	}
-	ft_del_list(env);
+	ft_histopt_w(core->set, core->hist, NULL);
+	ft_del_list(core->env);
 	clean_pos_curs();
 	close_termios();
 	exit(ret);

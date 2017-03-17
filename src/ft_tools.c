@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_tools.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maissa-b <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/05 15:18:39 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/05 15:18:40 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/15 19:06:57 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int			ft_export(t_lst *lst, char *arg)
 	{
 		if ((val = ft_strsub(arg, ft_strlen(name) + 1, \
 				(ft_strlen(arg) - ft_strlen(name) + 1))) == NULL)
-			return (ft_free_and_return(ERR_EXIT, name, NULL));
+			return (ft_free_and_return(ERR_EXIT, name, NULL, NULL));
 	}
 	ret = ft_setenv(lst, name, val);
 	(val != NULL) ? ft_multi_free(val, name, NULL, NULL) : ft_strdel(&name);
