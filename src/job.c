@@ -6,51 +6,51 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 13:52:27 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/16 19:58:39 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/03/17 14:21:05 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
-#define is ==
-#define token(x) (((t_tree *)x)->token)
+#define IS ==
+#define TOKEN(x) (((t_tree *)x)->token)
 #define isCondition(x) (x == OR || x == AND)
 #define isRedir(x) (x == DIR_AMP || x == SR_DIR || x == SL_DIR || x == DR_DIR || x == DL_DIR)
 
-void	listIter(List_p list, void (f)(void *));
+void	list_iter(List_p list, void (f)(void *));
 
-void	printStack(t_tree *elem)
+void	print_stack(t_tree *elem)
 {
 	printf("\tToken : <%d>\n", elem->token);
 }
 
-int	iterPostOrd(t_tree **ptr, List_p *stock)
+int	iter_post_ord(t_tree **ptr, List_p *stock)
 {
 	while (*ptr)
 	{
-		puts("Bottom");
+//		puts("Bottom");
 		if ((*ptr)->right)
-			push(stock, (*ptr)->right);
-		push(stock, *ptr);
+			PUSH(stock, (*ptr)->right);
+		PUSH(stock, *ptr);
 		*ptr = (*ptr)->left;
 	}
 /*	printf("=--Stack-1-=\n");
-	listIter(*stock, (void *)&printStack);*/
-	*ptr = pop(stock);
-	if (*stock && (*ptr)->right && top((*stock)) == (*ptr)->right)
+	list_iter(*stock, (void *)&print_stack);*/
+	*ptr = POP(stock);
+	if (*stock && (*ptr)->right && TOP((*stock)) == (*ptr)->right)
 	{
-		pop(stock);
-		push(stock, *ptr);
+		POP(stock);
+		PUSH(stock, *ptr);
 		*ptr = (*ptr)->right;
 /*		printf("=--Stack-B-=\n");
-		listIter(*stock, (void *)&printStack);*/
+		list_iter(*stock, (void *)&print_stack);*/
 		return (0);
 	}
 	return (1);
-//	return (pop(stock));
+//	return (POP(stock));
 }
 
-Node_p	createProcessTree(t_tree *root)
+t_node_p	create_process_tree(t_tree *root)
 {
 	List_p	stack;
 	List_p	stock;
@@ -59,58 +59,58 @@ Node_p	createProcessTree(t_tree *root)
 	stack = NULL;
 	while (true)
 	{
-		if (iterPostOrd(&root, &stock))
+		if (iter_post_ord(&root, &stock))
 		{
 /*			printf("=--Stack--=\n");
-			listIter(stock, (void *)&printStack);*/
-			if (token(root) is CMD)
-				push(&stack, createProcess(root));
-			else if (isCondition(token(root)))
-				push(&stack, createConditionIf(root, pop(&stack), pop(&stack)));//Condition, rightNode, leftNode
-			else if (token(root) is PIPE)
-				push(&stack, createPipe(pop(&stack), pop(&stack)));//rightNode, leftNode
-			else if (isRedir(token(root)))
-				push(&stack, createRedir(root, pop(&stack)));//Redir, targetNode, leftNode
+			list_iter(stock, (void *)&print_stack);*/
+			if (TOKEN(root) IS CMD)
+				PUSH(&stack, create_process(root));
+			else if (isCondition(TOKEN(root)))
+				PUSH(&stack, create_condition_if(root, POP(&stack), POP(&stack)));//Condition, right_node, left_node
+			else if (TOKEN(root) IS PIPE)
+				PUSH(&stack, create_pipe(POP(&stack), POP(&stack)));//right_node, left_node
+			else if (isRedir(TOKEN(root)))
+				PUSH(&stack, create_redir(root, POP(&stack)));//Redir, targetNode, left_node
 			root = NULL;
 		}
 		if (!stock)
 			break;
 	}
-	return (pop(&stack));
+	return (POP(&stack));
 }
 
-t_job	*createJob(t_tree *root, int foreground)
+t_job	*create_job(t_tree *root, int foreground)
 {
 	t_job	*job;
 
 	job = ft_memalloc(sizeof(t_job));
 	job->foreground = foreground;
-	job->process_tree = createProcessTree(root);
+	job->process_tree = create_process_tree(root);
 	return (job);
 }
 
 void	export_job(t_tree *root, List_p *job_list)
 {
-	while (token(root) is AMP || token(root) is DOT)
+	while (TOKEN(root) IS AMP || TOKEN(root) IS DOT)
 	{
-		insertLinkBottom(job_list, newLink(createJob(root->left, (token(root) is DOT) ? 1: 0), sizeof(t_job)));
+		insert_link_bottom(job_list, new_link(create_job(root->left, (TOKEN(root) IS DOT) ? 1: 0), sizeof(t_job)));
 		root = root->right;
 	}
-	insertLinkBottom(job_list, newLink(createJob(root, 1), sizeof(t_job)));
+	insert_link_bottom(job_list, new_link(create_job(root, 1), sizeof(t_job)));
 }
 
-ConditionIf_p newConditionIf(enum typeIf type)
+t_condition_if_p new_condition_if(t_type_if type)
 {
-	ConditionIf_p	ptr;
+	t_condition_if_p	ptr;
 
 	ptr = malloc(sizeof(*ptr));
 	ptr->type = type;
 	return (ptr);
 }
 
-Node_p newNode(enum typeNode type, size_t size)
+t_node_p new_node(t_type_node type, size_t size)
 {
-	Node_p	ptr;
+	t_node_p	ptr;
 
 	ptr = malloc(sizeof(*ptr));
 	ptr->type = type;
@@ -118,23 +118,21 @@ Node_p newNode(enum typeNode type, size_t size)
 	return (ptr);
 }
 
-void	deleteNode(Node_p node)
+void	delete_node(t_node_p node)
 {
 	free(node);
 }
 
-Process_p	newProcess(char **argv)
+t_process_p	new_process(char **argv)
 {
-	Process_p ptr;
+	t_process_p ptr;
 
 	ptr = malloc(sizeof(*ptr));
 	ptr->argv = argv;
 	return (ptr);
 }
 
-
-
-void	*newLink(void *data, size_t size)
+void	*new_link(void *data, size_t size)
 {
 	List_p	link;
 
@@ -145,7 +143,7 @@ void	*newLink(void *data, size_t size)
 	return (link);
 }
 
-void	*deleteLink(List_p link)
+void	*delete_link(List_p link)
 {
 	void	*data;
 
@@ -154,7 +152,7 @@ void	*deleteLink(List_p link)
 	return (data);
 }
 
-void	*removeLinkTop(List_p *refHeadTop)
+void	*remove_link_top(List_p *refHeadTop)
 {
 	List_p	link;
 
@@ -164,7 +162,7 @@ void	*removeLinkTop(List_p *refHeadTop)
 	return (link);
 }
 
-void	insertLinkTop(List_p *refHeadTop, List_p subLinkChain)
+void	insert_link_top(List_p *refHeadTop, List_p subLinkChain)
 {
 	List_p	link;
 
@@ -175,47 +173,47 @@ void	insertLinkTop(List_p *refHeadTop, List_p subLinkChain)
 	*refHeadTop = subLinkChain;
 }
 
-void	insertLinkBottom(List_p *refHeadTop, List_p subLinkChain)
+void	insert_link_bottom(List_p *refHeadTop, List_p subLinkChain)
 {
 	while (*refHeadTop)
 		refHeadTop = &(*refHeadTop)->next;
 	*refHeadTop = subLinkChain;
 }
 
-Node_p	createProcess(t_tree *nodeProcess)
+t_node_p	create_process(t_tree *nodeProcess)
 {
-	Node_p ptr;
+	t_node_p ptr;
 
-	ptr = newNode(PROCESS, sizeof(struct Process));
-	ptr->data = newLink(newProcess(nodeProcess->cmd), sizeof(struct Node));
+	ptr = new_node(PROCESS, sizeof(struct s_process));
+	ptr->data = new_link(new_process(nodeProcess->cmd), sizeof(struct s_node));
 	return (ptr);
 }
 
-Node_p	createConditionIf(t_tree *nodeConditionIf, Node_p rightNode, Node_p leftNode)
+t_node_p	create_condition_if(t_tree *nodeConditionIf, t_node_p right_node, t_node_p left_node)
 {
-	Node_p ptr;
+	t_node_p ptr;
 
-	ptr = newNode(IF, sizeof(struct ConditionIf));
-	ptr->left = leftNode;
-	ptr->right = rightNode;
-	ptr->data = newConditionIf((token(nodeConditionIf) is OR)? IF_OR : IF_AND);
+	ptr = new_node(IF, sizeof(struct s_condition_if));
+	ptr->left = left_node;
+	ptr->right = right_node;
+	ptr->data = new_condition_if((TOKEN(nodeConditionIf) IS OR)? IF_OR : IF_AND);
 	return (ptr);
 }
 
-Node_p	createPipe(Node_p rightNode, Node_p leftNode)
+t_node_p	create_pipe(t_node_p right_node, t_node_p left_node)
 {
-	insertLinkBottom(&((List_p)leftNode->data)->next, rightNode->data);
-	deleteNode(rightNode);
-	return (leftNode);
+	insert_link_bottom(&((List_p)left_node->data)->next, right_node->data);
+	delete_node(right_node);
+	return (left_node);
 }
 /* 
 	Temporary code which join the redirection operator and arguments, --ABSOLUTLY NOT FINAL-- form of redirection. We are using this 
 	solution just to perform some check.
 */
 
-Node_p createRedir(t_tree *nodeRedir, Node_p leftNode)
+t_node_p create_redir(t_tree *nodeRedir, t_node_p left_node)
 {
-	Process_p	process;
+	t_process_p	process;
 	char		*redir_opt_string;
 	char		*redir_arg_string;
 	size_t		size_redir_string;
@@ -223,14 +221,14 @@ Node_p createRedir(t_tree *nodeRedir, Node_p leftNode)
 	redir_opt_string = (nodeRedir->cmd)[0];
 	redir_arg_string = (nodeRedir->right->cmd)[0];
 	size_redir_string = strlen(redir_opt_string) + strlen(redir_arg_string) + 1;
-	process = leftNode->data;
+	process = left_node->data;
 	process->temp_redir = malloc(size_redir_string);
 	strcat(process->temp_redir, redir_opt_string);
 	strcat(process->temp_redir, redir_arg_string);
-	return (leftNode);
+	return (left_node);
 }
 
-void	listIter(List_p list, void (f)(void *))
+void	list_iter(List_p list, void (f)(void *))
 {
 	while (list)
 	{
@@ -251,7 +249,7 @@ void spacer(int io)
 	depth += io;
 }
 
-void printProcess(Process_p process)
+void printProcess(t_process_p process)
 {
 	spacer(1);
 	printf("[PROCESS]\t");
@@ -262,7 +260,7 @@ void printProcess(Process_p process)
 	spacer(-1);
 }
 
-void printConditionIf(ConditionIf_p condition)
+void printConditionIf(t_condition_if_p condition)
 {
 	spacer(1);
 	printf("[CONDITION]\t");
@@ -274,14 +272,14 @@ void printConditionIf(ConditionIf_p condition)
 
 void printProcessList(List_p processList)
 {
-	listIter(processList, (void *)&printProcess);
+	list_iter(processList, (void *)&printProcess);
 }
 
-void printNode(Node_p processTree)
+void printNode(t_node_p processTree)
 {
 	spacer(1);
 	printf("[NODE]\n");
-	if (processTree->type is PROCESS)
+	if (processTree->type IS PROCESS)
 		printProcessList(processTree->data);
 	else
 	{
@@ -304,7 +302,7 @@ void printJob(t_job *job)
 
 void printJobList(List_p jobList)
 {
-	listIter(jobList, (void *)&printJob);
+	list_iter(jobList, (void *)&printJob);
 }
 
 void test_func(t_tree *root)

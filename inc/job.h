@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 17:03:19 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/15 18:13:22 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/03/17 14:19:48 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ********************************************************)****************** */
 
@@ -18,30 +18,30 @@
 # include <sys/uio.h>
 # include <signal.h>
 
-#define push(x, elem)	(insertLinkTop(x, newLink(elem, sizeof(elem))))
-#define top(x) (x->data)
-#define pop(x)	(deleteLink(removeLinkTop(x)))
+#define PUSH(x, elem)	(insert_link_top(x, new_link(elem, sizeof(elem))))
+#define TOP(x) (x->data)
+#define POP(x)	(delete_link(remove_link_top(x)))
 
-typedef struct Node *Node_p;
+typedef struct s_node *t_node_p;
 
-typedef enum	typeNode
+typedef enum	e_type_node
 {
 	PROCESS,
 	IF
-}				typeNode;
+}				t_type_node;
 
-typedef enum	typeIf
+typedef enum	e_type_if
 {
 	IF_OR,
 	IF_AND
-}				typeIf;
+}				t_type_if;
 
-struct Node{
+struct s_node{
 	void *data;
 	size_t	size;
-	typeNode	type;
-	Node_p left;
-	Node_p right;
+	t_type_node	type;
+	t_node_p left;
+	t_node_p right;
 };
 
 typedef struct List *List_p;
@@ -52,17 +52,17 @@ struct List{
 	size_t	size;
 };
 
-typedef struct ConditionIf *ConditionIf_p;
+typedef struct s_condition_if *t_condition_if_p;
 
-struct ConditionIf{
-	typeIf type;
+struct s_condition_if{
+	t_type_if type;
 };
 
-typedef struct Process *Process_p;
+typedef struct s_process *t_process_p;
 	
-typedef struct Process
+typedef struct s_process
 {
-	Process_p		next;		/* struct list ou a changer par left right*/
+	t_process_p		next;		/* struct list ou a changer par left right*/
 	int				token;		/* token */
 	char			**argv;		/* for exec */
 	int				*tab_fd;		// ?tab_fd[3]? int stdin, stdout, stderr;  /* standard i/o channels */
@@ -78,7 +78,7 @@ typedef struct	s_job
 {
 	struct s_job	*next;
 	char			*command;		/* command line, used for messages */
-	Node_p			process_tree;	/* list of processes in this job */
+	t_node_p		process_tree;	/* list of processes in this job */
 	pid_t			pgid;			/* process group ID */
 	char			notified;		/* true if user told about stopped job */
 	struct termios	s_term;			/* saved terminal modes cf inc/read.h strcut s_term */
@@ -86,16 +86,16 @@ typedef struct	s_job
 	int				foreground;		/* foreground or background */
 }				t_job;
 
-void	insertLinkTop(List_p *refHeadTop, List_p subLinkChain);
-void	*removeLinkTop(List_p *refHeadTop);
-void	*deleteLink(List_p link);
-void	*newLink(void *data, size_t size);
-void	insertLinkBottom(List_p *refHeadTop, List_p subLinkChain);
+void	insert_link_top(List_p *refHeadTop, List_p subLinkChain);
+void	*remove_link_top(List_p *refHeadTop);
+void	*delete_link(List_p link);
+void	*new_link(void *data, size_t size);
+void	insert_link_bottom(List_p *refHeadTop, List_p subLinkChain);
 
-Node_p	createProcess(t_tree *nodeProcess);
-Node_p	createConditionIf(t_tree *nodeConditionIf, Node_p rightNode, Node_p leftNode);
-Node_p	createPipe(Node_p rightNode, Node_p leftNode);
-Node_p	createRedir(t_tree *nodeRedir, Node_p leftNode);
+t_node_p	create_process(t_tree *nodeProcess);
+t_node_p	create_condition_if(t_tree *nodeConditionIf, t_node_p right_node, t_node_p left_node);
+t_node_p	create_pipe(t_node_p right_node, t_node_p left_node);
+t_node_p	create_redir(t_tree *nodeRedir, t_node_p left_node);
 
 void test_func(t_tree *root);
 

@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/16 16:38:34 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/17 14:20:26 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int 	main(int argc, char **argv, char **envp)
 				av[0] = "ls";
 				av[1] = NULL;
 				execve(av[0], av, envp);
-*/			//	test_func(ast);
+*/				test_func(ast);
 				free_ast(ast);
 //				free(ast);
 			}
