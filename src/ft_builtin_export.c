@@ -83,8 +83,8 @@ int			multi_var_cheak(char *argv, t_set *m_env)
 	t_elem	*tmp;
 
 	tmp = NULL;
-	if (argv[0] == '=' || ft_isdigit(argv[0]))
-		return (ft_print_error(&argv[0], ERR_VAR_BEG_NO_ALPHA, -1)); 
+	if (argv[0] == '=' || ft_isalpha(argv[0]) == 0)
+		return (ft_print_error(&argv[0], ERR_VAR_BEG_NO_ALPHA, -1));
 	if ((tmp = search_var(argv, m_env->exp)))
 		return (insert_to_env(tmp, argv, m_env->env, m_env->exp));
 	else if ((tmp = search_var(argv, m_env->set)))
