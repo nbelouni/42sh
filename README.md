@@ -1,5 +1,24 @@
 # 42sh
 
+
+
+
+| PARTIE | STATUE | BUG report |
+| ------ | ------ | ---------- |
+| ED Line | DONE |     | 
+| PLexer | DONE |  |
+| globbing | en cours | |
+| exec | en cours  | |
+| builtins | en cours | |
+
+
+
+
+
+
+
+
+
 test sous-shell& accolade
 
  .() := sous-shell
