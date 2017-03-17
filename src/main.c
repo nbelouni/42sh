@@ -6,17 +6,19 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/13 18:54:13 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/16 11:15:57 by dogokar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
-void	parse(t_lst *env, char *line, char **envp)
+void	parse(t_set *m_env, char *line, char **envp)
 {
 	char	**args;
+	t_lst *env;
 
 	(void)envp;
+	env = m_env->env;
 	args = NULL;
 	args = ft_strsplit(line, ' ');
 	if (args != NULL && args[0] != NULL)
@@ -33,6 +35,10 @@ void	parse(t_lst *env, char *line, char **envp)
 			ft_builtin_echo(env, args[0], args + 1);
 		else if (ft_strcmp(args[0], "cd") == 0)
 			ft_builtin_cd(env, args[0], args + 1);
+		else if (ft_strcmp(args[0], "export") == 0)
+			ft_builtin_export(args, m_env);
+		else if (ft_strcmp(args[0], "unset") == 0)
+			ft_builtin_unset(m_env, args);
 		else
 			ft_waitchild(args, envp);
 		ft_tabdel(args);
@@ -47,6 +53,7 @@ int 	main(int argc, char **argv, char **envp)
 	t_buf	*buf;
 	t_token	*list;
 	t_lst	*env;
+	t_set *multi_var_env;
 	int		ret;
 	int		ret_read;
 	t_tree	*ast;
@@ -54,7 +61,9 @@ int 	main(int argc, char **argv, char **envp)
 	ast = NULL;
 	list = NULL;
 	env = NULL;
+	multi_var_env = ft_init_set();
 	env = ft_env_to_list(envp, env);
+	multi_var_env->env = env;
 	if (init_completion(&completion, env) == ERR_EXIT)
 		return (-1);
 	signal(SIGWINCH, get_sigwinch);
@@ -71,7 +80,7 @@ int 	main(int argc, char **argv, char **envp)
 			if (is_line_ended(buf) < 0)
 				return (-1);
 			complete_final_line(buf, list);
-//			parse(env, buf->final_line, envp);
+			parse(multi_var_env, buf->final_line, envp);
 			ret = parse_buf(&list, buf->final_line, &completion);
 			if (ret > 0 && list)
 			{

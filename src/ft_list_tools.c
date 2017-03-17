@@ -67,6 +67,7 @@ void		ft_insert_elem(t_elem *elem, t_lst *lst)
 
 void		ft_extract_elem(t_elem **elem, t_lst *lst)
 {
+	lst->size--;
 	if ((*elem)->next != NULL && (*elem)->prev != NULL)
 	{
 		(*elem)->prev->next = (*elem)->next;
@@ -81,6 +82,11 @@ void		ft_extract_elem(t_elem **elem, t_lst *lst)
 	{
 		lst->tail = (*elem)->prev;
 		(*elem)->prev->next = NULL;
+	}
+	else if ((*elem)->next == NULL && (*elem)->prev == NULL)
+	{
+		lst->tail = NULL;
+		lst->head = NULL;
 	}
 }
 
