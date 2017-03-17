@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/17 13:36:33 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/17 17:08:54 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,10 @@ int		parse(t_set *set, char *line, char **envp)
 			ft_builtin_echo(set->env, args[0], args + 1);
 		else if (ft_strcmp(args[0], "cd") == 0)
 			ft_builtin_cd(set->env, args[0], args + 1);
+		else if (ft_strcmp(args[0], "export") == 0)
+			ft_builtin_export(args, set);
+		else if (ft_strcmp(args[0], "unset") == 0)
+			ft_builtin_unset(set, args);
 		else if (ft_strcmp(args[0], "history") == 0)
 			ft_builtin_history(set->set, set->hist, args + 1);
 		else if (ft_strcmp(args[0], "set") == 0)
@@ -86,6 +90,8 @@ int 	main(int argc, char **argv, char **envp)
 		{
 			if (is_line_ended(buf) < 0)
 				return (-1);
+			complete_final_line(buf, list);
+			parse(set, buf->final_line, envp);
 			ret = parse_buf(&list, buf->final_line, &completion);
 			parse(set, buf->final_line, envp);
 			if (ret > 0 && list)
@@ -102,8 +108,6 @@ int 	main(int argc, char **argv, char **envp)
 			}
 			if (ret != ERR_NEW_PROMPT)
 				ft_strdel(&(buf->final_line));
-			else
-				complete_final_line(buf, list);
 			if (list)
 				ft_tokendestroy(&list); //clean la list a mettre a la fin
 			ft_bzero(buf->line, BUFF_SIZE);

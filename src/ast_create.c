@@ -166,10 +166,10 @@ t_token *search_toke(t_token *lst, t_lvl *lvl)
 	first_time = 0;
 	node_lst = NULL;
 	lvl_up = NULL;
-	if (lvl == NULL)
-		lvl = initlvl(0,0);
 	if (lst == NULL)
 		return (NULL);
+	if (lvl == NULL)
+		lvl = initlvl(0,0);
 	if (tmp->select == 1)
 		tmp = tmp->next;
 	while (tmp && tmp->select == 0)

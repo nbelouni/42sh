@@ -67,11 +67,20 @@ typedef struct		s_lst
 	t_elem			*tail;
 }					t_lst;
 
+typedef struct		s_sort_lst
+{
+		void  		*content;
+		int 			type;
+		struct s_sort_lst *next;
+		struct s_sort_lst *prev;
+}									t_sort_lst;
+
 typedef struct		s_set
 {
 	t_lst			*set;
 	t_lst			*hist;
 	t_lst			*env;
+	t_lst			*exp;
 }					t_set;
 
 /*	A REFAIRE
@@ -145,6 +154,8 @@ int					ft_add_elem(t_lst *lst, char *s);
 void				ft_del_elem(t_elem **elem, t_lst *lst);
 t_elem				*ft_find_elem(char *name, t_lst *lst);
 t_elem				*ft_new_elem(char *str);
+void 				ft_extract_elem(t_elem **elem, t_lst *lst);
+
 
 /*
 **	ft_list_tools2.c
@@ -174,5 +185,20 @@ int					ft_pwd_swap(t_lst *env, char *owd, char *cwd);
 */
 
 int					*ft_opt_parse(char *opts, char **args, size_t overwrite);
+
+/*
+**						ft_bultin_export
+*/
+
+int					ft_add_elemo(t_lst *lst, char *s);
+void				move_to_env(t_elem *lst, t_lst *env, t_lst *type_env);
+int 				ft_builtin_export(char **argv, t_set *m_env);
+void 				ft_print_export(t_set *m_env);
+
+/*
+**					ft_builtin_unset
+*/
+
+int   ft_builtin_unset(t_set *set, char **args);
 
 #endif

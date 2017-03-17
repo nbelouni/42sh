@@ -109,4 +109,5 @@ char				*ft_free_and_join(char *str1, char *str2);
 void				ft_tabdel(char **tab);
 char				*ft_strreplace(char *o, const char *s, const char *r);
 
+
 #endif

@@ -51,7 +51,7 @@ SRCS=ft_bzero.c ft_isalnum.c ft_isalpha.c ft_isascii.c ft_isdigit.c\
 
 all: $(NAME)
 
-$(NAME): $(OBJ) 
+$(NAME): $(OBJ)
 	ar rc $(NAME) $(OBJ)
 	ranlib $(NAME)
 
