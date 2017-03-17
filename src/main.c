@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/17 14:20:26 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/03/17 22:02:31 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ int 	main(int argc, char **argv, char **envp)
 	int		ret;
 	int		ret_read;
 	t_tree	*ast;
+	t_list	*jobs;
 
 	ast = NULL;
 	list = NULL;
@@ -39,6 +40,9 @@ int 	main(int argc, char **argv, char **envp)
 	while ((ret_read = read_line(buf, &completion)) != ERR_EXIT)
 	{
 		close_termios();
+		init_shell();
+		jobs = NULL;
+		PUT2("\n--------\n");
 		if (ret_read != TAB)
 		{
 			if (is_line_ended(buf) < 0)
@@ -48,7 +52,7 @@ int 	main(int argc, char **argv, char **envp)
 			ret = parse_buf(&list, buf->final_line, &completion);
 			if (ret > 0 && list)
 			{
-				ft_print_token_list(&list); //debug impression
+//				ft_print_token_list(&list); //debug impression
 				ft_push_ast(list, &ast);
 //				print_debug_ast(ast);
 /*				PUT2("\ntest\n");
@@ -57,7 +61,8 @@ int 	main(int argc, char **argv, char **envp)
 				av[0] = "ls";
 				av[1] = NULL;
 				execve(av[0], av, envp);
-*/				test_func(ast);
+*/				test_func(ast, &jobs);
+				launch_job(jobs, env);
 				free_ast(ast);
 //				free(ast);
 			}

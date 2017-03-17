@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 13:52:27 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/17 14:21:05 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/03/17 22:13:13 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,12 +91,13 @@ t_job	*create_job(t_tree *root, int foreground)
 
 void	export_job(t_tree *root, List_p *job_list)
 {
-	while (TOKEN(root) IS AMP || TOKEN(root) IS DOT)
+	while (root && (TOKEN(root) IS AMP || TOKEN(root) IS DOT))
 	{
 		insert_link_bottom(job_list, new_link(create_job(root->left, (TOKEN(root) IS DOT) ? 1: 0), sizeof(t_job)));
 		root = root->right;
 	}
-	insert_link_bottom(job_list, new_link(create_job(root, 1), sizeof(t_job)));
+	if (root)
+		insert_link_bottom(job_list, new_link(create_job(root, 1), sizeof(t_job)));
 }
 
 t_condition_if_p new_condition_if(t_type_if type)
@@ -132,24 +133,24 @@ t_process_p	new_process(char **argv)
 	return (ptr);
 }
 
-void	*new_link(void *data, size_t size)
+void	*new_link(void *content, size_t content_size)
 {
 	List_p	link;
 
 	link = malloc(sizeof(*link));
 	bzero(link, sizeof(*link));
-	link->data = data;
-	link->size = size;
+	link->content = content;
+	link->content_size = content_size;
 	return (link);
 }
 
 void	*delete_link(List_p link)
 {
-	void	*data;
+	void	*content;
 
-	data = link->data;
+	content = link->content;
 	free(link);
-	return (data);
+	return (content);
 }
 
 void	*remove_link_top(List_p *refHeadTop)
@@ -232,7 +233,7 @@ void	list_iter(List_p list, void (f)(void *))
 {
 	while (list)
 	{
-		f(list->data);
+		f(list->content);
 		list = list->next;
 	}
 }
@@ -305,10 +306,11 @@ void printJobList(List_p jobList)
 	list_iter(jobList, (void *)&printJob);
 }
 
-void test_func(t_tree *root)
+void test_func(t_tree *root, List_p *Jobs)
 {
-	List_p Jobs = NULL;
+//	List_p Jobs = NULL;
 
-	export_job(root, &Jobs);
-	printJobList(Jobs);
+//	export_job(root, &Jobs);
+	export_job(root, Jobs);
+//	printJobList(*Jobs);
 }

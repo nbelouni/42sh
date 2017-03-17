@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/19 15:29:18 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/10 21:40:05 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/17 16:52:41 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ int			is_new_prompt(t_token *prev)
 			return (print_err_message("}"));
 		if (is_dir_type(prev->type))
 			return (print_err_message("newline"));
-		if ((is_separator_type(prev->type) && prev->type != DOT) ||
+		if ((is_separator_type(prev->type) && prev->type != DOT
+			&& prev->type != AMP) ||
 		prev->bt_level > 0 || prev->bc_level > 0 ||
 		prev->word[ft_strlen(prev->word) - 1] == '\\')
 		{

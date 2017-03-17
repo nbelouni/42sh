@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/19 19:27:07 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/13 16:32:10 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/17 16:49:24 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int			is_separator_type(int type)
 {
-	if (type == DOT || type == PIPE || type == OR || type == AND)
+	if (type == DOT || type == PIPE || type == OR || type == AND || type == AMP)
 		return (1);
 	return (0);
 }
