@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 18:10:58 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/17 17:52:36 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/08 15:12:53 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,24 +42,4 @@ void		get_sigint(int sig)
 //		signal(SIGINT, SIG_DFL);
 	}
 	return ;
-}
-
-void		get_sig_dfl(void)
-{
-	signal (SIGINT, SIG_DFL);//2
-	signal (SIGQUIT, SIG_DFL);//3
-	signal (SIGTSTP, SIG_DFL);//20
-	signal (SIGTTIN, SIG_DFL);//21
-	signal (SIGTTOU, SIG_DFL);//22
-	signal (SIGCHLD, SIG_DFL);//17
-}
-
-void		get_sig_ign(void)
-{
-	signal(SIGINT, SIG_IGN);
-	signal(SIGQUIT, SIG_IGN);
-	signal(SIGTSTP, SIG_IGN);
-	signal(SIGTTIN, SIG_IGN);
-	signal(SIGTTOU, SIG_IGN);
-	signal(SIGCHLD, SIG_IGN);
 }
