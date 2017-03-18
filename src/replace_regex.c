@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/11 16:24:49 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/16 18:05:29 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/18 20:23:45 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,20 +55,6 @@ int		regex(t_token *lst)
 	int			curr_dir;;
 	int			i;
 
-	t_token		*expansions;
-
-	if (is_regex_in_text(lst->word) == FALSE)
-		return (0);
-	if (!(expansions = find_expansions(lst)))
-		return (-1);
-
-	i = -1;
-	while (expansions)
-	{
-		PUT2("expansions[i] : ");PUT2(expansions->word);X('\n');
-		expansions = expansions->next;
-	}
-	return (TRUE);
 	all_paths_len = count_slashs(lst->word);
 	if (!(all_paths = ft_memalloc(sizeof(t_reg_paths))))
 		return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
