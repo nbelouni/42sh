@@ -12,7 +12,7 @@
 
 #include "42sh.h"
 
-int		parse(t_set *set, char *line, char **envp)
+int		parse(t_core *set, char *line, char **envp)
 {
 	char	**args;
 
@@ -64,7 +64,7 @@ int 	main(int argc, char **argv, char **envp)
 	int		ret;
 	int		ret_read;
 	t_tree	*ast;
-	t_set	*set;
+	t_core	*set;
 
 	ast = NULL;
 	list = NULL;
@@ -91,16 +91,16 @@ int 	main(int argc, char **argv, char **envp)
 			if (is_line_ended(buf) < 0)
 				return (-1);
 			complete_final_line(buf, list);
-			parse(set, buf->final_line, envp);
+			//parse(set, buf->final_line, envp);
 			ret = parse_buf(&list, buf->final_line, &completion);
 			parse(set, buf->final_line, envp);
 			if (ret > 0 && list)
 			{
 
 //				ft_print_token_list(&list); //debug impression
-/*				
+/*
  *				enleve les quotes et les backslash -> va changer de place
- *				edit_cmd(list, env); 
+ *				edit_cmd(list, env);
  */
 //				ft_push_ast(list, &ast);
 //				print_debug_ast(ast);

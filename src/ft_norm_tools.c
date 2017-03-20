@@ -13,7 +13,7 @@
 #include "42sh.h"
 
 /*
-**	ft_modify_env est appelé par ft_pwd_swap, cette fonction sert a 
+**	ft_modify_env est appelé par ft_pwd_swap, cette fonction sert a
 **	soit creer, soit modifier la variable name dans l'environnement,
 **	et lui attribuer la valeur value
 */
@@ -87,7 +87,6 @@ void	ft_del_list(t_lst *lst)
 		}
 		head = tmp;
 	}
-	ft_memset(lst, 0, sizeof(t_lst) * lst->size);
-	free(lst);
-	lst = NULL;
+	ft_memdel((void *)&lst);
+	// free(lst);
 }

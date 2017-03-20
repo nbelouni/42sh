@@ -107,7 +107,6 @@ void		ft_del_elem(t_elem **elem, t_lst *lst)
 {
 	ft_extract_elem(elem, lst);
 	ft_clear_elem(elem);
-	lst->size = lst->size - 1;
 }
 
 /*

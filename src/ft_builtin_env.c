@@ -6,14 +6,14 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/07 18:24:17 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/15 19:06:20 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/20 17:48:35 by dogokar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
 /*
-**	ft_parse_env est une fonction qui va parcourir args afin d'y trouver 
+**	ft_parse_env est une fonction qui va parcourir args afin d'y trouver
 **	le format var=value, si il ne trouve pas var=value, il retourne ret qui est
 **	l'index dans les args où l'export de type var=value se termine, sinon
 **	il export la chaine contenu dans args.

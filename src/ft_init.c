@@ -17,16 +17,17 @@
 **	ses octets a 0, puis retourne la nouvelle liste de type set.
 */
 
-t_set	*ft_init_set(void)
+t_core	*ft_init_set(void)
 {
-	t_set			*set;
+	t_core			*set;
 
 	set = NULL;
-	if ((set = malloc(sizeof(t_set))) == NULL)
+	if ((set = malloc(sizeof(t_core))) == NULL)
 		return (NULL);
 	set->env = NULL;
 	set->set = NULL;
 	set->exp = NULL;
+	set->hist = NULL;
 	return (set);
 }
 
