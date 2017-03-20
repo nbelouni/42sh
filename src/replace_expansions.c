@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/13 17:30:53 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/18 21:27:22 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/20 18:00:55 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,10 +119,9 @@ int			find_n_poss(char *s, int end)
 			lvl++;
 		if (is_char(s, i, '}'))
 		{
-			if (lvl != 0)
-				lvl--;
-			else
+			if (lvl == 0)
 				poss++;
+			lvl--;
 		}
 		if (is_char(s, i, ',') && lvl == 0)
 			poss++;
@@ -264,7 +263,7 @@ int			is_number(char *s, int len)
 	return (TRUE);
 }
 
-char		**iter_ascii_sequence(char *first, char *last, int *len)
+char		**iter_ascii_sq(char *first, char *last, int *len)
 {
 	char	**new;
 	int		iter;
@@ -289,7 +288,7 @@ char		**iter_ascii_sequence(char *first, char *last, int *len)
 	return (new);
 }
 
-char		**iter_num_sequence(int first, int last, int *len)
+char		**iter_num_sq(int first, int last, int *len)
 {
 	char	**new;
 	int		iter;
@@ -356,124 +355,124 @@ int			which_sequence_type(char *s, int begin, int end, int pivot)
 	return (NO_SQ_TYPE);
 }
 
-int			find_sequence(char *s, t_exp *exp)
+int			init_bg_end_type(char *s, int *begin, int *end)
 {
 	int		pivot;
+
+	*begin = 0;
+	*end = 0;
+	pivot = 0;
+	if (is_sequence(s, &pivot, begin, end) == FALSE)
+		return (FALSE);
+	return (which_sequence_type(s, *begin, *end, pivot));
+}
+
+int			init_exp_sq(char **sq, int type, t_exp *exp)
+{
+	if (type == ALPHA)
+		exp->poss = iter_ascii_sq(sq[0], sq[1], &(exp->n_poss));
+	else if (type == NUMERIC)
+		exp->poss = iter_num_sq(ft_atoi(sq[0]), ft_atoi(sq[1]), &(exp->n_poss));
+	else
+	{
+		ft_tabdel_and_init(&sq);
+		return (FALSE);
+	}
+	return (TRUE);
+}
+
+int			find_sequence(char *s, t_exp *exp)
+{
 	int		begin;
 	int		end;
-	char	**sequence;
+	char	**sq;
 	char	*tmp;
 	int		type;
 
-	begin = 0;
-	end = 0;
-	pivot = 0;
-	if (is_sequence(s, &pivot, &begin, &end) == FALSE)
-		return (FALSE);
-	type = which_sequence_type(s, begin, end, pivot);
-	if (type == NO_SQ_TYPE)
+	if ((type = init_bg_end_type(s, &begin, &end)) == NO_SQ_TYPE)
 		return (FALSE);
 	if (!(tmp = ft_strsub(s, begin + 1, end - begin - 1)))
 		return (FALSE);
-	if (!(sequence = ft_strsplit(tmp, '.')))
-	{
-		ft_strdel(&tmp);
+	sq = ft_strsplit(tmp, '.');
+	ft_strdel(&tmp);
+	if (sq == NULL)
 		return (FALSE);
-	}
-	if (type == ALPHA)
-		exp->poss = iter_ascii_sequence(sequence[0], sequence[1], &(exp->n_poss));
-	else if (type == NUMERIC)
-		exp->poss = iter_num_sequence(ft_atoi(sequence[0]), ft_atoi(sequence[1]), &(exp->n_poss));
-	else
-	{
-		ft_tabdel_and_init(&sequence);
-		ft_strdel(&tmp);
+	if (init_exp_sq(sq, type, exp) == FALSE)
 		return (FALSE);
-	}
 	exp->n_poss = ft_tablen(exp->poss);
 	if (!(exp->first_word = ft_strsub(s, 0, begin)))
 		return (FALSE);
 	if (!(exp->last_word = ft_strsub(s, end + 1, ft_strlen(s) - end)))
 		return (FALSE);
-	ft_tabdel_and_init(&sequence);
-	ft_strdel(&tmp);
+	ft_tabdel_and_init(&sq);
 	return (TRUE);
 }
 
-void		fill_final_tmp(t_token **final, t_token **curr, t_token *new, t_exp *exp)
+void		final_tmp(t_token **final, t_token **curr, t_token *new, t_exp *exp)
 {
 	t_token *tmp;
-	int		pivot;
-	int		begin;
-	int		end;
 
 	tmp = new;
 	while (tmp)
 	{
-		pivot = 0;
-		begin = 0;
-		end = 0;
-		if (is_exp(tmp->word, &pivot, &begin, &end) == FALSE &&
-		(is_sequence(tmp->word, &pivot, &begin, &end) == FALSE))
+		if (can_expand(tmp->word) == FALSE)
 		{
 			if (*final)
 				ft_tokenpush(final, tmp);
 			else
 				*final = tmp;
-			tmp = tmp->next;
-			if (tmp)
-			{
-				tmp->prev->next = NULL;
-				tmp->prev = NULL;
-			}
 		}
 		else
-		{
 			ft_tokenpush(curr, tmp);
-			tmp = tmp->next;
-			if (tmp)
-			{
-				tmp->prev->next = NULL;
-				tmp->prev = NULL;
-			}
+		tmp = tmp->next;
+		if (tmp)
+		{
+			tmp->prev->next = NULL;
+			tmp->prev = NULL;
 		}
 		clean_t_exp(exp);
 	}
 	new = NULL;
 }
 
-//
-// supprimer doublons
-//
-t_token		*find_expansions(t_token *lst)
+t_token		*expand_word(t_token *head)
 {
-	t_token	*head;
-	t_token	*final;
 	t_token	*new;
+	t_token	*final;
 	t_token	*tmp;
-	int		lvl[2];
+	int		ret;
+	t_exp	exp;
 
-	lvl[0] = lst->bt_level;
-	lvl[1] = lst->bc_level;
-	if (!(head = ft_tokenew(lst->type, ft_strdup(lst->word), lvl)))
-		return (NULL);
 	tmp = head;
 	final = NULL;
 	while (tmp)
 	{
-		t_exp	exp;
-		int ret = find_exp(tmp->word, &exp);
+		ret = find_exp(tmp->word, &exp);
 		if (ret == FALSE)
 			ret = find_sequence(tmp->word, &exp);
 		if (ret == TRUE)
 		{
 			new = expand_text(&exp, tmp);
 			clean_t_exp(&exp);
-			fill_final_tmp(&final, &tmp, new, &exp);
+			final_tmp(&final, &tmp, new, &exp);
 			clean_t_exp(&exp);
 		}
 		tmp = tmp->next;
 	}
+	return (final);
+}
+
+t_token		*find_expansions(t_token *lst)
+{
+	t_token	*head;
+	t_token	*final;
+	int		lvl[2];
+
+	lvl[0] = lst->bt_level;
+	lvl[1] = lst->bc_level;
+	if (!(head = ft_tokenew(lst->type, ft_strdup(lst->word), lvl)))
+		return (NULL);
+	final = expand_word(head);
 	ft_tokendestroy(&head);
 	return (final);
 }

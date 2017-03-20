@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/06 15:31:30 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/18 20:44:54 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/20 17:47:25 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ int						is_sequence(char *s, int *pivot, int *begin, int *end);
 int						which_sequence_type(char *s, int begin, int end, int p);
 int						is_regex_in_text(char *s);
 
+int						can_expand(char *s);
 int						edit_cmd(t_token *list, t_lst *env);
 int						regex(t_token *lst);
 t_token					*find_expansions(t_token *lst);
