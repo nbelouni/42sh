@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/21 15:54:46 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/21 19:57:44 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,19 +53,99 @@ int		parse(t_core *core, char *line, char **envp)
 	return (0);
 }
 
-int		bang_substitution(char *line, t_core *core)
+/*
+ *	substitution : ^s1^s2^
+ *	!# se repete pas bien
+ *	:p
+ */
+int		bang_substitution(char **s, t_core *core)
 {
-	char	*res;
-//	char	*cmd = "je fais des tests    ";
+	char	*tmp;
+	char	*tmp2;
+	char	*n;
+	int		i;
+	int		squote;
 
-//	ft_histopt_r(&hist, set, ".42sh_history");
-	// ft_print_history(hist, hist->size);
-	res = ft_gets_lastword(line);
-	ft_putendl(res);
-	 res = ft_gets_in_hist(core->hist, line, ft_strncmp_bis);
-	ft_putendl(res);
+	i = -1;
+	squote = 0;
+	while ((*s)[++i])
+	{
+		if (is_char(*s, i, '\''))
+			squote++;
+		if (squote % 2 == 0)
+		{
+			if (is_char(*s, i, '!'))
+			{
+				i++;
+				if (!(*s)[i])
+					return (ft_print_error("42sh: !", ERR_EVENT_NFOUND, ERR_NEW_CMD));
+				if ((*s)[i] == '!')
+				{
+					tmp = *s;
+					tmp2 = ft_gets_lastcmd(core->hist);
+					*s = ft_strreplace(tmp, "!!", tmp2); 
+					ft_strdel(&tmp);
+					ft_strdel(&tmp2);
+				}
+				else if ((*s)[i] == '$')
+				{
+					tmp = *s;
+					tmp2 = ft_gets_lastword(core->hist->tail->name);
+					*s = ft_strreplace(tmp, "!$",  tmp2);
+					ft_strdel(&tmp);
+					ft_strdel(&tmp2);
+				}
+				else if ((*s)[i] == '*')
+				{
+					tmp = *s;
+					tmp2 = ft_gets_firstword(core->hist->tail->name);
+					*s = ft_strreplace(tmp, "!*", tmp2);
+					ft_strdel(&tmp);
+					ft_strdel(&tmp2);
+				}
+				else if ((*s)[i] == '#')
+				{
+					tmp = *s;
+					tmp2 = ft_gets_until_now(tmp, tmp + i - 1);
+					*s = ft_strreplace(tmp, "!#", tmp2);
+					ft_strdel(&tmp2);
+					ft_strdel(&tmp);
+				}
+				else if ((n = find_number(*s + i)))
+				{
+					tmp = *s;
+					if (!(tmp2 = ft_gets_hist_ncmd(core->hist, (n[0] == '-') ? core->hist->size - ft_atoi(n + 1) + 1 : ft_atoi(n))))
+						return (ft_print_error("42sh: !", ERR_EVENT_NFOUND, ERR_NEW_CMD));
+					*s = ft_strreplace(tmp, ft_strjoin("!", n), tmp2); 
+					ft_strdel(&tmp);
+					ft_strdel(&tmp2);
+					ft_strdel(&n);
+				}
+				else if ((*s)[i] != '?' && (n = find_replace_cmd(*s + i)))
+				{
+					tmp = *s;
+					if (!(tmp2 = ft_gets_in_hist(core->hist, n, &ft_strncmp_bis)))
+						return (ft_print_error("42sh: !", ERR_EVENT_NFOUND, ERR_NEW_CMD));
+					*s = ft_strreplace(tmp, ft_strjoin("!", n), tmp2); 
+					ft_strdel(&tmp);
+					ft_strdel(&tmp2);
+					ft_strdel(&n);
+				}
+				else if ((*s)[i] == '?' && (n = find_replace_cmd(*s + i + 1)))
+				{
+					tmp = *s;
+					if (!(tmp2 = ft_gets_in_hist(core->hist, n, &ft_strstr_bis)))
+						return (ft_print_error("42sh: !", ERR_EVENT_NFOUND, ERR_NEW_CMD));
+					*s = ft_strreplace(tmp, ft_strjoin("!?", n), tmp2); 
+					ft_strdel(&tmp);
+					ft_strdel(&tmp2);
+					ft_strdel(&n);
+				}
+			}
+		}
+	}
 
-return (0);	
+	PUT2("1 s : ");PUT2(*s);X('\n');
 	return (0);
 }
 
@@ -106,13 +186,12 @@ int 	main(int argc, char **argv, char **envp)
 		{
 			if (is_line_ended(buf) < 0)
 				return (-1);
-			bang_substitution(buf->final_line, core);
-			PUT2("buf->final_line : ");PUT2(buf->final_line);X('\n');
-			ret = ERR_NEW_PROMPT;
-//			ret = parse_buf(&list, buf->final_line, &completion, core->hist);
+			bang_substitution(&(buf->final_line), core);
+			PUT2("2 buf->final_line : ");PUT2(buf->final_line);X('\n');
+			ret = parse_buf(&list, buf->final_line, &completion, core->hist);
 			if (ret > 0 && list)
 			{
-				parse(core, buf->final_line, envp);
+//				parse(core, buf->final_line, envp);
 
 //				ft_print_token_list(&list); //debug impression
 /*				

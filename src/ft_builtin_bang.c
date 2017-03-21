@@ -6,11 +6,46 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 15:32:23 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/21 15:55:27 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/21 19:49:02 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
+
+char		*find_number(char *s)
+{
+	int		i;
+
+	i = 0;
+	if (s[i] > '9' || s[i] < '0')
+		return (NULL);
+	if (s[0] == '-')
+		i += 1;
+	while (s[i])
+	{
+		if (s[i] > '9' || s[i] < '0')
+			return (ft_strsub(s, 0, i));
+		i++;
+	}
+	if (s[i - 1] < '9' && s[i - 1] > '0')
+		return (ft_strdup(s));
+	return (NULL);
+}
+
+char		*find_replace_cmd(char *s)
+{
+	int		i;
+
+	i = 0;
+	while (s[i])
+	{
+		if (is_space(s, i) || is_char(s, i, ';') || is_char(s, i, '|') ||
+		is_char(s, i, '<') || is_char(s, i, '>') || is_char(s, i, '&'))
+			return (ft_strsub(s, 0, i));
+		i++;
+	}
+	return (ft_strdup(s));
+}
 
 char	*ft_gets_lastcmd(t_lst *hist)
 {
@@ -23,7 +58,7 @@ char	*ft_gets_lastcmd(t_lst *hist)
 		return (NULL);
 	if (hist->tail->name == NULL)
 		return (NULL);
-	if ((ret = ft_strdup(hist->tail->name)))
+	if ((ret = ft_strdup(hist->tail->name)) == NULL)
 		return (NULL);
 	return (ret);
 }
@@ -80,7 +115,7 @@ char	*ft_gets_until_now(char *s, char *ptr)
 	}
 	else
 	{
-		if ((buf = ft_strdup(s)) == NULL)
+		if ((buf = ft_strdup("")) == NULL)
 			return (NULL);
 	}
 	return (buf);
@@ -112,19 +147,28 @@ char	*ft_gets_lastword(char *str)
 {
 	char	*ret;
 	char	*ptr;
+	char	*tmp;
 
 	ret = NULL;
-	if ((ptr = ft_strrchr(str, ' ')) == NULL)
+	tmp = ft_strtrim(str);
+	if ((ptr = ft_strrchr(tmp, ' ')) == NULL)
 	{
-		if ((ret = ft_strdup(str)) == NULL)
+		if ((ret = ft_strdup(tmp)) == NULL)
+		{
+			ft_strdel(&tmp);
 			return (NULL);
+		}
 	}
 	else
 	{
 		++ptr;
 		if ((ret = ft_strdup(ptr)) == NULL)
+		{
+			ft_strdel(&tmp);
 			return (NULL);
+		}
 	}
+	ft_strdel(&tmp);
 	return (ret);
 }
 

@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/11 18:36:55 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/21 15:54:03 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/21 19:35:33 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,18 @@
 
 typedef enum	e_bang
 {
-	N_BANG,
-	N_LESS_BANG,
-	DOUBLE_BANG,
-	SSTART_BANG,
-	PRINT_SSTART_BANG,
-	SCONTAIN_BANG,
-	UNTIL_NOW_BANG,
-	RUN_LAST_BANG,
-	RUN_EXCEPT_FIRST_BANG,
-	PRINT_LAST_BANG,
-	PRINT_EXCEPT_FIRST_BANG,
-	QUICK_SUB
+	N_BANG,						// !n
+	N_LESS_BANG,				// !-n
+	DOUBLE_BANG,				// !!
+	SSTART_BANG,				// !str
+	PRINT_SSTART_BANG,			// !str:p ->a gerer plus tard
+	SCONTAIN_BANG,				// !?str
+	UNTIL_NOW_BANG,				// !#
+	RUN_LAST_BANG,				// !$
+	RUN_EXCEPT_FIRST_BANG,		// !*
+	PRINT_LAST_BANG,			// !$:p ->a gerer plus tard
+	PRINT_EXCEPT_FIRST_BANG,	// !*:p ->a gerer plus tard
+	QUICK_SUB					// ^str1^str2^ ->a gerer plus tard
 
 }				t_bang;
 
@@ -115,5 +115,7 @@ char	*ft_gets_lastword(char *str);
 int		ft_strstr_bis(char *s1, char *s2, int n);
 int		ft_strncmp_bis(char *s1, char *s2, int n);
 char	*ft_gets_in_hist(t_lst *hist, char *s, int (*f)(char *, char *, int));
+char	*find_number(char *s);
+char	*find_replace_cmd(char *s);
 
 #endif
