@@ -6,21 +6,25 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 17:03:19 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/17 14:19:48 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/03/21 16:15:23 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ********************************************************)****************** */
 
 #ifndef JOB_H
 # define JOB_H
+# include "list.h"
 # include "42sh.h"
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <sys/uio.h>
 # include <signal.h>
 
-#define PUSH(x, elem)	(insert_link_top(x, new_link(elem, sizeof(elem))))
-#define TOP(x) (x->data)
-#define POP(x)	(delete_link(remove_link_top(x)))
+#define IS ==
+#define TOKEN(x) (((t_tree *)x)->token)
+#define isCondition(x) (x == OR || x == AND)
+#define isRedir(x) (x == DIR_AMP || x == SR_DIR || x == SL_DIR || x == DR_DIR || x == DL_DIR)
+
+typedef struct s_list *List_p;
 
 typedef struct s_node *t_node_p;
 
@@ -44,14 +48,6 @@ struct s_node{
 	t_node_p right;
 };
 
-typedef struct List *List_p;
-
-struct List{
-	List_p	next;
-	void	*data;
-	size_t	size;
-};
-
 typedef struct s_condition_if *t_condition_if_p;
 
 struct s_condition_if{
@@ -65,7 +61,8 @@ typedef struct s_process
 	t_process_p		next;		/* struct list ou a changer par left right*/
 	int				token;		/* token */
 	char			**argv;		/* for exec */
-	int				*tab_fd;		// ?tab_fd[3]? int stdin, stdout, stderr;  /* standard i/o channels */
+//	int				*tab_fd;		// ?tab_fd[3]? int stdin, stdout, stderr;  /* standard i/o channels */
+	List_p			ioList;
 	char			*temp_redir;
 	pid_t			pid;		/* process ID */
 	char			completed;	/* true if process has completed */
@@ -85,12 +82,6 @@ typedef struct	s_job
 	int				flag;			/* mode exec */
 	int				foreground;		/* foreground or background */
 }				t_job;
-
-void	insert_link_top(List_p *refHeadTop, List_p subLinkChain);
-void	*remove_link_top(List_p *refHeadTop);
-void	*delete_link(List_p link);
-void	*new_link(void *data, size_t size);
-void	insert_link_bottom(List_p *refHeadTop, List_p subLinkChain);
 
 t_node_p	create_process(t_tree *nodeProcess);
 t_node_p	create_condition_if(t_tree *nodeConditionIf, t_node_p right_node, t_node_p left_node);

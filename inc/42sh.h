@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:09:30 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/11 18:54:10 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/20 21:11:09 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ typedef enum	e_bool
 # include "read.h"
 # include "lexer_parser.h"
 # include "lex.h"
+//# include "list.h"
+//# include "hash.h"
 # include "job.h"
 # include "globbing.h"
 
@@ -58,7 +60,6 @@ typedef struct		s_set
 	t_lst			*set;
 	t_lst			*env;
 }					t_set;
-
 
 /*
 **	ft_builtin_cd.c

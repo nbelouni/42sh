@@ -2,10 +2,15 @@ NAME = 42sh
 
 IDIR = ./inc/
 ILIB = ./libft/inc
-INCS = 42sh.h	\
-	   read.h	\
-	   job.h	\
-	   lex.h
+INCS =	42sh.h	\
+	  	read.h	\
+	  	job.h	\
+	  	lex.h	\
+	  	hash.h	\
+	  	list.h	\
+	  	io.h
+
+
 INCC = $(addprefix $(IDIR), $(INCS))
 
 LDIR = ./libft
@@ -60,7 +65,11 @@ SRCS = 	ft_builtin_cd.c		\
 		replace_regex.c		\
 		job.c				\
 		is_local_var.c		\
-		ft_print.c
+		ft_print.c			\
+		hash.c				\
+		list.c				\
+		io.c				\
+		handle_jobs.c
 
 SRCC = $(addprefix $(SDIR),$(SRCS))
 
@@ -68,7 +77,7 @@ ODIR = ./obj/
 OBJS = $(SRCS:.c=.o)
 OBCC = $(addprefix $(ODIR),$(OBJS))
 
-FLAG = -g -fsanitize=address -Wall -Werror -Wextra
+FLAG = -g -fsanitize=address -Wall -Werror -Wextra -DDEBUG_F
 
 $(NAME): $(OBCC)
 	make -C ./libft/

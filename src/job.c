@@ -6,18 +6,14 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 13:52:27 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/17 14:21:05 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/03/21 16:17:37 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
-
-#define IS ==
-#define TOKEN(x) (((t_tree *)x)->token)
-#define isCondition(x) (x == OR || x == AND)
-#define isRedir(x) (x == DIR_AMP || x == SR_DIR || x == SL_DIR || x == DR_DIR || x == DL_DIR)
-
-void	list_iter(List_p list, void (f)(void *));
+#include "hash.h"
+#include "list.h"
+#include "io.h"
 
 void	print_stack(t_tree *elem)
 {
@@ -132,54 +128,6 @@ t_process_p	new_process(char **argv)
 	return (ptr);
 }
 
-void	*new_link(void *data, size_t size)
-{
-	List_p	link;
-
-	link = malloc(sizeof(*link));
-	bzero(link, sizeof(*link));
-	link->data = data;
-	link->size = size;
-	return (link);
-}
-
-void	*delete_link(List_p link)
-{
-	void	*data;
-
-	data = link->data;
-	free(link);
-	return (data);
-}
-
-void	*remove_link_top(List_p *refHeadTop)
-{
-	List_p	link;
-
-	link = *refHeadTop;
-	(*refHeadTop) = (*refHeadTop)->next;
-	link->next = NULL;
-	return (link);
-}
-
-void	insert_link_top(List_p *refHeadTop, List_p subLinkChain)
-{
-	List_p	link;
-
-	link = subLinkChain;
-	while (link->next)
-		link = link->next;
-	link->next = *refHeadTop;
-	*refHeadTop = subLinkChain;
-}
-
-void	insert_link_bottom(List_p *refHeadTop, List_p subLinkChain)
-{
-	while (*refHeadTop)
-		refHeadTop = &(*refHeadTop)->next;
-	*refHeadTop = subLinkChain;
-}
-
 t_node_p	create_process(t_tree *nodeProcess)
 {
 	t_node_p ptr;
@@ -202,7 +150,7 @@ t_node_p	create_condition_if(t_tree *nodeConditionIf, t_node_p right_node, t_nod
 
 t_node_p	create_pipe(t_node_p right_node, t_node_p left_node)
 {
-	insert_link_bottom(&((List_p)left_node->data)->next, right_node->data);
+	insert_link_bottom((List_p *)&(left_node->data), right_node->data);
 	delete_node(right_node);
 	return (left_node);
 }
@@ -213,28 +161,34 @@ t_node_p	create_pipe(t_node_p right_node, t_node_p left_node)
 
 t_node_p create_redir(t_tree *nodeRedir, t_node_p left_node)
 {
+	Io_p	io;
+	int		left;
 	t_process_p	process;
-	char		*redir_opt_string;
-	char		*redir_arg_string;
-	size_t		size_redir_string;
 
-	redir_opt_string = (nodeRedir->cmd)[0];
-	redir_arg_string = (nodeRedir->right->cmd)[0];
-	size_redir_string = strlen(redir_opt_string) + strlen(redir_arg_string) + 1;
-	process = left_node->data;
-	process->temp_redir = malloc(size_redir_string);
-	strcat(process->temp_redir, redir_opt_string);
-	strcat(process->temp_redir, redir_arg_string);
-	return (left_node);
-}
-
-void	list_iter(List_p list, void (f)(void *))
-{
-	while (list)
+	io = new_io();
+	io->str = (nodeRedir->right->cmd)[0];
+	io->flag |= DUP;
+	if (!(left = atoi((nodeRedir->cmd)[0])))
+		left = 1 - ((TOKEN(nodeRedir) == SL_DIR)? 1: 0);
+	if (TOKEN(nodeRedir) == SR_DIR || TOKEN(nodeRedir) == SL_DIR || TOKEN(nodeRedir) == DR_DIR || TOKEN(nodeRedir) == DL_DIR)
 	{
-		f(list->data);
-		list = list->next;
+		io->out = left;
+		io->flag |= OPEN | CLOSE;
 	}
+	if (TOKEN(nodeRedir) == DR_DIR || TOKEN(nodeRedir) == SR_DIR)
+		io->mode |= O_WRONLY;
+	if(TOKEN(nodeRedir) == DR_DIR)
+		io->mode |= O_APPEND;
+	if(TOKEN(nodeRedir) == SL_DIR)
+		io->mode |= O_RDONLY;
+	if (TOKEN(nodeRedir) == DIR_AMP)
+	{
+		io->out = atoi((nodeRedir->right->cmd)[0]);
+		io->in = left;
+	}
+	process = left_node->data;
+	insert_link_bottom(&process->ioList, new_link(io, sizeof(*io)));
+	return (left_node);
 }
 
 void spacer(int io)

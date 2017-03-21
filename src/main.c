@@ -6,11 +6,15 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/17 14:20:26 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/03/21 16:44:32 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
+
+void	launch_job(t_job *j);
+void	export_job(t_tree *root, List_p *job_list);
+	void printJobList(List_p jobList);
 
 int 	main(int argc, char **argv, char **envp)
 {
@@ -23,6 +27,7 @@ int 	main(int argc, char **argv, char **envp)
 	int		ret;
 	int		ret_read;
 	t_tree	*ast;
+	List_p	joblist = NULL;
 
 	ast = NULL;
 	list = NULL;
@@ -57,7 +62,10 @@ int 	main(int argc, char **argv, char **envp)
 				av[0] = "ls";
 				av[1] = NULL;
 				execve(av[0], av, envp);
-*/				test_func(ast);
+*///				test_func(ast);
+				export_job(ast, (void*)joblist);
+				printJobList(joblist);
+				list_iter(joblist, (void *)launch_job);
 				free_ast(ast);
 //				free(ast);
 			}
