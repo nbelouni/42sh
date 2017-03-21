@@ -6,50 +6,57 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/17 17:08:54 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/20 16:55:34 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
-int		parse(t_set *set, char *line, char **envp)
+int		parse(t_core *core, char *line, char **envp)
 {
 	char	**args;
 
 	(void)envp;
-	if ((ft_cmd_to_history(set->hist, line)) == ERR_EXIT)
+	if ((ft_cmd_to_history(core->hist, line)) == ERR_EXIT)
 		return (ERR_EXIT);
 	args = NULL;
 	args = ft_strsplit(line, ' ');
 	if (args != NULL && args[0] != NULL)
 	{
 		if (ft_strcmp(args[0], "exit") == 0)
-			ft_builtin_exit(set, args[0], args + 1);
+			ft_builtin_exit(core, args[0], args + 1);
 		else if (ft_strcmp(args[0], "env") == 0)
-			ft_builtin_env(set->env, &args[1]);
+			ft_builtin_env(core->env, &args[1]);
 		else if (ft_strcmp(args[0], "setenv") == 0)
-			ft_builtin_setenv(set->env, args[0], args + 1);
+			ft_builtin_setenv(core->env, args[0], args + 1);
 		else if (ft_strcmp(args[0], "unsetenv") == 0)
-			ft_builtin_unsetenv(set->env, args[0], &args[1]);
+			ft_builtin_unsetenv(core->env, args[0], &args[1]);
 		else if (ft_strcmp(args[0], "echo") == 0)
-			ft_builtin_echo(set->env, args[0], args + 1);
+			ft_builtin_echo(core->env, args[0], args + 1);
 		else if (ft_strcmp(args[0], "cd") == 0)
-			ft_builtin_cd(set->env, args[0], args + 1);
+			ft_builtin_cd(core->env, args[0], args + 1);
 		else if (ft_strcmp(args[0], "export") == 0)
-			ft_builtin_export(args, set);
+			ft_builtin_export(args, core);
 		else if (ft_strcmp(args[0], "unset") == 0)
-			ft_builtin_unset(set, args);
+			ft_builtin_unset(core, args);
 		else if (ft_strcmp(args[0], "history") == 0)
-			ft_builtin_history(set->set, set->hist, args + 1);
+			ft_builtin_history(core->set, core->hist, args + 1);
 		else if (ft_strcmp(args[0], "set") == 0)
-			ft_print_lst(set->set);
+			ft_print_lst(core->set);
 		else
 			ft_waitchild(args, envp);
 		ft_tabdel(args);
 		args = NULL;
 	}
-	if ((ft_check_history_var(set->set, set->hist)) == ERR_EXIT)
+	if ((ft_check_history_var(core->set, core->hist)) == ERR_EXIT)
 		return (ERR_EXIT);
+	return (0);
+}
+
+int		bang_substitution(char *line, t_lst *hist)
+{
+	(void)line;
+	(void)hist;
 	return (0);
 }
 
@@ -64,18 +71,18 @@ int 	main(int argc, char **argv, char **envp)
 	int		ret;
 	int		ret_read;
 	t_tree	*ast;
-	t_set	*set;
+	t_core	*core;
 
 	ast = NULL;
 	list = NULL;
-	set = ft_init_set();
-	set->env = NULL;
-	set->set = ft_init_lstset();
-	set->hist = NULL;
-	ft_histopt_r(&(set->hist), set->set, NULL);
+	core = ft_init_core();
+	core->env = NULL;
+	core->set = ft_init_lstset();
+	core->hist = NULL;
+	ft_histopt_r(&(core->hist), core->set, NULL);
 	if (envp != NULL && envp[0] != NULL)
-		set->env = ft_env_to_list(envp, set->env);
-	if (init_completion(&completion, set->env) == ERR_EXIT)
+		core->env = ft_env_to_list(envp, core->env);
+	if (init_completion(&completion, core->env) == ERR_EXIT)
 		return (-1);
 	signal(SIGWINCH, get_sigwinch);
 	signal(SIGINT, get_sigint);
@@ -83,19 +90,18 @@ int 	main(int argc, char **argv, char **envp)
 		return (ft_print_error("42sh", ERR_MALLOC, ERR_EXIT));
 	set_prompt(PROMPT1, ft_strlen(PROMPT1));
 	init_curs();
-	while ((ret_read = read_line(buf, &completion)) != ERR_EXIT)
+	while ((ret_read = read_line(buf, &completion, core->hist)) != ERR_EXIT)
 	{
 		close_termios();
 		if (ret_read != TAB)
 		{
 			if (is_line_ended(buf) < 0)
 				return (-1);
-			complete_final_line(buf, list);
-			parse(set, buf->final_line, envp);
-			ret = parse_buf(&list, buf->final_line, &completion);
-			parse(set, buf->final_line, envp);
+			bang_substitution(buf->final_line, core->hist);
+			ret = parse_buf(&list, buf->final_line, &completion, core->hist);
 			if (ret > 0 && list)
 			{
+				parse(core, buf->final_line, envp);
 
 //				ft_print_token_list(&list); //debug impression
 /*				
@@ -108,6 +114,8 @@ int 	main(int argc, char **argv, char **envp)
 			}
 			if (ret != ERR_NEW_PROMPT)
 				ft_strdel(&(buf->final_line));
+			else
+				complete_final_line(buf, list);
 			if (list)
 				ft_tokendestroy(&list); //clean la list a mettre a la fin
 			ft_bzero(buf->line, BUFF_SIZE);

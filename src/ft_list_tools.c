@@ -6,14 +6,14 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 20:00:04 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/11 17:27:13 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/20 16:55:34 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
 /*
-**	ft_print_lst print une liste
+**	Ft_print_lst print une liste
 */
 
 void		ft_print_lst(t_lst *lst)
@@ -38,7 +38,7 @@ void		ft_print_lst(t_lst *lst)
 }
 
 /*
-**	ft_add_elem ajoute un element a la liste d'environnement
+**	Ft_add_elem ajoute un element a la liste d'environnement
 **	pointé par g_set->env.
 */
 
@@ -61,7 +61,7 @@ void		ft_insert_elem(t_elem *elem, t_lst *lst)
 }
 
 /*
-**	ft_del_elem supprime un element de la liste ainsi que ses variables.
+**	Ft_del_elem supprime un element de la liste ainsi que ses variables.
 **	(cette fonction est une dumb function (se referer au README))
 */
 
@@ -90,6 +90,10 @@ void		ft_extract_elem(t_elem **elem, t_lst *lst)
 	}
 }
 
+/*
+**	Ft_clear_elem va supprimer le contenu d'elem.
+*/
+
 void		ft_clear_elem(t_elem **elem)
 {
 	if ((*elem)->name != NULL)
@@ -103,15 +107,18 @@ void		ft_clear_elem(t_elem **elem)
 	free(*elem);
 }
 
+/*
+**	Ft_del_elem retire le maillon de la liste, puis delete son contenu.
+*/
+
 void		ft_del_elem(t_elem **elem, t_lst *lst)
 {
 	ft_extract_elem(elem, lst);
 	ft_clear_elem(elem);
-	lst->size = lst->size - 1;
 }
 
 /*
-**	ft_find_elem cherche un elem dans la liste pointé par lst,
+**	Ft_find_elem cherche un elem dans la liste pointé par lst,
 **	cette fonction retourne l'elem s'il est trouvé, sinon NULL
 */
 
@@ -136,7 +143,7 @@ t_elem		*ft_find_elem(char *name, t_lst *lst)
 }
 
 /*
-**	ft_new_elem initialise l'element elem, parse la string str passée en param
+**	Ft_new_elem initialise l'element elem, parse la string str passée en param
 **	et qui fait partie de l'env et est donc forcément de format <name>=<value>,
 **	value pouvant etre null, puis stock name et value respectivement dans
 **	elem->name et elem->value, pour enfin retourner le nouvel element.
@@ -163,6 +170,12 @@ t_elem		*ft_new_elem(char *s)
 	ft_clear_elem(&elem);
 	return (NULL);
 }
+
+/*
+**	Ft_add_elem est une fonction qui va checker si un caractere '=' est present
+**	, auquel cas ft_new_elem est appellée pour creer un element,
+**	puis ft_insert_elem s'occupe de l'introduire dans la liste.
+*/
 
 int			ft_add_elem(t_lst *lst, char *s)
 {

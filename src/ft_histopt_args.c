@@ -6,13 +6,19 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/11 18:59:29 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/16 19:18:44 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/20 13:14:18 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
-int		ft_histopt_p(char **args)
+/*
+**	ft_histopt_p est la fonction qui va gerer le comportement de l'option 'p'
+**	du builtin history, qui est de simplement afficher la substitution
+**	des arguments sans stocker la commande dans l'historique.
+*/
+
+int		ft_histopt_p(t_lst *hist, char **args)
 {
 	int		i;
 	char	*tmp;
@@ -28,8 +34,15 @@ int		ft_histopt_p(char **args)
 		ft_putendl_fd(tmp, 1);
 		ft_strdel(&tmp);
 	}
+	ft_del_elem(&(hist->tail), hist);
 	return (i);
 }
+
+/*
+**	ft_histopt_s est la fonction qui gere le comportement de l'option 's'
+**	du builtin history, qui est de sauvegarder args dans l'historique sans
+**	stocker la commande elle meme.
+*/
 
 int		ft_histopt_s(t_lst *hist, char **args)
 {

@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/03 18:21:52 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/15 16:30:48 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/20 15:07:17 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 **	contenu dans args[0] (plus d'arguments provoque une erreur).
 */
 
-int		ft_builtin_exit(t_set *core, char *cmd, char **args)
+int		ft_builtin_exit(t_core *core, char *cmd, char **args)
 {
 	int	ret;
 

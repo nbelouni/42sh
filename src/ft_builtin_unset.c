@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_builtin_unset.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: maissa-b <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/03/20 15:01:37 by maissa-b          #+#    #+#             */
+/*   Updated: 2017/03/20 15:02:04 by maissa-b         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "42sh.h"
 
-int   ft_unset(t_set *set, char **args)
+int   ft_unset(t_core *set, char **args)
 {
   while (*args != NULL)
   {
@@ -14,7 +26,7 @@ int   ft_unset(t_set *set, char **args)
   return (0);
 }
 
-int   ft_builtin_unset(t_set *set, char **args)
+int   ft_builtin_unset(t_core *set, char **args)
 {
   int *opt;
   int ret;

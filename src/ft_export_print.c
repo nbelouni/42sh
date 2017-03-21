@@ -6,7 +6,7 @@
 /*   By: dogokar <dogokar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/15 18:22:46 by dogokar           #+#    #+#             */
-/*   Updated: 2017/03/15 18:23:30 by dogokar          ###   ########.fr       */
+/*   Updated: 2017/03/20 15:02:29 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void		ft_print_lst_ex(t_lst *lst, int t)
 	}
 }
 
-void		ft_print_export(t_set *m_env)
+void		ft_print_export(t_core *m_env)
 {
 	t_lst	*env;
 	t_lst	*export;

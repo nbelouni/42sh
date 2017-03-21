@@ -68,6 +68,7 @@ SRCS = 	ft_builtin_cd.c		\
 		ft_history_tools.c	\
 		ft_builtin_history.c\
 		ft_default_set.c	\
+		edit_history.c		\
 		ft_print.c
 
 

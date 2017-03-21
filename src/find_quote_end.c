@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   find_quote_end.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 12:49:02 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/10 22:03:40 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/20 16:20:58 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int		find_quote_end(char *s)
 			return (FALSE);
 		else if (is_char(s, i, '"'))
 		{
-			if (btq_in_dquote(s, &i, &n_dquote))
+			if (btq_in_dquote(s, &i, &n_dquote) == FALSE)
 				return (FALSE);
 		}
 	}

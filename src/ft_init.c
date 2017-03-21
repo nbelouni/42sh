@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 14:13:58 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/17 15:04:03 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/20 14:43:44 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,18 @@
 **	ses octets a 0, puis retourne la nouvelle liste de type set.
 */
 
-t_set	*ft_init_set(void)
+t_core		*ft_init_core(void)
 {
-	t_set			*set;
+	t_core		*core;
 
-	set = NULL;
-	if ((set = malloc(sizeof(t_set))) == NULL)
+	core = NULL;
+	if ((core = malloc(sizeof(t_core))) == NULL)
+	{
 		return (NULL);
-	set->env = NULL;
-	set->set = NULL;
-	set->exp = NULL;
-	return (set);
+	}
+	core->env = NULL;
+	core->set = NULL;
+	return (core);
 }
 
 /*
@@ -35,9 +36,9 @@ t_set	*ft_init_set(void)
 **	ses octets a 0, puis retourne la nouvelle liste de type env.
 */
 
-t_lst	*ft_init_list(void)
+t_lst		*ft_init_list(void)
 {
-	t_lst			*lst;
+	t_lst		*lst;
 
 	lst = NULL;
 	lst = malloc(sizeof(t_lst));
@@ -54,9 +55,9 @@ t_lst	*ft_init_list(void)
 **	ses octets a 0, puis retourne le nouvel element.
 */
 
-t_elem	*ft_init_elem(void)
+t_elem		*ft_init_elem(void)
 {
-	t_elem			*elem;
+	t_elem		*elem;
 
 	elem = NULL;
 	if ((elem = malloc(sizeof(t_elem))) == NULL)
@@ -80,8 +81,8 @@ t_elem	*ft_init_elem(void)
 
 static char	*ft_envv_to_str(t_elem *elem)
 {
-	size_t			name_len;
-	char			*res;
+	size_t		name_len;
+	char		*res;
 
 	name_len = ft_strlen(elem->name);
 	if ((res = ft_strnew(name_len + ft_strlen(elem->value) + 1)) == NULL)
@@ -94,11 +95,11 @@ static char	*ft_envv_to_str(t_elem *elem)
 	return (res);
 }
 
-char	**ft_env_to_tab(t_lst *lst)
+char		**ft_env_to_tab(t_lst *lst)
 {
-	t_elem			*tmp;
-	char			**res;
-	unsigned int	i;
+	t_elem		*tmp;
+	char		**res;
+	size_t		i;
 
 	res = NULL;
 	if ((res = (char **)malloc(sizeof(char *) * (lst->size + 1))) == NULL)
@@ -127,9 +128,9 @@ char	**ft_env_to_tab(t_lst *lst)
 **	de g_set->env, elle ne check pas envp, on assume qu'il n'est pas vide.
 */
 
-t_lst	*ft_env_to_list(char **envp, t_lst *lst)
+t_lst		*ft_env_to_list(char **envp, t_lst *lst)
 {
-	int				ret;
+	int			ret;
 
 	if ((lst = ft_init_list()) == NULL)
 	{

@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/11 18:36:55 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/17 15:08:58 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/20 16:55:36 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ t_lst		*ft_get_history(t_lst *hist, char *filename);
 **	ft_histopt_args.c
 */
 
-int			ft_histopt_p(char **args);
+int			ft_histopt_p(t_lst *hist, char **args);
 int			ft_histopt_s(t_lst *hist, char **args);
 
 /*

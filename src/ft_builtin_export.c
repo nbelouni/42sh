@@ -6,7 +6,7 @@
 /*   By: dogokar <dogokar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/05 10:39:48 by dogokar           #+#    #+#             */
-/*   Updated: 2017/03/17 17:07:56 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/20 15:00:50 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ t_elem		*search_var(char *arg, t_lst *type_env)
 	return (tmp);
 }
 
-int			insert_to_exp(char *argv, t_set *m_env)
+int			insert_to_exp(char *argv, t_core *m_env)
 {
 	char	*tmp;
 	int		result;
@@ -78,7 +78,7 @@ int			insert_to_exp(char *argv, t_set *m_env)
 	return (0);
 }
 
-int			multi_var_cheak(char *argv, t_set *m_env)
+int			multi_var_cheak(char *argv, t_core *m_env)
 {
 	t_elem	*tmp;
 
@@ -96,7 +96,7 @@ int			multi_var_cheak(char *argv, t_set *m_env)
 	return (-1);
 }
 
-int			ft_builtin_export(char **argv, t_set *m_env)
+int			ft_builtin_export(char **argv, t_core *m_env)
 {
 	int		*opt;
 	int		i;
