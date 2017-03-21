@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/13 17:30:53 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/20 18:00:55 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/20 18:29:02 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ int			find_n_poss(char *s, int end)
 	int		lvl;
 	int		poss;
 
-	i = 0;
+	i = -1;
 	lvl = 0;
 	poss = 0;
 	while (++i < end)

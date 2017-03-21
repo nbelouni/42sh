@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/11 16:24:49 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/18 20:23:45 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/20 18:32:50 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ int		is_regex_in_text(char *s)
 	while (s[i])
 	{
 		if (is_char(s, i, '?') || is_char(s, i, '*'))
-			return (TRUE);
-		else if (is_char(s, i, '{') && find_next_char(s, i + 1, '}') >= 0)
 			return (TRUE);
 		else if (is_char(s, i, '[') && find_next_char(s, i + 1, ']') >= 0)
 			return (TRUE);
