@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 15:32:23 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/20 19:08:08 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/21 15:55:27 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,7 +168,7 @@ char	*ft_gets_in_hist(t_lst *hist, char *s, int (*f)(char *, char *, int))
 	return (ret);
 }
 
-int main(void)
+/*int main(void)
 {
 	t_lst *hist;
 	t_lst *set;
@@ -186,7 +186,7 @@ int main(void)
 
 return (0);	
 }
-
+*/
 // int		ft_check_expansion_type(char *s)
 // {
 // 	if (s[0] == '!')

@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/11 18:36:55 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/20 16:55:36 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/21 15:54:03 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,5 +101,19 @@ int			ft_get_hfsize(t_lst *set);
 int			ft_histlist_to_histfile(t_lst **hist, int fd);
 int			ft_check_histfile(t_lst *hist, char *filename);
 int			ft_set_history(t_lst *hist, char *filename);
+
+/*
+**	expansions
+*/
+
+char	*ft_gets_lastcmd(t_lst *hist);
+char	*ft_gets_hist_ncmd(t_lst *hist, int n);
+char	*ft_gets_quicksub(t_lst *hist, char *search, char *replace);
+char	*ft_gets_until_now(char *s, char *ptr);
+char	*ft_gets_firstword(char *str);
+char	*ft_gets_lastword(char *str);
+int		ft_strstr_bis(char *s1, char *s2, int n);
+int		ft_strncmp_bis(char *s1, char *s2, int n);
+char	*ft_gets_in_hist(t_lst *hist, char *s, int (*f)(char *, char *, int));
 
 #endif

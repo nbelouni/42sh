@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/20 16:55:34 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/21 15:54:46 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,19 @@ int		parse(t_core *core, char *line, char **envp)
 	return (0);
 }
 
-int		bang_substitution(char *line, t_lst *hist)
+int		bang_substitution(char *line, t_core *core)
 {
-	(void)line;
-	(void)hist;
+	char	*res;
+//	char	*cmd = "je fais des tests    ";
+
+//	ft_histopt_r(&hist, set, ".42sh_history");
+	// ft_print_history(hist, hist->size);
+	res = ft_gets_lastword(line);
+	ft_putendl(res);
+	 res = ft_gets_in_hist(core->hist, line, ft_strncmp_bis);
+	ft_putendl(res);
+
+return (0);	
 	return (0);
 }
 
@@ -97,8 +106,10 @@ int 	main(int argc, char **argv, char **envp)
 		{
 			if (is_line_ended(buf) < 0)
 				return (-1);
-			bang_substitution(buf->final_line, core->hist);
-			ret = parse_buf(&list, buf->final_line, &completion, core->hist);
+			bang_substitution(buf->final_line, core);
+			PUT2("buf->final_line : ");PUT2(buf->final_line);X('\n');
+			ret = ERR_NEW_PROMPT;
+//			ret = parse_buf(&list, buf->final_line, &completion, core->hist);
 			if (ret > 0 && list)
 			{
 				parse(core, buf->final_line, envp);
