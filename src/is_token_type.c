@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/19 19:27:07 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/13 16:32:10 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/22 18:43:03 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int			is_close_group_type(int type)
 int			is_dir_type(int type)
 {
 	if (type == SR_DIR || type == DL_DIR || type == DR_DIR ||
-	type == DIR_AMP || type == SL_DIR)
+	type == DIR_L_AMP || type == DIR_R_AMP || type == SL_DIR || type == LR_DIR)
 		return (1);
 	return (0);
 }

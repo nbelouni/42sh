@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/22 13:31:40 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/22 22:37:37 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,10 @@ int 	main(int argc, char **argv, char **envp)
 		return (ft_print_error("42sh", ERR_MALLOC, ERR_EXIT));
 	set_prompt(PROMPT1, ft_strlen(PROMPT1));
 	init_curs();
+	init_shell();
 	while ((ret_read = read_line(buf, &completion)) != ERR_EXIT)
 	{
 		close_termios();
-		init_shell();
 		joblist = NULL;
 		if (ret_read != TAB)
 		{
@@ -55,7 +55,7 @@ int 	main(int argc, char **argv, char **envp)
 			ret = parse_buf(&list, buf->final_line, &completion);
 			if (ret > 0 && list)
 			{
-				ft_print_token_list(&list); //debug impression
+//				ft_print_token_list(&list); //debug impression
 				ft_push_ast(list, &ast);
 //				print_debug_ast(ast);
 /*				PUT2("\ntest\n");
@@ -66,7 +66,7 @@ int 	main(int argc, char **argv, char **envp)
 				execve(av[0], av, envp);
 *///				test_func(ast);
 				export_job(ast, &joblist);
-				printJobList(joblist);
+//				printJobList(joblist);
 				list_iter(joblist, (void *)launch_job);
 				free_ast(ast);
 //				free(ast);

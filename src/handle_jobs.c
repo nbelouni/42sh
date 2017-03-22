@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/22 18:38:34 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/03/22 23:10:29 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,11 +165,12 @@ static void		put_job_in_foreground(t_job *j, int cont)
 		if (kill(- j->pgid, SIGCONT) < 0)
 			perror ("kill (SIGCONT)");
 	}
+
+	int stat, pid;
 //	wait_for_job (j);
-	/* Put the shell back in the foreground.  */
+	pid = wait(&stat);
 	tcsetpgrp (g_sh_tty, g_sh_pgid);
 
-//	/* Restore the shell’s terminal modes.  */
 //	tcgetattr (g_sh_tty, &j->tmodes);
 //	tcsetattr (g_sh_tty, TCSADRAIN, &shell_tmodes);
 }
@@ -178,13 +179,13 @@ void	doRedir(Io_p io);
 
 void	launch_process(t_process_p process, pid_t pgid, int foreground)
 {
-  pid_t pid;
+	pid_t pid;
 
-  pid = getpid();
-  if (pgid == 0) pgid = pid;
-  setpgid(pid, pgid);
-  if (foreground)
-	tcsetpgrp(g_sh_tty, pgid);
+	pid = getpid();
+	if (pgid == 0) pgid = pid;
+		setpgid(pid, pgid);
+	if (foreground)
+		tcsetpgrp(g_sh_tty, pgid);
 //  doRedir(process->ioList);
   list_iter(process->ioList, (void *)doRedir);
   signal (SIGINT, SIG_DFL);
@@ -219,23 +220,22 @@ t_node_p	iterInOrder(t_node_p ptr, List_p *stock)
 void	doRedir(Io_p io)
 {
 	puts("doRedir");
-	dprintf(2,"flags : <%d> and <%p>\n", io->flag, io);
 	if (io->flag & OPEN)
 	{
-		dprintf(2,"open <%p>\n", io);
+//		dprintf(2,"open <%p>\n", io);
 		if (access(io->str, X_OK) == -1)
 			io->mode |= O_CREAT;
-		io->dup_src = open(io->str, io->mode);
+		io->dup_src = open(io->str, io->mode, DEF_FILE);
 	}
 	if (io->flag & DUP)
 	{
-		dprintf(2,"dup <%p>\n", io);
-		int rd = dup2(io->dup_src, io->dup_target);
-		dprintf(2,"rd : <%d> && in : <%d><%p>\n", rd, io->dup_src, io);
+//		dprintf(2,"dup <%p>\n", io);
+		dup2(io->dup_src, io->dup_target);
+//		dprintf(2,"rd : <%d> && in : <%d><%p>\n", rd, io->dup_src, io);
 	}
 	if (io->flag & CLOSE)
 	{
-		dprintf(2,"close <%p>\n", io);
+//		dprintf(2,"close <%p>\n", io);
 		close(io->dup_src);
 	}
 }
@@ -255,17 +255,12 @@ int	doPipe(t_process_p p1, t_process_p p2)
 	io_out = new_io();
 	io_in->flag = DUP | CLOSE;
 	io_out->flag = DUP | CLOSE;
-
-	/* in| */
 	io_in->dup_src = ioPipe[1]; // dup2(in, STDOUT_FILENO)
 	io_in->dup_target = STDOUT_FILENO;
-
-	/* |out */
 	io_out->dup_src = ioPipe[0]; // dup2(in, STDIN_FILENO)
 	io_out->dup_target = STDIN_FILENO;
-	
-	dprintf(2,"flags : <%d> and i<%p>\n", io_in->flag, io_in);
-	dprintf(2,"flags : <%d> and o<%p>\n", io_out->flag, io_out);
+//	dprintf(2,"flags : <%d> and i<%p>\n", io_in->flag, io_in);
+//	dprintf(2,"flags : <%d> and o<%p>\n", io_out->flag, io_out);
 	PUSH(&(p1->ioList), io_in);
 	PUSH(&(p2->ioList), io_out);
 	return (ioPipe[1]);
@@ -289,14 +284,14 @@ int		doFork(t_process_p p, int pgid, int foreground)
 
 void	doPipeline(t_job *job, t_list *pipeline)
 {
-	int	pid;
+	int			pid;
 	t_process_p	p;
-	int pp;
-	
+	int			pp;
+
 	while (pipeline)
 	{
 		p = (t_process_p)pipeline->content;
-		dprintf(2,"iol : <%p>\n", p->ioList);
+//		dprintf(2,"iol : <%p>\n", p->ioList);
 		if (pipeline->next)
 			pp = doPipe(pipeline->content, pipeline->next->content);
 		pid = doFork(pipeline->content, job->pgid, job->foreground);
@@ -315,22 +310,20 @@ void	launch_job(t_job *j)
 
   current = j->process_tree;
   stack = NULL;
-  while ((current = iterInOrder(current, &stack)))
-  {
-	  PUT2("in\n");
-	  if (current->type == IF)
-		  current = ((current->type == IF_OR/* && last*/) || (current->type == IF_AND/* && !last*/)) ? current->right : NULL;
-	  else
-	  {
-	  	PUT2("out\n");
-		  doPipeline(j, current->data);
-		  current = current->right;
-	  }
-  }
+	while ((current = iterInOrder(current, &stack)))
+	{
+		if (current->type == IF)
+		 	current = ((current->type == IF_OR/* && last*/) || (current->type == IF_AND/* && !last*/)) ? current->right : NULL;
+		else
+		{
+			doPipeline(j, current->data);
+			current = current->right;
+		}
+	}
   int foreground = 1;
   if (foreground)
 	put_job_in_foreground(j, 0);
-  else
+ else
   put_job_in_background(j, 0);
 }
 

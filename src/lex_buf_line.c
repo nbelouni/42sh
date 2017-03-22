@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/16 00:50:00 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/13 16:11:12 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/22 14:51:40 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ static int	choose_pars(t_token **list, char *s, int ret, t_pt *p)
 			p->i++;
 	}
 	p->i++;
-	if (ret == DIR_AMP && (r = check_fd_out(list, s, p)))
+	if ((ret == DIR_L_AMP || ret == DIR_R_AMP) && (r = check_fd_out(list, s, p)))
 		return (r);
 	p->i = cut_space(s, p->i);
 	return (0);

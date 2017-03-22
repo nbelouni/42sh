@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 13:52:27 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/22 17:43:28 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/03/22 23:10:30 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,13 +166,13 @@ t_node_p	create_pipe(t_node_p right_node, t_node_p left_node)
 
 t_node_p create_redir(t_tree *nodeRedir, t_node_p left_node)
 {
-	Io_p	io;
-	int		left;
+	Io_p		io;
+	int			left;
 	t_process_p	process;
 
 	io = new_io();
 	puts("0");
-	dprintf(2, "cmd : <%p>\n", nodeRedir->right->cmd);
+//	dprintf(2, "cmd : <%p>\n", nodeRedir->right->cmd);
 	io->str = (nodeRedir->right->cmd)[0];
 	io->flag |= DUP;
 	puts("1");
@@ -193,15 +193,14 @@ t_node_p create_redir(t_tree *nodeRedir, t_node_p left_node)
 	puts("5");
 	if(TOKEN(nodeRedir) == SL_DIR)
 		io->mode |= O_RDONLY;
-	puts("6");
-	if (TOKEN(nodeRedir) == DIR_AMP)
+	if (TOKEN(nodeRedir) == DIR_L_AMP || TOKEN(nodeRedir) == DIR_R_AMP)
 	{
 		io->dup_src = atoi((nodeRedir->right->cmd)[0]);
 		io->dup_target = left;
 	}
 	puts("7");
-	process = left_node->data;
-	insert_link_bottom(&process->ioList, new_link(io, sizeof(*io)));
+	process = ((t_list *)left_node->data)->content;
+	insert_link_bottom(&(process->ioList), new_link(io, sizeof(*io)));
 	return (left_node);
 }
 

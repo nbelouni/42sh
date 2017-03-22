@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/21 16:47:01 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/15 20:10:57 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/22 17:27:09 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int		mv_and_read(t_buf *buf, int x, int ret)
 {
 	if (ret < 0)
 		return (ft_print_error("\n42sh", ERR_READ, ERR_EXIT));
-	if (x == CTRL_D)
+	if (x == CTRL_D && buf->size == 0)
 		return (ERR_EXIT);
 	if ((x > 31 && x < 127))
 	{

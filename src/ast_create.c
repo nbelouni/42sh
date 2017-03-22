@@ -6,13 +6,13 @@
 /*   By: dogokar <dogokar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 14:41:10 by dogokar           #+#    #+#             */
-/*   Updated: 2017/03/16 18:33:47 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/22 21:02:20 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
-# define LENLIB  10
+# define LENLIB  12
 
 t_tree *init_node(void)
 {
@@ -46,7 +46,9 @@ static  t_lib lib_op[LENLIB] =
 	{.toke = AMP, .priority = 11},
 	{.toke = DL_DIR, .priority = 7},
 	{.toke = DR_DIR, .priority = 7},
-	{.toke = DIR_AMP, .priority = 7},
+	{.toke = LR_DIR, .priority = 7},
+	{.toke = DIR_L_AMP, .priority = 7},
+	{.toke = DIR_R_AMP, .priority = 7},
 };
 
 t_tree  *add_tree(t_token *lst)
@@ -299,17 +301,33 @@ void print_tab(char **tabol)
 ** recursive de creation de ast
 */
 
+char	**copy_fd(t_token *tmp)
+{
+	char	**cmd;
+
+	cmd = ft_memalloc(sizeof(char *) * 2);
+	cmd[0] = ft_strdup(tmp->word);
+	cmd[1] = NULL;
+	return (cmd);
+	PUT2(cmd[0]);X('\n');
+}
+
 t_tree *recurs_creat_tree(t_token *lst)
 {
 	t_token *tmp;
 	t_tree  *node;
 
+	PUT2("\n-------------\n");
 	tmp = lst;
 	node = NULL;
 	node = add_tree(tmp);
 	node->token = tmp->type;
 	if (tmp->type == CMD)
 		node->cmd = concate_cmd(tmp);
+	if (isRedir(tmp->type))
+		node->cmd = copy_fd(tmp);
+	if (tmp->type == TARGET)
+		node->cmd = copy_fd(tmp);
 	node->right= creat_right(tmp, NULL);
 	if (node->right)
 		node->right->father = node;
@@ -367,6 +385,10 @@ t_tree  *new_tree(t_token *lst)
 		node->token = tmp->type;
 		if (tmp->type == CMD)
 			node->cmd = concate_cmd(tmp);
+		if (isRedir(tmp->type))
+			node->cmd = copy_fd(tmp);
+		if (tmp->type == TARGET)
+			node->cmd = copy_fd(tmp);
 		node->right = creat_right(tmp, NULL);
 		if (node->right)
 			node->right->father = node;
@@ -408,7 +430,10 @@ void	print_debug_ast(t_tree *node)
 		print_debug_ast(node->left);
 	}
 		PUT2("\n node ======>>>>>> ");
-	print_lst(node->argv);
+	if (node->argv)
+		PUT2(node->cmd[0]);
+//	if (node->token_or->word)
+//	print_lst(node->argv);
 //	else
 //		PUT2(node->token_or->word);
 	if (node->right)

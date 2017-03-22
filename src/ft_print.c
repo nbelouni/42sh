@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/16 20:44:31 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/15 12:55:14 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/22 18:41:37 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
  * fonction de debug pour affichage de la liste chainee
  **/
 
-static char		*(tab_name[22]) = {
+static char		*(tab_name[23]) = {
 	[NO_TOKEN] = "NO_TOKEN",
 	[CMD] = "CMD",
 	[ESPACE] = "ESPACE",
@@ -32,7 +32,9 @@ static char		*(tab_name[22]) = {
 	[AND] = "AND",
 	[DL_DIR] = "DL_DIR",
 	[DR_DIR] = "DR_DIR",
-	[DIR_AMP] = "DIR_AMP",
+	[LR_DIR] = "LR_DIR",
+	[DIR_L_AMP] = "DIR_L_AMP",
+	[DIR_R_AMP] = "DIR_R_AMP",
 	[O_BRACE] = "O_BRACE",
 	[C_BRACE] = "C_BRACE",
 	[FD_IN] = "FD_IN",
