@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/22 12:39:56 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/22 13:09:43 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,10 @@ void	launch_job(t_job *j)
 	  if (current->type == IF)
 		  current = ((current->type == IF_OR/* && last*/) || (current->type == IF_AND/* && !last*/)) ? current->right : NULL;
 	  else
+	  {
 		  doPipeline(j, current->data);
+		  current = current->right;
+	  }
   }
   int foreground = 1;
   if (foreground)
