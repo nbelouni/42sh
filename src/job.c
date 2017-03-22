@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 13:52:27 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/22 12:33:32 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/22 17:43:28 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ t_job	*create_job(t_tree *root, int foreground)
 	t_job	*job;
 
 	job = ft_memalloc(sizeof(t_job));
+	bzero(job, sizeof(*job));
 	job->foreground = foreground;
 	job->process_tree = create_process_tree(root);
 	return (job);
@@ -100,6 +101,7 @@ t_condition_if_p new_condition_if(t_type_if type)
 	t_condition_if_p	ptr;
 
 	ptr = malloc(sizeof(*ptr));
+	bzero(ptr, sizeof(*ptr));
 	ptr->type = type;
 	return (ptr);
 }
@@ -125,7 +127,9 @@ t_process_p	new_process(char **argv)
 	t_process_p ptr;
 
 	ptr = malloc(sizeof(*ptr));
+	bzero(ptr, sizeof(*ptr));
 	ptr->argv = argv;
+	printf("iolist : <%p>\n", ptr->ioList);
 	return (ptr);
 }
 
@@ -167,26 +171,35 @@ t_node_p create_redir(t_tree *nodeRedir, t_node_p left_node)
 	t_process_p	process;
 
 	io = new_io();
+	puts("0");
+	dprintf(2, "cmd : <%p>\n", nodeRedir->right->cmd);
 	io->str = (nodeRedir->right->cmd)[0];
 	io->flag |= DUP;
+	puts("1");
 	if (!(left = atoi((nodeRedir->cmd)[0])))
 		left = 1 - ((TOKEN(nodeRedir) == SL_DIR)? 1: 0);
+	puts("2");
 	if (TOKEN(nodeRedir) == SR_DIR || TOKEN(nodeRedir) == SL_DIR || TOKEN(nodeRedir) == DR_DIR || TOKEN(nodeRedir) == DL_DIR)
 	{
-		io->out = left;
+		io->dup_target = left;
 		io->flag |= OPEN | CLOSE;
 	}
+	puts("3");
 	if (TOKEN(nodeRedir) == DR_DIR || TOKEN(nodeRedir) == SR_DIR)
 		io->mode |= O_WRONLY;
+	puts("4");
 	if(TOKEN(nodeRedir) == DR_DIR)
 		io->mode |= O_APPEND;
+	puts("5");
 	if(TOKEN(nodeRedir) == SL_DIR)
 		io->mode |= O_RDONLY;
+	puts("6");
 	if (TOKEN(nodeRedir) == DIR_AMP)
 	{
-		io->out = atoi((nodeRedir->right->cmd)[0]);
-		io->in = left;
+		io->dup_src = atoi((nodeRedir->right->cmd)[0]);
+		io->dup_target = left;
 	}
+	puts("7");
 	process = left_node->data;
 	insert_link_bottom(&process->ioList, new_link(io, sizeof(*io)));
 	return (left_node);

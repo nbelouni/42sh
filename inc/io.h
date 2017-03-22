@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/21 11:02:12 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/22 12:22:17 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/22 17:39:20 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ enum	IoType
 struct	Io
 {
 	int		flag;
-	int		in;
-	int		out;
+	int		dup_src;
+	int		dup_target;
 	int		mode;
 	char	*str;
 };

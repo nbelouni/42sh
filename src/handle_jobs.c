@@ -6,12 +6,147 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/22 13:31:38 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/22 18:38:34 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 #include "io.h"
+
+//job *find_job (pid_t pgid)
+//{
+//  job *j;
+//
+//  for (j = first_job; j; j = j->next)
+//    if (j->pgid == pgid)
+//      return j;
+//  return NULL;
+//}
+//
+///* Return true if all processes in the job have stopped or completed.  */
+//int	job_is_stopped (job *j)
+//{
+//  process *p;
+//
+//  for (p = j->first_process; p; p = p->next)
+//    if (!p->completed && !p->stopped)
+//      return 0;
+//  return 1;
+//}
+//
+///* Return true if all processes in the job have completed.  */
+//int	job_is_completed (job *j)
+//{
+//  process *p;
+//
+//  for (p = j->first_process; p; p = p->next)
+//    if (!p->completed)
+//      return 0;
+//  return 1;
+//}
+//
+///* Store the status of the process pid that was returned by waitpid.
+//   Return 0 if all went well, nonzero otherwise.  */
+//
+//int	mark_process_status(pid_t pid, int status)
+//{
+//  job *j;
+//  process *p;
+//
+//  if (pid > 0)
+//    {
+//      for (j = first_job; j; j = j->next)
+//        for (p = j->first_process; p; p = p->next)
+//          if (p->pid == pid)
+//            {
+//              p->status = status;
+//              if (WIFSTOPPED (status))
+//                p->stopped = 1;
+//              else
+//                {
+//                  p->completed = 1;
+//                  if (WIFSIGNALED (status))
+//                    fprintf (stderr, "%d: Terminated by signal %d.\n",
+//                             (int) pid, WTERMSIG (p->status));
+//                }
+//              return 0;
+//             }
+//      fprintf (stderr, "No child process %d.\n", pid);
+//      return -1;
+//    }
+//  else if (pid == 0 || errno == ECHILD)
+//    return -1;
+//  else {
+//    perror ("waitpid");
+//    return -1;
+//  }
+//}
+//
+///* Check for processes that have status information available,
+//   without blocking.  */
+//
+//void	update_status(void)
+//{
+//  int status;
+//  pid_t pid;
+//
+//  do
+//    pid = waitpid (WAIT_ANY, &status, WUNTRACED|WNOHANG);
+//  while (!mark_process_status (pid, status));
+//}
+//
+///* Check for processes that have status information available,
+//   blocking until all processes in the given job have reported.  */
+//
+//void	wait_for_job (job *j)
+//{
+//  int status;
+//  pid_t pid;
+//
+//  do
+//    pid = waitpid (WAIT_ANY, &status, WUNTRACED);
+//  while (!mark_process_status (pid, status)
+//         && !job_is_stopped (j)
+//         && !job_is_completed (j));
+//}
+//
+///* Format information about job status for the user to look at.  */
+//
+//void	format_job_info(job *j, const char *status)
+//{
+//  fprintf (stderr, "%ld (%s): %s\n", (long)j->pgid, status, j->command);
+//}
+//
+///* Notify the user about stopped or terminated jobs.
+//   Delete terminated jobs from the active job list.  */
+//
+//void do_job_notification (void)
+//{
+//  job *j, *jlast, *jnext;
+//  process *p;
+//
+//  update_status ();
+//  jlast = NULL;
+//  for (j = first_job; j; j = jnext)
+//    {
+//      jnext = j->next;
+//      if (job_is_completed (j)) {
+//        format_job_info (j, "completed");
+//        if (jlast)
+//          jlast->next = jnext;
+//        else
+//          first_job = jnext;
+//        free_job (j);
+//      }
+//      else if (job_is_stopped (j) && !j->notified) {
+//        format_job_info (j, "stopped");
+//        j->notified = 1;
+//        jlast = j;
+//      }
+//      else
+//        jlast = j;
+//    }
+//}
 
 static void		put_job_in_background(t_job *j, int cont)
 {
@@ -68,17 +203,13 @@ t_node_p	iterInOrder(t_node_p ptr, List_p *stock)
 {
 	while (ptr || *stock)
 	{
-		PUT2("up\n");
-		printf("ptr : <%p> && *stock : <%p>\n\n", ptr, *stock);
 		if (ptr)
 		{
-			PUT2("mid\n");
 			PUSH(stock, ptr);
 			ptr = ptr->left;
 		}
 		else
 		{
-			PUT2("bot\n");
 			return (POP(stock));
 		}
 	}
@@ -87,19 +218,29 @@ t_node_p	iterInOrder(t_node_p ptr, List_p *stock)
 
 void	doRedir(Io_p io)
 {
+	puts("doRedir");
+	dprintf(2,"flags : <%d> and <%p>\n", io->flag, io);
 	if (io->flag & OPEN)
 	{
+		dprintf(2,"open <%p>\n", io);
 		if (access(io->str, X_OK) == -1)
 			io->mode |= O_CREAT;
-		io->in = open(io->str, io->mode);
+		io->dup_src = open(io->str, io->mode);
 	}
 	if (io->flag & DUP)
-		dup2(io->in, io->out);
+	{
+		dprintf(2,"dup <%p>\n", io);
+		int rd = dup2(io->dup_src, io->dup_target);
+		dprintf(2,"rd : <%d> && in : <%d><%p>\n", rd, io->dup_src, io);
+	}
 	if (io->flag & CLOSE)
-		close(io->in);
+	{
+		dprintf(2,"close <%p>\n", io);
+		close(io->dup_src);
+	}
 }
 
-void	doPipe(t_process_p p1, t_process_p p2)
+int	doPipe(t_process_p p1, t_process_p p2)
 {
 	int	ioPipe[2];
 	Io_p	io_in;
@@ -112,14 +253,22 @@ void	doPipe(t_process_p p1, t_process_p p2)
 	}
 	io_in = new_io();
 	io_out = new_io();
-	io_in->flag |= DUP | CLOSE;
-	io_out->flag |= DUP | CLOSE;
-	io_in->in = ioPipe[0];
-	io_out->in = ioPipe[1];
-	io_in->out = STDOUT_FILENO;
-	io_out->out = STDIN_FILENO;
-	PUSH(&(((t_process_p)p1)->ioList), new_link(io_in, sizeof(*io_in)));
-	PUSH(&(p2->ioList), new_link(io_out, sizeof(*io_out)));
+	io_in->flag = DUP | CLOSE;
+	io_out->flag = DUP | CLOSE;
+
+	/* in| */
+	io_in->dup_src = ioPipe[1]; // dup2(in, STDOUT_FILENO)
+	io_in->dup_target = STDOUT_FILENO;
+
+	/* |out */
+	io_out->dup_src = ioPipe[0]; // dup2(in, STDIN_FILENO)
+	io_out->dup_target = STDIN_FILENO;
+	
+	dprintf(2,"flags : <%d> and i<%p>\n", io_in->flag, io_in);
+	dprintf(2,"flags : <%d> and o<%p>\n", io_out->flag, io_out);
+	PUSH(&(p1->ioList), io_in);
+	PUSH(&(p2->ioList), io_out);
+	return (ioPipe[1]);
 }
 
 int		doFork(t_process_p p, int pgid, int foreground)
@@ -128,7 +277,7 @@ int		doFork(t_process_p p, int pgid, int foreground)
 	
 	pid = fork ();
 	if (pid == 0)
-		launch_process (p, pgid, foreground);
+		launch_process(p, pgid, foreground);
 	else if (pid < 0)
 	{
 		perror ("fork");
@@ -141,15 +290,21 @@ int		doFork(t_process_p p, int pgid, int foreground)
 void	doPipeline(t_job *job, t_list *pipeline)
 {
 	int	pid;
+	t_process_p	p;
+	int pp;
+	
 	while (pipeline)
 	{
+		p = (t_process_p)pipeline->content;
+		dprintf(2,"iol : <%p>\n", p->ioList);
 		if (pipeline->next)
-			doPipe(pipeline->content, pipeline->next->content);
+			pp = doPipe(pipeline->content, pipeline->next->content);
 		pid = doFork(pipeline->content, job->pgid, job->foreground);
 		if (job->pgid == 0)
 			job->pgid = pid;
 		setpgid(pid, job->pgid);
 		pipeline = pipeline->next;
+		close(pp);
 	}
 }
 
