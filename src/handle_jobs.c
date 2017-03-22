@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/22 13:09:43 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/03/22 13:31:38 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ void	launch_process(t_process_p process, pid_t pgid, int foreground)
 {
   pid_t pid;
 
-  (void)foreground;
   pid = getpid();
   if (pgid == 0) pgid = pid;
   setpgid(pid, pgid);
@@ -70,6 +69,7 @@ t_node_p	iterInOrder(t_node_p ptr, List_p *stock)
 	while (ptr || *stock)
 	{
 		PUT2("up\n");
+		printf("ptr : <%p> && *stock : <%p>\n\n", ptr, *stock);
 		if (ptr)
 		{
 			PUT2("mid\n");
@@ -144,7 +144,7 @@ void	doPipeline(t_job *job, t_list *pipeline)
 	while (pipeline)
 	{
 		if (pipeline->next)
-			doPipe(pipeline->content, ((t_process_p)pipeline->content)->next);
+			doPipe(pipeline->content, pipeline->next->content);
 		pid = doFork(pipeline->content, job->pgid, job->foreground);
 		if (job->pgid == 0)
 			job->pgid = pid;
@@ -159,13 +159,15 @@ void	launch_job(t_job *j)
   List_p	stack;
 
   current = j->process_tree;
+  stack = NULL;
   while ((current = iterInOrder(current, &stack)))
   {
-	  PUT2("up");
+	  PUT2("in\n");
 	  if (current->type == IF)
 		  current = ((current->type == IF_OR/* && last*/) || (current->type == IF_AND/* && !last*/)) ? current->right : NULL;
 	  else
 	  {
+	  	PUT2("out\n");
 		  doPipeline(j, current->data);
 		  current = current->right;
 	  }
@@ -174,7 +176,7 @@ void	launch_job(t_job *j)
   if (foreground)
 	put_job_in_foreground(j, 0);
   else
-    put_job_in_background(j, 0);
+  put_job_in_background(j, 0);
 }
 
 /*

@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/22 12:27:09 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/22 13:31:40 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int 	main(int argc, char **argv, char **envp)
 	while ((ret_read = read_line(buf, &completion)) != ERR_EXIT)
 	{
 		close_termios();
-//		init_shell();
+		init_shell();
 		joblist = NULL;
 		if (ret_read != TAB)
 		{
