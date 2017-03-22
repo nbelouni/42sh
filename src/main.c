@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/21 16:44:32 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/03/22 12:27:09 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int 	main(int argc, char **argv, char **envp)
 	t_completion	completion = {NULL, NULL, NULL, NULL};
 	t_buf	*buf;
 	t_token	*list;
-	t_lst	*env;
+//	t_lst	*env;
 	int		ret;
 	int		ret_read;
 	t_tree	*ast;
@@ -44,6 +44,8 @@ int 	main(int argc, char **argv, char **envp)
 	while ((ret_read = read_line(buf, &completion)) != ERR_EXIT)
 	{
 		close_termios();
+//		init_shell();
+		joblist = NULL;
 		if (ret_read != TAB)
 		{
 			if (is_line_ended(buf) < 0)
@@ -63,7 +65,7 @@ int 	main(int argc, char **argv, char **envp)
 				av[1] = NULL;
 				execve(av[0], av, envp);
 *///				test_func(ast);
-				export_job(ast, (void*)joblist);
+				export_job(ast, &joblist);
 				printJobList(joblist);
 				list_iter(joblist, (void *)launch_job);
 				free_ast(ast);

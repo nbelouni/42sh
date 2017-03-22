@@ -69,7 +69,8 @@ SRCS = 	ft_builtin_cd.c		\
 		hash.c				\
 		list.c				\
 		io.c				\
-		handle_jobs.c
+		handle_jobs.c		\
+		init_shell.c
 
 SRCC = $(addprefix $(SDIR),$(SRCS))
 

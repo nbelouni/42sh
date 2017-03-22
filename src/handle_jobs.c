@@ -6,56 +6,62 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/21 16:50:50 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/03/22 12:39:56 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 #include "io.h"
-/*
-void	put_job_in_foreground(t_job *j, int cont)
+
+static void		put_job_in_background(t_job *j, int cont)
 {
-  tcsetpgrp (shell_terminal, j->pgid);
-  if (cont)
-  {
-      tcsetattr (shell_terminal, TCSADRAIN, &j->tmodes);
-      if (kill (- j->pgid, SIGCONT) < 0)
-        perror ("kill (SIGCONT)");
-  }
-  wait_for_job (j);
-  tcsetpgrp (shell_terminal, shell_pgid);
-  tcgetattr (shell_terminal, &j->tmodes);
-  tcsetattr (shell_terminal, TCSADRAIN, &shell_tmodes);
+	if (cont)
+		if (kill(-j->pgid, SIGCONT) < 0)
+			perror("kill (SIGCONT)");
 }
 
-void	put_job_in_background(t_job *j, int cont)
+static void		put_job_in_foreground(t_job *j, int cont)
 {
-  if (cont)
-    if (kill (-j->pgid, SIGCONT) < 0)
-      perror ("kill (SIGCONT)");
-}
-*/
+	tcsetpgrp (g_sh_tty, j->pgid);
 
-void	doRedir(List_p ioList);
-	
+	if (cont)
+	{
+//		tcsetattr (g_sh_tty, TCSADRAIN, &j->tmodes);
+		if (kill(- j->pgid, SIGCONT) < 0)
+			perror ("kill (SIGCONT)");
+	}
+//	wait_for_job (j);
+	/* Put the shell back in the foreground.  */
+	tcsetpgrp (g_sh_tty, g_sh_pgid);
+
+//	/* Restore the shell’s terminal modes.  */
+//	tcgetattr (g_sh_tty, &j->tmodes);
+//	tcsetattr (g_sh_tty, TCSADRAIN, &shell_tmodes);
+}
+
+void	doRedir(Io_p io);
+
 void	launch_process(t_process_p process, pid_t pgid, int foreground)
 {
   pid_t pid;
 
+  (void)foreground;
   pid = getpid();
   if (pgid == 0) pgid = pid;
   setpgid(pid, pgid);
-//  if (foreground)
-//	  tcsetpgrp(shell_terminal, pgid);
-  doRedir(process->ioList);
+  if (foreground)
+	tcsetpgrp(g_sh_tty, pgid);
+//  doRedir(process->ioList);
+  list_iter(process->ioList, (void *)doRedir);
   signal (SIGINT, SIG_DFL);
   signal (SIGQUIT, SIG_DFL);
   signal (SIGTSTP, SIG_DFL);
   signal (SIGTTIN, SIG_DFL);
   signal (SIGTTOU, SIG_DFL);
   signal (SIGCHLD, SIG_DFL);
-//  execvp(p->argv[0], p->argv);
-  perror("execvp");
+  ft_check_exec(process->argv);
+// execvp(p->argv[0], p->argv);
+// perror("execvp");
   exit (1);
 }
 
@@ -63,39 +69,37 @@ t_node_p	iterInOrder(t_node_p ptr, List_p *stock)
 {
 	while (ptr || *stock)
 	{
+		PUT2("up\n");
 		if (ptr)
 		{
+			PUT2("mid\n");
 			PUSH(stock, ptr);
 			ptr = ptr->left;
 		}
 		else
+		{
+			PUT2("bot\n");
 			return (POP(stock));
+		}
 	}
 	return (NULL);
 }
 
-void	doRedir(List_p ioList)
+void	doRedir(Io_p io)
 {
-	Io_p	io;
-	
-	while (ioList)
+	if (io->flag & OPEN)
 	{
-		io = ioList->data;
-		if (io->flag & OPEN)
-		{
-			if (access(io->str, X_OK) == -1)
-				io->mode |= O_CREAT;
-			in = open(io->str, io->mode);
-		}
-		if (io->flag & DUP)
-			dup2(io->in, io->out);
-		if (io->flag & CLOSE)
-			close(io->in);
-		io = io->next;
+		if (access(io->str, X_OK) == -1)
+			io->mode |= O_CREAT;
+		io->in = open(io->str, io->mode);
 	}
+	if (io->flag & DUP)
+		dup2(io->in, io->out);
+	if (io->flag & CLOSE)
+		close(io->in);
 }
 
-void	doPipe(t_process *p1, t_process *p2)
+void	doPipe(t_process_p p1, t_process_p p2)
 {
 	int	ioPipe[2];
 	Io_p	io_in;
@@ -114,11 +118,11 @@ void	doPipe(t_process *p1, t_process *p2)
 	io_out->in = ioPipe[1];
 	io_in->out = STDOUT_FILENO;
 	io_out->out = STDIN_FILENO;
-	PUSH(&(p1->ioList), new_link(io_in, sizeof(*io_in)));
+	PUSH(&(((t_process_p)p1)->ioList), new_link(io_in, sizeof(*io_in)));
 	PUSH(&(p2->ioList), new_link(io_out, sizeof(*io_out)));
 }
 
-int		doFork(t_process p, int pgid, int foreground)
+int		doFork(t_process_p p, int pgid, int foreground)
 {
 	int	pid;
 	
@@ -134,17 +138,17 @@ int		doFork(t_process p, int pgid, int foreground)
 	return (pid);
 }
 
-void	doPipeline(t_job *job, List_p pipeline)
+void	doPipeline(t_job *job, t_list *pipeline)
 {
 	int	pid;
 	while (pipeline)
 	{
 		if (pipeline->next)
-			doPipe(pipeline->content, pipeline->content->next);
-		pid = doFork(pipeline, job->pgid, job->foreground);
+			doPipe(pipeline->content, ((t_process_p)pipeline->content)->next);
+		pid = doFork(pipeline->content, job->pgid, job->foreground);
 		if (job->pgid == 0)
 			job->pgid = pid;
-		set(pid, job->pgid);
+		setpgid(pid, job->pgid);
 		pipeline = pipeline->next;
 	}
 }
@@ -157,13 +161,15 @@ void	launch_job(t_job *j)
   current = j->process_tree;
   while ((current = iterInOrder(current, &stack)))
   {
+	  PUT2("up");
 	  if (current->type == IF)
-		  current = ((current->data->type == IF_OR && last) || (current->data->type == IF_AND && !last))? current->right: NULL;
+		  current = ((current->type == IF_OR/* && last*/) || (current->type == IF_AND/* && !last*/)) ? current->right : NULL;
 	  else
 		  doPipeline(j, current->data);
   }
+  int foreground = 1;
   if (foreground)
-    put_job_in_foreground(j, 0);
+	put_job_in_foreground(j, 0);
   else
     put_job_in_background(j, 0);
 }

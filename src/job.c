@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 13:52:27 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/21 16:17:37 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/03/22 12:33:32 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ t_node_p new_node(t_type_node type, size_t size)
 	t_node_p	ptr;
 
 	ptr = malloc(sizeof(*ptr));
+	bzero(ptr, sizeof(*ptr));
 	ptr->type = type;
 	ptr->size = size;
 	return (ptr);

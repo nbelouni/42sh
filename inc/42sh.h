@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:09:30 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/20 21:11:09 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/03/22 11:18:29 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef enum	e_bool
 //# include "list.h"
 //# include "hash.h"
 # include "job.h"
+# include "exec.h"
 # include "globbing.h"
 
 # define END_EOT	18
@@ -61,6 +62,12 @@ typedef struct		s_set
 	t_lst			*env;
 }					t_set;
 
+t_lst				*env;
+
+
+int					g_sh_tty;
+int					g_sh_is;
+pid_t				g_sh_pgid;
 /*
 **	ft_builtin_cd.c
 */

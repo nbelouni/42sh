@@ -6,11 +6,13 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 13:08:28 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/15 20:35:16 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/22 11:24:57 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
+
+extern t_lst	*env;
 
 static char		*ft_cut_path(char **s, char *av)
 {
@@ -65,7 +67,7 @@ int			ft_check_built(char **args)
 /*
  **execute la cmd si est un builtin
  */
-int			ft_exec_built(t_lst *env, char **args)
+int			ft_exec_built(char **args)
 {
 	int		ret;
 
@@ -92,7 +94,7 @@ int			ft_exec_built(t_lst *env, char **args)
 /*
 ** fonction d'execution des commandes via execve
 */
-void			ft_exec(char **av, t_lst *env)
+void			ft_exec(char **av)
 {
 	struct stat	st;
 	char		*s;
@@ -138,12 +140,12 @@ void			ft_exec(char **av, t_lst *env)
 **sert a retourner si la cmd est un builtin
 */
 
-int		ft_check_exec(char **cmd, t_lst *env)
+int		ft_check_exec(char **cmd)
 {
 	int		ret;
 
 	ret = TRUE;
-	if ((ret = ft_exec_built(env, cmd)) != 0)
-		ft_exec(cmd, env);
+	if ((ret = ft_exec_built(cmd)) != 0)
+		ft_exec(cmd);
 	return (ret);
 }

@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 13:25:54 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/09 17:38:13 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/22 11:34:06 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,13 @@
 int				exec_cmd(t_tree *root, t_lst *env);
 int				ft_init_gpr(t_tree *root, t_lst *env);
 //void			ft_exec(char **s, t_lst *env);
-int				ft_check_exec(char **cmd, t_lst *env);
+int				ft_check_exec(char **cmd);
 int				ft_check_built(char **av);
-int				ft_exec_built(t_lst *env, char **args);
+int				ft_exec_built(char **args);
+
+void			init_shell(void);
+void			get_sig_ign(void);
+void			wait_job(t_list *job_list);
 
 void			ft_dot(t_tree *node, t_lst *env);
 void	 		ft_pipe(t_tree *node, t_lst *env);
