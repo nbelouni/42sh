@@ -6,13 +6,38 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/23 12:11:17 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/03/23 20:41:37 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 #include "io.h"
 #include <errno.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <signal.h>
+
+void	sigchldhandler(int sig)
+{
+	(void)sig;
+	dprintf(2, "in handler\n");
+	
+}
+
+void print_process(t_process_p process)
+{
+	dprintf(2, "[PROCESS]\n");
+	dprintf(2, "\tself: <%p>\n", &process);
+	dprintf(2, "\tpid: <%d>\n", process->pid);
+	dprintf(2, "\tcompleted: <%d>\tstopped: <%d>\tstatus: <%d>\n", process->completed, process->stopped, process->status);
+}
+
+void print_job(t_job *job)
+{
+	dprintf(2, "[JOB]\n");
+	dprintf(2, "\tCommand : <%s>\n", job->command);
+	dprintf(2, "\tForeground : <%d>\t pgid : <%d>\t notified : <%d>\n", job->foreground, job->pgid, job->notified);
+}
 
 extern	List_p	jobList;
 int last = 0;
@@ -40,9 +65,13 @@ int	job_is_stopped (t_job *j)
   List_p	ptr;
 
   ptr = j->waitProcessList;
+  fputs("is stopped\n", stderr);
+  print_job(j);
   while (ptr)
   {
 	  p = ptr->content;
+	  fputs("is stopped\n", stderr);
+	  print_process(p);
 	  if (!p->completed && !p->stopped)
 		  return 0;
 	  ptr = ptr->next;
@@ -57,9 +86,13 @@ int	job_is_completed(t_job *j)
   List_p	ptr;
 
   ptr = j->waitProcessList;
+  fputs("is complete\n", stderr);
+  print_job(j);
   while (ptr)
   {
 	  p = ptr->content;
+	  fputs("is complete\n", stderr);
+	  print_process(p);
 	  if (!p->completed)
 		  return 0;
 	  ptr = ptr->next;
@@ -78,19 +111,26 @@ t_process_p	getProcessByPid(pid_t pid)
 	t_process_p	p;
 
 	ptrJob = jobList;
+	fputs("in getbyid\n", stderr);
 	while (ptrJob)
 	{
 		j = ptrJob->content;
+		print_job(j);
 		ptrProcess = j->waitProcessList;
 		while (ptrProcess)
 		{
 			p = ptrProcess->content;
+			print_process(p);
 			if (p->pid == pid)
+			{
+				fputs("mid getbyid\n", stderr);
 				return (p);
+			}
 			ptrProcess = ptrProcess->next;
 		}
 		ptrJob = ptrJob->next;
 	}
+	fputs("bot getbyid\n", stderr);
 	return (NULL);
 }
 
@@ -98,8 +138,10 @@ int	mark_process_status(pid_t pid, int status)
 {
   t_process_p p;
 
+  fputs("Inside\n", stderr);
   if (pid > 0)
   {
+	  fputs("up\n", stderr);
 	  if ((p = getProcessByPid(pid)))
 	  {
 		  p->status = status;
@@ -113,16 +155,21 @@ int	mark_process_status(pid_t pid, int status)
 				  fprintf (stderr, "%d: Terminated by signal %d.\n",
 						   (int) pid, WTERMSIG (p->status));
 		  }
+		  printf("in\n");
+		  print_process(p);
 		  return 0;		
 	  }
 	  else
 		  return (fprintf (stderr, "No child process %d.\n", pid), -1);
   }
   else if (pid == 0 || errno == ECHILD)
+  {
+	  fputs("outside\n", stderr);
 	  return -1;
+  }
   else
   {
-	  puts("bot");
+	  fputs("bot\n", stderr);
 	  return (perror("waitpid"), -1);
   }
 }
@@ -135,6 +182,7 @@ void	update_status(void)
   int status;
   pid_t pid;
 
+  fputs("update status\n", stderr);
   while (true)
   {
     pid = waitpid(WAIT_ANY, &status, WUNTRACED|WNOHANG);
@@ -151,12 +199,19 @@ void	wait_for_job(t_job *j)
   int status;
   pid_t pid;
 
+  print_job(j);
+  perror("--wait4Job--");
+  errno = 0;
+  signal(SIGCHLD, SIG_DFL);
+  signal(SIGCHLD, chld_handler);
+  if (errno)
+	  perror("signal");
   while (true)
   {
-	  printf("Waiting ...\n");
-	  pid = waitpid(WAIT_ANY, &status, WUNTRACED);
-	  printf("Continuing <%d>\n", pid);
-	  perror("waitpid");
+	  dprintf(2, "Waiting ...\n");
+	  pid = waitpid(-1, &status, WUNTRACED);// | WNOHANG);
+	  dprintf(2, "Continuing <%d> <%s>\n", getpid(), strerror(errno));
+	  perror("--waitpid--");
 	  if (mark_process_status(pid, status) || job_is_stopped(j) || job_is_completed(j))
 		  break ;
   }
@@ -186,18 +241,21 @@ void do_job_notification(void)
 	ptr = &jobList;
 	while (*ptr)
 	{
+		fputs("job_notif\n", stderr);
 		j = (*ptr)->content;
 		if (job_is_completed(j))
 		{
 			format_job_info (j, "completed");
 			delete_job(POP(ptr));
+			printf("<%p> and *<%p>\n", ptr, *ptr);
 		}
 		else if (job_is_stopped(j) && !j->notified)
 		{
-        format_job_info(j, "stopped");
-        j->notified = 1;
+			format_job_info(j, "stopped");
+			j->notified = 1;
 		}
-		ptr = &(*ptr)->next;
+		if (*ptr)
+			ptr = &(*ptr)->next;
 	}
 }
 
@@ -211,6 +269,7 @@ static void		put_job_in_background(t_job *j, int cont)
 static void		put_job_in_foreground(t_job *j, int cont)
 {
 	tcsetpgrp (g_sh_tty, j->pgid);
+	perror("put_job_in_foreground");
 	if (cont)
 	{
 //		tcsetattr (g_sh_tty, TCSADRAIN, &j->tmodes);
@@ -269,6 +328,8 @@ void	launch_process(t_process_p process, pid_t pgid, int foreground)
   signal (SIGTTIN, SIG_DFL);
   signal (SIGTTOU, SIG_DFL);
   signal (SIGCHLD, SIG_DFL);
+  print_process(process);
+//  sleep(10);
   ft_check_exec(process->argv);
 // execvp(p->argv[0], p->argv);
 // perror("execvp");
@@ -294,7 +355,7 @@ t_node_p	iterInOrder(t_node_p ptr, List_p *stock)
 
 void	doRedir(Io_p io)
 {
-	puts("doRedir");
+	fputs("doRedir\n", stderr);
 	if (io->flag & OPEN)
 	{
 //		dprintf(2,"open <%p>\n", io);
@@ -341,17 +402,23 @@ int	doPipe(t_process_p p1, t_process_p p2, 	int	*io_pipe)
 int		doFork(t_process_p p, int pgid, int foreground)
 {
 	int	pid;
-	
-	pid = fork ();
+
+	pid = fork();
 	if (pid == 0)
+	{
 		launch_process(p, pgid, foreground);
+		exit(0);
+	}
 	else if (pid < 0)
 	{
 		perror ("fork");
 		exit (1);
 	}
-	p->pid = pid;
-	return (pid);
+	else
+	{
+		p->pid = pid;
+		return (pid);
+	}
 }
 
 void	doPipeline(t_job *job, t_list *pipeline)
@@ -402,6 +469,9 @@ void	launch_job(t_job *j)
 	put_job_in_foreground(j, 0);
  else
   put_job_in_background(j, 0);
+
+  do_job_notification();
+
 }
 
 /*
