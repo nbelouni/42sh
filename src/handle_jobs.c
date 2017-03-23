@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/23 10:44:06 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/03/23 12:11:17 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,10 @@ int	mark_process_status(pid_t pid, int status)
   else if (pid == 0 || errno == ECHILD)
 	  return -1;
   else
-	  return (perror ("waitpid"), -1);
+  {
+	  puts("bot");
+	  return (perror("waitpid"), -1);
+  }
 }
 
 /* Check for processes that have status information available,
@@ -150,9 +153,12 @@ void	wait_for_job(t_job *j)
 
   while (true)
   {
-    pid = waitpid(WAIT_ANY, &status, WUNTRACED);
-	if (mark_process_status(pid, status) || job_is_stopped(j) || job_is_completed(j))
-		break ;
+	  printf("Waiting ...\n");
+	  pid = waitpid(WAIT_ANY, &status, WUNTRACED);
+	  printf("Continuing <%d>\n", pid);
+	  perror("waitpid");
+	  if (mark_process_status(pid, status) || job_is_stopped(j) || job_is_completed(j))
+		  break ;
   }
 }
 
@@ -382,7 +388,7 @@ void	launch_job(t_job *j)
   stack = NULL;
 	while ((current = iterInOrder(current, &stack)))
 	{
-//		printf("last : <%d>\n", last);
+		printf("last : <%d>\n", last);
 		if (current->type == IF)
 		 	current = ((((t_condition_if_p)current->data)->type == IF_OR && last) || (((t_condition_if_p)current->data)->type == IF_AND && !last)) ? current->right : NULL;
 		else
@@ -391,8 +397,8 @@ void	launch_job(t_job *j)
 			current = current->right;
 		}
 	}
-  int foreground = 1;
-  if (foreground)
+	insert_link_bottom(&jobList, new_link(j, sizeof(*j)));
+  if (j->foreground)
 	put_job_in_foreground(j, 0);
  else
   put_job_in_background(j, 0);

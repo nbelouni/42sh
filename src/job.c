@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 13:52:27 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/23 10:43:16 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/03/23 11:44:24 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,12 +88,13 @@ t_job	*create_job(t_tree *root, int foreground)
 
 void	export_job(t_tree *root, List_p *job_list)
 {
-	while (TOKEN(root) IS AMP || TOKEN(root) IS DOT)
+	while (root && (TOKEN(root) IS AMP || TOKEN(root) IS DOT))
 	{
 		insert_link_bottom(job_list, new_link(create_job(root->left, (TOKEN(root) IS DOT) ? 1: 0), sizeof(t_job)));
 		root = root->right;
 	}
-	insert_link_bottom(job_list, new_link(create_job(root, 1), sizeof(t_job)));
+	if (root)
+		insert_link_bottom(job_list, new_link(create_job(root, 1), sizeof(t_job)));
 }
 
 t_condition_if_p new_condition_if(t_type_if type)
