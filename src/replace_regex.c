@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/11 16:24:49 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/23 02:03:10 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/23 19:22:56 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,37 +68,35 @@ char	**split_args(char *s)
 			end = ft_strlen(s) - begin;
 		if (!(new[i] = ft_strsub(s, begin, end + 1)))
 			return (NULL);
-		PUT2("new[i] : ");PUT2(new[i]);X('\n');
 		begin += end + 1;
 		i++;
 	}
 	new[len] = NULL;
-	PUT2("len : ");E(len);X('\n');
-	i = 0;
-	while (new[i])
-	{
-		PUT2("new[i] : ");PUT2(new[i]);X('\n');
-		i++;
-	}
 	return (new);
 }
 
 t_reg_path	*init_curr_path(char *s)
 {
 	char		*path;
+	char		*out;
+	t_bool		is_abs;
 
 	if (s[0] == '/')
 	{
 		if (!(path = ft_strdup("/")))
 			return (NULL);
+		if (!(out = ft_strdup(path)))
+			return (NULL);
+		is_abs = TRUE;
 	}
 	else
 	{
 		if (!(path = getcwd(NULL, 1024)))
 			return (NULL);
-	
+		out = NULL;
+		is_abs = FALSE;
 	}
-	return (ft_reg_pathnew(path, 0));
+	return (ft_reg_pathnew(path, out, 0, is_abs));
 }
 
 int		is_regex(char *s, int i)
@@ -114,16 +112,21 @@ int		find_last_len(char *s)
 	int		len;
 	i = -1;
 	len = 0;
-	PUT2("find_last_len()\n");
-	PUT2("!find_next_char(*)\n");
-		while (++i < (int)ft_strlen(s))
-		{
-			if (is_char(s, i, '['))
-				i += find_next_char(s + i, 0, ']');
-			len++;
-		}
-	PUT2("len : ");E(len);X('\n');
+	while (++i < (int)ft_strlen(s))
+	{
+		if (is_char(s, i, '['))
+			i += find_next_char(s + i, 0, ']');
+		len++;
+	}
 	return (len);
+}
+
+int		free_rg_and_return(char *rg, int ret)
+{
+	PUT2("rg : ");PUT2(rg);X('\n');
+	if (rg)
+		ft_strdel(&rg);
+	return (ret);
 }
 
 int		match_regex(char *s, char *rg_ref)
@@ -132,36 +135,36 @@ int		match_regex(char *s, char *rg_ref)
 	int		i_rg;
 	char	*rg;
 
-	rg = ft_strdup(rg_ref);
+	if (!(rg = ft_strdup(rg_ref)))
+		return (FALSE);
 	if (rg_ref[ft_strlen(rg_ref) - 1] == '/')
-		rg[ft_strlen(rg) - 1] = 0;
-//	PUT2("match_regex(");PUT2(s);PUT2(", ");PUT2(rg);PUT2(")\n");
+		rg[ft_strlen(rg) - 1] = '\0';
+	PUT2("match_regex(");PUT2(s);PUT2(", ");PUT2(rg);PUT2(")\n");
 	i_s = 0;
 	i_rg = 0;
 	while (i_s < (int)ft_strlen(s) && i_rg < (int)ft_strlen(rg))
 	{
-//		PUT2("rg + i_rg : ");PUT2(rg + i_rg);X('\n');
 //		PUT2("s + i_s : ");PUT2(s + i_s);X('\n');
 		if (is_regex(rg, i_rg) == FALSE)
 		{
-//			PUT2("!regex\n");
+			PUT2("!regex\n");
 			if (rg[i_rg] != s[i_s])
-				return (FALSE);
+				return (free_rg_and_return(rg, FALSE));
 			rg += 1;
 			i_s += 1;
 		}
 		else if (rg[i_rg] == '?')
 		{
-//			PUT2("regex == ?\n");
+			PUT2("regex == ?\n");
 			if (rg[i_rg] != s[i_s])
 			if (!s[i_s])
-				return (FALSE);
+				return (free_rg_and_return(rg, FALSE));
 			i_rg += 1;
 			i_s += 1;
 		}
 		else if (rg[i_rg] == '[')
 		{
-//			PUT2("regex == [\n");
+			PUT2("regex == [\n");
 			i_rg += 1;
 			while (rg[i_rg])
 			{
@@ -172,17 +175,17 @@ int		match_regex(char *s, char *rg_ref)
 				i_rg += 1;
 			}
 			if (is_char(rg, i_rg, ']'))
-				return (FALSE);
+				return (free_rg_and_return(rg, FALSE));
 			i_rg += find_next_char(rg, i_rg, ']') + 1;
 			i_s++;
 		}
 		else if (rg[i_rg] == '*')
 		{
-//			PUT2("regex == *\n");
+			PUT2("regex == *\n");
 			while (rg[i_rg] && is_char(rg, i_rg, '*'))
 				i_rg += 1;
 			if (!rg[i_rg])
-				return (TRUE);
+				return (free_rg_and_return(rg, TRUE));
 //		PUT2("rg + i_rg : ");PUT2(rg + i_rg);X('\n');
 //		PUT2("NEXT_CHAR : ");E(find_next_char(rg, i_rg, '*'));X('\n');
 			if (find_next_char(rg, i_rg, '*') < 0)
@@ -225,7 +228,7 @@ int		match_regex(char *s, char *rg_ref)
 //				PUT2("rg + k : ");PUT2(rg + k);X('\n');
 //				PUT2("s + j : ");PUT2(s + j);X('\n');
 				if (s[j] != rg[k])
-					return (FALSE);
+					return (free_rg_and_return(rg, FALSE));
 				i_rg += find_next_char(rg, i_rg, ']') + 1;
 				i_s = j + 1;
 			}
@@ -239,8 +242,8 @@ int		match_regex(char *s, char *rg_ref)
 			i_rg += 1;
 	}
 	if (i_s < (int)ft_strlen(s) || i_rg < (int)ft_strlen(rg))
-		return (FALSE);
-	return (TRUE);
+		return (free_rg_and_return(rg, FALSE));
+	return (free_rg_and_return(rg, TRUE));
 }
 
 int		keep_path(t_reg_path *curr, char *rg, t_reg_path **next_path)
@@ -248,8 +251,9 @@ int		keep_path(t_reg_path *curr, char *rg, t_reg_path **next_path)
 	DIR				*dirp;
 	struct dirent	*dp;
 	char			*tmp;
+	char			*new_path;
+	char			*new_out;
 
-//	PUT2("rg : ");PUT2(rg);X('\n');
 	if ((dirp = opendir(curr->path)) != NULL)
 	{
 		while ((dp = readdir(dirp)) != NULL)
@@ -265,10 +269,24 @@ int		keep_path(t_reg_path *curr, char *rg, t_reg_path **next_path)
 							tmp = ft_strjoin(curr->path, "/");
 						else
 							tmp = ft_strdup(curr->path);
-						if (*next_path == NULL)
-							*next_path = ft_reg_pathnew(ft_strjoin(tmp, dp->d_name), curr->level  + 1);
+						new_path = ft_strjoin(tmp, dp->d_name);
+						ft_strdel(&tmp);
+						if (curr->is_abs == FALSE)
+						{
+							if (curr->out)
+								tmp = ft_strjoin(curr->out, "/");
+							else
+								tmp = NULL;
+							new_out = ft_strjoin(tmp, dp->d_name);
+							if (tmp)
+								ft_strdel(&tmp);
+						}
 						else
-							ft_reg_pathadd(next_path, ft_reg_pathnew(ft_strjoin(tmp, dp->d_name), curr->level  + 1));
+							new_out = NULL;
+						if (*next_path == NULL)
+							*next_path = ft_reg_pathnew(new_path, new_out, curr->level  + 1, curr->is_abs);
+						else
+							ft_reg_pathadd(next_path, ft_reg_pathnew(new_path, new_out, curr->level + 1, curr->is_abs));
                 
 					}
 				}
@@ -280,10 +298,24 @@ int		keep_path(t_reg_path *curr, char *rg, t_reg_path **next_path)
 							tmp = ft_strjoin(curr->path, "/");
 						else
 							tmp = ft_strdup(curr->path);
-						if (*next_path == NULL)
-							*next_path = ft_reg_pathnew(ft_strjoin(tmp, dp->d_name), curr->level  + 1);
+						new_path = ft_strjoin(tmp, dp->d_name);
+						ft_strdel(&tmp);
+						if (curr->is_abs == FALSE)
+						{
+							if (curr->out)
+								tmp = ft_strjoin(curr->out, "/");
+							else
+								tmp = NULL;
+							new_out = ft_strjoin(tmp, dp->d_name);
+							if (tmp)
+								ft_strdel(&tmp);
+						}
 						else
-							ft_reg_pathadd(next_path, ft_reg_pathnew(ft_strjoin(tmp, dp->d_name), curr->level  + 1));
+							new_out = NULL;
+						if (*next_path == NULL)
+							*next_path = ft_reg_pathnew(new_path, new_out, curr->level  + 1, curr->is_abs);
+						else
+							ft_reg_pathadd(next_path, ft_reg_pathnew(new_path, new_out, curr->level + 1, curr->is_abs));
                 
 					}
 				}
@@ -355,7 +387,10 @@ t_token	*replace_regex(char *s)
 	while (++i < (int)ft_tablen(args))
 	{
 		PUT2("curr_paths->path : ");PUT2(curr_paths->path);X('\n');
+		PUT2("curr_paths->out : ");PUT2(curr_paths->out);X('\n');
 		PUT2("curr_paths->level : ");E(curr_paths->level);X('\n');
+		PUT2("curr_paths->is_abs : ");PUT2(curr_paths->is_abs == TRUE ? "TRUE" : "FALSE");X('\n');
+//		sleep(100);
 		while (curr_paths)
 		{
 			if (keep_path(curr_paths, args[i], &next_paths) == TRUE)
@@ -371,7 +406,6 @@ t_token	*replace_regex(char *s)
 			ft_strdel(&(curr_paths->path));
 			free(curr_paths);
 			curr_paths = curr_paths->next;
-			PUT2("okok\n");
 		}
 		tmp = next_paths;
 		next_paths = NULL;
@@ -409,6 +443,7 @@ t_token	*replace_regex(char *s)
 	while (tmp)
 	{
 		PUT2("final->path : ");PUT2(tmp->path);X('\n');
+		PUT2("final->out : ");PUT2(tmp->out);X('\n');
 		tmp = tmp->next;
 	}
 	return (NULL);

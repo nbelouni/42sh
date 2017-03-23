@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/06 15:31:30 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/23 01:30:27 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/23 18:55:20 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,9 @@
 typedef struct			s_reg_path
 {
 	char				*path;
+	char				*out;
 	int					level;
+	t_bool				is_abs;
 	struct s_reg_path	*next;
 	struct s_reg_path	*prev;
 }						t_reg_path;
@@ -53,7 +55,7 @@ t_token					*replace_regex(char *s);
 t_token					*find_expansions(t_token *lst);
 void					expand_args(t_token **list, t_token **elem);
 
-t_reg_path				*ft_reg_pathnew(char *s, int lvl);
+t_reg_path				*ft_reg_pathnew(char *p, char *o, int l, t_bool out);
 void					ft_reg_pathadd(t_reg_path **begin, t_reg_path *new);
 void					ft_reg_pathclear(t_reg_path **list);
 void					ft_reg_pathpush(t_reg_path **begin, t_reg_path *new);

@@ -6,23 +6,28 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/22 13:58:45 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/22 14:03:08 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/23 18:55:51 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
-t_reg_path		*ft_reg_pathnew(char *s, int lvl)
+t_reg_path		*ft_reg_pathnew(char *path, char *out, int lvl, t_bool is_abs)
 {
 	t_reg_path	*elem;
 
 	if (!(elem = ft_memalloc(sizeof(t_reg_path))))
 		return (NULL);
 	elem->level = lvl;
-	if (s == NULL)
+	elem->is_abs = is_abs;
+	if (path == NULL)
 		elem->path = NULL;
 	else
-		elem->path = s;
+		elem->path = path;
+	if (out == NULL)
+		elem->out = NULL;
+	else
+		elem->out = out;
 	elem->next = NULL;
 	elem->prev = NULL;
 	return (elem);
@@ -85,6 +90,8 @@ void		ft_reg_pathdestroy(t_reg_path **begin)
 			tmp = NULL;
 		if (list->path)
 			ft_strdel(&(list->path));
+		if (list->out)
+			ft_strdel(&(list->out));
 		free(list);
 		list = tmp;
 	}
