@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/06 15:31:30 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/20 17:47:25 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/23 01:30:27 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,13 @@
 
 #include "42sh.h"
 
-typedef struct			s_reg_paths
+typedef struct			s_reg_path
 {
 	char				*path;
-	struct s_reg_paths	*match;
-	struct s_reg_paths	*next;
-}						t_reg_paths;
+	int					level;
+	struct s_reg_path	*next;
+	struct s_reg_path	*prev;
+}						t_reg_path;
 
 typedef enum			e_sequence_type
 {
@@ -48,8 +49,34 @@ int						is_regex_in_text(char *s);
 
 int						can_expand(char *s);
 int						edit_cmd(t_token *list, t_lst *env);
-int						regex(t_token *lst);
+t_token					*replace_regex(char *s);
 t_token					*find_expansions(t_token *lst);
 void					expand_args(t_token **list, t_token **elem);
 
+t_reg_path				*ft_reg_pathnew(char *s, int lvl);
+void					ft_reg_pathadd(t_reg_path **begin, t_reg_path *new);
+void					ft_reg_pathclear(t_reg_path **list);
+void					ft_reg_pathpush(t_reg_path **begin, t_reg_path *new);
+void					ft_reg_pathdestroy(t_reg_path **begin);
+
+/*
+ *	1. couper token->word sur les '/'
+ *	char **cut_arg(char *s)
+ *	
+ *	2. initialisation de t_reg_paths
+ *	fichier reg_path.c (reproduire token.c)
+ *	
+ *	3. initaliser les 2 listes du module :	tmp->path == getcwd | "/"
+ *											final = NULL
+ *	
+ *	4. tant que char **args:
+ *		tant que tmp :
+ *			.opendir tmp->name
+ *			.si args[i] == dir->d_name || regex(arg[i]) == dir->d_name
+ *				.si tmp->lvl + 1 == max_lvl (== len de args)
+ *					add_new_maillon(final)
+ *				.else if tmp->lvl + 1 < max_lvl
+ *					add_new_maillon(tmp)
+ *			.rm tmp
+ */
 #endif

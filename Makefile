@@ -45,6 +45,7 @@ SRCS = 	ft_builtin_cd.c		\
 		is_token.c			\
 		ft_exec.c			\
 		ft_tokenlist.c		\
+		reg_path.c			\
 		lex_buf_line.c		\
 		lex_buf_pars.c		\
 		is_tok.c			\

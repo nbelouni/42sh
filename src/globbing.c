@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/03 14:15:26 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/16 18:05:08 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/22 14:49:22 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,9 +151,7 @@ int		globb(t_token *lst, t_lst *env)
 			return (ERR_EXIT);
 		i++;
 	}
-	//	TEMPORAIRE
-	regex(lst);
-	//
+	replace_regex(lst->word);
 	supp_quotes(lst->word);
 	return (0);
 }

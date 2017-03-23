@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 16:51:24 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/18 21:21:54 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/22 16:41:23 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	sort_list_token(t_token **list, t_completion *completion)
 		{
 			here_doc(elem->next, completion);
 		}
-		if (!elem->prev || elem->prev->type != DL_DIR)
+		if (!elem->prev || is_dir_type(elem->prev->type))
 			expand_args(list, &elem);
 		elem = elem->next;
 	}
