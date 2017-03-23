@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/20 20:01:32 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/22 14:42:27 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/03/23 05:37:53 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,4 +87,17 @@ void	list_iter(List_p list, void (f)(void *))
 		f(list->content);
 		list = list->next;
 	}
+}
+
+void	*list_iter_while(List_p list, void *(f)(void *))
+{
+	void	*result;
+
+	while (list)
+	{
+		if ((result = f(list->content)))
+			return (result);
+		list = list->next;
+	}
+	return (NULL);
 }

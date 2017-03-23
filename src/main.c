@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/22 22:37:37 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/23 05:32:51 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 void	launch_job(t_job *j);
 void	export_job(t_tree *root, List_p *job_list);
 	void printJobList(List_p jobList);
+
+List_p	jobList = NULL;
 
 int 	main(int argc, char **argv, char **envp)
 {
@@ -27,7 +29,6 @@ int 	main(int argc, char **argv, char **envp)
 	int		ret;
 	int		ret_read;
 	t_tree	*ast;
-	List_p	joblist = NULL;
 
 	ast = NULL;
 	list = NULL;
@@ -45,7 +46,7 @@ int 	main(int argc, char **argv, char **envp)
 	while ((ret_read = read_line(buf, &completion)) != ERR_EXIT)
 	{
 		close_termios();
-		joblist = NULL;
+		jobList = NULL;
 		if (ret_read != TAB)
 		{
 			if (is_line_ended(buf) < 0)
@@ -65,9 +66,9 @@ int 	main(int argc, char **argv, char **envp)
 				av[1] = NULL;
 				execve(av[0], av, envp);
 *///				test_func(ast);
-				export_job(ast, &joblist);
+				export_job(ast, &jobList);
 //				printJobList(joblist);
-				list_iter(joblist, (void *)launch_job);
+				list_iter(jobList, (void *)launch_job);
 				free_ast(ast);
 //				free(ast);
 			}

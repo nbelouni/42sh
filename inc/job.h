@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 17:03:19 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/22 22:01:09 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/23 05:24:27 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ********************************************************)****************** */
 
@@ -82,6 +82,7 @@ typedef struct	s_job
 	struct termios	s_term;			/* saved terminal modes cf inc/read.h strcut s_term */
 	int				flag;			/* mode exec */
 	int				foreground;		/* foreground or background */
+	List_p			waitProcessList;
 }				t_job;
 
 t_node_p	create_process(t_tree *nodeProcess);

@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 13:52:27 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/22 23:10:30 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/23 10:43:16 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ t_process_p	new_process(char **argv)
 	ptr = malloc(sizeof(*ptr));
 	bzero(ptr, sizeof(*ptr));
 	ptr->argv = argv;
-	printf("iolist : <%p>\n", ptr->ioList);
+//	printf("iolist : <%p>\n", ptr->ioList);
 	return (ptr);
 }
 

@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/20 19:57:37 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/20 20:47:33 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/03/23 05:38:08 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ struct	s_list
 };
 */
 
+void	*list_iter_while(List_p list, void *(f)(void *));
 void	list_iter(List_p list, void (f)(void *));
 void	insert_link_top(List_p *refHeadTop, List_p subLinkChain);
 void	*remove_link_content(List_p *refHead, void *data);
