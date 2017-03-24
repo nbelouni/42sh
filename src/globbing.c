@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/03 14:15:26 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/22 14:49:22 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/24 16:35:46 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,22 +137,36 @@ int		replace_env_var(char **s, t_lst *env)
 	return (FALSE);
 }
 
-int		globb(t_token *lst, t_lst *env)
+int		globb(t_token **lst, t_lst *env)
 {
 	int		i;
 	int		ret;
+	t_token	*tmp;
 
 	i = 0;
 	ret = FALSE;
 	while (ret == FALSE)
 	{
-		is_end(lst->word, &i, '\'');
-		if ((ret = replace_env_var(&(lst->word), env)) == ERR_EXIT)
+		is_end((*lst)->word, &i, '\'');
+		if ((ret = replace_env_var(&((*lst)->word), env)) == ERR_EXIT)
 			return (ERR_EXIT);
 		i++;
 	}
-	replace_regex(lst->word);
-	supp_quotes(lst->word);
+	if ((tmp = replace_regex((*lst)->word)))
+	{
+		tmp->next = *lst;
+		tmp->prev = (*lst)->prev;
+		tmp->next = *lst;
+		tmp->prev = (*lst)->prev;
+		if ((*lst)->prev)
+		{
+			(*lst)->prev->next = tmp;
+			(*lst)->prev = tmp;
+		}
+		else
+			*lst = tmp;
+	}
+	supp_quotes((*lst)->word);
 	return (0);
 }
 
@@ -166,7 +180,7 @@ int		edit_cmd(t_token *list, t_lst *env)
 	tmp = list;
 	while (tmp)
 	{
-		if (globb(tmp, env) == ERR_EXIT)
+		if (globb(&tmp, env) == ERR_EXIT)
 			return (ERR_EXIT);
 		tmp = tmp->next;
 	}

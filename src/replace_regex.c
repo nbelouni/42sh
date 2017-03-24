@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/11 16:24:49 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/23 19:22:56 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/24 17:17:03 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,8 @@ char	**split_args(char *s)
 		begin = 1;
 	else
 		begin = 0;
-	i = 0;
-	while (i < len)
+	i = -1;
+	while (++i < len)
 	{
 		end = find_next_char(s, begin, '/');
 		if (end == -1)
@@ -69,7 +69,6 @@ char	**split_args(char *s)
 		if (!(new[i] = ft_strsub(s, begin, end + 1)))
 			return (NULL);
 		begin += end + 1;
-		i++;
 	}
 	new[len] = NULL;
 	return (new);
@@ -110,6 +109,7 @@ int		find_last_len(char *s)
 {
 	int		i;
 	int		len;
+
 	i = -1;
 	len = 0;
 	while (++i < (int)ft_strlen(s))
@@ -123,10 +123,101 @@ int		find_last_len(char *s)
 
 int		free_rg_and_return(char *rg, int ret)
 {
-	PUT2("rg : ");PUT2(rg);X('\n');
-	if (rg)
+	if (rg && rg[0])
 		ft_strdel(&rg);
 	return (ret);
+}
+
+int		is_same_char(char *s, char *rg, int *i_s, int *i_rg)
+{
+	if (is_regex(rg, *i_rg) == FALSE)
+	{
+		if (rg[*i_rg] != s[*i_s])
+			return (free_rg_and_return(rg, FALSE));
+		*i_rg += 1;
+		*i_s += 1;
+	}
+	else if (rg[*i_rg] == '?')
+	{
+		if (!s[*i_s])
+			return (free_rg_and_return(rg, FALSE));
+		*i_rg += 1;
+		*i_s += 1;
+	}
+	return (TRUE);
+}
+
+int		is_pool_char(char *s, char *rg, int *i_s, int *i_rg)
+{
+	if (rg[*i_rg] == '[')
+	{
+		*i_rg += 1;
+		while (rg[*i_rg])
+		{
+			if (is_char(rg, *i_rg, ']'))
+				break ;
+			else if (s[*i_s] == rg[*i_rg])
+				break ;
+			*i_rg += 1;
+		}
+		if (is_char(rg, *i_rg, ']'))
+			return (free_rg_and_return(rg, FALSE));
+		*i_rg += find_next_char(rg, *i_rg, ']') + 1;
+		(*i_s)++;
+	}
+	return (TRUE);
+}
+
+int		is_next_pool_char(char *s, char *rg, int *i_s, int *i_rg)
+{
+	int	j;
+	int	k;
+
+	if (rg[*i_rg] == '[')
+	{
+		if (*i_rg + find_next_char(rg, *i_rg, ']') == (int)ft_strlen(rg) - 1)
+			*i_s = ft_strlen(s) - 1;
+		k = *i_rg;
+		while (rg[++k] && !is_char(rg, k, ']'))
+		{
+			j = *i_s - 1;
+			while (s[++j])
+			{
+				if (s[j] == rg[k])
+					break ;
+			}
+			if (s[j] == rg[k])
+				break ;
+		}
+		if (s[j] != rg[k])
+			return (free_rg_and_return(rg, FALSE));
+		*i_rg += find_next_char(rg, *i_rg, ']') + 1;
+		*i_s = j + 1;
+	}
+	return (TRUE);
+}
+
+int		is_next_all_char(char *s, char *rg, int *i_s, int *i_rg)
+{
+	if (rg[*i_rg] == '*')
+	{
+		while (rg[*i_rg] && is_char(rg, *i_rg, '*'))
+			*i_rg += 1;
+		if (!rg[*i_rg])
+			return (free_rg_and_return(rg, TRUE));
+		if (find_next_char(rg, *i_rg, '*') < 0)
+			*i_s = ft_strlen(s) - find_last_len(rg + *i_rg);
+		if (!is_regex(rg, *i_rg))
+		{
+			while (s[*i_s] && s[*i_s] != rg[*i_rg])
+				*i_s += 1;
+			if (!s[*i_s])
+				return (free_rg_and_return(rg, FALSE));
+		}
+		if (is_next_pool_char(s, rg, i_s, i_rg) == FALSE)
+			return (FALSE);
+	}
+	return (TRUE);
 }
 
 int		match_regex(char *s, char *rg_ref)
@@ -138,121 +229,53 @@ int		match_regex(char *s, char *rg_ref)
 	if (!(rg = ft_strdup(rg_ref)))
 		return (FALSE);
 	if (rg_ref[ft_strlen(rg_ref) - 1] == '/')
-		rg[ft_strlen(rg) - 1] = '\0';
-	PUT2("match_regex(");PUT2(s);PUT2(", ");PUT2(rg);PUT2(")\n");
+		rg[ft_strlen(rg) - 1] = '#';
 	i_s = 0;
 	i_rg = 0;
 	while (i_s < (int)ft_strlen(s) && i_rg < (int)ft_strlen(rg))
 	{
-//		PUT2("s + i_s : ");PUT2(s + i_s);X('\n');
-		if (is_regex(rg, i_rg) == FALSE)
-		{
-			PUT2("!regex\n");
-			if (rg[i_rg] != s[i_s])
-				return (free_rg_and_return(rg, FALSE));
-			rg += 1;
-			i_s += 1;
-		}
-		else if (rg[i_rg] == '?')
-		{
-			PUT2("regex == ?\n");
-			if (rg[i_rg] != s[i_s])
-			if (!s[i_s])
-				return (free_rg_and_return(rg, FALSE));
-			i_rg += 1;
-			i_s += 1;
-		}
-		else if (rg[i_rg] == '[')
-		{
-			PUT2("regex == [\n");
-			i_rg += 1;
-			while (rg[i_rg])
-			{
-				if (is_char(rg, i_rg, ']'))
-					break ;
-				else if (s[i_s] == rg[i_rg])
-					break ;
-				i_rg += 1;
-			}
-			if (is_char(rg, i_rg, ']'))
-				return (free_rg_and_return(rg, FALSE));
-			i_rg += find_next_char(rg, i_rg, ']') + 1;
-			i_s++;
-		}
-		else if (rg[i_rg] == '*')
-		{
-			PUT2("regex == *\n");
-			while (rg[i_rg] && is_char(rg, i_rg, '*'))
-				i_rg += 1;
-			if (!rg[i_rg])
-				return (free_rg_and_return(rg, TRUE));
-//		PUT2("rg + i_rg : ");PUT2(rg + i_rg);X('\n');
-//		PUT2("NEXT_CHAR : ");E(find_next_char(rg, i_rg, '*'));X('\n');
-			if (find_next_char(rg, i_rg, '*') < 0)
-				i_s = ft_strlen(s) - find_last_len(rg + i_rg);
-//			PUT2("s + i_s : ");PUT2(s + i_s);X('\n');
-			if (!is_regex(rg, i_rg))
-			{
-				while (s[i_s] && s[i_s] != rg[i_rg])
-					i_s += 1;
-			}
-			else if (rg[i_rg] == '[')
-			{
-				int	j;
-				int	k;
-
-				k = i_rg + 1;
-				if (i_rg + find_next_char(rg, i_rg, ']') == (int)ft_strlen(rg) - 1)
-					i_s = ft_strlen(s) - 1;
-				while (rg[k] && !is_char(rg, k, ']'))
-				{
-					j = i_s;
-					while (s[j])
-					{
-						if (s[j] == rg[k])
-						{
-//				PUT2("rg + k : ");PUT2(rg + k);X('\n');
-//				PUT2("s + j : ");PUT2(s + j);X('\n');
-							break ;
-						}
-						j += 1;
-					}
-					if (s[j] == rg[k])
-					{
-//				PUT2("rg + k : ");PUT2(rg + k);X('\n');
-//				PUT2("s + j : ");PUT2(s + j);X('\n');
-						break ;
-					}
-					k += 1;
-				}
-//				PUT2("rg + k : ");PUT2(rg + k);X('\n');
-//				PUT2("s + j : ");PUT2(s + j);X('\n');
-				if (s[j] != rg[k])
-					return (free_rg_and_return(rg, FALSE));
-				i_rg += find_next_char(rg, i_rg, ']') + 1;
-				i_s = j + 1;
-			}
-//			PUT2("rg + i_rg : ");PUT2(rg + i_rg);X('\n');
-//			PUT2("s + i_s : ");PUT2(s + i_s);X('\n');
-		}
+		if (is_same_char(s, rg, &i_s, &i_rg) == FALSE)
+			return (FALSE);
+		if (is_pool_char(s, rg, &i_s, &i_rg) == FALSE)
+			return (FALSE);
+		if (is_next_all_char(s, rg, &i_s, &i_rg) == FALSE)
+			return (FALSE);
 	}
-	if (rg[i_rg] == '*')
-	{
-		while (rg[i_rg] && rg[i_rg] == '*')
-			i_rg += 1;
-	}
+	while (rg[i_rg] && rg[i_rg] == '*')
+		i_rg += 1;
 	if (i_s < (int)ft_strlen(s) || i_rg < (int)ft_strlen(rg))
 		return (free_rg_and_return(rg, FALSE));
 	return (free_rg_and_return(rg, TRUE));
+}
+
+int		insert_in_next(t_reg_path *c, t_reg_path **next, char *d_name)
+{
+	char			*t;
+	char			*np;
+	char			*no;
+
+	t = ft_strcmp(c->path, "/") ? ft_strjoin(c->path, "/") : ft_strdup(c->path);
+	np = ft_strjoin(t, d_name);
+	ft_strdel(&t);
+	if (c->is_abs == FALSE)
+	{
+		t = (c->out) ? ft_strjoin(c->out, "/") : NULL;
+		no = ft_strjoin(t, d_name);
+		ft_strdel(&t);
+	}
+	else
+		no = NULL;
+	if (*next == NULL)
+		*next = ft_reg_pathnew(np, no, c->level + 1, c->is_abs);
+	else
+		ft_reg_pathadd(next, ft_reg_pathnew(np, no, c->level + 1, c->is_abs));
+	return (TRUE);
 }
 
 int		keep_path(t_reg_path *curr, char *rg, t_reg_path **next_path)
 {
 	DIR				*dirp;
 	struct dirent	*dp;
-	char			*tmp;
-	char			*new_path;
-	char			*new_out;
 
 	if ((dirp = opendir(curr->path)) != NULL)
 	{
@@ -264,61 +287,10 @@ int		keep_path(t_reg_path *curr, char *rg, t_reg_path **next_path)
 				if (!is_regex_in_text(rg))
 				{
 					if (!ft_strncmp(dp->d_name, rg, ft_strlen(rg) - 1))
-					{
-						if (ft_strcmp(curr->path, "/"))
-							tmp = ft_strjoin(curr->path, "/");
-						else
-							tmp = ft_strdup(curr->path);
-						new_path = ft_strjoin(tmp, dp->d_name);
-						ft_strdel(&tmp);
-						if (curr->is_abs == FALSE)
-						{
-							if (curr->out)
-								tmp = ft_strjoin(curr->out, "/");
-							else
-								tmp = NULL;
-							new_out = ft_strjoin(tmp, dp->d_name);
-							if (tmp)
-								ft_strdel(&tmp);
-						}
-						else
-							new_out = NULL;
-						if (*next_path == NULL)
-							*next_path = ft_reg_pathnew(new_path, new_out, curr->level  + 1, curr->is_abs);
-						else
-							ft_reg_pathadd(next_path, ft_reg_pathnew(new_path, new_out, curr->level + 1, curr->is_abs));
-                
-					}
+						insert_in_next(curr, next_path, dp->d_name);
 				}
-				else
-				{
-					if (match_regex(dp->d_name, rg) == TRUE)
-					{
-						if (ft_strcmp(curr->path, "/"))
-							tmp = ft_strjoin(curr->path, "/");
-						else
-							tmp = ft_strdup(curr->path);
-						new_path = ft_strjoin(tmp, dp->d_name);
-						ft_strdel(&tmp);
-						if (curr->is_abs == FALSE)
-						{
-							if (curr->out)
-								tmp = ft_strjoin(curr->out, "/");
-							else
-								tmp = NULL;
-							new_out = ft_strjoin(tmp, dp->d_name);
-							if (tmp)
-								ft_strdel(&tmp);
-						}
-						else
-							new_out = NULL;
-						if (*next_path == NULL)
-							*next_path = ft_reg_pathnew(new_path, new_out, curr->level  + 1, curr->is_abs);
-						else
-							ft_reg_pathadd(next_path, ft_reg_pathnew(new_path, new_out, curr->level + 1, curr->is_abs));
-                
-					}
-				}
+				else if (match_regex(dp->d_name, rg) == TRUE)
+					insert_in_next(curr, next_path, dp->d_name);
 			}
 		}
 		closedir(dirp);
@@ -328,23 +300,23 @@ int		keep_path(t_reg_path *curr, char *rg, t_reg_path **next_path)
 	return (TRUE);
 }
 
-void	dispach_paths(t_reg_path *tmp, t_reg_path **next, t_reg_path **final, int max_lvl)
+void	dispach_paths(t_reg_path *tmp, t_reg_path **nx, t_reg_path **f, int lvl)
 {
 	while (tmp)
 	{
-		if ((tmp)->level == max_lvl)
+		if ((tmp)->level == lvl)
 		{
-			if (*final)
-				ft_reg_pathpush(final, tmp);
+			if (*f)
+				ft_reg_pathpush(f, tmp);
 			else
-				*final = tmp;
+				*f = tmp;
 		}
 		else
 		{
-			if (*next)
-				ft_reg_pathpush(next, tmp);
+			if (*nx)
+				ft_reg_pathpush(nx, tmp);
 			else
-				*next = tmp;
+				*nx = tmp;
 		}
 		tmp = (tmp)->next;
 		if (tmp)
@@ -355,11 +327,6 @@ void	dispach_paths(t_reg_path *tmp, t_reg_path **next, t_reg_path **final, int m
 	}
 }
 
-/*
- *	bash-3.2$ echo *\/
- *	-> doc/ inc/ libft/ obj/ src/
- *
- */
 t_token	*replace_regex(char *s)
 {
 	char		**args;
@@ -373,78 +340,29 @@ t_token	*replace_regex(char *s)
 		return (NULL);
 	if (!(args = split_args(s)))
 		return (NULL);
-	i = -1;
-	while (args[++i])
-	{
-		PUT2("args[i] : ");PUT2(args[i]);X('\n');
-	}
 	next_paths = NULL;
 	final = NULL;
 	curr_paths = init_curr_path(s);
 	i = -1;
-	PUT2("_________________\n");
-	PUT2("args len : ");E(ft_tablen(args));X('\n');
 	while (++i < (int)ft_tablen(args))
 	{
-		PUT2("curr_paths->path : ");PUT2(curr_paths->path);X('\n');
-		PUT2("curr_paths->out : ");PUT2(curr_paths->out);X('\n');
-		PUT2("curr_paths->level : ");E(curr_paths->level);X('\n');
-		PUT2("curr_paths->is_abs : ");PUT2(curr_paths->is_abs == TRUE ? "TRUE" : "FALSE");X('\n');
-//		sleep(100);
 		while (curr_paths)
 		{
-			if (keep_path(curr_paths, args[i], &next_paths) == TRUE)
-			{
-				tmp = next_paths;
-				while (tmp)
-				{
-					PUT2("tmp->path : ");PUT2(tmp->path);X('\n');
-					PUT2("tmp->level : ");E(tmp->level);X('\n');
-					tmp = tmp->next;
-				}
-			}
+			keep_path(curr_paths, args[i], &next_paths);
 			ft_strdel(&(curr_paths->path));
+			ft_strdel(&(curr_paths->out));
 			free(curr_paths);
 			curr_paths = curr_paths->next;
 		}
 		tmp = next_paths;
 		next_paths = NULL;
 		dispach_paths(tmp, &next_paths, &final, ft_tablen(args));
-		t_reg_path *tmp2;
-		tmp2 = tmp;
-		PUT2("TMP :\n");
-		while (tmp2)
-		{
-			PUT2("tmp->path : ");PUT2(tmp2->path);X('\n');
-			PUT2("tmp->level : ");E(tmp2->level);X('\n');
-			tmp2 = tmp2->next;
-		}
-		tmp2 = next_paths;
-		PUT2("NEXT_PATHS :\n");
-		while (tmp2)
-		{
-			PUT2("next_paths->path : ");PUT2(tmp2->path);X('\n');
-			PUT2("next_paths->level : ");E(tmp2->level);X('\n');
-			tmp2 = tmp2->next;
-		}
-		tmp2 = final;
-		PUT2("FINAL :\n");
-		while (tmp2)
-		{
-			PUT2("final->path : ");PUT2(tmp2->path);X('\n');
-			PUT2("final->level : ");E(tmp2->level);X('\n');
-			tmp2 = tmp2->next;
-		}
 		curr_paths = next_paths;
 		next_paths = NULL;
 	}
-	tmp = final;
-	PUT2("FINAL :\n");
-	while (tmp)
-	{
-		PUT2("final->path : ");PUT2(tmp->path);X('\n');
-		PUT2("final->out : ");PUT2(tmp->out);X('\n');
-		tmp = tmp->next;
-	}
+	ft_reg_pathdestroy(&next_paths);
+	ft_reg_pathdestroy(&final);
+	ft_reg_pathdestroy(&curr_paths);
+	ft_tabdel(args);
 	return (NULL);
 }
