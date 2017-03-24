@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/24 18:04:06 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/03/24 17:17:31 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,8 @@ int	job_is_stopped (t_job *j)
 /* Return true if all processes in the job have completed.  */
 int	job_is_completed(t_job *j)
 {
-  t_process_p p;
-  List_p	ptr;
+	t_process_p p;
+	List_p	ptr;
 
   ptr = j->waitProcessList;
   print_job(j);
@@ -117,7 +117,7 @@ t_process_p	getProcessByPid(pid_t pid)
 		while (ptrProcess)
 		{
 			p = ptrProcess->content;
-			print_process(p);
+//			print_process(p);
 			if (p->pid == pid)
 				return (p);
 			ptrProcess = ptrProcess->next;
@@ -129,7 +129,7 @@ t_process_p	getProcessByPid(pid_t pid)
 
 int	mark_process_status(pid_t pid, int status)
 {
-  t_process_p p;
+	t_process_p p;
 
   if (pid > 0)
   {
@@ -163,8 +163,8 @@ int	mark_process_status(pid_t pid, int status)
 
 void	update_status(void)
 {
-  int status;
-  pid_t pid;
+	int status;
+	pid_t pid;
 
   while (true)
   {
@@ -179,8 +179,8 @@ void	update_status(void)
 
 void	wait_for_job(t_job *j)
 {
-  int status;
-  pid_t pid;
+	int status;
+	pid_t pid;
 
   print_job(j);
   signal (SIGCHLD, SIG_DFL);
@@ -284,25 +284,23 @@ void	launch_process(t_process_p process, pid_t pgid, int foreground)
 
 	pid = getpid();
 	if (pgid == 0) pgid = pid;
-		setpgid(pid, pgid);
+	setpgid(pid, pgid);
 	if (foreground)
 		tcsetpgrp(g_sh_tty, pgid);
-//  doRedir(process->ioList);
-//	while (process->ioList)
-//		doRedir(POP(&process->ioList));
-  list_iter(process->ioList, (void *)doRedir);
-  signal (SIGINT, SIG_DFL);
-  signal (SIGQUIT, SIG_DFL);
-  signal (SIGTSTP, SIG_DFL);
-  signal (SIGTTIN, SIG_DFL);
-  signal (SIGTTOU, SIG_DFL);
-  signal (SIGCHLD, SIG_DFL);
-  print_process(process);
-//  sleep(10);
-  ft_check_exec(process->argv);
-// execvp(p->argv[0], p->argv);
-// perror("execvp");
-  exit (1);
+	//  doRedir(process->ioList);
+	list_iter(process->ioList, (void *)doRedir);
+	signal (SIGINT, SIG_DFL);
+	signal (SIGQUIT, SIG_DFL);
+	signal (SIGTSTP, SIG_DFL);
+	signal (SIGTTIN, SIG_DFL);
+	signal (SIGTTOU, SIG_DFL);
+	signal (SIGCHLD, SIG_DFL);
+//	print_process(process);
+//	sleep(10);
+	ft_check_exec(process->argv);
+//	execvp(p->argv[0], p->argv);
+//	perror("execvp");
+	exit (1);
 }
 
 t_node_p	iterInOrder(t_node_p ptr, List_p *stock)
@@ -333,7 +331,55 @@ void	doRedir(Io_p io)
 	if (io->flag & CLOSE)
 		close(io->dup_src);
 }
+/*Il
+void	doRedir(Io_p io)
+{
+	char	buf[10];
+	int		pipefd[2];
 
+	pipe(pipefd);
+	fputs("doRedir\n", stderr);
+	if (io->flag & OPEN)
+	{
+//		dprintf(2,"open %d\n", io->dup_src);
+		if (access(io->str, X_OK) == -1)
+			io->dup_src = open(io->str, io->mode, DEF_FILE);
+		if (io->dup_src < 0 && !io->mode)
+			fputs("42sh: No such file or directory (a placer dans les error)\n", stderr);
+//		else if (io->dup_src < 0)
+//			fputs("42sh: Bad file descriptor (a placer dans les error)\n", stderr);
+		dprintf(2,"src %d\n", io->dup_src);
+	}
+	if (io->flag & DUP & WRITE)
+	{
+//		fputs("WRITE\n", stderr);
+//		dprintf(2,"open %d\n", io->dup_src);
+//		dprintf(2,"target %d\n", io->dup_target);
+		while (read(io->dup_src, buf, 10) > 0)
+		{
+			write(pipefd[1], buf, 10);
+			ft_bzero(buf, 10);
+		}
+		io->dup_src = pipefd[0];
+	}
+	if (io->flag & WRITE)
+	{
+		dup2(pipefd[0], STDIN_FILENO);
+		write(pipefd[1], io->str, ft_strlen(io->str));
+	}
+	if (io->flag & DUP)
+	{
+		dup2(io->dup_src, io->dup_target);
+//		dprintf(2,"rd : <%d> && in : <%d><%p>\n", rd, io->dup_src, io);
+	}
+	if (io->flag & CLOSE)
+	{
+		dprintf(2,"close <%p>\n", io);
+		close(io->dup_src);
+		close(pipefd[1]);
+	}
+}
+*/
 int	doPipe(t_process_p p1, t_process_p p2, 	int	*io_pipe)
 {
 	Io_p	io_in;

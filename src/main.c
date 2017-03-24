@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/24 17:44:18 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/03/24 17:20:28 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 void	launch_job(t_job *j);
 void	export_job(t_tree *root, List_p *job_list);
 void	printJobList(List_p jobList);
-
 
 List_p	jobList = NULL;
 
@@ -69,7 +68,7 @@ int 	main(int argc, char **argv, char **envp)
 				execve(av[0], av, envp);
 *///				test_func(ast);
 				export_job(ast, &jobListBis);
-//				printJobList(joblist);
+//				printJobList(jobListBis);
 				list_iter(jobListBis, (void *)launch_job);
 				delete_list(&jobListBis, NULL);
 				free_ast(ast);

@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 13:08:28 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/24 18:03:09 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/03/23 14:10:08 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,11 @@ int			ft_check_built(char **args)
 			ret = FALSE;
 		else if ((ret = ft_strcmp(args[0], "echo")) == FALSE)
 			ret = FALSE;
+		else if (ft_strcmp(args[0], "job") == FALSE ||
+				ft_strcmp(args[0], "fg") == FALSE ||
+				ft_strcmp(args[0], "bg") == FALSE
+				)
+			ret = FALSE;
 		return (ret);
 	}
 	return (FALSE);
@@ -102,6 +107,7 @@ void			ft_exec(char **av)
 	char		**envp;
 	t_elem		*tmp;
 
+	close_termios();
 	envp = ft_env_to_tab(env);
 	if (!(tmp = ft_find_elem("PATH", env)))
 		s = ft_strdup("");
@@ -111,9 +117,9 @@ void			ft_exec(char **av)
 	{
 		s2 = ft_cut_path(&s, av[0]);
 		if (lstat(av[0], &st) == 0 && st.st_mode & S_IXUSR)
-			execve(av[0], av, NULL);
+			execve(av[0], av, envp);
 		if (lstat(s2, &st) == 0 && st.st_mode & S_IXUSR)
-			execve(s2, av, NULL);
+			execve(s2, av, envp);
 		if (!ft_strchr(s, ':'))
 		{
 			if (lstat(av[0], &st) == 0 && st.st_mode & S_IXUSR)

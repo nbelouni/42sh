@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 19:31:44 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/22 14:41:52 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/24 16:57:11 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ int			check_fd_out(t_token **list, char *s, t_pt *p)
 
 	while (s[p->i + p->len] && ft_isalnum(s[p->i + p->len]) == 1)
 		p->len++;
+	if (p->len == 0 && s[p->i + p->len] == '-')
+		p->len++;
 	if (p->len != 0)
 	{
 		p->type = TARGET;
@@ -65,7 +67,8 @@ static int	check_fd_in(t_token **list, char *s, t_pt *p)
 	j = 0;
 	ret = is_redir(s, p->i + p->len);
 	ret2 = is_agreg(s, p->i + p->len);
-	if (ret != SR_DIR && ret != SL_DIR && ret2 != DIR_L_AMP && ret2 != DIR_R_AMP)
+	if (ret != SR_DIR && ret != SL_DIR && ret2 != DIR_L_AMP &&
+		ret2 != DIR_R_AMP && ret != DR_DIR && ret != LR_DIR)
 		return (0);
 	while (p->len - j > 0 && ft_isdigit(s[p->i + p->len - j - 1]) == 1)
 		j++;

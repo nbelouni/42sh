@@ -6,7 +6,7 @@
 /*   By: dogokar <dogokar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 14:41:10 by dogokar           #+#    #+#             */
-/*   Updated: 2017/03/22 21:02:20 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/24 13:46:09 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -309,7 +309,6 @@ char	**copy_fd(t_token *tmp)
 	cmd[0] = ft_strdup(tmp->word);
 	cmd[1] = NULL;
 	return (cmd);
-	PUT2(cmd[0]);X('\n');
 }
 
 t_tree *recurs_creat_tree(t_token *lst)
@@ -317,7 +316,6 @@ t_tree *recurs_creat_tree(t_token *lst)
 	t_token *tmp;
 	t_tree  *node;
 
-	PUT2("\n-------------\n");
 	tmp = lst;
 	node = NULL;
 	node = add_tree(tmp);

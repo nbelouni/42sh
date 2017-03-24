@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 17:03:19 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/23 05:24:27 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/03/24 13:31:54 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ********************************************************)****************** */
 
@@ -22,7 +22,7 @@
 #define IS ==
 #define TOKEN(x) (((t_tree *)x)->token)
 #define isCondition(x) (x == OR || x == AND)
-#define isRedir(x) (x == DIR_L_AMP || x == DIR_R_AMP || x == SR_DIR || x == SL_DIR || x == DR_DIR || x == DL_DIR)
+#define isRedir(x) (x == DIR_L_AMP || x == DIR_R_AMP || x == SR_DIR || x == SL_DIR || x == DR_DIR || x == DL_DIR || x == LR_DIR)
 #define DEF_FILE 0644
 
 typedef struct s_list *List_p;
@@ -90,6 +90,7 @@ t_node_p	create_condition_if(t_tree *nodeConditionIf, t_node_p right_node, t_nod
 t_node_p	create_pipe(t_node_p right_node, t_node_p left_node);
 t_node_p	create_redir(t_tree *nodeRedir, t_node_p left_node);
 
+char	*iter_cmd(t_node_p process_tree);
 void test_func(t_tree *root);
 
 #endif

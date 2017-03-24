@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 13:08:51 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/22 14:48:50 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/23 19:55:49 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ void		init_shell(void)
 			exit (1);
 		}
 		tcsetpgrp(g_sh_tty, g_sh_pgid);
+//		PUT2("\n---shell pgid---\n");
 //		E(g_sh_pgid);
+//		tcgetattr (shell_terminal, &shell_tmodes);
 	}
 }
