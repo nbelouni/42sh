@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 13:52:27 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/23 11:44:24 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/03/24 18:02:31 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,26 +24,20 @@ int	iter_post_ord(t_tree **ptr, List_p *stock)
 {
 	while (*ptr)
 	{
-//		puts("Bottom");
 		if ((*ptr)->right)
 			PUSH(stock, (*ptr)->right);
 		PUSH(stock, *ptr);
 		*ptr = (*ptr)->left;
 	}
-/*	printf("=--Stack-1-=\n");
-	list_iter(*stock, (void *)&print_stack);*/
 	*ptr = POP(stock);
 	if (*stock && (*ptr)->right && TOP((*stock)) == (*ptr)->right)
 	{
 		POP(stock);
 		PUSH(stock, *ptr);
 		*ptr = (*ptr)->right;
-/*		printf("=--Stack-B-=\n");
-		list_iter(*stock, (void *)&print_stack);*/
 		return (0);
 	}
 	return (1);
-//	return (POP(stock));
 }
 
 t_node_p	create_process_tree(t_tree *root)
@@ -57,8 +51,6 @@ t_node_p	create_process_tree(t_tree *root)
 	{
 		if (iter_post_ord(&root, &stock))
 		{
-/*			printf("=--Stack--=\n");
-			list_iter(stock, (void *)&print_stack);*/
 			if (TOKEN(root) IS CMD)
 				PUSH(&stack, create_process(root));
 			else if (isCondition(TOKEN(root)))
@@ -118,9 +110,13 @@ t_node_p new_node(t_type_node type, size_t size)
 	return (ptr);
 }
 
-void	delete_node(t_node_p node)
+void	*delete_node(t_node_p node)
 {
+	void	*data;
+
+	data = node->data;
 	free(node);
+	return(data);
 }
 
 t_process_p	new_process(char **argv)
@@ -130,7 +126,6 @@ t_process_p	new_process(char **argv)
 	ptr = malloc(sizeof(*ptr));
 	bzero(ptr, sizeof(*ptr));
 	ptr->argv = argv;
-//	printf("iolist : <%p>\n", ptr->ioList);
 	return (ptr);
 }
 
@@ -139,7 +134,7 @@ t_node_p	create_process(t_tree *nodeProcess)
 	t_node_p ptr;
 
 	ptr = new_node(PROCESS, sizeof(struct s_process));
-	ptr->data = new_link(new_process(nodeProcess->cmd), sizeof(struct s_node));
+	ptr->data = new_link(new_process(nodeProcess->cmd), sizeof(struct s_process));
 	return (ptr);
 }
 
@@ -173,7 +168,6 @@ t_node_p create_redir(t_tree *nodeRedir, t_node_p left_node)
 
 	io = new_io();
 	puts("0");
-//	dprintf(2, "cmd : <%p>\n", nodeRedir->right->cmd);
 	io->str = (nodeRedir->right->cmd)[0];
 	io->flag |= DUP;
 	puts("1");
@@ -279,4 +273,61 @@ void test_func(t_tree *root)
 
 	export_job(root, &Jobs);
 	printJobList(Jobs);
+}
+
+void	*iterPreOrder(t_node_p Node, List_p *stack)
+{
+	if (!Node && !*stack)
+		return (NULL);
+	if (*stack)
+		Node = POP(stack);
+	if (Node->right)
+		PUSH(stack, Node->right);
+	if (Node->right)
+		PUSH(stack, Node->left);
+	return (Node);
+}
+
+void	deleteConditionIf(t_condition_if_p conditionIf)
+{
+	if (!conditionIf)
+		return ;	
+	free(conditionIf);
+}
+
+void	deleteProcess(t_process_p process)
+{
+	if (!process)
+		return ;
+	if (process->ioList)
+		delete_list(&(process->ioList), &free);
+	free(process);
+}
+
+void	deleteProcessTreeNode(int type, void *data)
+{
+	if (!data)
+		return ;
+	if (type == IF)
+		deleteConditionIf(data);
+	else
+		delete_list((List_p *)&data, (void *)deleteProcess);
+}
+
+void	delete_tree(t_node_p summitNode, void (f)(int, void *))
+{
+	List_p	stack = NULL;
+
+	while ((summitNode = iterPreOrder(summitNode, &stack)))
+	{
+		f(summitNode->type, delete_node(summitNode));
+		summitNode = NULL;
+	}
+}
+
+void	delete_job(t_job *j)
+{
+	delete_tree(j->process_tree, deleteProcessTreeNode);
+	delete_list(&j->waitProcessList, (void * )deleteProcess);
+	free(j);
 }
