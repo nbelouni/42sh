@@ -82,6 +82,22 @@ typedef struct		s_set
 t_lst				*ft_init_lstset(void);
 
 /*
+**				init_default_env
+*/
+
+t_lst				*ft_default_env(void);
+
+/*
+**	ft_init.c
+*/
+
+t_core				*ft_core_alloc(void);
+t_lst				*ft_init_list(void);
+t_elem				*ft_init_elem(void);
+char				**ft_env_to_tab(t_lst *lst);
+t_lst				*ft_env_to_list(char **envp, t_lst *lst);
+
+/*
 **	ft_builtin_cd.c
 */
 
@@ -126,15 +142,7 @@ int					ft_builtin_setenv(t_lst *env, char *cmd, char **args);
 int					ft_unsetenv(t_lst *env, char *var);
 int					ft_builtin_unsetenv(t_lst *env, char *cmd, char **args);
 
-/*
-**	ft_init.c
-*/
 
-t_core				*ft_init_set(void);
-t_lst				*ft_init_list(void);
-t_elem				*ft_init_elem(void);
-char				**ft_env_to_tab(t_lst *lst);
-t_lst				*ft_env_to_list(char **envp, t_lst *lst);
 
 /*
 **	ft_list_tools.c

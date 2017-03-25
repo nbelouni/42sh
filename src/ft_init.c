@@ -17,7 +17,7 @@
 **	ses octets a 0, puis retourne la nouvelle liste de type set.
 */
 
-t_core	*ft_init_set(void)
+t_core	*ft_core_alloc(void)
 {
 	t_core			*set;
 

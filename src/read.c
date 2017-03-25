@@ -13,6 +13,7 @@
 #include "42sh.h"
 #include "read.h"
 
+
 int		cpy_cut_paste(t_buf *buf, int x)
 {
 	if (x == CTRL_F || x == CTRL_N || x == CTRL_A || x == CTRL_I)
@@ -42,13 +43,70 @@ int		cpy_cut_paste(t_buf *buf, int x)
 	return (0);
 }
 
+int		mv_and_read2(t_buf *buf, int x)
+{
+	if (x == DEL)
+	{
+		vb_del(buf, x);
+		return (1);
+	}
+	else if (x == ALT_UP)
+	{
+		m_up();
+		return (1);
+	}
+	else if (x == ALT_DOWN)
+	{
+		m_down(buf);
+		return (1);
+	}
+	else if (x == LEFT || x == HOME || x == ALT_LEFT)
+	{
+		PUT2("fuck");
+		m_left(calc_len(buf, x));
+		return (1);
+	}
+	else if (x == RIGHT || x == END || x == ALT_RIGHT)
+	{
+		m_right(calc_len(buf, x));
+		return (1);
+	}
+	return (0);
+}
+
+char 	*cut_bit(int x)
+{
+	char *test;
+	int i;
+
+	test = ft_strnew(sizeof(int));
+	i = 0;
+	while (x != 0)
+	{
+		test[i] = x & 0xff;
+		x >>= 8;
+		i++;
+	}
+	ft_putstr(test);
+	return (test);
+}
+
+/*
+**  TODO cut bite cree un chaine decouper a partire de int x
+**	mais fuck va falloir une tampon ou une autre maniere de read
+**	ou faire une copy de vbinsert avec l'utilistation d'une chaine
+*/
+
 int		mv_and_read(t_buf *buf, int x, int ret)
 {
+	int i;
+
+	i = 0;
 	if (ret < 0)
 		return (ft_print_error("\n42sh", ERR_READ, ERR_EXIT));
 	if (x == CTRL_D)
 		return (ERR_EXIT);
-	if ((x > 31 && x < 127))
+	if (ft_isprint(x))
 	{
 		if (vb_insert(buf, (char *)&x) < 0)
 		{
@@ -56,21 +114,20 @@ int		mv_and_read(t_buf *buf, int x, int ret)
 			return (ft_print_error("\n42sh", ERR_CMD_TOO_LONG, ERR_NEW_CMD));
 		}
 	}
-	if (x == DEL)
-		vb_del(buf, x);
-	if (x == ALT_UP)
-		m_up();
-	if (x == ALT_DOWN)
-		m_down(buf);
-	if (x == LEFT || x == HOME || x == ALT_LEFT)
-		m_left(calc_len(buf, x));
-	if (x == RIGHT || x == END || x == ALT_RIGHT)
-		m_right(calc_len(buf, x));
+	else if (mv_and_read2(buf, x) == 0)
+	{
+		if (vb_insert(buf, cut_bit(x)) < 0)
+		{
+			m_right(calc_len(buf, END));
+			return (ft_print_error("\n42sh", ERR_CMD_TOO_LONG, ERR_NEW_CMD));
+		}
+	}
 	return (0);
 }
 
 /*
 **	Y faut trouver un autre moyen de recuperer les caracteres speciaux
+**	TODO ; j'ai jsute modifier le read
 */
 
 void	init_line(t_buf *buf)
@@ -83,7 +140,7 @@ void	init_line(t_buf *buf)
 
 int		read_line(t_buf *buf, t_completion *cplt)
 {
-	unsigned int	x;
+ 	int				x;
 	int				ret;
 	int				err;
 	int				i;
@@ -92,7 +149,7 @@ int		read_line(t_buf *buf, t_completion *cplt)
 	x = 0;
 	err = 0;
 	init_line(buf);
-	while ((ret = read(0, (char *)&x, 4)))
+	while ((ret = read(0, &x, sizeof(int))))
 	{
 		if ((err = mv_and_read(buf, x, ret)) < 0 ||
 		(err = cpy_cut_paste(buf, x)) < 0 ||

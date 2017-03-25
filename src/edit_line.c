@@ -16,6 +16,7 @@ int			vb_insert(t_buf *buf, char *s)
 {
 	int cursor;
 
+
 	cursor = g_curs.win_col * g_curs.row + g_curs.col;
 	t_puts("im", 1);
 	t_puts("ic", 1);
