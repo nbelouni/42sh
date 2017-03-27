@@ -6,43 +6,51 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/27 22:10:52 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/17 17:08:54 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
-void	parse(t_set *m_env, char *line, char **envp)
+int		parse(t_core *set, char *line, char **envp)
 {
 	char	**args;
-	t_lst *env;
 
 	(void)envp;
-	env = m_env->env;
+	if ((ft_cmd_to_history(set->hist, line)) == ERR_EXIT)
+		return (ERR_EXIT);
 	args = NULL;
 	args = ft_strsplit(line, ' ');
 	if (args != NULL && args[0] != NULL)
 	{
 		if (ft_strcmp(args[0], "exit") == 0)
-			ft_builtin_exit(env, args[0], args + 1);
+			ft_builtin_exit(set, args[0], args + 1);
 		else if (ft_strcmp(args[0], "env") == 0)
-			ft_builtin_env(env, &args[1]);
+			ft_builtin_env(set->env, &args[1]);
 		else if (ft_strcmp(args[0], "setenv") == 0)
-			ft_builtin_setenv(env, args[0], args + 1);
+			ft_builtin_setenv(set->env, args[0], args + 1);
 		else if (ft_strcmp(args[0], "unsetenv") == 0)
-			ft_builtin_unsetenv(env, args[0], &args[1]);
+			ft_builtin_unsetenv(set->env, args[0], &args[1]);
 		else if (ft_strcmp(args[0], "echo") == 0)
-			ft_builtin_echo(env, args[0], args + 1);
+			ft_builtin_echo(set->env, args[0], args + 1);
 		else if (ft_strcmp(args[0], "cd") == 0)
-			ft_builtin_cd(env, args[0], args + 1);
+			ft_builtin_cd(set->env, args[0], args + 1);
 		else if (ft_strcmp(args[0], "export") == 0)
-			ft_builtin_export(args, m_env);
+			ft_builtin_export(args, set);
 		else if (ft_strcmp(args[0], "unset") == 0)
-			ft_builtin_unset(m_env, args);
+			ft_builtin_unset(set, args);
+		else if (ft_strcmp(args[0], "history") == 0)
+			ft_builtin_history(set->set, set->hist, args + 1);
+		else if (ft_strcmp(args[0], "set") == 0)
+			ft_print_lst(set->set);
 		else
 			ft_waitchild(args, envp);
 		ft_tabdel(args);
+		args = NULL;
 	}
+	if ((ft_check_history_var(set->set, set->hist)) == ERR_EXIT)
+		return (ERR_EXIT);
+	return (0);
 }
 
 void print_tab(char **tabol);
@@ -82,19 +90,22 @@ int 	main(int argc, char **argv, char **envp)
 	t_completion	completion = {NULL, NULL, NULL, NULL};
 	t_buf	*buf;
 	t_token	*list;
-	t_lst	*env;
-	t_set *multi_var_env;
+	// t_lst	*env;
 	int		ret;
 	int		ret_read;
 	t_tree	*ast;
+	t_core	*set;
 
 	ast = NULL;
 	list = NULL;
-	env = NULL;
-	multi_var_env = ft_init_set();
-	env = ft_env_to_list(envp, env);
-	multi_var_env->env = env;
-	if (init_completion(&completion, env) == ERR_EXIT)
+	set = ft_init_set();
+	set->env = NULL;
+	set->set = ft_init_lstset();
+	set->hist = NULL;
+	ft_histopt_r(&(set->hist), set->set, NULL);
+	if (envp != NULL && envp[0] != NULL)
+		set->env = ft_env_to_list(envp, set->env);
+	if (init_completion(&completion, set->env) == ERR_EXIT)
 		return (-1);
 	signal(SIGWINCH, get_sigwinch);
 	signal(SIGINT, get_sigint);
@@ -110,19 +121,19 @@ int 	main(int argc, char **argv, char **envp)
 			if (is_line_ended(buf) < 0)
 				return (-1);
 			complete_final_line(buf, list);
-//			parse(multi_var_env, buf->final_line, envp);
+			//parse(set, buf->final_line, envp);
 			ret = parse_buf(&list, buf->final_line, &completion);
+			parse(set, buf->final_line, envp);
 			if (ret > 0 && list)
 			{
 
-				ft_print_token_list(&list); //debug impression
-				
-//				enleve les quotes et les backslash -> va changer de place
-
-				ft_push_ast(list, &ast);
-				if (regexp_in_tree(ast, env) == ERR_EXIT)
-					exit(-1);
-				print_debug_ast(ast);
+//				ft_print_token_list(&list); //debug impression
+/*
+ *				enleve les quotes et les backslash -> va changer de place
+ *				edit_cmd(list, env);
+ */
+//				ft_push_ast(list, &ast);
+//				print_debug_ast(ast);
 //				free_ast(ast);
 			}
 			if (ret != ERR_NEW_PROMPT)

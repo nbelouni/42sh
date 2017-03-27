@@ -6,14 +6,14 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/13 20:05:40 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/04 20:27:53 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/15 16:23:26 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
 /*
-**	ft_modify_env est appelé par ft_pwd_swap, cette fonction sert a 
+**	ft_modify_env est appelé par ft_pwd_swap, cette fonction sert a
 **	soit creer, soit modifier la variable name dans l'environnement,
 **	et lui attribuer la valeur value
 */
@@ -87,7 +87,6 @@ void	ft_del_list(t_lst *lst)
 		}
 		head = tmp;
 	}
-	ft_memset(lst, 0, sizeof(t_lst));
-	free(lst);
-	lst = NULL;
+	ft_memdel((void *)&lst);
+	// free(lst);
 }

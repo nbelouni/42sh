@@ -26,7 +26,6 @@ SRCS = 	ft_builtin_cd.c		\
 		ft_init.c			\
 		ft_list_tools.c		\
 		ft_list_tools2.c	\
-		ft_tools.c			\
 		ft_opt_parse.c		\
 		read.c				\
 		buf.c				\
@@ -63,6 +62,15 @@ SRCS = 	ft_builtin_cd.c		\
 		replace_expansions.c\
 		replace_regex.c		\
 		expand.c			\
+		ft_get_history.c	\
+		ft_set_history.c	\
+		ft_histopt_filename.c\
+		ft_histopt_offset.c	\
+		ft_histopt_args.c	\
+		ft_history_opt.c	\
+		ft_history_tools.c	\
+		ft_builtin_history.c\
+		ft_default_set.c	\
 		ft_print.c
 
 

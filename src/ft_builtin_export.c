@@ -6,11 +6,16 @@
 /*   By: dogokar <dogokar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/05 10:39:48 by dogokar           #+#    #+#             */
-/*   Updated: 2017/03/15 18:18:25 by dogokar          ###   ########.fr       */
+/*   Updated: 2017/03/20 17:45:51 by dogokar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
+
+/*
+**		prend un maillon de varaible contenue dans n'importe quel liste et
+**		l'insert dans la liste de variable d'environnement
+*/
 
 int			insert_to_env(t_elem *node, char *arg, t_lst *env, t_lst *type_env)
 {
@@ -23,7 +28,7 @@ int			insert_to_env(t_elem *node, char *arg, t_lst *env, t_lst *type_env)
 	{
 		if ((val = ft_strsub(arg, ft_strlen(node->name) + 1,
 						(ft_strlen(arg) - ft_strlen(node->name) + 1))) == NULL)
-			return (ft_free_and_return(ERR_EXIT, node->name, NULL));
+			return (ft_free_and_return(ERR_EXIT, node->name, NULL, NULL));
 	}
 	if (val)
 	{
@@ -35,6 +40,10 @@ int			insert_to_env(t_elem *node, char *arg, t_lst *env, t_lst *type_env)
 		move_to_env(node, env, type_env);
 	return (0);
 }
+
+/*
+**			va chercher la variable dans une liste
+*/
 
 t_elem		*search_var(char *arg, t_lst *type_env)
 {
@@ -60,7 +69,12 @@ t_elem		*search_var(char *arg, t_lst *type_env)
 	return (tmp);
 }
 
-int			insert_to_exp(char *argv, t_set *m_env)
+/*
+**		insert_to_exp va verifier si la variable comporte un '='
+**		si c'est le cas il va l'inserer dans l'env si non dans la liste d'exp
+*/
+
+int			insert_to_exp(char *argv, t_core *m_env)
 {
 	char	*tmp;
 	int		result;
@@ -78,13 +92,19 @@ int			insert_to_exp(char *argv, t_set *m_env)
 	return (0);
 }
 
-int			multi_var_cheak(char *argv, t_set *m_env)
+/*
+**    va chercher dans les diffrents listes de varaiable, si la variable
+**		existe il va l'inserer dans l'env
+**		si non il va la cree avec insert_to_exp
+*/
+
+int			multi_var_cheak(char *argv, t_core *m_env)
 {
 	t_elem	*tmp;
 
 	tmp = NULL;
-	if (argv[0] == '=' || ft_isdigit(argv[0]))
-		return (ft_print_error(&argv[0], ERR_VAR_BEG_NO_ALPHA, -1)); 
+	if (argv[0] == '=' || ft_isalpha(argv[0]) == 0)
+		return (ft_print_error(&argv[0], ERR_VAR_BEG_NO_ALPHA, -1));
 	if ((tmp = search_var(argv, m_env->exp)))
 		return (insert_to_env(tmp, argv, m_env->env, m_env->exp));
 	else if ((tmp = search_var(argv, m_env->set)))
@@ -96,14 +116,18 @@ int			multi_var_cheak(char *argv, t_set *m_env)
 	return (-1);
 }
 
-int			ft_builtin_export(char **argv, t_set *m_env)
+/*
+**   gestion des erreurs et debut de fonction
+*/
+
+int			ft_builtin_export(char **argv, t_core *m_env)
 {
 	int		*opt;
 	int		i;
 	int		result;
 
 	if (!(opt = ft_opt_parse(EXPORT_OPT, argv + 1, 0)))
-			return (ERR_EXIT);
+		return (ERR_EXIT);
 	if (opt[0] == -1)
 		return (ERR_NEW_CMD);
 	i = opt[0] + 1;

@@ -6,14 +6,14 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/07 18:24:17 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/05 18:07:11 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/20 17:48:35 by dogokar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
 /*
-**	ft_parse_env est une fonction qui va parcourir args afin d'y trouver 
+**	ft_parse_env est une fonction qui va parcourir args afin d'y trouver
 **	le format var=value, si il ne trouve pas var=value, il retourne ret qui est
 **	l'index dans les args où l'export de type var=value se termine, sinon
 **	il export la chaine contenu dans args.
@@ -68,21 +68,6 @@ static t_lst	*ft_getlst_env(t_lst *env, int *opt)
 		}
 	}
 	return (dup);
-	// if (env != NULL && opt[1] == 0)
-	// {
-	// 	if ((dup = ft_lstdup(env)) == NULL)
-	// 	{
-	// 		return (NULL);
-	// 	}
-	// }
-	// else
-	// {
-	// 	if ((dup = ft_init_list()) == NULL)
-	// 	{
-	// 		return (NULL);
-	// 	}
-	// }
-	// return (dup);
 }
 
 /*
@@ -103,14 +88,14 @@ static int		ft_exec_env(t_lst *env, char **args)
 	if ((opt = ft_opt_parse(ENV_OPT, args, 0)) == NULL)
 		return (ERR_EXIT);
 	if (opt[0] == -1)
-		return (ft_free_and_return(ERR_NEW_CMD, opt, NULL));
+		return (ft_free_and_return(ERR_NEW_CMD, opt, NULL, NULL));
 	if ((dup = ft_getlst_env(env, opt)) == NULL)
-		return (ft_free_and_return(ERR_EXIT, opt, NULL));
+		return (ft_free_and_return(ERR_EXIT, opt, NULL, NULL));
 	if (args[opt[0]] != NULL && args[opt[0]][0] != '\0')
 	{
 		ret = ft_parse_env(dup, &(args[opt[0]]));
 		if (ret < 0)
-			return (ft_free_and_return(ret, opt, NULL));
+			return (ft_free_and_return(ret, opt, NULL, NULL));
 		if (ret > (int)ft_tablen(args) || !args[ret] || !args[ret][0])
 			(dup != NULL) ? ft_print_lst(dup) : 0;
 		else

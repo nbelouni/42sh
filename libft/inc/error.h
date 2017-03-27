@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:19:58 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/02/21 16:10:19 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/16 12:42:57 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 
 # define ERR_OPTION				": illegal option"
 
+# define ERR_NUM_ARG			": numeric argument required"
 # define ERR_EXT_FRMT			": Badly formed number"
 # define ERR_NO_FILE			": No such file or directory"
 # define ERR_EXPR_SYNT			": Expression Syntax"
@@ -44,5 +45,6 @@
 # define ERR_HOME_NOT_SET		": HOME not set"
 # define ERR_OLDPWD_NOT_SET		": OLDPWD not set"
 # define ERR_CMD_TOO_LONG		": command too long"
+# define ERR_EVENT_NFOUND		": event not found"
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/07 18:23:32 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/05 13:51:13 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/15 19:05:39 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int		ft_builtin_echo(t_lst *env, char *cmd, char **args)
 		if (!(tmp = ft_tabconcat(args)))
 			return (ERR_EXIT);
 		if ((output = ft_epurstr(tmp)) == NULL)
-			return (ft_free_and_return(ERR_EXIT, tmp, NULL));
+			return (ft_free_and_return(ERR_EXIT, tmp, NULL, NULL));
 		write(1, output, ft_strlen(output));
 		ft_multi_free(output, tmp, NULL, NULL);
 	}

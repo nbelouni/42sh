@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 14:13:58 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/06 19:02:45 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/17 15:04:03 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,17 @@
 **	ses octets a 0, puis retourne la nouvelle liste de type set.
 */
 
-t_set	*ft_init_set(void)
+t_core	*ft_init_set(void)
 {
-	t_set			*set;
+	t_core			*set;
 
 	set = NULL;
-	if ((set = malloc(sizeof(t_set))) == NULL)
+	if ((set = malloc(sizeof(t_core))) == NULL)
 		return (NULL);
 	set->env = NULL;
 	set->set = NULL;
 	set->exp = NULL;
+	set->hist = NULL;
 	return (set);
 }
 
@@ -63,6 +64,8 @@ t_elem	*ft_init_elem(void)
 	{
 		return (NULL);
 	}
+	elem->is_modified = 0;
+	elem->is_appended = 0;
 	elem->name = NULL;
 	elem->value = NULL;
 	elem->next = NULL;
@@ -103,7 +106,7 @@ char	**ft_env_to_tab(t_lst *lst)
 	{
 		return (NULL);
 	}
-	ft_memset(res, 0, sizeof(lst->size + 1));
+	ft_memset(res, 0, (sizeof(char *) * (lst->size + 1)));
 	tmp = lst->head;
 	i = 0;
 	while (tmp != NULL)
@@ -113,7 +116,7 @@ char	**ft_env_to_tab(t_lst *lst)
 			ft_tabdel(res);
 			return (NULL);
 		}
-		i++;
+		++i;
 		tmp = tmp->next;
 	}
 	res[i] = NULL;
