@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/22 14:35:47 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/27 22:10:52 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,36 @@ void	parse(t_set *m_env, char *line, char **envp)
 			ft_waitchild(args, envp);
 		ft_tabdel(args);
 	}
+}
+
+void print_tab(char **tabol);
+int		regexp_in_tree(t_tree *node, t_lst *env)
+{
+	if(!node)
+	{
+		PUT2("\n node = NULL");
+		return (0);
+	}
+	if (node->left)
+	{
+		PUT2(" \n node->left");
+		print_debug_ast(node->left);
+	}
+		PUT2("\n node ======>>>>>> ");
+	if (node->token == CMD)
+	{
+		print_tab(node->cmd);
+		if (edit_cmd(&(node->cmd), env) == ERR_EXIT)
+			return (ERR_EXIT);
+	}
+	else
+		PUT2(node->token_or->word);
+	if (node->right)
+	{
+		PUT2(" \n node->right");
+		print_debug_ast(node->right);
+	}
+	return (0);
 }
 
 int 	main(int argc, char **argv, char **envp)
@@ -88,10 +118,11 @@ int 	main(int argc, char **argv, char **envp)
 				ft_print_token_list(&list); //debug impression
 				
 //				enleve les quotes et les backslash -> va changer de place
-				edit_cmd(list, env); 
 
-//				ft_push_ast(list, &ast);
-//				print_debug_ast(ast);
+				ft_push_ast(list, &ast);
+				if (regexp_in_tree(ast, env) == ERR_EXIT)
+					exit(-1);
+				print_debug_ast(ast);
 //				free_ast(ast);
 			}
 			if (ret != ERR_NEW_PROMPT)

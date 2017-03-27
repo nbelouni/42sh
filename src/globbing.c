@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/03 14:15:26 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/24 16:35:46 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/27 22:28:06 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,52 +137,126 @@ int		replace_env_var(char **s, t_lst *env)
 	return (FALSE);
 }
 
-int		globb(t_token **lst, t_lst *env)
+int		insert_new_args(char **s, t_reg_path **new_args, t_reg_path *tmp)
 {
-	int		i;
-	int		ret;
-	t_token	*tmp;
+	t_reg_path	*tmp2;
+
+	if (*new_args)
+	{
+		tmp2 = *new_args;
+		while (tmp2->next)
+			tmp2 = tmp2->next;
+		tmp2->next = tmp;
+		tmp->prev = tmp2;
+	}
+	else
+		*new_args = tmp;
+	ft_strdel(s);
+	if (!(*s = ft_strdup("")))
+		return (FALSE);
+	tmp2 = tmp;
+	while (tmp2)
+	{
+		supp_quotes(*s);
+		tmp2 = tmp2->next;
+	}
+	return (TRUE);
+}
+
+int		globb(char **s, t_lst *env, t_reg_path **new_args)
+{
+	int			i;
+	int			ret;
+	t_reg_path	*tmp;
 
 	i = 0;
 	ret = FALSE;
 	while (ret == FALSE)
 	{
-		is_end((*lst)->word, &i, '\'');
-		if ((ret = replace_env_var(&((*lst)->word), env)) == ERR_EXIT)
+		is_end(*s, &i, '\'');
+		if ((ret = replace_env_var(s, env)) == ERR_EXIT)
 			return (ERR_EXIT);
 		i++;
 	}
-	if ((tmp = replace_regex((*lst)->word)))
+	if ((tmp = replace_regex(*s)))
 	{
-		tmp->next = *lst;
-		tmp->prev = (*lst)->prev;
-		tmp->next = *lst;
-		tmp->prev = (*lst)->prev;
-		if ((*lst)->prev)
-		{
-			(*lst)->prev->next = tmp;
-			(*lst)->prev = tmp;
-		}
-		else
-			*lst = tmp;
+		if (insert_new_args(s, new_args, tmp) == FALSE)
+			return (FALSE);
 	}
-	supp_quotes((*lst)->word);
-	return (0);
+	return (TRUE);
 }
 
-/*
-**	Faire ca apres avoir envoye les btquotes
-*/
-int		edit_cmd(t_token *list, t_lst *env)
+int		args_len(char **args, t_reg_path *reg_args)
 {
-	t_token	*tmp;
+	int			len;
+	int			i;
+	t_reg_path	*tmp;
 
-	tmp = list;
+	i = -1;
+	len = 0;
+	while (args[++i])
+	{
+		if (args[i][0])
+			len += 1;
+	}
+	tmp = reg_args;
 	while (tmp)
 	{
-		if (globb(&tmp, env) == ERR_EXIT)
-			return (ERR_EXIT);
+		len += 1;
 		tmp = tmp->next;
+	}
+	return (len);
+}
+
+char	**add_in_args(char **args, t_reg_path *reg_args)
+{
+	t_reg_path	*tmp;
+	char		**new;
+	int			i;
+	int			j;
+
+	if (!reg_args)
+		return (args);
+	if (!(new = ft_memalloc(sizeof(char *) * (args_len(args, reg_args) + 1))))
+		return (NULL);
+	i = -1;
+	j = -1;
+	while (++i < (int)ft_tablen(args))
+	{
+		if (args[i][0])
+			if (!(new[++j] = ft_strdup(args[i])))
+				return (NULL);
+	}
+	tmp = reg_args;
+	while (tmp)
+	{
+		if (!(new[++j] = ft_strdup(tmp->out)))
+			return (NULL);
+		tmp = tmp->next;
+	}
+	return (new);
+}
+
+int		edit_cmd(char ***args, t_lst *env)
+{
+	t_reg_path	*new_args;
+	char		**tmp;
+	int			i;
+
+	new_args = NULL;
+	i = -1;
+	while ((*args)[++i])
+	{
+		if (globb(&(*args)[i], env, &new_args) == ERR_EXIT)
+			return (ERR_EXIT);
+	}
+	if (new_args)
+	{
+		if (!(tmp = add_in_args(*args, new_args)))
+			return (ERR_EXIT);
+		ft_tabdel(*args);
+		*args = tmp;
+		ft_reg_pathdestroy(&new_args);
 	}
 	return (0);
 }

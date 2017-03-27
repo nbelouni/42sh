@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/11 16:24:49 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/24 17:17:03 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/27 22:23:44 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,10 @@ int		find_last_len(char *s)
 int		free_rg_and_return(char *rg, int ret)
 {
 	if (rg && rg[0])
+	{
+		ft_bzero(rg, ft_strlen(rg));
 		ft_strdel(&rg);
+	}
 	return (ret);
 }
 
@@ -197,24 +200,24 @@ int		is_next_pool_char(char *s, char *rg, int *i_s, int *i_rg)
 	return (TRUE);
 }
 
-int		is_next_all_char(char *s, char *rg, int *i_s, int *i_rg)
+int		is_next_all_char(char *s, char **rg, int *i_s, int *i_rg)
 {
-	if (rg[*i_rg] == '*')
+	if ((*rg)[*i_rg] == '*')
 	{
-		while (rg[*i_rg] && is_char(rg, *i_rg, '*'))
+		while ((*rg)[*i_rg] && is_char((*rg), *i_rg, '*'))
 			*i_rg += 1;
-		if (!rg[*i_rg])
-			return (free_rg_and_return(rg, TRUE));
-		if (find_next_char(rg, *i_rg, '*') < 0)
-			*i_s = ft_strlen(s) - find_last_len(rg + *i_rg);
-		if (!is_regex(rg, *i_rg))
+		if (!(*rg)[*i_rg])
+			return (free_rg_and_return((*rg), TRUE));
+		if (find_next_char((*rg), *i_rg, '*') < 0)
+			*i_s = ft_strlen(s) - find_last_len((*rg) + *i_rg);
+		if (!is_regex((*rg), *i_rg))
 		{
-			while (s[*i_s] && s[*i_s] != rg[*i_rg])
+			while (s[*i_s] && s[*i_s] != (*rg)[*i_rg])
 				*i_s += 1;
 			if (!s[*i_s])
-				return (free_rg_and_return(rg, FALSE));
+				return (free_rg_and_return((*rg), FALSE));
 		}
-		if (is_next_pool_char(s, rg, i_s, i_rg) == FALSE)
+		if (is_next_pool_char(s, *rg, i_s, i_rg) == FALSE)
 			return (FALSE);
 	}
 	return (TRUE);
@@ -238,7 +241,7 @@ int		match_regex(char *s, char *rg_ref)
 			return (FALSE);
 		if (is_pool_char(s, rg, &i_s, &i_rg) == FALSE)
 			return (FALSE);
-		if (is_next_all_char(s, rg, &i_s, &i_rg) == FALSE)
+		if (is_next_all_char(s, &rg, &i_s, &i_rg) == FALSE)
 			return (FALSE);
 	}
 	while (rg[i_rg] && rg[i_rg] == '*')
@@ -290,7 +293,9 @@ int		keep_path(t_reg_path *curr, char *rg, t_reg_path **next_path)
 						insert_in_next(curr, next_path, dp->d_name);
 				}
 				else if (match_regex(dp->d_name, rg) == TRUE)
+				{
 					insert_in_next(curr, next_path, dp->d_name);
+				}
 			}
 		}
 		closedir(dirp);
@@ -327,7 +332,7 @@ void	dispach_paths(t_reg_path *tmp, t_reg_path **nx, t_reg_path **f, int lvl)
 	}
 }
 
-t_token	*replace_regex(char *s)
+t_reg_path	*replace_regex(char *s)
 {
 	char		**args;
 	t_reg_path	*curr_paths;
@@ -360,9 +365,9 @@ t_token	*replace_regex(char *s)
 		curr_paths = next_paths;
 		next_paths = NULL;
 	}
-	ft_reg_pathdestroy(&next_paths);
-	ft_reg_pathdestroy(&final);
-	ft_reg_pathdestroy(&curr_paths);
-	ft_tabdel(args);
-	return (NULL);
+	if (next_paths)
+		ft_reg_pathdestroy(&next_paths);
+	if (curr_paths)
+		ft_reg_pathdestroy(&curr_paths);
+	return (final);
 }
