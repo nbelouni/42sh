@@ -6,7 +6,7 @@
 /*   By: dogokar <dogokar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 14:41:10 by dogokar           #+#    #+#             */
-/*   Updated: 2017/03/24 13:46:09 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/27 18:24:05 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -305,10 +305,16 @@ char	**copy_fd(t_token *tmp)
 {
 	char	**cmd;
 
-	cmd = ft_memalloc(sizeof(char *) * 2);
-	cmd[0] = ft_strdup(tmp->word);
-	cmd[1] = NULL;
-	return (cmd);
+	if (!(cmd = ft_memalloc(sizeof(char *) * 2)))
+		return (NULL);
+	if (tmp && tmp->word)
+	{
+		cmd[0] = ft_strdup(tmp->word);
+		cmd[1] = NULL;
+		return (cmd);
+	}
+	else
+		return (NULL);
 }
 
 t_tree *recurs_creat_tree(t_token *lst)
@@ -428,10 +434,10 @@ void	print_debug_ast(t_tree *node)
 		print_debug_ast(node->left);
 	}
 		PUT2("\n node ======>>>>>> ");
-	if (node->argv)
-		PUT2(node->cmd[0]);
+//	if (node->argv)
+//		PUT2(node->cmd[0]);
 //	if (node->token_or->word)
-//	print_lst(node->argv);
+	print_lst(node->argv);
 //	else
 //		PUT2(node->token_or->word);
 	if (node->right)

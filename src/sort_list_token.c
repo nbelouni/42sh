@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 16:51:24 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/24 17:05:37 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/27 18:17:39 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,10 +111,10 @@ void	ft_find_fd(t_token *list)
 	char	*s;
 
 	s = NULL;
-	if (list && list->prev && list->prev->type != FD_IN)
+	if (list && list->word && !atoi(list->word))
 	{
 		free(list->word);
-		list->word = ft_strdup("1");
+		list->word = NULL;
 	}
 }
 
@@ -130,14 +130,14 @@ int		sort_list_token(t_token **list, t_completion *completion)
 	elem = *list;
 	while (elem)
 	{
-//		if (isRedir(elem->type))
-//			ft_find_fd(elem);
 		if (elem->type == FD_IN)
 		{
 			ft_swap_in(&elem);
 			if (!elem->prev)
 				*list = elem;
 		}
+		if (isRedir(elem->type))
+			ft_find_fd(elem);
 		if ((elem->type == DIR_L_AMP || elem->type == DIR_R_AMP) && elem->next && check_error_out(elem->next))
 			return (ft_print_error(elem->word, ERR_FD_AMB, ERR_FD));
 		if (((elem->type > START && elem->type < AMP) || (elem->type > AND
