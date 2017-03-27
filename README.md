@@ -59,3 +59,17 @@ bash: 2147483647: Bad file descriptor
 	TOKEN A FAIRE
 	<> -> == < a voir
 	<& && >& sont differents a changer a checker
+
+--->>> Penser a aller chercher la liste d'arguments dans t_list *argv
+		a la place de char **cmd
+
+typedef struct		s_tree
+{
+	int				token;
+	char			**cmd;
+	t_list			*argv;
+	t_token			*token_or;
+	struct s_tree	*father;
+	struct s_tree	*left;
+	struct s_tree	*right;
+}					t_tree;

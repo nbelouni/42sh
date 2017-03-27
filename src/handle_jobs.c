@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/24 17:17:31 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/27 15:52:51 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -331,55 +331,7 @@ void	doRedir(Io_p io)
 	if (io->flag & CLOSE)
 		close(io->dup_src);
 }
-/*Il
-void	doRedir(Io_p io)
-{
-	char	buf[10];
-	int		pipefd[2];
 
-	pipe(pipefd);
-	fputs("doRedir\n", stderr);
-	if (io->flag & OPEN)
-	{
-//		dprintf(2,"open %d\n", io->dup_src);
-		if (access(io->str, X_OK) == -1)
-			io->dup_src = open(io->str, io->mode, DEF_FILE);
-		if (io->dup_src < 0 && !io->mode)
-			fputs("42sh: No such file or directory (a placer dans les error)\n", stderr);
-//		else if (io->dup_src < 0)
-//			fputs("42sh: Bad file descriptor (a placer dans les error)\n", stderr);
-		dprintf(2,"src %d\n", io->dup_src);
-	}
-	if (io->flag & DUP & WRITE)
-	{
-//		fputs("WRITE\n", stderr);
-//		dprintf(2,"open %d\n", io->dup_src);
-//		dprintf(2,"target %d\n", io->dup_target);
-		while (read(io->dup_src, buf, 10) > 0)
-		{
-			write(pipefd[1], buf, 10);
-			ft_bzero(buf, 10);
-		}
-		io->dup_src = pipefd[0];
-	}
-	if (io->flag & WRITE)
-	{
-		dup2(pipefd[0], STDIN_FILENO);
-		write(pipefd[1], io->str, ft_strlen(io->str));
-	}
-	if (io->flag & DUP)
-	{
-		dup2(io->dup_src, io->dup_target);
-//		dprintf(2,"rd : <%d> && in : <%d><%p>\n", rd, io->dup_src, io);
-	}
-	if (io->flag & CLOSE)
-	{
-		dprintf(2,"close <%p>\n", io);
-		close(io->dup_src);
-		close(pipefd[1]);
-	}
-}
-*/
 int	doPipe(t_process_p p1, t_process_p p2, 	int	*io_pipe)
 {
 	Io_p	io_in;

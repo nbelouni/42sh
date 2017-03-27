@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 13:52:27 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/24 18:25:46 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/27 15:53:04 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,59 +198,7 @@ t_node_p create_redir(t_tree *nodeRedir, t_node_p left_node)
 	insert_link_bottom(&(process->ioList), new_link(io, sizeof(*io)));
 	return (left_node);
 }
-/*
-t_node_p create_redir(t_tree *nodeRedir, t_node_p left_node)
-{
-	Io_p		io;
-	int			left;
-	t_process_p	process;
 
-	io = new_io();
-	puts("0");
-	dprintf(2, "cmd : <%p>\n", nodeRedir->right->cmd);
-	io->str = (nodeRedir->right->cmd)[0];
-	if (TOKEN(nodeRedir) != LR_DIR)
-		io->flag |= DUP;
-	if (!(left = atoi((nodeRedir->cmd)[0])))
-		left = 1 - ((TOKEN(nodeRedir) == SL_DIR) ? 1: 0);
-	if (TOKEN(nodeRedir) == SR_DIR || TOKEN(nodeRedir) == DR_DIR
-		|| TOKEN(nodeRedir) == SL_DIR || TOKEN(nodeRedir) == DL_DIR
-		|| TOKEN(nodeRedir) == DIR_L_AMP || TOKEN(nodeRedir) == DIR_R_AMP
-		|| TOKEN(nodeRedir) == LR_DIR)
-	{
-		io->dup_target = left;
-		io->flag |= OPEN | CLOSE;
-	}
-	if (TOKEN(nodeRedir) == SL_DIR || TOKEN(nodeRedir) == DL_DIR)
-		io->flag |= WRITE;
-	if (TOKEN(nodeRedir) == DR_DIR || TOKEN(nodeRedir) == SR_DIR)
-		io->mode |= O_WRONLY | O_CREAT;
-	if (TOKEN(nodeRedir) == DR_DIR)
-		io->mode |= O_APPEND;
-	if (TOKEN(nodeRedir) == SL_DIR)
-		io->mode |= O_RDONLY;
-	if (TOKEN(nodeRedir) == LR_DIR)
-		io->mode |= O_RDWR | O_CREAT;
-	if (TOKEN(nodeRedir) == DIR_L_AMP || TOKEN(nodeRedir) == DIR_R_AMP)
-	{
-		io->mode |= O_RDWR;
-		if ((nodeRedir->right->cmd)[0][0] == '-')
-		{
-			io->flag &= CLOSE;
-			io->dup_src = left;
-		}
-		else
-		{
-			io->dup_src = atoi((nodeRedir->right->cmd)[0]);
-			io->dup_target = left;
-		}
-		dprintf(2,"right %d\n", io->dup_src);
-	}
-	process = ((t_list *)left_node->data)->content;
-	insert_link_bottom(&(process->ioList), new_link(io, sizeof(*io)));
-	return (left_node);
-}
-*/
 void spacer(int io)
 {
 	static int depth;
