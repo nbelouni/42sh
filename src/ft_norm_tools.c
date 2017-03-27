@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/13 20:05:40 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/20 16:55:33 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/27 12:39:46 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,17 +53,19 @@ int		ft_modify_env(t_lst *env, char *name, char *value)
 
 int		ft_pwd_swap(t_lst *env, char *owd, char *cwd)
 {
-	int	ret;
+	int		ret;
+	t_elem	*elem;
 
 	ret = 0;
 	if ((ret = ft_modify_env(env, "PWD", cwd)) != 0)
 	{
 		return (ret);
 	}
-	if ((ret = ft_modify_env(env, "OLDPWD", owd)) != 0)
-	{
-		return (ret);
-	}
+	if ((elem = ft_find_elem("PWD", env)))
+	// if ((ret = ft_modify_env(env, "OLDPWD", owd)) != 0)
+	// {
+	// 	return (ret);
+	// }
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:09:30 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/21 15:44:58 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/24 18:14:14 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ typedef enum	e_bool
 # include "lex.h"
 # include "exec.h"
 # include "globbing.h"
-# include "history.h"
 //# include "builtins.h"
 
 # define END_EOT	18
@@ -74,6 +73,7 @@ typedef struct		s_core
 	t_lst			*env;
 	t_lst			*exp;
 }					t_core;
+# include "history.h"
 
 /*	A REFAIRE
 **	ft_default_set.c
@@ -191,6 +191,6 @@ void 				ft_print_export(t_core *m_env);
 **					ft_builtin_unset
 */
 
-int   ft_builtin_unset(t_core *set, char **args);
+int   				ft_builtin_unset(t_core *set, char **args);
 
 #endif

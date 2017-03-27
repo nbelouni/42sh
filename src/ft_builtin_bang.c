@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 15:32:23 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/21 19:49:02 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/24 17:42:42 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@ char		*find_number(char *s)
 	int		i;
 
 	i = 0;
-	if (s[i] > '9' || s[i] < '0')
-		return (NULL);
 	if (s[0] == '-')
 		i += 1;
+	if (!ft_isdigit(s[i]))
+		return (NULL);
 	while (s[i])
 	{
 		if (s[i] > '9' || s[i] < '0')
@@ -121,25 +121,19 @@ char	*ft_gets_until_now(char *s, char *ptr)
 	return (buf);
 }
 
-char	*ft_gets_firstword(char *str)
+char	*ft_gets_cmd_except_firstword(char *str)
 {
-	int		len;
-	char	*ret;
 	char	*ptr;
+	char	*ret;
+	char	*tmp;
 
-	ret = NULL;
-	if ((ptr = ft_strchr(str, ' ')) == NULL)
+	if ((tmp = ft_strtrim(str)) == NULL)
 	{
-		if ((ret = ft_strdup(str)) == NULL)
-			return (NULL);
+		return (NULL);
 	}
-	else
-	{
-		len = ft_strlen(str) - ft_strlen(ptr);
-		if ((ret = ft_strnew(len)) == NULL)
-			return (NULL);
-		ret = ft_strncpy(ret, str, len);
-	}
+	ptr = ft_strchr(tmp, ' ');
+	ret = (ptr == NULL) ? "" : ft_strtrim(ptr);
+	ft_strdel(&tmp);
 	return (ret);
 }
 
@@ -150,24 +144,19 @@ char	*ft_gets_lastword(char *str)
 	char	*tmp;
 
 	ret = NULL;
-	tmp = ft_strtrim(str);
-	if ((ptr = ft_strrchr(tmp, ' ')) == NULL)
-	{
-		if ((ret = ft_strdup(tmp)) == NULL)
-		{
-			ft_strdel(&tmp);
-			return (NULL);
-		}
-	}
-	else
-	{
-		++ptr;
-		if ((ret = ft_strdup(ptr)) == NULL)
-		{
-			ft_strdel(&tmp);
-			return (NULL);
-		}
-	}
+	if ((tmp = ft_strtrim(str)) == NULL)
+		return (NULL);
+	ptr = ft_strrchr(tmp, ' ');
+	ret = (ptr != NULL) ? ft_strdup(&(ptr[1])) : ft_strdup(tmp);
+	// if ((ptr = ft_strrchr(tmp, ' ')) == NULL)
+	// {
+	// 	ret = ft_strdup(tmp);
+	// }
+	// else
+	// {
+	// 	++ptr;
+	// 	ret = ft_strdup(ptr);
+	// }
 	ft_strdel(&tmp);
 	return (ret);
 }
@@ -211,80 +200,3 @@ char	*ft_gets_in_hist(t_lst *hist, char *s, int (*f)(char *, char *, int))
 	}
 	return (ret);
 }
-
-/*int main(void)
-{
-	t_lst *hist;
-	t_lst *set;
-	char	*res;
-	char	*cmd = "je fais des tests    ";
-
-	hist = NULL;
-	set = NULL;
-	ft_histopt_r(&hist, set, ".42sh_history");
-	// ft_print_history(hist, hist->size);
-	res = ft_gets_lastword(cmd);
-	ft_putendl(res);
-	// res = ft_gets_in_hist(hist, cmd, ft_strncmp_int);
-	// ft_putendl(res);
-
-return (0);	
-}
-*/
-// int		ft_check_expansion_type(char *s)
-// {
-// 	if (s[0] == '!')
-// 	{
-// 		if (s[1] == '\0')
-// 			return (ft_print_error("bash: ", ERR_EXPR_SYNT))
-// 		if (s[1] == '!')
-// 			return ((s[2] != '\0') ? DOUBLE_BANG : -1);
-// 		else if (ft_isdigit(s[1]))
-// 			return (N_BANG);
-// 		else if (s[1] == '-' && ft_isdigit(s[2]))
-// 			return (N_LESS_BANG);
-// 		else if (s[1] != '?' && !ft_isdigit(s[1]))
-// 			return (ft_strstr(&s[2], ":p") ? PRINT_SSTART_BANG : SSTART_BANG);
-// 		else if (s[1] == '?')
-// 			return (STR_CONTAIN_BANG);
-// 		else if (s[1] == '#')
-// 			return (UNTIL_NOW_BANG);
-// 		else if (s[1] == '$')
-// 			return (ft_strstr(&s[2], ":p") ? PRINT_LAST_BANG : RUN_LAST_BANG);
-// 		else if (s[1] == '*')
-// 			return (ft_strstr(&s[2], ":p") ? PRINT_EXCEPT_FIRST_BANG : \
-// 				RUN_EXCEPT_FIRST_BANG);
-// 	}
-// 	if (s[0] == '^')
-// 		return (QUICK_SUB);
-// 	return (-1);
-// }
-
-// char	*ft_builtin_expansion(t_lst *hist, char *cmd, int type)
-// {
-// 	char	*res;
-// 	int		calc;t_elem	*elem;
-
-// 	res = NULL;
-// 	if (hist != NULL && hist->head != NULL)
-// 	{
-// 		if (type == DOUBLE_BANG)
-// 			res = hist->tail->name;
-// 		else if (type == N_BANG || type == N_LESS_BANG)
-// 		{
-// 			calc = (type == N_BANG) ? ft_atoi(&cmd[1]) : (hist->size - ft_atoi(&cmd[2]));
-// 			if ((elem = ft_get_nelem(hist, calc)) == NULL)
-// 				ft_print_error(cmd, ERR_EVENT_NFOUND, 0);
-// 			res = (elem != NULL) ? elem->name : NULL;
-// 		}
-// 		else if (type == STR_START_BANG || STR_CONTAIN_BANG)
-// 		{
-// 			if (type == STR_START_BANG)
-// 			{
-// 	
-// 				;
-// 			}
-// 		}
-// 	}
-// 	return (res);
-// }

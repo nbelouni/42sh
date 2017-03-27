@@ -6,38 +6,12 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/07 18:21:51 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/15 19:05:31 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/27 12:37:46 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 #include <stdarg.h>
-
-/*
-**	change le chemin qu'empruntera chdir si une option est spécifié
-**	et que le chemin passé a chdir est un lien symbolique
-**	opt -> {fin options, 'L', 'P'}
-*/
-
-static char	*ft_cd_opt(char *path, mode_t mode, int *opt)
-{
-	char	*buf;
-
-	buf = NULL;
-	if ((buf = ft_strnew(PATH_MAX)) == NULL)
-	{
-		return (NULL);
-	}
-	if (S_ISLNK(mode) && opt != NULL && opt[1])
-	{
-		readlink(path, buf, PATH_MAX);
-	}
-	else
-	{
-		ft_strcpy(buf, path);
-	}
-	return (buf);
-}
 
 /*
 **	la fonction ft_free_and_return retourne l'int ret spécifié en argument
@@ -54,9 +28,44 @@ int			ft_free_and_return(int ret, void *d1, void *d2, void *d3)
 }
 
 /*
+**	change le chemin qu'empruntera chdir si une option est spécifié
+**	et que le chemin passé a chdir est un lien symbolique
+**	opt -> {fin options, 'L', 'P'}
+*/
+
+static char	*ft_cd_opt(char *path, mode_t mode, int *opt)
+{
+	char	*buf;
+	char	*tmp;
+
+	buf = NULL;
+	tmp = NULL;
+	if ((buf = ft_strnew(PATH_MAX)) == NULL)
+	{
+		return (NULL);
+	}
+	if (S_ISLNK(mode) && opt != NULL && opt[2])
+	{
+		if ((tmp = ft_strnew(PATH_MAX)) == NULL)
+		{
+			ft_strdel(&buf);
+			return (NULL);
+		}
+		readlink(path, tmp, PATH_MAX);
+	}
+	ft_strncpy(buf, path, (ft_strlen(path) - ft_strlen(ft_strlchr(path, '/'))));
+	buf = (tmp) ? ft_strcat(buf, tmp) : ft_strcat(buf, ft_strlchr(path, '/'));
+	(tmp) ? ft_strdel(&tmp) : 0;
+	return (buf);
+}
+
+
+/*
 **	ft_cd est l'etape finale du builtin cd, permettant de changer de dossier
 **	et actualisant/creant le PWD et l'OLDPWD
 */
+
+// A MODIFIER
 
 static int	ft_cd(t_lst *env, int *opt, char *s, mode_t m)
 {
@@ -72,17 +81,17 @@ static int	ft_cd(t_lst *env, int *opt, char *s, mode_t m)
 	if ((owd = getcwd(NULL, PATH_MAX)) == NULL)
 		return (ft_free_and_return(-1, buf, NULL, NULL));
 	chdir(buf);
-	ft_strdel(&buf);
 	if ((b2 = getcwd(NULL, PATH_MAX)) == NULL)
 		return (ft_free_and_return(-1, owd, NULL, NULL));
 	if (S_ISLNK(m) != 0 && opt != NULL && opt[0] > 0 && opt[1] > 0)
 	{
 		ft_memset(ft_strlchr(b2, '/'), 0, ft_strlen(ft_strlchr(b2, '/')));
 		if ((b2 = ft_free_and_join(b2, ft_strlchr(s, '/'))) == NULL)
-			return (ft_free_and_return(-2, owd, b2, NULL));
+			return (ft_free_and_return(ERR_EXIT, owd, b2, NULL));
 	}
 	ret = ft_pwd_swap(env, owd, b2);
-	return (ft_free_and_return(ret, owd, b2, NULL));
+	(buf) ? ft_strdel(&buf) : NULL;
+	return (ft_free_and_return(ret, owd, NULL, NULL));
 }
 
 /*
