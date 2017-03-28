@@ -6,11 +6,16 @@
 /*   By: dogokar <dogokar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/05 10:39:48 by dogokar           #+#    #+#             */
-/*   Updated: 2017/03/20 15:00:50 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/20 17:45:51 by dogokar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
+
+/*
+**		prend un maillon de varaible contenue dans n'importe quel liste et
+**		l'insert dans la liste de variable d'environnement
+*/
 
 int			insert_to_env(t_elem *node, char *arg, t_lst *env, t_lst *type_env)
 {
@@ -36,6 +41,10 @@ int			insert_to_env(t_elem *node, char *arg, t_lst *env, t_lst *type_env)
 	return (0);
 }
 
+/*
+**			va chercher la variable dans une liste
+*/
+
 t_elem		*search_var(char *arg, t_lst *type_env)
 {
 	t_elem	*tmp;
@@ -60,6 +69,11 @@ t_elem		*search_var(char *arg, t_lst *type_env)
 	return (tmp);
 }
 
+/*
+**		insert_to_exp va verifier si la variable comporte un '='
+**		si c'est le cas il va l'inserer dans l'env si non dans la liste d'exp
+*/
+
 int			insert_to_exp(char *argv, t_core *m_env)
 {
 	char	*tmp;
@@ -77,6 +91,12 @@ int			insert_to_exp(char *argv, t_core *m_env)
 		return (ft_export(m_env->env, argv));
 	return (0);
 }
+
+/*
+**    va chercher dans les diffrents listes de varaiable, si la variable
+**		existe il va l'inserer dans l'env
+**		si non il va la cree avec insert_to_exp
+*/
 
 int			multi_var_cheak(char *argv, t_core *m_env)
 {
@@ -96,6 +116,10 @@ int			multi_var_cheak(char *argv, t_core *m_env)
 	return (-1);
 }
 
+/*
+**   gestion des erreurs et debut de fonction
+*/
+
 int			ft_builtin_export(char **argv, t_core *m_env)
 {
 	int		*opt;
@@ -103,7 +127,7 @@ int			ft_builtin_export(char **argv, t_core *m_env)
 	int		result;
 
 	if (!(opt = ft_opt_parse(EXPORT_OPT, argv + 1, 0)))
-			return (ERR_EXIT);
+		return (ERR_EXIT);
 	if (opt[0] == -1)
 		return (ERR_NEW_CMD);
 	i = opt[0] + 1;

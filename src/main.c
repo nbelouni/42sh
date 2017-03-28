@@ -98,9 +98,9 @@ int 	main(int argc, char **argv, char **envp)
 				parse(core, buf->final_line, envp);
 
 //				ft_print_token_list(&list); //debug impression
-/*				
+/*
  *				enleve les quotes et les backslash -> va changer de place
- *				edit_cmd(list, env); 
+ *				edit_cmd(list, env);
  */
 //				ft_push_ast(list, &ast);
 //				print_debug_ast(ast);

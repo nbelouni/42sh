@@ -1,0 +1,154 @@
+Tests préliminaires
+Vérifiez d'abord les éléments suivants :
+
+- Il y a bien un rendu (dans le dépôt git)
+- Fichier auteur valide
+- Le Makefile est présent et a bien les règles demandées
+- Pas de faute de norme, la Norminette faisant foi
+- Pas de triche (fonctions non autorisées...)
+
+Si un élément n'est pas conforme au sujet, la notation s'arrête.
+Vous pouvez toujours débattre du projet, mais le barème n'est pas appliqué.
+
+Durant le reste de la soutenance, si le programme a un comportement inapproprié
+(segfault, buserror, double-free, ...), la soutenance s'arrête.
+
+Yes No
+Le shell
+Testons les principales features de votre shell.
+Fork et execve
+Fork et execve sont deux appels system au coeur du shell.
+S'il en manque un c'est qu'il y a un problème de compréhension du sujet.
+Avec la liste de fonctions autorisées, il n'y a pas d'autre solution.
+
+Yes No
+Les builtins
+Les fonctionnalités précédentes correspondent plus à un programme
+capable de faire un fork et un execve en boucle qu'à un shell digne de ce nom.
+Un shell, même préhistorique, doit proposer certaines fonctionnalités.
+
+- cd
+- cd /path/to/dir
+- exitcd 
+
+Yes No
+Gestion de l environnement
+Les builtins :
+
+- env
+- setenv
+- unsetenv
+
+fonctionnent, modifient l'environnement et passent le bon environnement aux programmes qui sont exécutés.
+(vérifier par ex avec /usr/bin/env au minimum)
+
+Yes No
+Gestion du PATH
+L'exécution des binaires avec un path complet fonctionne.
+('/bin/ls' par ex)
+
+L'exécution des binaires dans les répertoires du PATH fonctionne.
+('ls' par ex)
+
+Essayer des binaires dans chaque répertoire que comporte le PATH.
+
+Yes No
+Shell fondamental
+Votre shell doit pouvoir assurer ces fonctionalités de base :
+
+- un prompt
+- une commande simple, par exemple un simple ls
+- le shell attend la fin de l'exécution de la commande lancée pour ré-afficher le prompt
+- emacs (ou vim pour ceux qui ont des goûts douteux) fichier.c
+- ls /bin /boot /sbin /dev /home
+- /bin/ls (tester une commande avec un PATH complet)
+- commande inconnue (comme trucmachin) : 'Command not found' (ou un message d'erreur similaire)
+- commande connue mais pas dans le PATH
+
+Les pipes et redirections seront testés plus loin.
+
+Yes No
+Gestion de la ligne de commande
+Un minimum de choses doit marcher :
+
+- Des espaces et/ou des tabulations un peu partout dans la ligne de commande
+ne perturbent pas l'exécution de cette commande, de manière similaire à sh, bash ou zsh ;
+- Une ligne de commande vide ne provoque pas d'erreur ;
+- Une ligne de commande vide avec des espaces ne provoque pas d'erreur.
+
+Yes No
+Signal
+Ctrl-c ça marche ? ça arrête le programme ?
+
+Yes No
+Pipe et redirection
+Vous devez gérez :
+
+- '>'
+- '<'
+- '<<'
+- '>>'
+- ';'
+- '|'
+
+Yes No
+Edition de ligne simple
+Testez les points suivants :
+
+- Edition de la ligne courante à l'endroit du curseur ;
+- Déplacement gauche/droite dans la ligne courante avec flèche gauche/droite ;
+- Saut vers début / fin de ligne avec home / end ;
+- Navigation dans l'historique avec flèche haut/bas ;
+
+Rate it from 0 (failed) through 5 (excellent)
+Edition de ligne avancee
+Testez les points suivants :
+
+- Déplacement d'un mot à gauche/droite dans la ligne courante avec ctrl+ flèche gauche/droite ;
+- Copier/coller de tout ou partie de la ligne avec un raccourci clavier ;
+- Ecrire/éditer une commande sur plusieurs lignes en même temps.
+
+Rate it from 0 (failed) through 5 (excellent)
+ctrl+D et ctrl+C
+Gestion correcte de ctrl-C / ctrl-D dans l'édition de ligne, comme dans un shell.
+
+Yes No
+Edition multiligne avancée
+Si vous pouvez vous déplacer de haut en bas entre les lignes avec ctrl+ flèche haut/bas, c'est ok.
+
+Yes No
+Gestion des parenthèses
+Si des quotes, doubles quotes, back quotes, parenthèses, crochets, accolades ou parenthèses
+ne sont pas fermées, le shell doit revenir à la ligne et attendre la fin de la commande.
+Puis la récupérer et la traiter correctement, bien sûr.
+
+Yes No
+Bonus
+
+Autres features
+D'autres bonus ?
+par ex. gestion du tilde, coloration syntaxique (dés)activable, ...
+
+Rate it from 0 (failed) through 5 (excellent)
+Complétion
+La complétion marche-t-elle ?
+
+Yes No
+Aggrégation
+Aggrégation de sorties de fichier
+par ex. 'ls 2>&1' sous bash
+ou 'cat toto >& /tmp/titi' sous tcsh
+
+Yes No
+Table de hachage
+Avez-vous fait une table de hachage pour les binaires ?
+
+Yes No
+Recherche dans historique
+On peut faire une recherche dans l'historique avec ctrl+R
+
+Yes No
+Navigation dans la pagination
+On peut naviguer dans la pagination avec shift+ PAGE UP / PAGE DOWN
+
+Yes No

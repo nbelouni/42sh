@@ -12,12 +12,22 @@
 
 #include "42sh.h"
 
+/*
+** concate les list exp et env pour les trier
+*/
+
 void		concatlst(t_lst *head, t_lst *tail)
 {
 	head->tail->next = tail->head;
 	tail->head->prev = head->tail;
 	head->size += tail->size;
+	tail->head = NULL;
+	tail->tail = NULL;
 }
+
+/*
+**  va chercher le bon element de la liste a q trier (trie par insertion)
+*/
 
 t_elem		*sort_node(t_lst *node)
 {
@@ -36,6 +46,10 @@ t_elem		*sort_node(t_lst *node)
 		ft_extract_elem(&elem, node);
 	return (elem);
 }
+
+/*
+**			va trier la liste en ascii
+*/
 
 t_lst		*lst_sort_ascii(t_lst *lsthead)
 {
@@ -63,6 +77,10 @@ t_lst		*lst_sort_ascii(t_lst *lsthead)
 	return (lsthead);
 }
 
+/*
+**  print la list concatener et trier
+*/
+
 void		ft_print_lst_ex(t_lst *lst, int t)
 {
 	t_elem	*elem;
@@ -88,11 +106,16 @@ void		ft_print_lst_ex(t_lst *lst, int t)
 	}
 }
 
+/*
+**   va cree une list temporaire qui va etre supprimer apres l'affchage
+*/
+
 void		ft_print_export(t_core *m_env)
 {
 	t_lst	*env;
 	t_lst	*export;
 
+	export = NULL;
 	env = ft_lstdup(m_env->env);
 	if (m_env->exp && m_env->exp->head)
 	{
@@ -102,4 +125,6 @@ void		ft_print_export(t_core *m_env)
 	ft_print_lst_ex(lst_sort_ascii(env), 1);
 	if (env)
 		ft_del_list(env);
+	if (export)
+		ft_del_list(export);
 }

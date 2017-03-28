@@ -19,16 +19,16 @@
 
 t_core		*ft_init_core(void)
 {
-	t_core		*core;
+	t_core			*set;
 
-	core = NULL;
-	if ((core = malloc(sizeof(t_core))) == NULL)
-	{
+	set = NULL;
+	if ((set = malloc(sizeof(t_core))) == NULL)
 		return (NULL);
-	}
-	core->env = NULL;
-	core->set = NULL;
-	return (core);
+	set->env = NULL;
+	set->set = NULL;
+	set->exp = NULL;
+	set->hist = NULL;
+	return (set);
 }
 
 /*

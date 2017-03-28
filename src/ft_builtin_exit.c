@@ -12,6 +12,23 @@
 
 #include "42sh.h"
 
+void 	ft_del_core(t_core *core)
+{
+	if (core)
+	{
+		if (core->set)
+			ft_del_list(core->set);
+		if (core->exp)
+			ft_del_list(core->exp);
+		if (core->env)
+			ft_del_list(core->env);
+		if (core->hist)
+			ft_del_list(core->hist);
+		ft_memdel((void*)&core);
+	}
+}
+
+
 /*
 **	la fonction ft_builtin_exit gere les erreurs des arguments (s'il y en a),
 **	retourne -1 comme tout builtin si une erreur occure, sinon exit est appelé
@@ -38,7 +55,7 @@ int		ft_builtin_exit(t_core *core, char *cmd, char **args)
 		ret = ft_atoi(args[0]);
 	}
 	ft_histopt_w(core->set, core->hist, NULL);
-	ft_del_list(core->env);
+	ft_del_core(core);
 	clean_pos_curs();
 	close_termios();
 	exit(ret);
