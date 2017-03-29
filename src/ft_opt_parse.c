@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/07 18:27:26 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/04 20:27:53 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/11 18:13:35 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,9 @@ static int	*ft_set_opt(int *opt, char *opts, char c, size_t overwrite)
 
 static int	ft_is_opt(int *opt, char *opts, char *arg, size_t overwrite)
 {
+	int	i;
+
+	i = 1;
 	if (arg[0] != '-' || (arg[0] == '-' && arg[1] == '\0'))
 	{
 		return (0);
@@ -69,15 +72,15 @@ static int	ft_is_opt(int *opt, char *opts, char *arg, size_t overwrite)
 	}
 	else
 	{
-		++arg;
-		while (*arg != '\0')
+
+		while (arg[i] != '\0')
 		{
-			if (ft_strchr(opts, *arg) == NULL)
+			if (ft_strchr(opts, arg[i]) == NULL)
 			{
-				return (print_opt_err(opts, *arg));
+				return (print_opt_err(opts, arg[i]));
 			}
-			opt = ft_set_opt(opt, opts, *arg, overwrite);
-			++arg;
+			opt = ft_set_opt(opt, opts, arg[i], overwrite);
+			++i;
 		}
 	}
 	return (1);

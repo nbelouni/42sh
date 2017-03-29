@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 16:51:24 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/27 18:17:39 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/29 14:46:42 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ t_token	*move_for_token(t_token *elem)
 		tmp->prev = elem;
 		elem->prev = NULL;
 		elem->type = CMD;
-		ft_print_token_list(&elem);
+//		ft_print_token_list(&elem);
 	}
 	return (ret);
 }

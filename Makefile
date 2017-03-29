@@ -23,12 +23,14 @@ SRCS = 	ft_builtin_cd.c		\
 		ft_builtin_exit.c	\
 		ft_builtin_setenv.c	\
 		ft_builtin_unsetenv.c\
-		ft_bultin_export.c	\
+		ft_builtin_export.c	\
+		ft_builtin_export_tools.c\
+		ft_builtin_unset.c\
+		ft_export_print.c\
 		ft_norm_tools.c		\
 		ft_init.c			\
 		ft_list_tools.c		\
 		ft_list_tools2.c	\
-		ft_tools.c			\
 		ft_opt_parse.c		\
 		read.c				\
 		buf.c				\
@@ -71,7 +73,16 @@ SRCS = 	ft_builtin_cd.c		\
 		io.c				\
 		handle_jobs.c		\
 		init_shell.c		\
-		create_cmd_for_job.c
+		create_cmd_for_job.c\
+		ft_get_history.c	\
+		ft_set_history.c	\
+		ft_histopt_filename.c\
+		ft_histopt_offset.c	\
+		ft_histopt_args.c	\
+		ft_history_opt.c	\
+		ft_history_tools.c	\
+		ft_builtin_history.c\
+		ft_default_set.c
 
 SRCC = $(addprefix $(SDIR),$(SRCS))
 

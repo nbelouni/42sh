@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 20:00:04 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/04 20:27:54 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/11 17:27:13 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ void		ft_insert_elem(t_elem *elem, t_lst *lst)
 
 void		ft_extract_elem(t_elem **elem, t_lst *lst)
 {
+	lst->size--;
 	if ((*elem)->next != NULL && (*elem)->prev != NULL)
 	{
 		(*elem)->prev->next = (*elem)->next;
@@ -81,6 +82,11 @@ void		ft_extract_elem(t_elem **elem, t_lst *lst)
 	{
 		lst->tail = (*elem)->prev;
 		(*elem)->prev->next = NULL;
+	}
+	else if ((*elem)->next == NULL && (*elem)->prev == NULL)
+	{
+		lst->tail = NULL;
+		lst->head = NULL;
 	}
 }
 
@@ -101,7 +107,6 @@ void		ft_del_elem(t_elem **elem, t_lst *lst)
 {
 	ft_extract_elem(elem, lst);
 	ft_clear_elem(elem);
-	lst->size = lst->size - 1;
 }
 
 /*

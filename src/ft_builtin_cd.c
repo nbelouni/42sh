@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/07 18:21:51 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/04 20:27:52 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/15 19:05:31 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,17 +45,11 @@ static char	*ft_cd_opt(char *path, mode_t mode, int *opt)
 **	n'est pas trouvé.
 */
 
-int			ft_free_and_return(int ret, void *start, ...)
+int			ft_free_and_return(int ret, void *d1, void *d2, void *d3)
 {
-	va_list	list;
-
-	va_start(list, start);
-	while (start)
-	{
-		ft_memdel(&start);
-		start = va_arg(list, void *);
-	}
-	va_end(list);
+	(d1) ? ft_memdel(&d1) : 0;
+	(d2) ? ft_memdel(&d2) : 0;
+	(d3) ? ft_memdel(&d3) : 0;
 	return (ret);
 }
 
@@ -74,13 +68,13 @@ static int	ft_cd(t_lst *env, int *opt, char *s, mode_t m)
 	if ((buf = ft_cd_opt(s, m, opt)) == NULL)
 		return (-1);
 	if (ft_is_valid_dir(buf) == -1)
-		return (ft_free_and_return(-1, buf, NULL));
+		return (ft_free_and_return(-1, buf, NULL, NULL));
 	if ((owd = getcwd(NULL, PATH_MAX)) == NULL)
-		return (ft_free_and_return(-1, buf, NULL));
+		return (ft_free_and_return(-1, buf, NULL, NULL));
 	chdir(buf);
 	ft_strdel(&buf);
 	if ((b2 = getcwd(NULL, PATH_MAX)) == NULL)
-		return (ft_free_and_return(-1, owd, NULL));
+		return (ft_free_and_return(-1, owd, NULL, NULL));
 	if (S_ISLNK(m) != 0 && opt != NULL && opt[0] > 0 && opt[1] > 0)
 	{
 		ft_memset(ft_strlchr(b2, '/'), 0, ft_strlen(ft_strlchr(b2, '/')));
@@ -301,7 +295,7 @@ int			ft_builtin_cd(t_lst *env, char *cmd, char **args)
 	if (opt == NULL)
 		return (ERR_EXIT);
 	else if (opt[0] == -1)
-		return (ft_free_and_return(ERR_NEW_CMD, opt, NULL));
+		return (ft_free_and_return(ERR_NEW_CMD, opt, NULL, NULL));
 	if (args != NULL && args[opt[0]] != NULL && ft_tablen(&(args[opt[0]])) > 2)
 	{
 		(opt != NULL) ? free(opt) : 0;

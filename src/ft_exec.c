@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 13:08:28 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/23 14:10:08 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/29 14:37:06 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,17 +80,17 @@ int			ft_exec_built(char **args)
 	if (args != NULL && args[0] != NULL)
 	{
 		if ((ret = ft_strcmp(args[0], "exit")) == FALSE)
-			ft_builtin_exit(env, args[0], args + 1);
+			ft_builtin_exit(set, args[0], args + 1);
 		else if ((ret = ft_strcmp(args[0], "env")) == FALSE)
-			ft_builtin_env(env, &args[1]);
+			ft_builtin_env(set->env, &args[1]);
 		else if ((ret = ft_strcmp(args[0], "setenv")) == FALSE)
-			ft_builtin_setenv(env, args[0], args + 1);
+			ft_builtin_setenv(set->env, args[0], args + 1);
 		else if ((ret = ft_strcmp(args[0], "unsetenv")) == FALSE)
-			ft_builtin_unsetenv(env, args[0], &args[1]);
+			ft_builtin_unsetenv(set->env, args[0], &args[1]);
 		else if ((ret = ft_strcmp(args[0], "echo")) == FALSE)
-			ft_builtin_echo(env, args[0], args + 1);
+			ft_builtin_echo(set->env, args[0], args + 1);
 		else if ((ret = ft_strcmp(args[0], "cd")) == FALSE)
-			ft_builtin_cd(env, args[0], args + 1);
+			ft_builtin_cd(set->env, args[0], args + 1);
 		return (ret);
 	}
 	return (FALSE);
@@ -108,8 +108,8 @@ void			ft_exec(char **av)
 	t_elem		*tmp;
 
 	close_termios();
-	envp = ft_env_to_tab(env);
-	if (!(tmp = ft_find_elem("PATH", env)))
+	envp = ft_env_to_tab(set->env);
+	if (!(tmp = ft_find_elem("PATH", set->env)))
 		s = ft_strdup("");
 	else
 		s = ft_strdup(tmp->value);

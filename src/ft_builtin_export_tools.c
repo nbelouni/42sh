@@ -1,16 +1,46 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_tools.c                                         :+:      :+:    :+:   */
+/*   ft_builtin_export_tools.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maissa-b <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: dogokar <dogokar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/03/05 15:18:39 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/05 15:18:40 by maissa-b         ###   ########.fr       */
+/*   Created: 2017/03/15 18:19:12 by dogokar           #+#    #+#             */
+/*   Updated: 2017/03/15 18:19:59 by dogokar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
+
+/*
+**		extrais l'element et l'insert dans une autre liste
+*/
+
+void		move_to_env(t_elem *lst, t_lst *env, t_lst *type_env)
+{
+	ft_extract_elem(&lst, type_env);
+	ft_insert_elem(lst, env);
+}
+
+/*
+**  ajoute un element sans les messages d'erreurs
+*/
+
+int			ft_add_elemo(t_lst *lst, char *s)
+{
+	t_elem	*elem;
+
+	elem = NULL;
+	if (s && s[0])
+	{
+		if ((elem = ft_init_elem()) == NULL)
+			return (ERR_EXIT);
+		elem->name = ft_strdup(s);
+		ft_insert_elem(elem, lst);
+		return (0);
+	}
+	return (-1);
+}
 
 /*
 **	ft_export est une fonction permettant d'exporter dans une liste lst
@@ -35,7 +65,7 @@ int			ft_export(t_lst *lst, char *arg)
 	{
 		if ((val = ft_strsub(arg, ft_strlen(name) + 1, \
 				(ft_strlen(arg) - ft_strlen(name) + 1))) == NULL)
-			return (ft_free_and_return(ERR_EXIT, name, NULL));
+			return (ft_free_and_return(ERR_EXIT, name, NULL, NULL));
 	}
 	ret = ft_setenv(lst, name, val);
 	(val != NULL) ? ft_multi_free(val, name, NULL, NULL) : ft_strdel(&name);
