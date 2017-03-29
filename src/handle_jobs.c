@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/27 15:52:51 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/29 14:12:36 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,11 +67,11 @@ int	job_is_stopped (t_job *j)
   List_p	ptr;
 
   ptr = j->waitProcessList;
-  print_job(j);
+//  print_job(j);
   while (ptr)
   {
 	  p = ptr->content;
-	  print_process(p);
+//	  print_process(p);
 	  if (!p->completed && !p->stopped)
 		  return 0;
 	  ptr = ptr->next;
@@ -86,11 +86,11 @@ int	job_is_completed(t_job *j)
 	List_p	ptr;
 
   ptr = j->waitProcessList;
-  print_job(j);
+//  print_job(j);
   while (ptr)
   {
 	  p = ptr->content;
-	  print_process(p);
+//	  print_process(p);
 	  if (!p->completed)
 		  return 0;
 	  ptr = ptr->next;
@@ -112,7 +112,7 @@ t_process_p	getProcessByPid(pid_t pid)
 	while (ptrJob)
 	{
 		j = ptrJob->content;
-		print_job(j);
+//		print_job(j);
 		ptrProcess = j->waitProcessList;
 		while (ptrProcess)
 		{
@@ -146,7 +146,7 @@ int	mark_process_status(pid_t pid, int status)
 				  fprintf (stderr, "%d: Terminated by signal %d.\n",
 						   (int) pid, WTERMSIG (p->status));
 		  }
-		  print_process(p);
+//		  print_process(p);
 		  return 0;		
 	  }
 	  else
@@ -182,7 +182,7 @@ void	wait_for_job(t_job *j)
 	int status;
 	pid_t pid;
 
-  print_job(j);
+ // print_job(j);
   signal (SIGCHLD, SIG_DFL);
   while (true)
   {
@@ -214,7 +214,7 @@ void do_job_notification(void)
 		j = (*ptr)->content;
 		if (job_is_completed(j))
 		{
-			format_job_info (j, "completed");
+//			format_job_info (j, "completed");
 			delete_job(POP(ptr));
 		}
 		else if (job_is_stopped(j) && !j->notified)
@@ -331,7 +331,42 @@ void	doRedir(Io_p io)
 	if (io->flag & CLOSE)
 		close(io->dup_src);
 }
+/*
+void	doRedir(Io_p io)
+{
+	int		pipefd[2];
 
+	pipe(pipefd);
+	if (io->flag & OPEN)
+	{
+		if (io->flag & CLOSE && access(io->str, X_OK) == -1)
+			io->mode |= O_CREAT;
+		io->dup_src = open(io->str, io->mode, DEF_FILE);
+		if (io->dup_src < 0 && io->mode)
+			fputs("42sh: No such file or directory (a placer dans les error)\n", stderr);
+//		E(io->dup_src);X('\n');
+	}
+	if (io->flag & WRITE)
+	{
+		dup2(pipefd[0], STDIN_FILENO);
+		write(pipefd[1], io->str, ft_strlen(io->str));
+	}
+	if (io->flag & DUP)
+	{
+		if (fcntl(io->dup_src, F_GETFL) < 0*//* && errno == EBADF*//*)
+			fputs("42sh: Bad file descriptor (a placer dans les error)\n", stderr);
+		E(fcntl(io->dup_src, F_GETFL));X('\n');
+		dprintf(2,"dup <%p>\n", io);
+		dup2(io->dup_src, io->dup_target);
+	}
+	if (io->flag & CLOSE)
+	{
+		dprintf(2,"close <%p>\n", io);
+		close(io->dup_src);
+		close(pipefd[1]);
+	}
+}
+*/
 int	doPipe(t_process_p p1, t_process_p p2, 	int	*io_pipe)
 {
 	Io_p	io_in;
