@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/01 17:17:28 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/17 13:24:00 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/30 09:20:55 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,6 +206,14 @@ int			init_completion(t_completion *cplt, t_lst *env)
 	char	*s;
 
 	s = ft_find_elem("PATH", env)->value;
+	if (cplt->command)
+		destroy_sort_list(&(cplt->command));
+	if (cplt->username)
+		destroy_sort_list(&(cplt->username));
+	if (cplt->hostname)
+		destroy_sort_list(&(cplt->hostname));
+	if (cplt->variable)
+		destroy_sort_list(&(cplt->variable));
 	if (fill_command(&(cplt->command), s) == ERR_EXIT)
 		return (ERR_EXIT);
 	if (fill_username(&(cplt->username), "/etc/passwd") == ERR_EXIT)
