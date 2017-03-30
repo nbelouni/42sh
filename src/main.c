@@ -26,7 +26,7 @@ int		parse(t_core *set, char *line, char **envp)
 		if (ft_strcmp(args[0], "exit") == 0)
 			ft_builtin_exit(set, args[0], args + 1);
 		else if (ft_strcmp(args[0], "env") == 0)
-			ft_builtin_env(set->env, &args[1]);
+			ft_builtin_env(set->env, args + 1);
 		else if (ft_strcmp(args[0], "setenv") == 0)
 			ft_builtin_setenv(set->env, args[0], args + 1);
 		else if (ft_strcmp(args[0], "unsetenv") == 0)
@@ -40,7 +40,7 @@ int		parse(t_core *set, char *line, char **envp)
 		else if (ft_strcmp(args[0], "unset") == 0)
 			ft_builtin_unset(set, args);
 		else if (ft_strcmp(args[0], "history") == 0)
-			ft_builtin_history(set->set, set->hist, args + 1);
+			return ft_builtin_history(set->set, set->hist, args + 1);
 		else if (ft_strcmp(args[0], "set") == 0)
 			ft_print_lst(set->set);
 		else
@@ -52,6 +52,7 @@ int		parse(t_core *set, char *line, char **envp)
 		return (ERR_EXIT);
 	return (0);
 }
+
 
 /*
 **		TODO  init_core initialisation des liste d'env

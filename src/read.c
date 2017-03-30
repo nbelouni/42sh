@@ -23,28 +23,35 @@ int		cpy_cut_paste(t_buf *buf, int x)
 			m_right(calc_len(buf, END));
 			return (ft_print_error("\n42sh", ERR_MALLOC, ERR_EXIT));
 		}
+		return (1);
 	}
-	if (x == CTRL_B || x == CTRL_E || x == CTRL_K || x == CTRL_W)
+	else if (x == CTRL_B || x == CTRL_E || x == CTRL_K || x == CTRL_W)
 	{
 		if (vb_cut(buf, x) < 0)
 		{
 			m_right(calc_len(buf, END));
 			return (ft_print_error("\n42sh", ERR_MALLOC, ERR_EXIT));
 		}
+		return (1);
 	}
-	if (x == CTRL_P)
+	else if (x == CTRL_P)
 	{
 		if (vb_paste(buf) < 0)
 		{
 			m_right(calc_len(buf, END));
 			return (ft_print_error("\n42sh", ERR_CMD_TOO_LONG, ERR_NEW_CMD));
 		}
+		return (1);
 	}
+
 	return (0);
 }
 
 int		mv_and_read2(t_buf *buf, int x)
 {
+	int i;
+
+	i = 0;
 	if (x == DEL)
 	{
 		vb_del(buf, x);
@@ -62,7 +69,6 @@ int		mv_and_read2(t_buf *buf, int x)
 	}
 	else if (x == LEFT || x == HOME || x == ALT_LEFT)
 	{
-		PUT2("fuck");
 		m_left(calc_len(buf, x));
 		return (1);
 	}
@@ -74,22 +80,15 @@ int		mv_and_read2(t_buf *buf, int x)
 	return (0);
 }
 
-char 	*cut_bit(int x)
-{
-	char *test;
-	int i;
-
-	test = ft_strnew(sizeof(int));
-	i = 0;
-	while (x != 0)
-	{
-		test[i] = x & 0xff;
-		x >>= 8;
-		i++;
-	}
-	ft_putstr(test);
-	return (test);
-}
+// char 	*cut_bit(int x)
+// {
+// 	char *test;
+// 	int i;
+//
+// 	test = ft_strnew(sizeof(int));
+// 	i = 0;
+// 	return (test);
+// }
 
 /*
 **  TODO cut bite cree un chaine decouper a partire de int x
@@ -113,15 +112,10 @@ int		mv_and_read(t_buf *buf, int x, int ret)
 			m_right(calc_len(buf, END));
 			return (ft_print_error("\n42sh", ERR_CMD_TOO_LONG, ERR_NEW_CMD));
 		}
+		return (1);
 	}
-	else if (mv_and_read2(buf, x) == 0)
-	{
-		if (vb_insert(buf, cut_bit(x)) < 0)
-		{
-			m_right(calc_len(buf, END));
-			return (ft_print_error("\n42sh", ERR_CMD_TOO_LONG, ERR_NEW_CMD));
-		}
-	}
+	else if (mv_and_read2(buf, x))
+		return (1);
 	return (0);
 }
 
@@ -138,23 +132,104 @@ void	init_line(t_buf *buf)
 	print_post_curs(buf);
 }
 
+
+int			vb_insert2(t_buf *buf, char s)
+{
+	int cursor;
+
+	//ft_putendl("rentre dans vb_inse")
+	cursor = g_curs.win_col * g_curs.row + g_curs.col;
+	t_puts("im", 1);
+	t_puts("ic", 1);
+	//ft_putchar_fd(s, 1);
+	if (buf->size + 1 >= BUFF_SIZE)
+		return (-1);
+	insert_in_buf(buf, cursor - get_prompt_len(), &s, 1);
+	buf->size += 1;
+	if (g_curs.col + 1 < g_curs.win_col)
+		g_curs.col += 1;
+	else
+	{
+		g_curs.col = 0;
+		g_curs.row++;
+		t_puts("cr", 1);
+		t_puts("do", 1);
+	}
+	print_post_curs(buf);
+	t_puts("ei", 1);
+	return (0);
+}
+
+int testmv_and_read(t_buf *buf, int x)
+{
+	if (ft_isprint(x))
+	{
+		if (vb_insert2(buf, x) < 0)
+		{
+			m_right(calc_len(buf, END));
+			return (ft_print_error("\n42sh", ERR_CMD_TOO_LONG, ERR_NEW_CMD));
+		}
+		return (1);
+	}
+	return (0);
+}
+
+int 	catch_keys(t_buf *buf, int x, int ret, t_completion *cplt)
+{
+	int 	err;
+//	char 	*tmp;
+	char 	i;
+
+	err = 0;
+	i = 0;
+	if ((err = mv_and_read(buf, x, ret)) < 0)
+		return (err);
+	else if (err != 1)
+	{
+		if ((err = cpy_cut_paste(buf, x)) < 0)
+			return (err);
+		else if (err != 1)
+		{
+			if ((err = complete_line(buf, cplt, x)) < 0)
+				return (err);
+			else if (err == 2)
+			{
+				while (x != 0)
+				{
+					i = x & 0xff;
+					testmv_and_read(buf, i);
+					x >>= 8;
+					i++;
+				}
+//				PUT2("cut_bit ->>  ");
+				//tmp = cut_bit(x);
+				//PUT2(tmp);
+	//			PUT2("\n");
+				// while (i < 5)
+				// {
+				// 	mv_and_read(buf, tmp[i], ret);
+				// 	tmp++;
+				// 	i++;
+				// }
+			}
+		}
+	}
+	return (err);
+}
+
 int		read_line(t_buf *buf, t_completion *cplt)
 {
  	int				x;
 	int				ret;
 	int				err;
-	int				i;
 
-	i = -1;
 	x = 0;
 	err = 0;
 	init_line(buf);
 	while ((ret = read(0, &x, sizeof(int))))
 	{
-		if ((err = mv_and_read(buf, x, ret)) < 0 ||
-		(err = cpy_cut_paste(buf, x)) < 0 ||
-		(err = complete_line(buf, cplt, x)) != 0)
-			return (err);
+		if (catch_keys (buf, x, ret, cplt) == ERR)
+			return (ERR);
 		if (x == RETR)
 		{
 			m_right(calc_len(buf, END));

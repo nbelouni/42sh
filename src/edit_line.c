@@ -16,7 +16,7 @@ int			vb_insert(t_buf *buf, char *s)
 {
 	int cursor;
 
-
+	//ft_putendl("rentre dans vb_inse")
 	cursor = g_curs.win_col * g_curs.row + g_curs.col;
 	t_puts("im", 1);
 	t_puts("ic", 1);

@@ -317,7 +317,8 @@ int		complete_line(t_buf *buf, t_completion *cplt, char x)
 	int			ret;
 
 	if (x != TAB)
-		return (0);
+		return (2);
+		PUT2("rente dans complete_line");
 	begin = find_word_begin(buf->line);
 	if (is_char(buf->line, begin, '$'))
 		return (replace_or_print(buf, cplt->variable, begin + 1, '$'));
@@ -336,5 +337,6 @@ int		complete_line(t_buf *buf, t_completion *cplt, char x)
 			destroy_sort_list(&ref);
 		return (ret);
 	}
-	return (0);
+	PUT2("sort de la");
+	return (2);
 }
