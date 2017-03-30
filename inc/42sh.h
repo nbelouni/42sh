@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:09:30 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/20 15:50:26 by dogokar          ###   ########.fr       */
+/*   Updated: 2017/03/29 16:15:12 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ typedef struct		s_lst
 	t_elem			*tail;
 }					t_lst;
 
-typedef struct		s_set
+typedef struct		s_core
 {
 	t_lst			*set;
 	t_lst			*hist;

@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/03 14:15:26 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/27 22:28:06 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/30 09:03:58 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,10 @@ void	supp_dquote(char *s, int *i, int *len)
 	j += *i;
 	while (*i < j)
 	{
-		if (supp_char(s, *i, '\\'))
-			j--;
+		if (s[*i + 1] && (s[*i + 1] == '$' || s[*i + 1] == '\\' ||
+		s[*i + 1] == '`' || s[*i + 1] == '"'))
+			if (supp_char(s, *i, '\\'))
+				j--;
 		(*i)++;
 	}
 	supp_char(s, *i, '"');
@@ -86,30 +88,50 @@ void	supp_quotes(char *s)
 
 int		init_begin_end(char *s, int *begin, int *end)
 {
+	int		s_quote;
+	int		d_quote;
+	int		esp;
+
 	*begin = find_next_char(s, 0, '$');
-	if (*begin < 0 || *begin + 1 >= (int)ft_strlen(s))
+	if (*begin < 0 || *begin + 1 >= (int)ft_strlen(s) || which_quotes(s, *begin) == S_QUOTE)
 		return (TRUE);
 	*begin += 1;
-	*end = find_next_char(s, *begin, ' ');
-	if (*end == -1)
+	if ((s_quote = find_next_char(s, *begin, '\'')) < 0)
+		s_quote = ft_strlen(s);
+	if ((d_quote = find_next_char(s, *begin, '"')) < 0)
+		d_quote = ft_strlen(s);
+	if ((esp = find_next_char(s, *begin, ' ')) < 0)
+		esp = ft_strlen(s);
+	if (s_quote < d_quote && s_quote < esp)
+		*end = s_quote;
+	if (d_quote < s_quote && d_quote < esp)
+		*end = d_quote;
+	else
+		*end = esp;
+	if (*end == (int)ft_strlen(s))
 		*end = ft_strlen(s) - *begin;
 	return (FALSE);
 }
 
-int		init_new_value(char *var_name, t_lst *env, char **new_value)
+int		init_new_value(char *var_name, t_core *core, char **new_value)
 {
 	t_elem	*tmp;
 
 	if (!var_name)
 		return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
-	tmp = ft_find_elem(var_name, env);
+	PUT2("var_name : ");PUT2(var_name);X('\n');
+	if (!(tmp = ft_find_elem(var_name, core->set)))
+	{
+		if (!(tmp = ft_find_elem(var_name, core->env)))
+			tmp = ft_find_elem(var_name, core->exp);
+	}
 	*new_value = (tmp && tmp->value && tmp->value[0]) ? tmp->value : NULL;
 	if (var_name)
 		ft_strdel(&var_name);
 	return (0);
 }
 
-int		replace_env_var(char **s, t_lst *env)
+int		replace_env_var(char **s, t_core *core)
 {
 	char	*new_val;
 	char	*new_s;
@@ -119,7 +141,7 @@ int		replace_env_var(char **s, t_lst *env)
 
 	if (init_begin_end(*s, &bg, &end) == TRUE)
 		return (TRUE);
-	if (init_new_value(ft_strsub(*s, bg, end), env, &new_val) == ERR_EXIT)
+	if (init_new_value(ft_strsub(*s, bg, end), core, &new_val) == ERR_EXIT)
 		return (ERR_EXIT);
 	if (!(new_s = ft_strnew(ft_strlen(*s) - end + ft_strlen(new_val))))
 		return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
@@ -163,7 +185,7 @@ int		insert_new_args(char **s, t_reg_path **new_args, t_reg_path *tmp)
 	return (TRUE);
 }
 
-int		globb(char **s, t_lst *env, t_reg_path **new_args)
+int		globb(char **s, t_core *core, t_reg_path **new_args)
 {
 	int			i;
 	int			ret;
@@ -174,7 +196,7 @@ int		globb(char **s, t_lst *env, t_reg_path **new_args)
 	while (ret == FALSE)
 	{
 		is_end(*s, &i, '\'');
-		if ((ret = replace_env_var(s, env)) == ERR_EXIT)
+		if ((ret = replace_env_var(s, core)) == ERR_EXIT)
 			return (ERR_EXIT);
 		i++;
 	}
@@ -183,6 +205,8 @@ int		globb(char **s, t_lst *env, t_reg_path **new_args)
 		if (insert_new_args(s, new_args, tmp) == FALSE)
 			return (FALSE);
 	}
+	else
+		supp_quotes(*s);
 	return (TRUE);
 }
 
@@ -237,7 +261,7 @@ char	**add_in_args(char **args, t_reg_path *reg_args)
 	return (new);
 }
 
-int		edit_cmd(char ***args, t_lst *env)
+int		edit_cmd(char ***args, t_core *core)
 {
 	t_reg_path	*new_args;
 	char		**tmp;
@@ -247,11 +271,18 @@ int		edit_cmd(char ***args, t_lst *env)
 	i = -1;
 	while ((*args)[++i])
 	{
-		if (globb(&(*args)[i], env, &new_args) == ERR_EXIT)
+		if (globb(&(*args)[i], core, &new_args) == ERR_EXIT)
 			return (ERR_EXIT);
 	}
 	if (new_args)
 	{
+		t_reg_path *tmp2 = new_args;
+		while (tmp2)
+		{
+			PUT2("tmp2->out : ");PUT2(tmp2->out);X('\n');
+			tmp2 = tmp2->next;
+		}
+		PUT2("ok\n");
 		if (!(tmp = add_in_args(*args, new_args)))
 			return (ERR_EXIT);
 		ft_tabdel(*args);

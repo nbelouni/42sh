@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/17 17:08:54 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/29 16:11:42 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int		parse(t_core *set, char *line, char **envp)
 }
 
 void print_tab(char **tabol);
-int		regexp_in_tree(t_tree *node, t_lst *env)
+int		regexp_in_tree(t_tree *node, t_core *env)
 {
 	if(!node)
 	{
@@ -123,7 +123,7 @@ int 	main(int argc, char **argv, char **envp)
 			complete_final_line(buf, list);
 			//parse(set, buf->final_line, envp);
 			ret = parse_buf(&list, buf->final_line, &completion);
-			parse(set, buf->final_line, envp);
+//			parse(set, buf->final_line, envp);
 			if (ret > 0 && list)
 			{
 
@@ -132,9 +132,10 @@ int 	main(int argc, char **argv, char **envp)
  *				enleve les quotes et les backslash -> va changer de place
  *				edit_cmd(list, env);
  */
-//				ft_push_ast(list, &ast);
-//				print_debug_ast(ast);
-//				free_ast(ast);
+				ft_push_ast(list, &ast);
+				regexp_in_tree(ast, set);
+				print_debug_ast(ast);
+				free_ast(ast);
 			}
 			if (ret != ERR_NEW_PROMPT)
 				ft_strdel(&(buf->final_line));

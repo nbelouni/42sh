@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/11 16:24:49 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/27 22:23:44 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/30 09:01:57 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,19 @@ int		is_regex_in_text(char *s)
 	i = 0;
 	while (s[i])
 	{
+		is_end(s, &i, '\'');
+		is_end(s, &i, '`');
+		is_end(s, &i, '"');
 		if (is_char(s, i, '?') || is_char(s, i, '*'))
 			return (TRUE);
-		else if (is_char(s, i, '[') && find_next_char(s, i + 1, ']') >= 0)
-			return (TRUE);
+		else if (is_char(s, i, '['))
+		{
+			is_end(s, &i, '\'');
+			is_end(s, &i, '`');
+			is_end(s, &i, '"');
+			if (find_next_char(s, i + 1, ']') >= 0)
+				return (TRUE);
+		}
 		i++;
 	}
 	return (FALSE);
@@ -37,6 +46,9 @@ int		count_slashs(char *s)
 	n_slash = 0;
 	while (s[++i])
 	{
+		is_end(s, &i, '\'');
+		is_end(s, &i, '`');
+		is_end(s, &i, '"');
 		if (is_char(s, i, '/'))
 			n_slash++;
 	}
@@ -45,7 +57,7 @@ int		count_slashs(char *s)
 	return (n_slash);
 }
 
-char	**split_args(char *s)
+char		**split_args(char *s)
 {
 	char	**new;
 	int		i;
@@ -54,17 +66,23 @@ char	**split_args(char *s)
 	int		end;
 
 	len = count_slashs(s);
+
 	if (!(new = ft_memalloc(sizeof(char *) * (len + 1))))
 		return (NULL);
 	if (s[0] == '/')
 		begin = 1;
 	else
 		begin = 0;
+	end = 0;
 	i = -1;
 	while (++i < len)
 	{
-		end = find_next_char(s, begin, '/');
-		if (end == -1)
+		is_end(s, &end, '\'');
+		is_end(s, &end, '`');
+		is_end(s, &end, '"');
+		if (find_next_char(s, begin, '/') >= 0)
+			end += find_next_char(s, begin, '/');
+		else
 			end = ft_strlen(s) - begin;
 		if (!(new[i] = ft_strsub(s, begin, end + 1)))
 			return (NULL);
@@ -98,14 +116,53 @@ t_reg_path	*init_curr_path(char *s)
 	return (ft_reg_pathnew(path, out, 0, is_abs));
 }
 
-int		is_regex(char *s, int i)
+int			which_quotes(char *s, int len)
 {
-	if (is_char(s, i, '?') || is_char(s, i, '[') || is_char(s, i, '*'))
-		return (TRUE);
+	int		w_quotes;
+	int		i;
+
+	w_quotes = 0;
+	i = -1;
+	while (++i < len)
+	{
+		if (is_char(s, i, '"'))
+			w_quotes = (w_quotes == NO_QUOTE) ? D_QUOTE : NO_QUOTE;
+		if (is_char(s, i, '\''))
+			w_quotes = (w_quotes == NO_QUOTE) ? S_QUOTE : NO_QUOTE;
+		if (is_char(s, i, '`'))
+			w_quotes = (w_quotes == NO_QUOTE) ? BT_QUOTE : NO_QUOTE;
+	}
+	return (w_quotes);
+}
+
+int			is_regex(char *s, int i)
+{
+//	int len;
+//	PUT2("s + i : ");PUT2(s + i);X('\n');
+//	if ((len = which_quotes(s, i)) == 0)
+	if (which_quotes(s, i) == NO_QUOTE)
+	{
+//	PUT2("len : ");E(len);X('\n');
+		if (is_char(s, i, '?') || is_char(s, i, '*'))
+			return (TRUE);
+		if (is_char(s, i, '['))
+		{
+			while (i < (int)ft_strlen(s) && !is_char(s, i, ']'))
+			{
+				is_end(s, &i, '\'');
+				is_end(s, &i, '`');
+				is_end(s, &i, '"');
+				i++;
+			}
+			if (i < (int)ft_strlen(s))
+				return (TRUE);
+		}
+	}
+	//PUT2("len : ");E(len);X('\n');
 	return (FALSE);
 }
 
-int		find_last_len(char *s)
+int			find_last_len(char *s)
 {
 	int		i;
 	int		len;
@@ -114,14 +171,26 @@ int		find_last_len(char *s)
 	len = 0;
 	while (++i < (int)ft_strlen(s))
 	{
+		is_end(s, &i, '\'');
+		is_end(s, &i, '`');
+		is_end(s, &i, '"');
 		if (is_char(s, i, '['))
-			i += find_next_char(s + i, 0, ']');
+		{
+			while (++i < (int)ft_strlen(s))
+			{
+				is_end(s, &i, '\'');
+				is_end(s, &i, '`');
+				is_end(s, &i, '"');
+				if (is_char(s, i, ']'))
+					break ;
+			}
+		}
 		len++;
 	}
 	return (len);
 }
 
-int		free_rg_and_return(char *rg, int ret)
+int			free_rg_and_return(char *rg, int ret)
 {
 	if (rg && rg[0])
 	{
@@ -131,16 +200,19 @@ int		free_rg_and_return(char *rg, int ret)
 	return (ret);
 }
 
-int		is_same_char(char *s, char *rg, int *i_s, int *i_rg)
+int			is_same_char(char *s, char *rg, int *i_s, int *i_rg)
 {
 	if (is_regex(rg, *i_rg) == FALSE)
 	{
+//		PUT2("rg + i_rg : ");PUT2(rg + *i_rg);X('\n');
+//		PUT2("s + i_s : ");PUT2(s + *i_s);X('\n');
+//		PUT2("REGEX : FALSE\n");
 		if (rg[*i_rg] != s[*i_s])
 			return (free_rg_and_return(rg, FALSE));
 		*i_rg += 1;
 		*i_s += 1;
 	}
-	else if (rg[*i_rg] == '?')
+	else if (which_quotes(rg, *i_rg) == NO_QUOTE && is_char(rg, *i_rg, '?'))
 	{
 		if (!s[*i_s])
 			return (free_rg_and_return(rg, FALSE));
@@ -150,20 +222,23 @@ int		is_same_char(char *s, char *rg, int *i_s, int *i_rg)
 	return (TRUE);
 }
 
-int		is_pool_char(char *s, char *rg, int *i_s, int *i_rg)
+int			is_pool_char(char *s, char *rg, int *i_s, int *i_rg)
 {
-	if (rg[*i_rg] == '[')
+	if (which_quotes(rg, *i_rg) == NO_QUOTE && is_char(rg, *i_rg, '['))
 	{
 		*i_rg += 1;
 		while (rg[*i_rg])
 		{
+			is_end(rg, i_rg, '\'');
+			is_end(rg, i_rg, '`');
+			is_end(rg, i_rg, '"');
 			if (is_char(rg, *i_rg, ']'))
 				break ;
 			else if (s[*i_s] == rg[*i_rg])
 				break ;
 			*i_rg += 1;
 		}
-		if (is_char(rg, *i_rg, ']'))
+		if (which_quotes(rg, *i_rg) == NO_QUOTE && is_char(rg, *i_rg, ']'))
 			return (free_rg_and_return(rg, FALSE));
 		*i_rg += find_next_char(rg, *i_rg, ']') + 1;
 		(*i_s)++;
@@ -171,12 +246,12 @@ int		is_pool_char(char *s, char *rg, int *i_s, int *i_rg)
 	return (TRUE);
 }
 
-int		is_next_pool_char(char *s, char *rg, int *i_s, int *i_rg)
+int			is_next_pool_char(char *s, char *rg, int *i_s, int *i_rg)
 {
 	int	j;
 	int	k;
 
-	if (rg[*i_rg] == '[')
+	if (which_quotes(rg, *i_rg) == NO_QUOTE && is_char(rg, *i_rg, '['))
 	{
 		if (*i_rg + find_next_char(rg, *i_rg, ']') == (int)ft_strlen(rg) - 1)
 			*i_s = ft_strlen(s) - 1;
@@ -200,14 +275,37 @@ int		is_next_pool_char(char *s, char *rg, int *i_s, int *i_rg)
 	return (TRUE);
 }
 
-int		is_next_all_char(char *s, char **rg, int *i_s, int *i_rg)
+int			can_skip_char(char *s, int i)
 {
-	if ((*rg)[*i_rg] == '*')
+	int		q_mode;
+
+	PUT2("1. s + i : ");PUT2(s + i);X('\n');
+	q_mode = which_quotes(s, i);
+	PUT2("q_mode : ");E(q_mode);X('\n');
+	if (is_any_quote(s, i))
+		return (TRUE);
+	if (q_mode == NO_QUOTE && s[i] == '\\' && s[i + 1] != '\\')
+		return (TRUE);
+	if (q_mode == D_QUOTE && s[i] == '\\' &&
+	(s[i + 1] == '$' || s[i + 1] ==  '\\' ||
+	s[i + 1] ==  '`' || s[i + 1] ==  '"'))
+		return (TRUE);
+	return (FALSE);
+}
+
+int			is_next_all_char(char *s, char **rg, int *i_s, int *i_rg)
+{
+	if (which_quotes(*rg, *i_rg) == NO_QUOTE && is_char(*rg, *i_rg, '*'))
 	{
 		while ((*rg)[*i_rg] && is_char((*rg), *i_rg, '*'))
 			*i_rg += 1;
+		while ((*rg)[*i_rg] && can_skip_char(*rg, *i_rg))
+			*i_rg += 1;
 		if (!(*rg)[*i_rg])
+		{
+			*i_s = ft_strlen(s);
 			return (free_rg_and_return((*rg), TRUE));
+		}
 		if (find_next_char((*rg), *i_rg, '*') < 0)
 			*i_s = ft_strlen(s) - find_last_len((*rg) + *i_rg);
 		if (!is_regex((*rg), *i_rg))
@@ -215,15 +313,17 @@ int		is_next_all_char(char *s, char **rg, int *i_s, int *i_rg)
 			while (s[*i_s] && s[*i_s] != (*rg)[*i_rg])
 				*i_s += 1;
 			if (!s[*i_s])
+			{
 				return (free_rg_and_return((*rg), FALSE));
+			}
 		}
-		if (is_next_pool_char(s, *rg, i_s, i_rg) == FALSE)
+		else if (is_next_pool_char(s, *rg, i_s, i_rg) == FALSE)
 			return (FALSE);
 	}
 	return (TRUE);
 }
 
-int		match_regex(char *s, char *rg_ref)
+int			match_regex(char *s, char *rg_ref)
 {
 	int		i_s;
 	int		i_rg;
@@ -235,12 +335,20 @@ int		match_regex(char *s, char *rg_ref)
 		rg[ft_strlen(rg) - 1] = '#';
 	i_s = 0;
 	i_rg = 0;
+//	PUT2("s : ");PUT2(s);X('\n');
 	while (i_s < (int)ft_strlen(s) && i_rg < (int)ft_strlen(rg))
 	{
+		while (can_skip_char(rg, i_rg))
+			i_rg++;
+//		PUT2("2. rg +  i_rg : ");PUT2(rg + i_rg);X('\n');
 		if (is_same_char(s, rg, &i_s, &i_rg) == FALSE)
 			return (FALSE);
+		while (can_skip_char(rg, i_rg))
+			i_rg++;
 		if (is_pool_char(s, rg, &i_s, &i_rg) == FALSE)
 			return (FALSE);
+		while (can_skip_char(rg, i_rg))
+			i_rg++;
 		if (is_next_all_char(s, &rg, &i_s, &i_rg) == FALSE)
 			return (FALSE);
 	}
@@ -251,7 +359,7 @@ int		match_regex(char *s, char *rg_ref)
 	return (free_rg_and_return(rg, TRUE));
 }
 
-int		insert_in_next(t_reg_path *c, t_reg_path **next, char *d_name)
+int			insert_in_next(t_reg_path *c, t_reg_path **next, char *d_name)
 {
 	char			*t;
 	char			*np;
@@ -275,7 +383,7 @@ int		insert_in_next(t_reg_path *c, t_reg_path **next, char *d_name)
 	return (TRUE);
 }
 
-int		keep_path(t_reg_path *curr, char *rg, t_reg_path **next_path)
+int			keep_path(t_reg_path *curr, char *rg, t_reg_path **next_path)
 {
 	DIR				*dirp;
 	struct dirent	*dp;
@@ -287,7 +395,7 @@ int		keep_path(t_reg_path *curr, char *rg, t_reg_path **next_path)
 			if ((rg[0] != '.' && dp->d_name[0] != '.') ||
 			(rg[0] == '.' && dp->d_name[0] == '.'))
 			{
-				if (!is_regex_in_text(rg))
+				if (is_regex_in_text(rg) == FALSE)
 				{
 					if (!ft_strncmp(dp->d_name, rg, ft_strlen(rg) - 1))
 						insert_in_next(curr, next_path, dp->d_name);
@@ -305,7 +413,7 @@ int		keep_path(t_reg_path *curr, char *rg, t_reg_path **next_path)
 	return (TRUE);
 }
 
-void	dispach_paths(t_reg_path *tmp, t_reg_path **nx, t_reg_path **f, int lvl)
+void		dispach_paths(t_reg_path *tmp, t_reg_path **nx, t_reg_path **f, int lvl)
 {
 	while (tmp)
 	{
@@ -369,5 +477,6 @@ t_reg_path	*replace_regex(char *s)
 		ft_reg_pathdestroy(&next_paths);
 	if (curr_paths)
 		ft_reg_pathdestroy(&curr_paths);
+	ft_tabdel(args);
 	return (final);
 }

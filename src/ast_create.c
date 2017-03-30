@@ -6,7 +6,7 @@
 /*   By: dogokar <dogokar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 14:41:10 by dogokar           #+#    #+#             */
-/*   Updated: 2017/03/05 19:44:24 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/28 11:46:08 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -396,7 +396,7 @@ void free_ast(t_tree *ast)
 {
 	if (!ast)
 	{
-		PUT2("fin de branche");
+//		PUT2("fin de branche");
 		return ;
 	}
 	else

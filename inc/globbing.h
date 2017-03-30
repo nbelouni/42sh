@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/06 15:31:30 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/27 20:41:38 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/30 09:02:56 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define GLOBBING_H
 
 #include "42sh.h"
+
+typedef struct	s_core	t_core;
 
 typedef struct			s_reg_path
 {
@@ -50,7 +52,7 @@ int						which_sequence_type(char *s, int begin, int end, int p);
 int						is_regex_in_text(char *s);
 
 int						can_expand(char *s);
-int						edit_cmd(char ***args, t_lst *env);
+int						edit_cmd(char ***args, t_core *core);
 t_reg_path				*replace_regex(char *s);
 t_token					*find_expansions(t_token *lst);
 void					expand_args(t_token **list, t_token **elem);
@@ -60,6 +62,7 @@ void					ft_reg_pathadd(t_reg_path **begin, t_reg_path *new);
 void					ft_reg_pathclear(t_reg_path **list);
 void					ft_reg_pathpush(t_reg_path **begin, t_reg_path *new);
 void					ft_reg_pathdestroy(t_reg_path **begin);
+int						which_quotes(char *s, int len);
 
 /*
  *	1. couper token->word sur les '/'
