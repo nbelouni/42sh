@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/03 14:15:26 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/30 11:09:30 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/30 13:40:32 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ int		init_begin_end(char *s, int *begin, int *end)
 	*begin += 1;
 	i = *begin;
 	*end = 0;
-	while (s[i + *end] && ft_isalnum(s[i + *end]))	
+	while (s[i + *end] && ft_isalnum(s[i + *end]))
 		*end += 1;
 	return (FALSE);
 }
@@ -108,7 +108,6 @@ int		init_new_value(char *var_name, t_core *core, char **new_value)
 
 	if (!var_name)
 		return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
-	PUT2("var_name : ");PUT2(var_name);X('\n');
 	if (!(tmp = ft_find_elem(var_name, core->set)))
 	{
 		if (!(tmp = ft_find_elem(var_name, core->env)))
@@ -189,7 +188,6 @@ int		globb(char **s, t_core *core, t_reg_path **new_args)
 			return (ERR_EXIT);
 		i++;
 	}
-//	PUT2("AFTER replace_env_var() . s : ");PUT2(*s);X('\n');
 	if ((tmp = replace_regex(*s)))
 	{
 		if (insert_new_args(s, new_args, tmp) == FALSE)
@@ -266,13 +264,6 @@ int		edit_cmd(char ***args, t_core *core)
 	}
 	if (new_args)
 	{
-//		t_reg_path *tmp2 = new_args;
-//		while (tmp2)
-//		{
-//			PUT2("tmp2->out : ");PUT2(tmp2->out);X('\n');
-//			tmp2 = tmp2->next;
-//		}
-//		PUT2("ok\n");
 		if (!(tmp = add_in_args(*args, new_args)))
 			return (ERR_EXIT);
 		ft_tabdel(*args);
