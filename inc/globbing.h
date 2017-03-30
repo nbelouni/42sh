@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/06 15:31:30 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/30 09:02:56 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/30 11:11:22 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,24 +64,4 @@ void					ft_reg_pathpush(t_reg_path **begin, t_reg_path *new);
 void					ft_reg_pathdestroy(t_reg_path **begin);
 int						which_quotes(char *s, int len);
 
-/*
- *	1. couper token->word sur les '/'
- *	char **cut_arg(char *s)
- *	
- *	2. initialisation de t_reg_paths
- *	fichier reg_path.c (reproduire token.c)
- *	
- *	3. initaliser les 2 listes du module :	tmp->path == getcwd | "/"
- *											final = NULL
- *	
- *	4. tant que char **args:
- *		tant que tmp :
- *			.opendir tmp->name
- *			.si args[i] == dir->d_name || regex(arg[i]) == dir->d_name
- *				.si tmp->lvl + 1 == max_lvl (== len de args)
- *					add_new_maillon(final)
- *				.else if tmp->lvl + 1 < max_lvl
- *					add_new_maillon(tmp)
- *			.rm tmp
- */
 #endif

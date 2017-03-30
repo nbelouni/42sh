@@ -6,7 +6,7 @@
 /*   By: dogokar <dogokar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 14:41:10 by dogokar           #+#    #+#             */
-/*   Updated: 2017/03/28 11:46:08 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/30 13:18:42 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ t_lib  *cheak_lib(t_token *node)
 	int i;
 
 	i = 0;
-	while (i <= LENLIB)
+	while (i < LENLIB)
 	{
 		if (node->type == lib_op[i].toke)
 			return (&lib_op[i]);
@@ -242,7 +242,7 @@ char  **concate_cmd(t_token *lst)
 	j = 0;
 	cmd_len(tmp, &i, &j);
 	argv = NULL;
-	if (!(argv = (char **)malloc(sizeof(char*) * (i * j))))
+	if (!(argv = (char **)malloc(sizeof(char*) * (i * j + 1))))
 		return (NULL);
 	while (tmp && (count <= i -1))
 	{

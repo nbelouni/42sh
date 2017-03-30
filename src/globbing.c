@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/03 14:15:26 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/30 09:03:58 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/30 11:09:30 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,28 +88,17 @@ void	supp_quotes(char *s)
 
 int		init_begin_end(char *s, int *begin, int *end)
 {
-	int		s_quote;
-	int		d_quote;
-	int		esp;
+	int		i;
 
 	*begin = find_next_char(s, 0, '$');
-	if (*begin < 0 || *begin + 1 >= (int)ft_strlen(s) || which_quotes(s, *begin) == S_QUOTE)
+	if (*begin < 0 || *begin + 1 >= (int)ft_strlen(s) ||
+	which_quotes(s, *begin) == S_QUOTE)
 		return (TRUE);
 	*begin += 1;
-	if ((s_quote = find_next_char(s, *begin, '\'')) < 0)
-		s_quote = ft_strlen(s);
-	if ((d_quote = find_next_char(s, *begin, '"')) < 0)
-		d_quote = ft_strlen(s);
-	if ((esp = find_next_char(s, *begin, ' ')) < 0)
-		esp = ft_strlen(s);
-	if (s_quote < d_quote && s_quote < esp)
-		*end = s_quote;
-	if (d_quote < s_quote && d_quote < esp)
-		*end = d_quote;
-	else
-		*end = esp;
-	if (*end == (int)ft_strlen(s))
-		*end = ft_strlen(s) - *begin;
+	i = *begin;
+	*end = 0;
+	while (s[i + *end] && ft_isalnum(s[i + *end]))	
+		*end += 1;
 	return (FALSE);
 }
 
@@ -200,6 +189,7 @@ int		globb(char **s, t_core *core, t_reg_path **new_args)
 			return (ERR_EXIT);
 		i++;
 	}
+//	PUT2("AFTER replace_env_var() . s : ");PUT2(*s);X('\n');
 	if ((tmp = replace_regex(*s)))
 	{
 		if (insert_new_args(s, new_args, tmp) == FALSE)
@@ -276,13 +266,13 @@ int		edit_cmd(char ***args, t_core *core)
 	}
 	if (new_args)
 	{
-		t_reg_path *tmp2 = new_args;
-		while (tmp2)
-		{
-			PUT2("tmp2->out : ");PUT2(tmp2->out);X('\n');
-			tmp2 = tmp2->next;
-		}
-		PUT2("ok\n");
+//		t_reg_path *tmp2 = new_args;
+//		while (tmp2)
+//		{
+//			PUT2("tmp2->out : ");PUT2(tmp2->out);X('\n');
+//			tmp2 = tmp2->next;
+//		}
+//		PUT2("ok\n");
 		if (!(tmp = add_in_args(*args, new_args)))
 			return (ERR_EXIT);
 		ft_tabdel(*args);
