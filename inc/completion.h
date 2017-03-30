@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/27 14:49:27 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/30 09:24:25 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/30 17:11:42 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 
 # define COMPLETE_LINE	134
 
+typedef struct s_core	t_core;
 typedef struct s_elem	t_elem;
 typedef struct s_lst	t_lst;
 typedef struct s_buf	t_buf;
@@ -90,7 +91,7 @@ int						fill_username(t_sort_list **list, char *path);
 **	lit struct t_env, recupere env.name et met dans t_sort_list
 **	dans completion.variable
 */
-int						fill_variable(t_sort_list **list, t_elem *env);
+int						fill_variable(t_sort_list **list, t_core *core);
 /*
 **	lit etc/hosts, parse le contenu et met dans t_sort_list
 **	dans completion.username
@@ -101,7 +102,7 @@ int						fill_hostname(t_sort_list **list, char *path);
 **	appelle fill_*()
 **	initialise t_completion
 */
-int						init_completion(t_completion *cplt, t_lst *env);
+int						init_completion(t_completion *cplt, t_core *core);
 
 /*
 **	complete buf.line selon matches entre input et t_completion

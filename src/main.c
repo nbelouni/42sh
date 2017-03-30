@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/30 09:15:18 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/30 17:11:04 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int 	main(int argc, char **argv, char **envp)
 	ft_histopt_r(&(set->hist), set->set, NULL);
 	if (envp != NULL && envp[0] != NULL)
 		set->env = ft_env_to_list(envp, set->env);
-	if (init_completion(&completion, set->env) == ERR_EXIT)
+	if (init_completion(&completion, set) == ERR_EXIT)
 		return (-1);
 	signal(SIGWINCH, get_sigwinch);
 	signal(SIGINT, get_sigint);
@@ -113,7 +113,7 @@ int 	main(int argc, char **argv, char **envp)
 			ft_bzero(buf->line, BUFF_SIZE);
 			buf->size = 0;
 			clean_pos_curs();
-			if (init_completion(&completion, set->env) == ERR_EXIT)
+			if (init_completion(&completion, set) == ERR_EXIT)
 				return (-1);
 		}
 		if (ret_read == END_EOT)

@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/01 17:17:28 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/30 09:20:55 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/30 17:15:12 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,11 +187,25 @@ int			fill_hostname(t_sort_list **list, char *path)
 	return (0);
 }
 
-int			fill_variable(t_sort_list **list, t_elem *env)
+int			fill_variable(t_sort_list **list, t_core *core)
 {
 	t_elem		*tmp;
 
-	tmp = env;
+	tmp = (core->env) ? core->env->head : NULL;
+	while (tmp)
+	{
+		if (insert_in_list(list, tmp->name) == ERR_EXIT)
+			return (ERR_EXIT);
+		tmp = tmp->next;
+	}
+	tmp = (core->exp) ? core->exp->head : NULL;
+	while (tmp)
+	{
+		if (insert_in_list(list, tmp->name) == ERR_EXIT)
+			return (ERR_EXIT);
+		tmp = tmp->next;
+	}
+	tmp = (core->set) ? core->set->head : NULL;
 	while (tmp)
 	{
 		if (insert_in_list(list, tmp->name) == ERR_EXIT)
@@ -201,11 +215,11 @@ int			fill_variable(t_sort_list **list, t_elem *env)
 	return (0);
 }
 
-int			init_completion(t_completion *cplt, t_lst *env)
+int			init_completion(t_completion *cplt, t_core *core)
 {
 	char	*s;
 
-	s = ft_find_elem("PATH", env)->value;
+	s = ft_find_elem("PATH", core->env)->value;
 	if (cplt->command)
 		destroy_sort_list(&(cplt->command));
 	if (cplt->username)
@@ -220,7 +234,7 @@ int			init_completion(t_completion *cplt, t_lst *env)
 		return (ERR_EXIT);
 	if (fill_hostname(&(cplt->hostname), "/etc/hosts") == ERR_EXIT)
 		return (ERR_EXIT);
-	if (fill_variable(&(cplt->variable), env->head) == ERR_EXIT)
+	if (fill_variable(&(cplt->variable), core) == ERR_EXIT)
 		return (ERR_EXIT);
 	return (0);
 }
