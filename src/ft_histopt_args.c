@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/11 18:59:29 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/20 13:14:18 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/29 13:03:03 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,19 +22,24 @@ int		ft_histopt_p(t_lst *hist, char **args)
 {
 	int		i;
 	char	*tmp;
+	t_elem	*tmp_tail;
 
 	i = 0;
-	while (args[++i] != NULL)
+	tmp_tail = hist->tail;
+	if (args && args[1])
 	{
-		tmp = NULL;
-		if ((tmp = ft_strtrim(args[i])) == NULL)
+		while (args[++i] != NULL)
 		{
-			return (ERR_EXIT);
+			tmp = NULL;
+			if ((tmp = ft_strtrim(args[i])) == NULL)
+			{
+				return (ERR_EXIT);
+			}
+			ft_putendl_fd(tmp, 1);
+			(tmp) ? ft_strdel(&tmp) : 0;
 		}
-		ft_putendl_fd(tmp, 1);
-		ft_strdel(&tmp);
+		ft_del_elem(&tmp_tail, hist);
 	}
-	ft_del_elem(&(hist->tail), hist);
 	return (i);
 }
 

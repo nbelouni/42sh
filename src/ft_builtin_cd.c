@@ -6,12 +6,11 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/07 18:21:51 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/27 12:37:46 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/29 14:45:16 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
-#include <stdarg.h>
 
 /*
 **	la fonction ft_free_and_return retourne l'int ret spécifié en argument
@@ -293,7 +292,7 @@ static char	*ft_builtin_cd_norm(t_lst *env, int *op, char **args)
 **	plus d'arguments sont trouvés.
 */
 
-int			ft_builtin_cd(t_lst *env, char *cmd, char **args)
+int			ft_builtin_cd(t_core *core, char **args)
 {
 	struct stat	st;
 	int			*opt;
@@ -308,12 +307,12 @@ int			ft_builtin_cd(t_lst *env, char *cmd, char **args)
 	if (args != NULL && args[opt[0]] != NULL && ft_tablen(&(args[opt[0]])) > 2)
 	{
 		(opt != NULL) ? free(opt) : 0;
-		return (ft_print_error(cmd, ERR_TOO_MANY_ARGS, ERR_NEW_CMD));
+		return (ft_print_error("cd", ERR_TOO_MANY_ARGS, ERR_NEW_CMD));
 	}
 	i = -1;
-	if ((path = ft_builtin_cd_norm(env, opt, args)) != NULL)
+	if ((path = ft_builtin_cd_norm(core->env, opt, args)) != NULL)
 	{
-		i = ((lstat(path, &st)) != -1) ? ft_cd(env, opt, path, st.st_mode) :\
+		i = ((lstat(path, &st)) != -1) ? ft_cd(core->env, opt, path, st.st_mode) :\
 			ft_print_error(path, ERR_NO_FILE, ERR_NEW_CMD);
 		ft_strdel(&path);
 	}

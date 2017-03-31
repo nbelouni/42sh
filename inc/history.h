@@ -6,18 +6,12 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/11 18:36:55 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/24 18:18:37 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/29 15:44:35 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef HISTORY_H
 # define HISTORY_H
-
-/*
-**	ft_builtin_history.c
-*/
-
-int		ft_builtin_history(t_lst *set, t_lst *hist, char **args);
 
 /*
 **	ft_get_history.c

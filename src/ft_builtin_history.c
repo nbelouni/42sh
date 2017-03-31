@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/04 17:21:39 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/20 13:03:41 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/29 14:49:23 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,26 +49,26 @@ static int	ft_exec_history(t_lst *set, t_lst *hist, char **args)
 **	du builtin.
 */
 
-int			ft_builtin_history(t_lst *set, t_lst *hist, char **args)
+int			ft_builtin_history(t_core *core, char **args)
 {
 	int		hsize;
 	int		ret;
 
 	ret = 0;
-	if (hist != NULL)
+	if (core->hist != NULL)
 	{
 		hsize = 0;
-		if ((hsize = ft_get_hsize(set)) == 0)
+		if ((hsize = ft_get_hsize(core->set)) == 0)
 		{
 			return (ERR_NEW_CMD);
 		}
 		if (args == NULL || *args == NULL || **args == '\0')
 		{
-			ft_print_history(hist, hist->size);
+			ft_print_history(core->hist, core->hist->size);
 		}
 		else
 		{
-			ret = ft_exec_history(set, hist, args);
+			ret = ft_exec_history(core->set, core->hist, args);
 		}
 	}
 	return (ret);

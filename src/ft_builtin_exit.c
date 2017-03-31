@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/03 18:21:52 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/20 15:07:17 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/29 14:47:31 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void 	ft_del_core(t_core *core)
 **	contenu dans args[0] (plus d'arguments provoque une erreur).
 */
 
-int		ft_builtin_exit(t_core *core, char *cmd, char **args)
+int		ft_builtin_exit(t_core *core, char **args)
 {
 	int	ret;
 
@@ -45,11 +45,11 @@ int		ft_builtin_exit(t_core *core, char *cmd, char **args)
 	{
 		if (!ft_isdigit(args[0][0]) || args[1])
 		{
-			return (ft_print_error(cmd, ERR_EXPR_SYNT, ERR_NEW_CMD));
+			return (ft_print_error("exit", ERR_EXPR_SYNT, ERR_NEW_CMD));
 		}
 		else if (!ft_strisdigit(args[0]) && args[0][0] != '-')
 		{
-			return (ft_print_error(cmd, ERR_EXT_FRMT, ERR_NEW_CMD));
+			return (ft_print_error("exit", ERR_EXT_FRMT, ERR_NEW_CMD));
 		}
 		ret = (unsigned char)ret;
 		ret = ft_atoi(args[0]);

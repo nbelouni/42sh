@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 20:00:04 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/20 16:55:34 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/29 12:55:41 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,8 +113,8 @@ void		ft_clear_elem(t_elem **elem)
 
 void		ft_del_elem(t_elem **elem, t_lst *lst)
 {
-	ft_extract_elem(elem, lst);
-	ft_clear_elem(elem);
+	ft_extract_elem(&(*elem), lst);
+	ft_clear_elem(&(*elem));
 }
 
 /*

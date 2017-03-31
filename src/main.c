@@ -6,47 +6,58 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/24 20:41:31 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/29 19:10:45 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
+static t_builtin_array builtin_array[] =
+{
+	{"cd", &ft_builtin_cd},
+	{"env", &ft_builtin_env},
+	{"setenv", &ft_builtin_setenv},
+	{"unsetenv", &ft_builtin_unsetenv},
+	{"exit", &ft_builtin_exit},
+	{"echo", &ft_builtin_echo},
+	{"history", &ft_builtin_history},
+	{"unset", &ft_builtin_unset},
+	{"export", &ft_builtin_export},
+	// {"jobs", &ft_builtin_jobs},
+	// {"fg", &ft_builtin_fg},
+	// {"bg", &ft_builtin_bg},
+	{NULL, NULL}
+};
+
+int		parse_builtins(t_core *core, char *cmd, char **cmd_args)
+{
+	int	i;
+
+	i = -1;
+	while (builtin_array[++i].cmd)
+	{
+		if (ft_strcmp(builtin_array[i].cmd, cmd) == 0)
+			return (builtin_array[i].func(core, cmd_args));
+	}
+	return (1);
+}
+
 int		parse(t_core *core, char *line, char **envp)
 {
 	char	**args;
+	int		ret;
 
 	(void)envp;
+	ret = 0;
 	if ((ft_cmd_to_history(core->hist, line)) == ERR_EXIT)
 		return (ERR_EXIT);
 	args = NULL;
 	args = ft_strsplit(line, ' ');
 	if (args != NULL && args[0] != NULL)
 	{
-		if (ft_strcmp(args[0], "exit") == 0)
-			ft_builtin_exit(core, args[0], args + 1);
-		else if (ft_strcmp(args[0], "env") == 0)
-			ft_builtin_env(core->env, &args[1]);
-		else if (ft_strcmp(args[0], "setenv") == 0)
-			ft_builtin_setenv(core->env, args[0], args + 1);
-		else if (ft_strcmp(args[0], "unsetenv") == 0)
-			ft_builtin_unsetenv(core->env, args[0], &args[1]);
-		else if (ft_strcmp(args[0], "echo") == 0)
-			ft_builtin_echo(core->env, args[0], args + 1);
-		else if (ft_strcmp(args[0], "cd") == 0)
-			ft_builtin_cd(core->env, args[0], args + 1);
-		else if (ft_strcmp(args[0], "export") == 0)
-			ft_builtin_export(args, core);
-		else if (ft_strcmp(args[0], "unset") == 0)
-			ft_builtin_unset(core, args);
-		else if (ft_strcmp(args[0], "history") == 0)
-			ft_builtin_history(core->set, core->hist, args + 1);
-		else if (ft_strcmp(args[0], "set") == 0)
-			ft_print_lst(core->set);
-		else
+		if ((ret = parse_builtins(core, args[0], args + 1)) == 1)
 			ft_waitchild(args, envp);
 		ft_tabdel(args);
-		args = NULL;
 	}
 	if ((ft_check_history_var(core->set, core->hist)) == ERR_EXIT)
 		return (ERR_EXIT);
@@ -91,10 +102,11 @@ int 	main(int argc, char **argv, char **envp)
 			if (is_line_ended(buf) < 0)
 				return (-1);
 			bang_substitution(&(buf->final_line), core);
-			PUT2("2 buf->final_line : ");PUT2(buf->final_line);X('\n');
+			// PUT2("2 buf->final_line : ");PUT2(buf->final_line);X('\n');
 			ret = parse_buf(&list, buf->final_line, &completion, core->hist);
 			if (ret > 0 && list)
 			{
+				// ft_print_history(core->hist, core->hist->size);
 				parse(core, buf->final_line, envp);
 
 //				ft_print_token_list(&list); //debug impression
