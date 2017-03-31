@@ -66,7 +66,13 @@ SRCS = 	ft_builtin_cd.c		\
 		ft_history_opt.c	\
 		ft_history_tools.c	\
 		ft_builtin_history.c\
+		ft_builtin_bang.c	\
 		ft_default_set.c	\
+		ft_bang_alphanum_sub.c\
+		ft_bang_special_sub.c\
+		ft_bang_substitution.c\
+		ft_quick_substitution.c\
+		edit_history.c		\
 		ft_print.c
 
 

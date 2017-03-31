@@ -6,14 +6,14 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/11 18:49:22 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/17 15:21:41 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/20 14:28:19 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
 /*
-**	option c du builtin history, clear la liste hist si elle n'est pas NULL.
+**	Option c du builtin history, clear la liste hist si elle n'est pas NULL.
 */
 
 t_lst		*ft_histopt_c(t_lst *hist)
@@ -25,13 +25,19 @@ t_lst		*ft_histopt_c(t_lst *hist)
 	return (hist);
 }
 
+/*
+**	Ft_check_histopt_arg est une fonction qui va servir de gestionnaire des
+**	options qui prennent plusieurs arguments en parametre, elle va definir
+**	s'ils s'agit de l'option 's' ou 'p', puis retourner la position dans args.
+*/
+
 int			ft_check_histopt_arg(t_lst *hist, char **args, int i)
 {
 	int		ret;
 
 	if (args[i][1] == HIST_OPT_P)
 	{
-		if ((ret = ft_histopt_p(&(args[i]))) == ERR_EXIT)
+		if ((ret = ft_histopt_p(hist, &(args[i]))) == ERR_EXIT)
 		{
 			return (ERR_EXIT);
 		}
@@ -46,6 +52,11 @@ int			ft_check_histopt_arg(t_lst *hist, char **args, int i)
 	return (i);
 }
 
+/*
+**	Ft_check_histopt_offset est une fonction qui gere les options prenant
+**	un digit en parametre, ici seule l'option 'd' est concernee.
+*/
+
 int			ft_check_histopt_offset(t_lst *hist, char **args, int i)
 {
 	if (ft_histopt_d(hist, args[i + 1]) == ERR_NEW_CMD)
@@ -58,6 +69,11 @@ int			ft_check_histopt_offset(t_lst *hist, char **args, int i)
 	}
 	return (i);
 }
+
+/*
+**	Ft_check_histopt_file2 est la deuxieme partie de ft_check_histopt_file.
+**	Se réferer a la premiere partie.
+*/
 
 static int	ft_check_histopt_file2(t_lst *set, t_lst *hist, char **args, int j)
 {
@@ -84,6 +100,12 @@ static int	ft_check_histopt_file2(t_lst *set, t_lst *hist, char **args, int j)
 	return ((ret < 0) ? ret : j);
 }
 
+/*
+**	Ft_check_histopt_file est une fonction qui gere les options prenant
+**	un nom de fichier optionnel en parametre, les options 'a', 'n', 'r' et 'w'
+**	sont concernés, cette fonction sert de gestionnaire des fonctions envoyés.
+*/
+
 int			ft_check_histopt_file(t_lst *set, t_lst *hist, char **args, int i)
 {
 	int		ret;
@@ -106,6 +128,11 @@ int			ft_check_histopt_file(t_lst *set, t_lst *hist, char **args, int i)
 		return (j);
 	return (ret);
 }
+
+/*
+**	Ft_check_histopt est une fonction qui va servir de boucle d'options.
+**	C'est elle qui gere l'appelle ou non des gestionnaires de ces dernieres.
+*/
 
 int			ft_check_histopt(t_lst *set, t_lst *hist, char **args, int i)
 {
@@ -130,6 +157,11 @@ int			ft_check_histopt(t_lst *set, t_lst *hist, char **args, int i)
 	}
 	return (i);
 }
+
+/*
+**	Ft_parse_histopt va checker en boucle les argumets pour trouver des erreurs
+**	ou renvoyer ft_check_histopt pour identifier la validité de ces dernieres.
+*/
 
 int			ft_parse_histopt(t_lst *set, t_lst *hist, char **args)
 {
@@ -158,7 +190,7 @@ int			ft_parse_histopt(t_lst *set, t_lst *hist, char **args)
 }
 
 /*
-**	print le message d'erreur des options invalides.
+**	Print le message d'erreur des options invalides.
 */
 
 int			ft_print_histopt_err(char c)

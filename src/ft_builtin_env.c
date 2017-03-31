@@ -6,23 +6,23 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/07 18:24:17 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/20 17:48:35 by dogokar          ###   ########.fr       */
+/*   Updated: 2017/03/29 14:46:46 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
 /*
-**	ft_parse_env est une fonction qui va parcourir args afin d'y trouver
+**	Ft_parse_env est une fonction qui va parcourir args afin d'y trouver
 **	le format var=value, si il ne trouve pas var=value, il retourne ret qui est
 **	l'index dans les args où l'export de type var=value se termine, sinon
 **	il export la chaine contenu dans args.
 */
 
-static int	ft_parse_env(t_lst *lst, char **args)
+static int		ft_parse_env(t_lst *lst, char **args)
 {
-	int	ret;
-	int	ret2;
+	int		ret;
+	int		ret2;
 
 	ret = 0;
 	ret2 = 0;
@@ -47,7 +47,7 @@ static int	ft_parse_env(t_lst *lst, char **args)
 }
 
 /*
-**	ft_getlst_env permet simplement d'initialisé et/ou de de copier la liste
+**	Ft_getlst_env permet simplement d'initialisé et/ou de de copier la liste
 **	dans dup, puis de la retourner, selon si env est remplis ou non.
 */
 
@@ -114,21 +114,21 @@ static int		ft_exec_env(t_lst *env, char **args)
 **	sinon, ft_exec_env est appellé pour gerer les cas specifiques au builtin.
 */
 
-int			ft_builtin_env(t_lst *env, char **args)
+int				ft_builtin_env(t_core *core, char **args)
 {
-	int	ret;
+	int		ret;
 
 	ret = 0;
 	if (args == NULL || *args == NULL)
 	{
-		if (env != NULL && env->head != NULL)
+		if (core->env != NULL && core->env->head != NULL)
 		{
-			ft_print_lst(env);
+			ft_print_lst(core->env);
 		}
 	}
 	else
 	{
-		ret = ft_exec_env(env, args);
+		ret = ft_exec_env(core->env, args);
 	}
 	return (ret);
 }
