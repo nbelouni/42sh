@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lex.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/11 12:30:14 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/12 18:53:20 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/17 18:12:48 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ int		is_or_and(char *s, int i);
 int		is_quot(char *s, int i);
 int		find_bracket_end(char *s, int i);
 
-int		parse_buf(t_token **lst, char *s, t_completion *completion);
+int		parse_buf(t_token **lst, char *s, t_completion *completion, t_lst *hist);
 int		cut_space(char *s, int i);
 void	reset_int_pt(t_pt *pt);
 int		parse_list(t_token **list, char *s, t_pt *p);
@@ -124,7 +124,7 @@ void	ft_tokenclear(t_token **lst);
 void	ft_tokendestroy(t_token **begin);
 t_token	*ft_tokenew(int type, char *word, int *level);
 void	ft_tokenpush(t_token **begin, t_token *new);
-void	sort_list_token(t_token **list, t_completion *completion);
+void	sort_list_token(t_token **list, t_completion *completion, t_lst *hist);
 void	ft_print_token_list(t_token **list);
 /*
 int		add_new_word(t_word *w, int len, t_word **lst);
@@ -139,7 +139,7 @@ int		return_new_prompt(int ret);
 /*
 **       ast
 */
-int		here_doc(t_token *elemi, t_completion *completion);
+int		here_doc(t_token *elemi, t_completion *completion, t_lst *hist);
 
 t_tree 	*creat_left(t_token *lst, t_lvl *lvl);
 t_tree 	*creat_right(t_token *lst, t_lvl *lvl);

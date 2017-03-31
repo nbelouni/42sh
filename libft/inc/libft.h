@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/04 14:46:22 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/16 17:47:33 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/20 16:55:37 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,8 @@ char				*ft_free_and_join(char *str1, char *str2);
 void				ft_tabdel(char **tab);
 void				ft_tabdel_and_init(char ***tab);
 char				*ft_strreplace(char *o, const char *s, const char *r);
+int					ft_intlen(int n);
+void				ft_putnchar(char c, int n);
 
 
 #endif

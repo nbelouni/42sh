@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 19:55:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/10 20:43:05 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/17 18:13:02 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,12 @@ int		join_lines(t_buf *buf)
 	return (0);
 }
 
-int		read_here_doc(t_buf *buf, t_completion *completion, t_token *elem)
+int		read_here_doc(t_buf *buf, t_completion *completion, t_token *elem, t_lst *hist)
 {
 	int		ret_read;
 
 	ret_read = 0;
-	while ((ret_read = read_line(buf, completion)) != ERR_EXIT)
+	while ((ret_read = read_line(buf, completion, hist)) != ERR_EXIT)
 	{
 		close_termios();
 		if (!ft_strcmp(elem->word, buf->line))
@@ -59,7 +59,7 @@ int		read_here_doc(t_buf *buf, t_completion *completion, t_token *elem)
 	return (ret_read);
 }
 
-int		here_doc(t_token *elem, t_completion *completion)
+int		here_doc(t_token *elem, t_completion *completion, t_lst *hist)
 {
 	t_buf	*buf;
 
@@ -67,7 +67,7 @@ int		here_doc(t_token *elem, t_completion *completion)
 	clean_pos_curs();
 	if (!(buf = init_buf()))
 		return (ft_print_error("42sh", ERR_MALLOC, ERR_EXIT));
-	if (read_here_doc(buf, completion, elem) == ERR_EXIT)
+	if (read_here_doc(buf, completion, elem, hist) == ERR_EXIT)
 		return (ERR_EXIT);
 	if (!elem->word)
 	{

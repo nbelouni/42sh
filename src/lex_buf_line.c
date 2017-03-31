@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lex_buf_line.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/16 00:50:00 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/10 20:09:53 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/17 18:11:44 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ static int	choose_pars(t_token **list, char *s, int ret, t_pt *p)
 	return (0);
 }
 
-int			parse_buf(t_token **lst, char *s, t_completion *completion)
+int			parse_buf(t_token **lst, char *s, t_completion *completion, t_lst *hist)
 {
 	int		j;
 	int		ret;
@@ -120,7 +120,7 @@ int			parse_buf(t_token **lst, char *s, t_completion *completion)
 				return (return_new_prompt(ret_lex));
 		}
 	}
-	sort_list_token(lst, completion);
+	sort_list_token(lst, completion, hist);
 	set_prompt(PROMPT1, ft_strlen(PROMPT1));
 	return (can_create_tree(*lst));
 }

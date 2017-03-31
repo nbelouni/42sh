@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   buf.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:43:38 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/05 17:11:56 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/20 15:56:47 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ t_buf		*init_buf(void)
 		return (NULL);
 	buf->size = 0;
 	buf->to_paste = NULL;
+	buf->cur_hist = NULL;
+	buf->last_cmd = NULL;
 	buf->to_paste_size = 0;
 	buf->final_line = NULL;
 	return (buf);
@@ -34,12 +36,18 @@ void		free_buf(t_buf *buf)
 		free(buf->to_paste);
 	if (buf->final_line)
 		free(buf->final_line);
+	if (buf->last_cmd)
+		free(buf->last_cmd);
+	buf->cur_hist = NULL;
 	free(buf);
 	buf = NULL;
 }
 
 void		clear_buf(t_buf *buf)
 {
+	if (buf->last_cmd)
+		free(buf->last_cmd);
 	ft_bzero(buf->line, (size_t)(sizeof(char) * BUFF_SIZE));
+	buf->cur_hist = NULL;
 	buf->size = 0;
 }
