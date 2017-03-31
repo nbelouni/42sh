@@ -34,6 +34,7 @@ SRCS = 	ft_builtin_cd.c		\
 		curs.c				\
 		main.c				\
 	    edit_completion.c	\
+	    completion.c		\
 	    edit_move.c			\
 	    edit_buf.c			\
 	    edit_line.c			\
@@ -48,10 +49,8 @@ SRCS = 	ft_builtin_cd.c		\
 		lex_buf_pars.c		\
 		is_tok.c			\
 		is_check.c			\
-		sort_list.c			\
 		sort_list_token.c	\
 		can_create_tree.c	\
-		completion.c		\
 		is_token_type.c		\
 		return_errors.c		\
 		ast_create.c		\
@@ -82,7 +81,7 @@ ODIR = ./obj/
 OBJS = $(SRCS:.c=.o)
 OBCC = $(addprefix $(ODIR),$(OBJS))
 
-FLAG = -g -Wall -Werror -Wextra
+FLAG = -g -Wall -Werror -Wextra#-fsanitize=address
 
 $(NAME): $(OBCC)
 	make -C ./libft/

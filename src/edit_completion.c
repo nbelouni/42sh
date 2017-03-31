@@ -6,13 +6,13 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/01 17:17:28 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/17 13:24:00 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/30 19:07:53 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
-int			fill_command(t_sort_list **list, char *path)
+int			fill_command(t_list **list, char *path)
 {
 	char			**bin_path;
 	DIR				*dirp;
@@ -60,16 +60,16 @@ int			edit_username_line(char **line)
 	return (0);
 }
 
-int			insert_next(t_sort_list *tmp, char *s)
+int			insert_next(t_list *tmp, char *s)
 {
-	t_sort_list		*tmp_next;
+	t_list		*tmp_next;
 
-	while (tmp->next && ft_strcmp(tmp->next->s, s) < 0)
+	while (tmp->next && ft_strcmp(LIST_S(tmp->next), s) < 0)
 		tmp = tmp->next;
-	if (ft_strcmp(tmp->s, s) && (!tmp->next || ft_strcmp(tmp->next->s, s)))
+	if (ft_strcmp(LIST_S(tmp), s) && (!tmp->next || ft_strcmp(LIST_S(tmp->next), s)))
 	{
 		tmp_next = (tmp->next) ? tmp->next : NULL;
-		if (!(tmp->next = create_sort_list(ft_strdup(s))))
+		if (!(tmp->next = ft_lstnew(s, sizeof(char) * (ft_strlen(s) + 1))))
 			return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
 		tmp->next->prev = tmp;
 		tmp->next->next = tmp_next;
@@ -79,22 +79,22 @@ int			insert_next(t_sort_list *tmp, char *s)
 	return (0);
 }
 
-int			insert_in_list(t_sort_list **list, char *s)
+int			insert_in_list(t_list **list, char *s)
 {
-	t_sort_list		*tmp;
-	t_sort_list		*tmp_next;
+	t_list		*tmp;
+	t_list		*tmp_next;
 
 	if (s && !*list)
 	{
-		if (!(*list = create_sort_list(ft_strdup(s))))
+		if (!(*list = ft_lstnew(s, sizeof(char) * (ft_strlen(s) + 1))))
 			return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
 	}
 	else if (s)
 	{
 		tmp = *list;
-		if (tmp && ft_strcmp(tmp->s, s) > 0)
+		if (tmp && ft_strcmp(LIST_S(tmp), s) > 0)
 		{
-			if (!(tmp_next = create_sort_list(ft_strdup(s))))
+			if (!(tmp_next = ft_lstnew(s, sizeof(char) * (ft_strlen(s) + 1))))
 				return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
 			tmp_next->next = tmp;
 			tmp->prev = tmp_next;
@@ -106,7 +106,7 @@ int			insert_in_list(t_sort_list **list, char *s)
 	return (0);
 }
 
-int			fill_username(t_sort_list **list, char *path)
+int			fill_username(t_list **list, char *path)
 {
 	int				fd;
 	char			*line;
@@ -132,21 +132,23 @@ int			fill_username(t_sort_list **list, char *path)
 	return (0);
 }
 
-int			edit_hostname_line(t_sort_list *list, char **line)
+int			edit_hostname_line(t_list *list, char **line)
 {
-	char		**val;
-	int			i;
-	t_sort_list	*tmp;
+	char	**val;
+	int		i;
+	t_list	*tmp;
 
 	if (!(val = ft_strsplit(*line, ' ')))
 		return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
 	if (ft_tablen(val) != 2)
 		return (0);
+	PUT2("val[0] : ");PUT2(val[0]);X('\n');
+	PUT2("val[1] : ");PUT2(val[1]);X('\n');
 	tmp = list;
 	i = 1;
 	while (tmp)
 	{
-		if (!ft_strcmp(val[i], tmp->s))
+		if (!ft_strcmp(val[i], LIST_S(tmp)))
 		{
 			i = 0;
 			break ;
@@ -161,10 +163,10 @@ int			edit_hostname_line(t_sort_list *list, char **line)
 	return (0);
 }
 
-int			fill_hostname(t_sort_list **list, char *path)
+int			fill_hostname(t_list **list, char *path)
 {
-	int				fd;
-	char			*line;
+	int		fd;
+	char	*line;
 
 	line = NULL;
 	if ((fd = open(path, O_RDONLY)) < 0)
@@ -187,7 +189,7 @@ int			fill_hostname(t_sort_list **list, char *path)
 	return (0);
 }
 
-int			fill_variable(t_sort_list **list, t_elem *env)
+int			fill_variable(t_list **list, t_elem *env)
 {
 	t_elem		*tmp;
 

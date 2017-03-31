@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 20:07:22 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/10 14:42:57 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/31 16:18:01 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,16 +59,6 @@ enum				e_token
 	ARG
 };
 
-typedef struct		s_cmd
-{
-	t_token			*prev_cmd;
-	char			**cmd;
-	int				in;
-	int				out;
-	struct s_cmd	*left;
-	struct s_cmd	*right;
-}					t_cmd;
-
 t_token				*create_token();
 void				push_token();
 void				clear_token();
@@ -77,16 +67,6 @@ void				destroy_token();
 int					can_create_tree(t_token	*lst);
 int					is_end(char *s, int *i, char c);
 int					find_quote_end(char *s);
-
-/*
- * PAS IMPLEMENTEES
-t_cmd				*create_cmd();
-void				push_cmd();
-void				clear_cmd();
-void				destroy_cmd();
- *
- */
-
 
 
 #endif

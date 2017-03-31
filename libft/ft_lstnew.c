@@ -6,7 +6,7 @@
 /*   By: nbelouni <nbelouni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/08 21:48:10 by nbelouni          #+#    #+#             */
-/*   Updated: 2015/01/01 18:17:58 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/30 19:01:30 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,14 @@ t_list		*ft_lstnew(void const *content, size_t content_size)
 	}
 	else
 	{
-		new->content = (void *)malloc(sizeof(void) * content_size);
+//		new->content = (void *)malloc(sizeof(void) * content_size);
+		new->content = (void *)malloc(content_size);
 		if (!new->content)
 			return (NULL);
 		new->content = ft_memcpy(new->content, content, content_size);
 		new->content_size = content_size;
 	}
 	new->next = NULL;
+	new->prev = NULL;
 	return (new);
 }

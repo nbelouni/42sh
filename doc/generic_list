@@ -1,0 +1,27 @@
+struct point
+{
+	int		x;
+	int		y;
+	int		z;
+	char	*s;
+};
+
+void	ft_lstdelone(t_list **alst, void (*del)(void *, size_t));
+
+content = malloc(sizeof((point *)));
+
+
+lst = ft_lstnew(content, sizeof(point *));
+
+x = ((point *)(lst->content))->x;
+
+((point *)(lst->content))->s = ft_strdup("asd");
+
+void	point_del(void *data, size_t len)
+{
+	ft_strdel(&((point *)(data))->s);
+	ft_bzero(data, len);
+	free(data);
+	data = NULL;
+}
+

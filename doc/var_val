@@ -1,0 +1,129 @@
+> ok1=ok2 ok2=ok3 ok3=ok1
+> set | grep ok
+ok1=ok2
+ok2=ok3
+ok3=ok1
+
+_____________________________________
+
+> ok1=$ok2 ok2=$ok3 ok3=$ok1
+> set | grep ok
+ok1=ok3
+ok2=ok1
+ok3=ok3
+
+_____________________________________
+> $ok1=$ok2 $ok2=$ok3 $ok3=$ok1
+bash: ok3=ok1: command not found
+
+_____________________________________
+> export 1=1 2=3 4=5 6=7
+bash: export: `1=1': not a valid identifier
+bash: export: `2=3': not a valid identifier
+bash: export: `4=5': not a valid identifier
+bash: export: `6=7': not a valid identifier
+> export a1=1 a2=3 a4=5 a6=7
+
+> export *=f=d
+bash: export: `*=f=d': not a valid identifier
+OK
+
+_____________________________________
+> a=c | echo
+
+> set | grep [a-c]=
+> a=c & echo ok
+[1] 28005
+ok
+> set | grep [a-c]=
+[1]+  Done                    a=c
+> set | grep [a-c]=
+>
+
+_____________________________________
+>  ls >la>lo
+> cat lo
+1
+42sh
+Makefile
+README.md
+asd
+auteur
+d
+daf
+debug
+debug2
+doc
+env1
+env2
+inc
+la
+li
+libft
+lo
+memo
+obj
+oiuhi
+ok
+src
+test
+test1
+test2
+test4
+test_db.txt
+> rm la lo
+>  ls >la>lo
+> cat lo
+1
+42sh
+Makefile
+README.md
+asd
+auteur
+d
+daf
+debug
+debug2
+doc
+env1
+env2
+inc
+la
+li
+libft
+lo
+memo
+obj
+oiuhi
+ok
+src
+test
+test1
+test2
+test4
+test_db.txt
+> cat la
+> rm la lo
+>  ls -j 2>la>lo
+> cat la
+ls: illegal option -- j
+usage: ls [-ABCFGHLOPRSTUWabcdefghiklmnopqrstuwx1] [file ...]
+> cat lo
+> rm la lo
+> 2>la ls -j 2> lo
+> cat la
+> cat lo
+ls: illegal option -- j
+usage: ls [-ABCFGHLOPRSTUWabcdefghiklmnopqrstuwx1] [file ...]
+
+_____________________________________
+
+var=val :
+	. ajoute export si !is_text_type(tmp)
+	. ajoute env si commande si is_text_type(tmp) && !ft_strchr(tmp)
+_______________________________________ 
+	. n'est interprete que si NO_QUOTE
+	. check que si var=val.type = CMD
+	. est skip si !'=' dans CMD/ARGS
+	(v1=v2 v2=v3 OK | v1=v2 v3 KO | v1 v2=v3 KO)
+	.modifier var=val en [export]->[var=val]->[...]

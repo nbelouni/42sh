@@ -130,7 +130,6 @@ int 	main(int argc, char **argv, char **envp)
 		}
 		if (ret_read == END_EOT)
 			break ;
-		// while (1) ;
 	}
 	close_termios();
 	free_buf(buf);

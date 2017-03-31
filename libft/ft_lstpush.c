@@ -1,22 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstiter.c                                       :+:      :+:    :+:   */
+/*   ft_lstpush.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nbelouni <nbelouni@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2014/11/10 09:22:32 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/30 15:22:16 by nbelouni         ###   ########.fr       */
+/*   Created: 2017/03/30 15:23:58 by nbelouni          #+#    #+#             */
+/*   Updated: 2017/03/30 15:27:36 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void		ft_lstiter(t_list *lst, void (*f)(t_list *elem))
+void		ft_lstpush(t_list **begin, t_list *new)
 {
-	while (lst && f)
+	t_list	*elem;
+
+	elem = *begin;
+	if (elem == NULL)
 	{
-		(*f)(lst);
-		lst = lst->next;
+		*begin = elem;
+		return ;
 	}
+	while (elem->next)
+		elem = elem->next;
+	elem->next = new;
+	new->prev = elem;
 }
+

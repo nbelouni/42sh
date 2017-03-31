@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 15:10:02 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/07 20:09:54 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/31 15:56:22 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,16 +76,16 @@ int		find_word_end(char *s)
 	return (i);
 }
 
-int		find_cplt(char *s, t_sort_list *ref, t_sort_list **lst, int len)
+int		find_cplt(char *s, t_list *ref, t_list **lst, int len)
 {
-	t_sort_list	*tmp;
-	int			n_lst;
+	t_list	*tmp;
+	int		n_lst;
 
 	n_lst = 0;
 	tmp = ref;
 	while (tmp)
 	{
-		if (!ft_strncmp(tmp->s, s, len))
+		if (!ft_strncmp(LIST_S(tmp), s, len))
 		{
 			if (!*lst)
 				*lst = tmp;
@@ -96,9 +96,9 @@ int		find_cplt(char *s, t_sort_list *ref, t_sort_list **lst, int len)
 	return (n_lst);
 }
 
-int		count_sort_lst(t_sort_list *lst)
+int		count_sort_lst(t_list *lst)
 {
-	t_sort_list	*tmp;
+	t_list	*tmp;
 	int			len;
 
 	tmp = lst;
@@ -111,29 +111,29 @@ int		count_sort_lst(t_sort_list *lst)
 	return (len);
 }
 
-int		max_len_sort_lst(t_sort_list *lst, int n)
+int		max_len_sort_lst(t_list *lst, int n)
 {
-	t_sort_list	*tmp;
+	t_list	*tmp;
 	int			len;
 
 	tmp = lst;
 	len = 0;
 	while (n && tmp)
 	{
-		if ((int)ft_strlen(tmp->s) > len)
-			len = (int)ft_strlen(tmp->s);
+		if ((int)ft_strlen(LIST_S(tmp)) > len)
+			len = (int)ft_strlen(LIST_S(tmp));
 		n--;
 		tmp = tmp->next;
 	}
 	return (len);
 }
 
-void	print_sort_list(t_sort_list *lst, int n, char c)
+void	print_sort_list(t_list *lst, int n, char c)
 {
-	t_sort_list	*tmp;
-	int			word_per_line;
-	int			max_len;
-	int			i;
+	t_list	*tmp;
+	int		word_per_line;
+	int		max_len;
+	int		i;
 
 	close_termios();
 	tmp = lst;
@@ -143,9 +143,9 @@ void	print_sort_list(t_sort_list *lst, int n, char c)
 	while (n-- && tmp)
 	{
 		write(1, &c, 1);
-		ft_putstr_fd(tmp->s, 1);
+		ft_putstr_fd(LIST_S(tmp), 1);
 		i = -1;
-		while ((int)ft_strlen(tmp->s) + ++i < max_len)
+		while ((int)ft_strlen(LIST_S(tmp)) + ++i < max_len)
 			ft_putchar_fd(' ', 1);
 		word_per_line--;
 		if (word_per_line == 0)
@@ -259,7 +259,7 @@ int		open_rel_path(char *s, DIR **dirp, int *bg)
 	return (TRUE);
 }
 
-int		fill_file(t_buf *buf, t_sort_list **lst, int *bg)
+int		fill_file(t_buf *buf, t_list **lst, int *bg)
 {
 	DIR				*dirp;
 	struct dirent	*dp;
@@ -286,12 +286,12 @@ int		fill_file(t_buf *buf, t_sort_list **lst, int *bg)
 	return (n_lst);
 }
 
-int		replace_or_print(t_buf *buf, t_sort_list *ref, int begin, char c)
+int		replace_or_print(t_buf *buf, t_list *ref, int begin, char c)
 {
 	int			n_lst;
 	int			len;
 	char		*s;
-	t_sort_list	*lst;
+	t_list	*lst;
 
 	s = buf->line;
 	lst = NULL;
@@ -304,17 +304,23 @@ int		replace_or_print(t_buf *buf, t_sort_list *ref, int begin, char c)
 	else
 		n_lst = find_cplt(s + begin, ref, &lst, len);
 	if (n_lst == 1)
-		replace_cplt(buf, lst->s, begin);
+		replace_cplt(buf, LIST_S(lst), begin);
 	else if (n_lst > 1)
 		print_sort_list(lst, n_lst, c);
 	return (n_lst > 1 ? TAB : 0);
 }
 
+void	s_del(void *data, size_t len)
+{
+	ft_bzero(data, len);
+	ft_strdel(((char **)&data));
+}
+
 int		complete_line(t_buf *buf, t_completion *cplt, char x)
 {
-	t_sort_list	*ref;
-	int			begin;
-	int			ret;
+	t_list	*ref;
+	int		begin;
+	int		ret;
 
 	if (x != TAB)
 		return (0);
@@ -333,7 +339,7 @@ int		complete_line(t_buf *buf, t_completion *cplt, char x)
 			return (ret);
 		ret = replace_or_print(buf, ref, begin, 0);
 		if (ref)
-			destroy_sort_list(&ref);
+			ft_lstdel(&ref, &s_del);
 		return (ret);
 	}
 	return (0);

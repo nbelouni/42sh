@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/16 12:42:26 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/10 21:58:20 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/31 16:20:31 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,12 @@ t_token		*ft_tokenew(int type, char *s, int *level)
 		elem->word = NULL;
 	else
 		elem->word = s;
-	elem->next = NULL;
-	elem->prev = NULL;
+//	elem->next = NULL;
+//	elem->prev = NULL;
 	return (elem);
 }
 
+/*
 void		ft_tokenadd(t_token **begin, t_token *new)
 {
 	if (*begin != NULL)
@@ -94,3 +95,4 @@ void		ft_tokendestroy(t_token **begin)
 	}
 	*begin = NULL;
 }
+*/
