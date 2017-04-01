@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/01 18:38:48 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/04/01 21:48:26 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ int 	main(int argc, char **argv, char **envp)
 			if (ret > 0 && list)
 			{
 
-				ft_push_ast(list, &ast);
+	//			ft_push_ast(list, &ast);
 
 /*
 **				. remplace $var
@@ -115,13 +115,11 @@ int 	main(int argc, char **argv, char **envp)
 **				. supprime '\'', '"' , '`' et '\\'
 **
 **				. sera remplacee quqnd je saurais ou la mettre
-**
+**				regexp_in_tree(ast, core);
 **
 */
-
-				regexp_in_tree(ast, core);
-				print_debug_ast(ast);
-				free_ast(ast);
+	//			print_debug_ast(ast);
+	//			free_ast(ast);
 
 			}
 			if (ret != ERR_NEW_PROMPT)
