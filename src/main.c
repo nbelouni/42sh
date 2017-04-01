@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/31 16:56:42 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/04/01 18:38:48 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,36 +64,6 @@ int		parse(t_core *core, char *line, char **envp)
 	return (0);
 }
 
-void print_tab(char **tabol);
-int		regexp_in_tree(t_tree *node, t_core *env)
-{
-	if(!node)
-	{
-		PUT2("\n node = NULL");
-		return (0);
-	}
-	if (node->left)
-	{
-		PUT2(" \n node->left");
-		print_debug_ast(node->left);
-	}
-		PUT2("\n node ======>>>>>> ");
-	if (node->token == CMD)
-	{
-		print_tab(node->cmd);
-		if (edit_cmd(&(node->cmd), env) == ERR_EXIT)
-			return (ERR_EXIT);
-	}
-	else
-		PUT2(node->token_or->word);
-	if (node->right)
-	{
-		PUT2(" \n node->right");
-		print_debug_ast(node->right);
-	}
-	return (0);
-}
-
 int 	main(int argc, char **argv, char **envp)
 {
 	(void)argc;
@@ -116,7 +86,7 @@ int 	main(int argc, char **argv, char **envp)
 	ft_histopt_r(&(core->hist), core->set, NULL);
 	if (envp != NULL && envp[0] != NULL)
 		core->env = ft_env_to_list(envp, core->env);
-	if (init_completion(&completion, core->env) == ERR_EXIT)
+	if (init_completion(&completion, core) == ERR_EXIT)
 		return (-1);
 	signal(SIGWINCH, get_sigwinch);
 	signal(SIGINT, get_sigint);
@@ -137,15 +107,22 @@ int 	main(int argc, char **argv, char **envp)
 			if (ret > 0 && list)
 			{
 
-//				ft_print_token_list(&list); //debug impression
-/*
- *				enleve les quotes et les backslash -> va changer de place
- *				edit_cmd(list, env);
- */
 				ft_push_ast(list, &ast);
+
+/*
+**				. remplace $var
+**				. ajoute arguments si regex
+**				. supprime '\'', '"' , '`' et '\\'
+**
+**				. sera remplacee quqnd je saurais ou la mettre
+**
+**
+*/
+
 				regexp_in_tree(ast, core);
 				print_debug_ast(ast);
 				free_ast(ast);
+
 			}
 			if (ret != ERR_NEW_PROMPT)
 				ft_strdel(&(buf->final_line));
@@ -156,6 +133,8 @@ int 	main(int argc, char **argv, char **envp)
 			ft_bzero(buf->line, BUFF_SIZE);
 			buf->size = 0;
 			clean_pos_curs();
+			if (init_completion(&completion, core) == ERR_EXIT)
+				return (-1);
 		}
 		if (ret_read == END_EOT)
 			break ;
