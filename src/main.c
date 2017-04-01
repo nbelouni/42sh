@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/29 19:10:45 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/04/01 21:48:26 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,17 +106,21 @@ int 	main(int argc, char **argv, char **envp)
 			ret = parse_buf(&list, buf->final_line, &completion, core->hist);
 			if (ret > 0 && list)
 			{
-				// ft_print_history(core->hist, core->hist->size);
-				parse(core, buf->final_line, envp);
 
-//				ft_print_token_list(&list); //debug impression
+	//			ft_push_ast(list, &ast);
+
 /*
- *				enleve les quotes et les backslash -> va changer de place
- *				edit_cmd(list, env);
- */
-//				ft_push_ast(list, &ast);
-//				print_debug_ast(ast);
-//				free_ast(ast);
+**				. remplace $var
+**				. ajoute arguments si regex
+**				. supprime '\'', '"' , '`' et '\\'
+**
+**				. sera remplacee quqnd je saurais ou la mettre
+**				regexp_in_tree(ast, core);
+**
+*/
+	//			print_debug_ast(ast);
+	//			free_ast(ast);
+
 			}
 			if (ret != ERR_NEW_PROMPT)
 				ft_strdel(&(buf->final_line));

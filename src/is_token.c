@@ -22,9 +22,6 @@ int		is_backslash(char *s, int i)
 	return (0);
 }
 
-// a utiliser
-// se rappeler -> parser single quotes avec % 2
-
 int		is_char(char *s, int i, char c)
 {
 	if (i == 0 || s[i - 1] != '\\')
