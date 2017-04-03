@@ -23,7 +23,7 @@ int			vb_insert(t_buf *buf, char *s)
 	if (buf->size + ft_strlen(s) >= BUFF_SIZE)
 		return (-1);
 	insert_in_buf(buf, cursor - get_prompt_len(), s, 1);
-	buf->size += ft_strlen(s);
+	buf->size += 1;
 	if (g_curs.col + 1 < g_curs.win_col)
 		g_curs.col += 1;
 	else

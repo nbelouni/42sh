@@ -64,6 +64,26 @@ int		parse(t_core *core, char *line, char **envp)
 	return (0);
 }
 
+
+/*
+**	  init_core initialisation des liste d'env
+*/
+
+t_core 		*ft_creat_env(char **envp)
+{
+	t_core *core;
+
+	core = ft_init_core();
+	core->set = ft_init_lstset();
+	core->exp = ft_init_list();
+	if (envp != NULL && envp[0] != NULL)
+		core->env = ft_env_to_list(envp, core->env);
+	else
+		core->env = ft_default_env();
+	ft_histopt_r(&(core->hist), core->set, NULL);
+	return (core);
+}
+
 int 	main(int argc, char **argv, char **envp)
 {
 	(void)argc;
@@ -71,7 +91,6 @@ int 	main(int argc, char **argv, char **envp)
 	t_completion	completion = {NULL, NULL, NULL, NULL};
 	t_buf	*buf;
 	t_token	*list;
-	// t_lst	*env;
 	int		ret;
 	int		ret_read;
 	t_tree	*ast;
@@ -79,13 +98,7 @@ int 	main(int argc, char **argv, char **envp)
 
 	ast = NULL;
 	list = NULL;
-	core = ft_init_core();
-	core->env = NULL;
-	core->set = ft_init_lstset();
-	core->hist = NULL;
-	ft_histopt_r(&(core->hist), core->set, NULL);
-	if (envp != NULL && envp[0] != NULL)
-		core->env = ft_env_to_list(envp, core->env);
+	core = ft_creat_env(envp);
 	if (init_completion(&completion, core) == ERR_EXIT)
 		return (-1);
 	signal(SIGWINCH, get_sigwinch);
@@ -102,11 +115,10 @@ int 	main(int argc, char **argv, char **envp)
 			if (is_line_ended(buf) < 0)
 				return (-1);
 			bang_substitution(&(buf->final_line), core);
-			// PUT2("2 buf->final_line : ");PUT2(buf->final_line);X('\n');
 			ret = parse_buf(&list, buf->final_line, &completion, core->hist);
 			if (ret > 0 && list)
 			{
-
+					parse(core, buf->final_line, envp);
 	//			ft_push_ast(list, &ast);
 
 /*
