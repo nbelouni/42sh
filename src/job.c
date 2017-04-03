@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 13:52:27 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/03 16:52:06 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/03 17:46:47 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,14 +120,40 @@ void	*delete_node(t_node_p node)
 	return(data);
 }
 
-t_process_p	new_process(t_list *argv)
+int			isBuiltin(char **args);
+
+t_process_p	new_process(char **argv)
 {
 	t_process_p ptr;
 
 	ptr = malloc(sizeof(*ptr));
 	bzero(ptr, sizeof(*ptr));
 	ptr->argv = argv;
+	if (isBuiltin(argv))
+		ptr->flag |= BUILTIN;
 	return (ptr);
+}
+
+int			isBuiltin(char **args)
+{
+	if (args != NULL && args[0] != NULL)
+	{
+		if (!ft_strcmp(args[0], "exit"))
+			return (TRUE);
+		else if (!ft_strcmp(args[0], "env"))
+			return (TRUE);
+		else if (!ft_strcmp(args[0], "setenv"))
+			return (TRUE);
+		else if (!ft_strcmp(args[0], "unsetenv"))
+			return (TRUE);
+		else if (!ft_strcmp(args[0], "echo"))
+			return (TRUE);
+		else if (!ft_strcmp(args[0], "cd"))
+			return (TRUE);
+		else if (!ft_strcmp(args[0], "fg"))
+			return (TRUE);
+	}
+	return (FALSE);
 }
 
 t_node_p	create_process(t_tree *nodeProcess)
@@ -135,7 +161,7 @@ t_node_p	create_process(t_tree *nodeProcess)
 	t_node_p ptr;
 
 	ptr = new_node(PROCESS, sizeof(struct s_process));
-	ptr->data = new_link(new_process(nodeProcess->argv), sizeof(struct s_process));
+	ptr->data = new_link(new_process(nodeProcess->cmd), sizeof(struct s_process));
 	return (ptr);
 }
 

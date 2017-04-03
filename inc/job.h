@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 17:03:19 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/03 16:51:33 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/03 19:28:22 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ********************************************************)****************** */
 
@@ -35,6 +35,10 @@ typedef enum	e_type_node
 	IF
 }				t_type_node;
 
+# define	BUILTIN	0x1
+# define	DOFORK 0x2
+# define	ALREADY_FORK 0x4
+
 typedef enum	e_type_if
 {
 	IF_OR,
@@ -61,11 +65,11 @@ typedef struct s_process
 {
 	t_process_p		next;		/* struct list ou a changer par left right*/
 	int				token;		/* token */
-	t_list			*argv;
-//	char			**argv;		/* for exec */
+//	t_list			*argv;
+	int				flag;
+	char			**argv;		/* for exec */
 //	int				*tab_fd;		// ?tab_fd[3]? int stdin, stdout, stderr;  /* standard i/o channels */
 	List_p			ioList;
-	int				dofork;
 	char			*temp_redir;
 	pid_t			pid;		/* process ID */
 	char			completed;	/* true if process has completed */

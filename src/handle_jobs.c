@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/03 16:59:45 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/03 19:37:49 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	job_is_stopped (t_job *j)
 	List_p	ptr;
 
 	ptr = j->waitProcessList;
-	//  print_job(j);
+	print_job(j);
 	while (ptr)
 	{
 		p = ptr->content;
@@ -286,8 +286,6 @@ void	doRedir(Io_p io);
 
 void	launch_process(t_process_p process)
 {
-	pid_t pid;
-
 	//  doRedir(process->ioList);
 	list_iter(process->ioList, (void *)doRedir);
 	/*Je l'avais initialement mise ici mais je te l'ai deplace dans MakeChildren*/
@@ -373,7 +371,7 @@ int	doPipe(t_process_p p1, t_process_p p2, 	int	*io_pipe)
 
 //		launch_process(p, pgid, foreground);
 
-int		giveTerm(int pgid)
+void		giveTerm(int pgid, int foreground)
 {
 	sigset_t set;
 
@@ -395,8 +393,8 @@ int		makeChildren(t_process_p p, int *pgid, int foreground)
 	pid = fork();
 	if (pid == 0)
 	{
-		if (sigprocmask(SIG_UNBLOCK, core->sig_set, NULL) < 0)/*ERROR a set*/
-			return ;
+//		if (sigprocmask(SIG_UNBLOCK, core->sig_set, NULL) < 0)/*ERROR a set*/
+//			return ;
 /*		signal (SIGINT, SIG_DFL);
 		signal (SIGQUIT, SIG_DFL);
 		signal (SIGTSTP, SIG_DFL);
@@ -407,7 +405,7 @@ int		makeChildren(t_process_p p, int *pgid, int foreground)
 		if (*pgid == 0) *pgid = pid;
 		setpgid(pid, *pgid);
 		/*a voir si tu en as besoin besoin normanement tout est set dans init_shell*/
-		giveTerm(*pgid);
+		giveTerm(*pgid, foreground);
 	}
 	else if (pid < 0)
 	{
@@ -426,13 +424,22 @@ int		makeChildren(t_process_p p, int *pgid, int foreground)
 
 void	execSimpleCommand(t_process_p p, int fg, int dofork, int *pgid)
 {
-	int			pid;
-	int			fpid;
+//	int			pid;
+//	int			fpid;
 
 	if (dofork)
-		if (makeChildren(pipeline->content, job->pgid, job->foreground))
+		if (makeChildren(p, pgid, fg))
 			return ;
-	launch_process();
+	launch_process(p);
+}
+
+int		shouldfork(t_job *j, List_p pipeline)
+{
+	int dofork = 0;
+
+	if (j->foreground == 0 || pipeline->next)
+		dofork |= DOFORK;
+	return (dofork);
 }
 
 void	doPipeline(t_job *job, t_list *pipeline)
@@ -440,10 +447,10 @@ void	doPipeline(t_job *job, t_list *pipeline)
 	int			io_pipe[2];
 	int			in;
 	int			out;
-	int			dofork;
+	int			dofork = 0;
 
 	in = STDIN_FILENO;
-	dofork = shouldfork(job);
+	dofork |= shouldfork(job, pipeline);
 	while (pipeline)
 	{
 		out = (pipeline->next)? doPipe(pipeline->content, pipeline->next->content, io_pipe): STDOUT_FILENO;
