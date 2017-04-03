@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/03 16:43:27 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/03 20:06:44 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ int 	main(int argc, char **argv, char **envp)
 	init_shell();
 	while ((ret_read = read_line(buf, &completion, core->hist)) != ERR_EXIT)
 	{
+		printf("Touch\n");
 		close_termios();
 		jobListBis = NULL;
 		if (ret_read != TAB)

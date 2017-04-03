@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/03 19:37:49 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/03 20:26:14 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int	job_is_stopped (t_job *j)
 	{
 		p = ptr->content;
 		//	  PUT2("process : ");E(p->stopped);X('\n');
-		//	  print_process(p);
+			  print_process(p);
 		if (!p->completed && !p->stopped)
 			return 0;
 		ptr = ptr->next;
@@ -113,12 +113,12 @@ t_process_p	getProcessByPid(pid_t pid)
 	while (ptrJob)
 	{
 		j = ptrJob->content;
-//		print_job(j);
+		print_job(j);
 		ptrProcess = j->waitProcessList;
 		while (ptrProcess)
 		{
 			p = ptrProcess->content;
-//			print_process(p);
+			print_process(p);
 			if (p->pid == pid)
 				return (p);
 			ptrProcess = ptrProcess->next;
@@ -151,7 +151,7 @@ int	mark_process_status(pid_t pid, int status)
 					fprintf (stderr, "%d: Terminated by signal %d.\n",
 							(int) pid, WTERMSIG (p->status));
 			}
-			//		  print_process(p);
+					  print_process(p);
 			return 0;		
 		}
 		else
@@ -187,10 +187,10 @@ void	wait_for_job(t_job *j)
 	int status;
 	pid_t pid;
 
-	sigdelset(core->sig_set, SIGCHLD);
-	sigprocmask(SIG_SETMASK, core->sig_set, NULL);
-//	print_job(j);
-//	signal (SIGCHLD, SIG_DFL);
+//	sigdelset(core->sig_set, SIGCHLD);
+//	sigprocmask(SIG_SETMASK, core->sig_set, NULL);
+	print_job(j);
+	signal (SIGCHLD, SIG_DFL);
 	while (true)
 	{
 		pid = waitpid(-1, &status, WUNTRACED);// | WNOHANG);
@@ -296,7 +296,7 @@ void	launch_process(t_process_p process)
 	ft_check_exec(process->argv);
 //	execvp(p->argv[0], p->argv);
 //	perror("execvp");
-	exit (1);
+//	exit (1);
 }
 
 t_node_p	iterInOrder(t_node_p ptr, List_p *stock)
@@ -342,6 +342,7 @@ void	doRedir(Io_p io)
 	if (io->flag & CLOSE)
 	{
 		if (io->flag ^ WRITE)
+
 			close(io->dup_src);
 	}
 }
@@ -371,7 +372,7 @@ int	doPipe(t_process_p p1, t_process_p p2, 	int	*io_pipe)
 
 //		launch_process(p, pgid, foreground);
 
-void		giveTerm(int pgid, int foreground)
+void	giveTerm(int pgid, int foreground)
 {
 	sigset_t set;
 
@@ -389,22 +390,22 @@ void		giveTerm(int pgid, int foreground)
 int		makeChildren(t_process_p p, int *pgid, int foreground)
 {
 	int	pid;
+	int	fpid;
 
 	pid = fork();
 	if (pid == 0)
 	{
 //		if (sigprocmask(SIG_UNBLOCK, core->sig_set, NULL) < 0)/*ERROR a set*/
 //			return ;
-/*		signal (SIGINT, SIG_DFL);
+		signal (SIGINT, SIG_DFL);
 		signal (SIGQUIT, SIG_DFL);
 		signal (SIGTSTP, SIG_DFL);
 		signal (SIGTTIN, SIG_DFL);
 		signal (SIGTTOU, SIG_DFL);
 		signal (SIGCHLD, SIG_DFL);
-*/		pid = getpid();
-		if (*pgid == 0) *pgid = pid;
-		setpgid(pid, *pgid);
-		/*a voir si tu en as besoin besoin normanement tout est set dans init_shell*/
+		fpid = getpid();
+		if (*pgid == 0) *pgid = fpid;
+		setpgid(fpid, *pgid);
 		giveTerm(*pgid, foreground);
 	}
 	else if (pid < 0)
@@ -415,6 +416,7 @@ int		makeChildren(t_process_p p, int *pgid, int foreground)
 	else
 	{
 		p->pid = pid;
+		if (*pgid == 0) *pgid = pid;
 		setpgid(pid, *pgid);
 	}
 	return (pid);
@@ -436,9 +438,11 @@ void	execSimpleCommand(t_process_p p, int fg, int dofork, int *pgid)
 int		shouldfork(t_job *j, List_p pipeline)
 {
 	int dofork = 0;
+	t_process_p	p;
 
-	if (j->foreground == 0 || pipeline->next)
-		dofork |= DOFORK;
+	p = pipeline->content;
+	if (j->foreground == 0 || pipeline->next || !(p->flag & BUILTIN))
+		dofork = 1;
 	return (dofork);
 }
 
@@ -451,6 +455,7 @@ void	doPipeline(t_job *job, t_list *pipeline)
 
 	in = STDIN_FILENO;
 	dofork |= shouldfork(job, pipeline);
+	dprintf(2, "Dofork : <%d>\n", dofork);
 	while (pipeline)
 	{
 		out = (pipeline->next)? doPipe(pipeline->content, pipeline->next->content, io_pipe): STDOUT_FILENO;
