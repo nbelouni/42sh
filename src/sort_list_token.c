@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 16:51:24 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/03 16:21:08 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/03 22:13:16 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,22 +87,10 @@ int		check_error_out(t_token *elem)
 
 void	ft_swap_in(t_token **list)
 {
-	char	*s;
-	int		ret;
+//	char	*s;
+//	int		ret;
 
-	ret = 2;
-	if ((*list)->next->type == DIR_L_AMP || (*list)->next->type == DIR_R_AMP)
-		ret = 3;
-	s = (*list)->next->word;
 	(*list)->next->word = (*list)->word;
-	(*list)->word = s;
-//	s = ft_memalloc(ft_strlen((*list)->word) + ret);
-//	s = ft_strcpy(s, (*list)->word);
-//	ft_memcpy(&s[ft_strlen((*list)->word)], (*list)->next->word,
-//	ft_strlen((*list)->next->word));
-//	if ((*list)->next && (*list)->next->word) 
-//		free((*list)->next->word);
-//	(*list)->next->word = s;
 	ft_tokenclear(list);
 }
 
@@ -126,13 +114,16 @@ void	ft_find_fd(t_token *list)
 void	sort_list_token(t_token **list, t_completion *completion, t_lst *hist)
 {
 	t_token		*elem;
+	t_token		*tmp;
 
 	elem = *list;
 	while (elem)
 	{
 		if (elem->type == FD_IN)
 		{
+			tmp = elem->next;
 			ft_swap_in(&elem);
+			elem = tmp;
 			if (!elem->prev)
 				*list = elem;
 		}

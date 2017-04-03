@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/03 20:26:14 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/03 22:21:52 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -321,7 +321,7 @@ void	doRedir(Io_p io)
 	if (io->flag & OPEN)
 	{
 		if (io->flag & CLOSE && access(io->str, X_OK) == -1)
-			io->mode |= O_CREAT;
+//			io->mode |= O_CREAT;
 		io->dup_src = open(io->str, io->mode, DEF_FILE);
 		if (io->dup_src < 0 && io->mode)
 			fputs("42sh: No such file or directory (a placer dans les error)\n", stderr);
@@ -342,7 +342,6 @@ void	doRedir(Io_p io)
 	if (io->flag & CLOSE)
 	{
 		if (io->flag ^ WRITE)
-
 			close(io->dup_src);
 	}
 }

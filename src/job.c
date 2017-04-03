@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 13:52:27 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/03 17:46:47 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/03 22:20:32 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,10 +188,10 @@ t_node_p	create_pipe(t_node_p right_node, t_node_p left_node)
 */
 static t_mode		(tab_mode[7]) = {
 	[0] = { SL_DIR, O_RDONLY, OPEN | CLOSE},
-	[1] = { SR_DIR, O_WRONLY | O_CREAT, OPEN | CLOSE},
+	[1] = { SR_DIR, O_WRONLY, OPEN | CLOSE},
 	[2] = { DL_DIR, 0, CLOSE | WRITE},
-	[3] = { DR_DIR, O_WRONLY | O_CREAT | O_APPEND, OPEN | CLOSE},
-	[4] = { LR_DIR, O_RDWR | O_CREAT, OPEN | CLOSE},
+	[3] = { DR_DIR, O_WRONLY | O_APPEND, OPEN | CLOSE},
+	[4] = { LR_DIR, O_RDWR, OPEN | CLOSE},
 	[5] = { DIR_L_AMP, O_RDWR, 0},
 	[6] = { DIR_R_AMP, O_RDWR, 0},
 };
