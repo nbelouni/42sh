@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 13:52:27 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/29 14:12:07 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/03 15:25:07 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ void	*delete_node(t_node_p node)
 	return(data);
 }
 
-t_process_p	new_process(char **argv)
+t_process_p	new_process(t_list *argv)
 {
 	t_process_p ptr;
 
@@ -135,7 +135,7 @@ t_node_p	create_process(t_tree *nodeProcess)
 	t_node_p ptr;
 
 	ptr = new_node(PROCESS, sizeof(struct s_process));
-	ptr->data = new_link(new_process(nodeProcess->cmd), sizeof(struct s_process));
+	ptr->data = new_link(new_process(nodeProcess->argv), sizeof(struct s_process));
 	return (ptr);
 }
 
@@ -161,6 +161,85 @@ t_node_p	create_pipe(t_node_p right_node, t_node_p left_node)
 	solution just to perform some check.
 */
 
+int	getFlag(int token)
+{
+	int	flag;
+	
+	if (token IS DIR_L_AMP_MINUS || token IS DIR_R_AMP_MINUS)
+		flag = CLOSE;
+	else
+	{
+		flag = DUP;
+		if (token IS SR_DIR || token IS SL_DIR || token IS DR_DIR || token IS LR_DIR)
+			flag |= OPEN | CLOSE;
+	}
+	return (flag);
+}
+
+int	getSrc(int token, char *src)
+{
+	int		dup_src;
+
+	
+	return ((token IS DIR_L_AMP || token IS DIR_R_AMP)? src: 0);
+}
+
+int getTarget(int token, char *target)
+{
+	
+}
+
+int	getPath()
+{}
+
+int	getMode(int token)
+{
+	int mode;
+
+	mode = 0;
+	if (token == DR_DIR || token == SR_DIR)
+		mode = O_WRONLY;
+	else if(token == SL_DIR)
+		mode = O_RDONLY;
+	else if (token == LR_DIR)
+		mode = O_RDWR;
+	if(token == DR_DIR)
+		mode |= O_APPEND;
+	else if (token == DR_DIR || token == SR_DIR)
+		mode |= O_TRUNC;
+	return (mode);
+}
+
+#define LEFT_F(t)	((t == SL_DIR || t == LR_DIR || t == DL_DIR))
+
+t_node_p create_redir(t_tree *nodeRedir, t_node_p left_node)
+{
+	Io_p		io;
+	int			left;
+	t_process_p	process;
+
+	io = new_io(getFlag(TOKEN(nodeRedir)), getMode(TOKEN(nodeRedir)));
+	if (!nodeRedir->cmd)
+		left = LEFT_F(TOKEN(nodeRedir))? 0: 1;
+	else
+		left = atoi((nodeRedir->cmd)[0]);
+	if (TOKEN(nodeRedir) == SR_DIR || TOKEN(nodeRedir) == SL_DIR || TOKEN(nodeRedir) == DR_DIR || TOKEN(nodeRedir) == LR_DIR)
+	{
+		io->dup_target = left;
+		io->str = (nodeRedir->right->cmd)[0];
+	}
+	else if (TOKEN(nodeRedir) == DIR_L_AMP || TOKEN(nodeRedir) == DIR_R_AMP)
+	{
+		io->dup_src = atoi((nodeRedir->right->cmd)[0]);
+		io->dup_target = left;
+	}
+	else
+		io->close_fd = left;
+	process = ((t_list *)left_node->data)->content;
+	insert_link_bottom(&(process->ioList), new_link(io, sizeof(*io)));
+	return (left_node); 
+}
+
 t_node_p create_redir(t_tree *nodeRedir, t_node_p left_node)
 {
 	Io_p		io;
@@ -168,33 +247,20 @@ t_node_p create_redir(t_tree *nodeRedir, t_node_p left_node)
 	t_process_p	process;
 
 	io = new_io();
-	puts("0");
 	io->str = (nodeRedir->right->cmd)[0];
 	io->flag |= DUP;
-	puts("1");
-	if (nodeRedir->cmd && !(left = atoi((nodeRedir->cmd)[0])))
+	if (!(left = atoi((nodeRedir->cmd)[0])))
 		left = 1 - ((TOKEN(nodeRedir) == SL_DIR)? 1: 0);
-	puts("2");
 	if (TOKEN(nodeRedir) == SR_DIR || TOKEN(nodeRedir) == SL_DIR || TOKEN(nodeRedir) == DR_DIR)
 	{
 		io->dup_target = left;
 		io->flag |= OPEN | CLOSE;
 	}
-	puts("3");
-	if (TOKEN(nodeRedir) == DR_DIR || TOKEN(nodeRedir) == SR_DIR)
-		io->mode |= O_WRONLY;
-	puts("4");
-	if(TOKEN(nodeRedir) == DR_DIR)
-		io->mode |= O_APPEND;
-	puts("5");
-	if(TOKEN(nodeRedir) == SL_DIR)
-		io->mode |= O_RDONLY;
 	if (TOKEN(nodeRedir) == DIR_L_AMP || TOKEN(nodeRedir) == DIR_R_AMP)
 	{
 		io->dup_src = atoi((nodeRedir->right->cmd)[0]);
 		io->dup_target = left;
 	}
-	puts("7");
 	process = ((t_list *)left_node->data)->content;
 	insert_link_bottom(&(process->ioList), new_link(io, sizeof(*io)));
 	return (left_node);

@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/29 14:12:36 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/03 14:43:04 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -278,23 +278,12 @@ void	continue_job (t_job *j, int foreground)
 
 void	doRedir(Io_p io);
 
-void	launch_process(t_process_p process, pid_t pgid, int foreground)
+void	launch_process(t_process_p process)
 {
 	pid_t pid;
 
-	pid = getpid();
-	if (pgid == 0) pgid = pid;
-	setpgid(pid, pgid);
-	if (foreground)
-		tcsetpgrp(g_sh_tty, pgid);
 	//  doRedir(process->ioList);
 	list_iter(process->ioList, (void *)doRedir);
-	signal (SIGINT, SIG_DFL);
-	signal (SIGQUIT, SIG_DFL);
-	signal (SIGTSTP, SIG_DFL);
-	signal (SIGTTIN, SIG_DFL);
-	signal (SIGTTOU, SIG_DFL);
-	signal (SIGCHLD, SIG_DFL);
 //	print_process(process);
 //	sleep(10);
 	ft_check_exec(process->argv);
@@ -325,11 +314,12 @@ void	doRedir(Io_p io)
 		if (access(io->str, X_OK) == -1)
 			io->mode |= O_CREAT;
 		io->dup_src = open(io->str, io->mode, DEF_FILE);
+		io->close_fd = io_src->dup_src;
 	}
 	if (io->flag & DUP)
 		dup2(io->dup_src, io->dup_target);
 	if (io->flag & CLOSE)
-		close(io->dup_src);
+		close(io->close_fd);
 }
 /*
 void	doRedir(Io_p io)
@@ -390,15 +380,40 @@ int	doPipe(t_process_p p1, t_process_p p2, 	int	*io_pipe)
 	return (io_pipe[1]);
 }
 
-int		doFork(t_process_p p, int pgid, int foreground)
+		launch_process(p, pgid, foreground);
+
+int		giveTerm(int pgid)
+{
+	sigset_t set;
+
+	sigemptyset (&set);
+	sigaddset (&set, SIGTTOU);
+	sigaddset (&set, SIGTTIN);
+	sigaddset (&set, SIGTSTP);
+	sigaddset (&set, SIGCHLD);
+	sigemptyset (&oset);
+	if (foreground)
+		tcsetpgrp(g_sh_tty, pgid);
+}
+
+
+int		makeChildren(t_process_p p, int *pgid, int foreground)
 {
 	int	pid;
 
 	pid = fork();
 	if (pid == 0)
 	{
-		launch_process(p, pgid, foreground);
-		exit(0);
+		signal (SIGINT, SIG_DFL);
+		signal (SIGQUIT, SIG_DFL);
+		signal (SIGTSTP, SIG_DFL);
+		signal (SIGTTIN, SIG_DFL);
+		signal (SIGTTOU, SIG_DFL);
+		signal (SIGCHLD, SIG_DFL);
+		pid = getpid();
+		if (*pgid == 0) *pgid = pid;
+		setpgid(pid, *pgid);
+		giveTerm(*pgid);
 	}
 	else if (pid < 0)
 	{
@@ -408,28 +423,37 @@ int		doFork(t_process_p p, int pgid, int foreground)
 	else
 	{
 		p->pid = pid;
-		return (pid);
+		setpgid(pid, *pgid);
 	}
+	return (pid);
+}
+
+
+
+void	execSimpleCommand(t_process_p p, int fg, int dofork, int *pgid)
+{
+	int			pid;
+	int			fpid;
+
+	if (dofork)
+		if (makeChildren(pipeline->content, job->pgid, job->foreground))
+			return ;
+	launchProcess();
 }
 
 void	doPipeline(t_job *job, t_list *pipeline)
 {
-	int			pid;
 	int			io_pipe[2];
 	int			in;
 	int			out;
+	int			dofork;
 
 	in = STDIN_FILENO;
+	dofork = shouldfork(job);
 	while (pipeline)
 	{
 		out = (pipeline->next)? doPipe(pipeline->content, pipeline->next->content, io_pipe): STDOUT_FILENO;
-		pid = doFork(pipeline->content, job->pgid, job->foreground);
-		if (job->pgid == 0)
-			job->pgid = pid;
-		setpgid(pid, job->pgid);
-//		t_process_p	p ;
-//		p = memcpy(malloc(sizeof(*p)), pipeline->content, pipeline->content_size);
-//		printf("<%d> and <%d>\n", (int)pipeline->content_size, (int)sizeof(*p));
+		execSimpleCommand(pipeline->content, job->foreground, dofork, &(job->pgid));
 		if (out != STDOUT_FILENO)
 			close(out);
 		if (in != STDIN_FILENO)

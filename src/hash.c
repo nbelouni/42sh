@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/20 20:06:57 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/21 11:21:41 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/03/29 17:30:21 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,23 @@ uint32_t	insert_into_table(t_table *t, t_entry *kv)
 	PUSH(HASH(t) + h, kv);
 	//SLIST_INSERT_HEAD(HASH(t) + h, kv, sibl);
 	return (h);
+}
+/*
+
+# define ENTRY(k, v)	((t_entry){.key = k; .data = v})
+# define VALUE(t, k)	(getDataFromTable(t, &ENTRY(k, NULL)))
+
+void builtin(char *builtStr, void *builtParam)
+{
+	(VALUE(hashBuilt, builtStr))(builtParam, param2);
+}
+
+builtin("env", p1, p2, p3);
+
+*/
+void		*getDataFromTable(t_table *t, t_entry *kv)
+{
+	return ((lookup_into_table(t, kv))? lookup_into_table(t, kv)->data: NULL);
 }
 
 t_entry		*lookup_into_table(t_table *t, t_entry *kv)

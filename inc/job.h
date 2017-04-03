@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 17:03:19 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/24 13:31:54 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/03 15:25:09 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ********************************************************)****************** */
 
@@ -61,9 +61,11 @@ typedef struct s_process
 {
 	t_process_p		next;		/* struct list ou a changer par left right*/
 	int				token;		/* token */
+//	t_list			*argv;
 	char			**argv;		/* for exec */
 //	int				*tab_fd;		// ?tab_fd[3]? int stdin, stdout, stderr;  /* standard i/o channels */
 	List_p			ioList;
+	int				dofork;
 	char			*temp_redir;
 	pid_t			pid;		/* process ID */
 	char			completed;	/* true if process has completed */
