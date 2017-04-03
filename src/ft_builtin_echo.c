@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/07 18:23:32 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/15 19:05:39 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/29 14:46:03 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,15 @@
 **	puis l'affiche.
 */
 
-int		ft_builtin_echo(t_lst *env, char *cmd, char **args)
+int		ft_builtin_echo(t_core *core, char **args)
 {
 	char	*tmp;
 	char	*output;
 
-	(void)env;
-	if (!cmd || !cmd[0])
-		return (-1);
-	if (args && *args)
+	(void)core;
+	if (args && args[0])
 	{
-		if (!(tmp = ft_tabconcat(args)))
+		if ((tmp = ft_tabconcat(args)) == NULL)
 			return (ERR_EXIT);
 		if ((output = ft_epurstr(tmp)) == NULL)
 			return (ft_free_and_return(ERR_EXIT, tmp, NULL, NULL));

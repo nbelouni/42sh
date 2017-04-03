@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/07 18:27:26 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/11 18:13:35 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/24 18:19:11 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ static int	ft_is_opt(int *opt, char *opts, char *arg, size_t overwrite)
 	}
 	else
 	{
-
 		while (arg[i] != '\0')
 		{
 			if (ft_strchr(opts, arg[i]) == NULL)

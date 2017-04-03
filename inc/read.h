@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   term.h                                             :+:      :+:    :+:   */
+/*   read.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:01:52 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/07 19:24:01 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/20 16:55:36 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,8 @@ typedef struct	s_prompt
 typedef struct	s_buf
 {
 	char		*line;
+	char		*last_cmd;
+	t_elem		*cur_hist;
 	int			size;
 	char		*to_paste;
 	int			to_paste_size;
@@ -204,7 +206,7 @@ int				close_termios(void);
 /*
 **	Lit et edite ligne (visuel) + buffer (buf.line) si changements necessaires
 */
-int				read_line(t_buf *buf, t_completion *completion);
+int				read_line(t_buf *buf, t_completion *completion, t_lst *hist);
 
 
 /*
@@ -395,5 +397,6 @@ int				is_line_ended(t_buf *buf);
 typedef	struct	s_token	t_token;
 
 int				complete_final_line(t_buf *buf, t_token *lst);
+int				edit_history(t_buf *buf, t_lst *history, int x);
 
 #endif

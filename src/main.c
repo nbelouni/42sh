@@ -6,49 +6,60 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/17 17:08:54 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/04/01 21:48:26 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
-int		parse(t_core *set, char *line, char **envp)
+static t_builtin_array builtin_array[] =
+{
+	{"cd", &ft_builtin_cd},
+	{"env", &ft_builtin_env},
+	{"setenv", &ft_builtin_setenv},
+	{"unsetenv", &ft_builtin_unsetenv},
+	{"exit", &ft_builtin_exit},
+	{"echo", &ft_builtin_echo},
+	{"history", &ft_builtin_history},
+	{"unset", &ft_builtin_unset},
+	{"export", &ft_builtin_export},
+	// {"jobs", &ft_builtin_jobs},
+	// {"fg", &ft_builtin_fg},
+	// {"bg", &ft_builtin_bg},
+	{NULL, NULL}
+};
+
+int		parse_builtins(t_core *core, char *cmd, char **cmd_args)
+{
+	int	i;
+
+	i = -1;
+	while (builtin_array[++i].cmd)
+	{
+		if (ft_strcmp(builtin_array[i].cmd, cmd) == 0)
+			return (builtin_array[i].func(core, cmd_args));
+	}
+	return (1);
+}
+
+int		parse(t_core *core, char *line, char **envp)
 {
 	char	**args;
+	int		ret;
 
 	(void)envp;
-	if ((ft_cmd_to_history(set->hist, line)) == ERR_EXIT)
+	ret = 0;
+	if ((ft_cmd_to_history(core->hist, line)) == ERR_EXIT)
 		return (ERR_EXIT);
 	args = NULL;
 	args = ft_strsplit(line, ' ');
 	if (args != NULL && args[0] != NULL)
 	{
-		if (ft_strcmp(args[0], "exit") == 0)
-			ft_builtin_exit(set, args[0], args + 1);
-		else if (ft_strcmp(args[0], "env") == 0)
-			ft_builtin_env(set->env, args + 1);
-		else if (ft_strcmp(args[0], "setenv") == 0)
-			ft_builtin_setenv(set->env, args[0], args + 1);
-		else if (ft_strcmp(args[0], "unsetenv") == 0)
-			ft_builtin_unsetenv(set->env, args[0], &args[1]);
-		else if (ft_strcmp(args[0], "echo") == 0)
-			ft_builtin_echo(set->env, args[0], args + 1);
-		else if (ft_strcmp(args[0], "cd") == 0)
-			ft_builtin_cd(set->env, args[0], args + 1);
-		else if (ft_strcmp(args[0], "export") == 0)
-			ft_builtin_export(args, set);
-		else if (ft_strcmp(args[0], "unset") == 0)
-			ft_builtin_unset(set, args);
-		else if (ft_strcmp(args[0], "history") == 0)
-			return ft_builtin_history(set->set, set->hist, args + 1);
-		else if (ft_strcmp(args[0], "set") == 0)
-			ft_print_lst(set->set);
-		else
+		if ((ret = parse_builtins(core, args[0], args + 1)) == 1)
 			ft_waitchild(args, envp);
 		ft_tabdel(args);
-		args = NULL;
 	}
-	if ((ft_check_history_var(set->set, set->hist)) == ERR_EXIT)
+	if ((ft_check_history_var(core->set, core->hist)) == ERR_EXIT)
 		return (ERR_EXIT);
 	return (0);
 }
@@ -84,7 +95,7 @@ int 	main(int argc, char **argv, char **envp)
 	int		ret;
 	int		ret_read;
 	t_tree	*ast;
-	t_core	*set;
+	t_core	*core;
 
 	ast = NULL;
 	list = NULL;
@@ -98,40 +109,49 @@ int 	main(int argc, char **argv, char **envp)
 		return (ft_print_error("42sh", ERR_MALLOC, ERR_EXIT));
 	set_prompt(PROMPT1, ft_strlen(PROMPT1));
 	init_curs();
-	while ((ret_read = read_line(buf, &completion)) != ERR_EXIT)
+	while ((ret_read = read_line(buf, &completion, core->hist)) != ERR_EXIT)
 	{
 		close_termios();
 		if (ret_read != TAB)
 		{
 			if (is_line_ended(buf) < 0)
 				return (-1);
-			complete_final_line(buf, list);
-			//parse(set, buf->final_line, envp);
-			ft_putendl(buf->final_line);
-			ret = parse_buf(&list, buf->final_line, &completion);
-			parse(set, buf->final_line, envp);
+			bang_substitution(&(buf->final_line), core);
+			// PUT2("2 buf->final_line : ");PUT2(buf->final_line);X('\n');
+			ret = parse_buf(&list, buf->final_line, &completion, core->hist);
 			if (ret > 0 && list)
 			{
 
-//				ft_print_token_list(&list); //debug impression
+	//			ft_push_ast(list, &ast);
+
 /*
- *				enleve les quotes et les backslash -> va changer de place
- *				edit_cmd(list, env);
- */
-//				ft_push_ast(list, &ast);
-//				print_debug_ast(ast);
-//				free_ast(ast);
+**				. remplace $var
+**				. ajoute arguments si regex
+**				. supprime '\'', '"' , '`' et '\\'
+**
+**				. sera remplacee quqnd je saurais ou la mettre
+**				regexp_in_tree(ast, core);
+**
+*/
+	//			print_debug_ast(ast);
+	//			free_ast(ast);
+
 			}
 			if (ret != ERR_NEW_PROMPT)
 				ft_strdel(&(buf->final_line));
+			else
+				complete_final_line(buf, list);
 			if (list)
 				ft_tokendestroy(&list); //clean la list a mettre a la fin
 			ft_bzero(buf->line, BUFF_SIZE);
 			buf->size = 0;
 			clean_pos_curs();
+			if (init_completion(&completion, core) == ERR_EXIT)
+				return (-1);
 		}
 		if (ret_read == END_EOT)
 			break ;
+		// while (1) ;
 	}
 	close_termios();
 	free_buf(buf);

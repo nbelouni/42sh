@@ -6,14 +6,14 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/13 20:05:40 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/15 16:23:26 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/28 16:03:48 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
 /*
-**	ft_modify_env est appelé par ft_pwd_swap, cette fonction sert a
+**	Ft_modify_env est appelée par ft_pwd_swap, cette fonction sert a
 **	soit creer, soit modifier la variable name dans l'environnement,
 **	et lui attribuer la valeur value
 */
@@ -47,13 +47,13 @@ int		ft_modify_env(t_lst *env, char *name, char *value)
 }
 
 /*
-**	ft_pwd_swap va simplement modifier l'environnement concernant le pwd
+**	Ft_pwd_swap va simplement modifier l'environnement concernant le pwd
 **	et l'oldpwd, cette fonction est appelée a chaque changements via chdir.
 */
 
 int		ft_pwd_swap(t_lst *env, char *owd, char *cwd)
 {
-	int	ret;
+	int		ret;
 
 	ret = 0;
 	if ((ret = ft_modify_env(env, "PWD", cwd)) != 0)
@@ -62,13 +62,13 @@ int		ft_pwd_swap(t_lst *env, char *owd, char *cwd)
 	}
 	if ((ret = ft_modify_env(env, "OLDPWD", owd)) != 0)
 	{
-		return (ret);
+		 return (ret);
 	}
 	return (0);
 }
 
 /*
-**	ft_del_list est une fonction qui va detruire entierement le contenu
+**	Ft_del_list est une fonction qui va detruire entierement le contenu
 **	de lst ainsi que liberer le pointeur, puis le mettre a NULL.
 */
 
@@ -88,5 +88,4 @@ void	ft_del_list(t_lst *lst)
 		head = tmp;
 	}
 	ft_memdel((void *)&lst);
-	// free(lst);
 }

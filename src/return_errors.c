@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/21 17:03:05 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/24 17:18:02 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/04/01 21:46:08 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,16 @@ int		return_new_prompt(int ret)
 	{
 		set_prompt(PROMPT2, ft_strlen(PROMPT2));
 		return (ERR_NEW_PROMPT);
+	}
+	return (ret);
+}
+
+int		free_rg_and_return(char **rg, int ret)
+{
+	if (rg && rg[0])
+	{
+		ft_bzero(*rg, ft_strlen(*rg));
+		ft_strdel(rg);
 	}
 	return (ret);
 }

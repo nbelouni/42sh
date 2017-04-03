@@ -1,5 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_default_set.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: maissa-b <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/03/20 14:39:57 by maissa-b          #+#    #+#             */
+/*   Updated: 2017/03/20 14:40:25 by maissa-b         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "42sh.h"
 
+<<<<<<< HEAD
 
 t_lst	*ft_default_env(void)
 {
@@ -20,10 +33,17 @@ t_lst	*ft_default_env(void)
 	ft_strdel(&pwd);
 	return (env);
 }
+=======
+/*
+**	ft_init_lstset est une fonction qui va initialiser la liste du set
+**	avec les variables HISTFILE, HISTSIZE et HISTFILESIZE, définis sur
+**	les standards de bash.
+*/
+>>>>>>> 20d92ba433e91b502b84dff298e1ba3078fda93b
 
 t_lst	*ft_init_lstset(void)
 {
-	t_lst *set;
+	t_lst	*set;
 	char	*pwd;
 	char	*histfilepath;
 

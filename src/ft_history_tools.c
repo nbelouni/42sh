@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/11 18:46:55 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/17 15:25:06 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/20 19:08:09 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,11 @@ int			ft_truncate_histlist(t_lst *hist, size_t n)
 	return (0);
 }
 
+/*
+**	Partie 2 de ft_truncate_histfile, utilisée pour la norme.
+**	Se referer à la premiere partie.
+*/
+
 static int	ft_truncate_histfile2(t_lst *tmp_hist, int n, int fd)
 {
 	int		i;
@@ -67,6 +72,13 @@ static int	ft_truncate_histfile2(t_lst *tmp_hist, int n, int fd)
 	}
 	return (0);
 }
+
+/*
+**	Ft_truncate_histfile va tronquer le fichier d'historique en partant
+**	de la fin, par rapport a n. La méthode utilisée est de copier le contenu
+**	du fichier dans une liste temporaire, puis copier les n derniers elements
+**	de cette derniere dans le fichier en ecrasant les precedentes entrées.
+*/
 
 int			ft_truncate_histfile(char *filename, int n)
 {
@@ -91,6 +103,11 @@ int			ft_truncate_histfile(char *filename, int n)
 	return (0);
 }
 
+/*
+**	Ft_get_hfname va récuperer le path du fichier d'historique contenu dans
+**	la variable du set HISTFILE. Si cette valeur est NULL, NULL est retourné.
+*/
+
 char		*ft_get_hfname(t_lst *set)
 {
 	t_elem	*elem;
@@ -106,6 +123,12 @@ char		*ft_get_hfname(t_lst *set)
 	}
 	return (elem->value);
 }
+
+/*
+**	Ft_chech_history_var est une fonction qui va checker les variables du set
+**	liées a l'historique a chaque tour de boucle du shell, afin de tronquer
+**	le fichier et/ou la liste d'historique.
+*/
 
 int			ft_check_history_var(t_lst *set, t_lst *hist)
 {
@@ -130,6 +153,11 @@ int			ft_check_history_var(t_lst *set, t_lst *hist)
 	return (0);
 }
 
+/*
+**	Ft_cmd_to_history est une fonction qui, comme son nom l'indique, va push
+**	la ligne de commande, entrée dans l'entrée standard, dans la liste hist.
+*/
+
 int			ft_cmd_to_history(t_lst *hist, char *cmd)
 {
 	t_elem	*new_elem;
@@ -139,39 +167,26 @@ int			ft_cmd_to_history(t_lst *hist, char *cmd)
 	{
 		return (ERR_EXIT);
 	}
+	if (cmd == NULL || cmd[0] == '\n' || cmd[0] == '\0')
+	{
+		free(new_elem);
+		return (0);
+	}
 	if ((new_elem->name = ft_strdup(cmd)) == NULL)
 	{
+		free(new_elem);
 		return (ERR_EXIT);
 	}
 	ft_insert_elem(new_elem, hist);
 	return (0);
 }
 
-static int	ft_intlen(int n)
-{
-	int		i;
-	int		count;
-
-	count = 0;
-	i = n;
-	while (i != 0)
-	{
-		i /= 10;
-		++count;
-	}
-	return (count);
-}
-
-static void	ft_putnchar(char c, int n)
-{
-	int		i;
-
-	i = -1;
-	while (++i != n)
-	{
-		write(1, &c, 1);
-	}
-}
+/*
+**	Ft_print_history est la fonction de l'affichage de l'historique. L'int
+**	qu'elle prend en parametre va definir a partir de quel element la liste
+**	d'historique hist va etre affichée. Si une commande de l'historique
+**	a été modifiée, un caractere '*' est affiché devant ce dernier.
+*/
 
 int			ft_print_history(t_lst *hist, int start)
 {
