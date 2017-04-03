@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:09:30 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/29 14:32:08 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/30 15:46:08 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,22 +16,7 @@
 # include <stdlib.h>
 # include <sys/syslimits.h>
 # include "libft.h"
-
-# define CD_OPT				"LP"
-# define ENV_OPT			"i"
-# define UNSET_OPT			"fv"
-# define EXPORT_OPT			"p"
-
-# define HIST_OPTS			"cpsdanrw"
-
-# define HIST_OPT_C			99
-# define HIST_OPT_P			112
-# define HIST_OPT_S			115
-# define HIST_OPT_D			100
-# define HIST_OPT_A			97
-# define HIST_OPT_N			110
-# define HIST_OPT_R			114
-# define HIST_OPT_W			119
+# include "options.h"
 
 typedef enum	e_bool
 {
@@ -43,13 +28,9 @@ typedef enum	e_bool
 # include "read.h"
 # include "lexer_parser.h"
 # include "lex.h"
-//# include "list.h"
-//# include "hash.h"
 # include "job.h"
 # include "exec.h"
 # include "globbing.h"
-# include "history.h"
-//# include "builtins.h"
 
 # define END_EOT	18
 
@@ -70,7 +51,7 @@ typedef struct		s_lst
 	t_elem			*tail;
 }					t_lst;
 
-typedef struct		s_set
+typedef struct		s_core
 {
 	t_lst			*set;
 	t_lst			*hist;
@@ -78,7 +59,10 @@ typedef struct		s_set
 	t_lst			*exp;
 }					t_core;
 
-/*	A REFAIRE
+# include "builtins.h"
+# include "history.h"
+
+/*
 **	ft_default_set.c
 */
 
@@ -90,55 +74,10 @@ t_lst				*ft_init_lstset(void);
 t_core				*set;
 
 /*
-**	ft_builtin_cd.c
-*/
-
-int					ft_free_and_return(int ret, void *d1, void *d2, void *d3);
-int					ft_builtin_cd(t_lst *env, char *cmd, char **args);
-
-/*
-**	ft_builtin_echo.c
-*/
-
-int					ft_builtin_echo(t_lst *env, char *cmd, char **args);
-
-/*
-**	ft_builtin_env.c
-*/
-
-int					ft_builtin_env(t_lst *env, char **args);
-
-/*
-**	ft_builtin_exit.c
-*/
-
-int					ft_builtin_exit(t_core *core, char *cmd, char **args);
-
-/*
-**	ft_builtin_history.c
-*/
-
-int					ft_builtin_history(t_lst *set, t_lst *hist, char **args);
-
-/*
-**	ft_builtin_setenv.c
-*/
-
-int					ft_setenv(t_lst *env, char *var, char *word);
-int					ft_builtin_setenv(t_lst *env, char *cmd, char **args);
-
-/*
-**	ft_builtin_unsetenv.c
-*/
-
-int					ft_unsetenv(t_lst *env, char *var);
-int					ft_builtin_unsetenv(t_lst *env, char *cmd, char **args);
-
-/*
 **	ft_init.c
 */
 
-t_core				*ft_init_set(void);
+t_core				*ft_init_core(void);
 t_lst				*ft_init_list(void);
 t_elem				*ft_init_elem(void);
 char				**ft_env_to_tab(t_lst *lst);
@@ -180,25 +119,5 @@ int					ft_export(t_lst *dup, char *arg);
 void				ft_del_list(t_lst *lst);
 int					ft_pwd_swap(t_lst *env, char *owd, char *cwd);
 
-/*
-**	ft_opt_parse.c
-*/
-
-int					*ft_opt_parse(char *opts, char **args, size_t overwrite);
-
-/*
-**						ft_bultin_export
-*/
-
-int					ft_add_elemo(t_lst *lst, char *s);
-void				move_to_env(t_elem *lst, t_lst *env, t_lst *type_env);
-int 				ft_builtin_export(char **argv, t_core *m_env);
-void 				ft_print_export(t_core *m_env);
-
-/*
-**					ft_builtin_unset
-*/
-
-int   ft_builtin_unset(t_core *set, char **args);
 
 #endif

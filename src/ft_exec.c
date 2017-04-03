@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 13:08:28 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/29 14:37:06 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/03 16:19:38 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ int			ft_check_built(char **args)
 /*
  **execute la cmd si est un builtin
  */
+/*
 int			ft_exec_built(char **args)
 {
 	int		ret;
@@ -95,6 +96,7 @@ int			ft_exec_built(char **args)
 	}
 	return (FALSE);
 }
+*/
 
 /*
 ** fonction d'execution des commandes via execve
@@ -146,12 +148,15 @@ void			ft_exec(char **av)
 **sert a retourner si la cmd est un builtin
 */
 
+int		parse_builtins(t_core *core, char *cmd, char **cmd_args);
+
 int		ft_check_exec(char **cmd)
 {
 	int		ret;
 
 	ret = TRUE;
-	if ((ret = ft_exec_built(cmd)) != 0)
+//	if ((ret = ft_exec_built(cmd)) != 0)
+	if ((ret = parse_builtins(set, cmd[0], cmd + 1)) != 0)
 		ft_exec(cmd);
 	return (ret);
 }

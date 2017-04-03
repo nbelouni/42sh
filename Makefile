@@ -2,15 +2,16 @@ NAME = 42sh
 
 IDIR = ./inc/
 ILIB = ./libft/inc
-INCS =	42sh.h	\
-	  	read.h	\
-	  	job.h	\
-	  	lex.h	\
+INCS = 42sh.h		\
+	   read.h		\
+	   lex.h		\
+	   exec.h		\
+	   completion.h	\
+	   globbing.h	\
+		job.h	\
 	  	hash.h	\
 	  	list.h	\
 	  	io.h
-
-
 INCC = $(addprefix $(IDIR), $(INCS))
 
 LDIR = ./libft
@@ -49,6 +50,7 @@ SRCS = 	ft_builtin_cd.c		\
 		is_token.c			\
 		ft_exec.c			\
 		ft_tokenlist.c		\
+		reg_path.c			\
 		lex_buf_line.c		\
 		lex_buf_pars.c		\
 		is_tok.c			\
@@ -64,7 +66,15 @@ SRCS = 	ft_builtin_cd.c		\
 		globbing.c			\
 		here_doc.c			\
 		replace_expansions.c\
+		find_expansions.c	\
+		exp.c				\
+		which_sequence_type.c\
+		expand_text.c		\
 		replace_regex.c		\
+		check_regex.c		\
+		match_regex.c		\
+		find_regex.c		\
+		expand.c			\
 		job.c				\
 		is_local_var.c		\
 		ft_print.c			\
@@ -82,7 +92,14 @@ SRCS = 	ft_builtin_cd.c		\
 		ft_history_opt.c	\
 		ft_history_tools.c	\
 		ft_builtin_history.c\
-		ft_default_set.c
+		ft_builtin_bang.c	\
+		ft_default_set.c	\
+		ft_bang_alphanum_sub.c\
+		ft_bang_special_sub.c\
+		ft_bang_substitution.c\
+		ft_quick_substitution.c\
+		edit_history.c		\
+		ft_print.c
 
 SRCC = $(addprefix $(SDIR),$(SRCS))
 

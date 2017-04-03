@@ -1,37 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_tokenlist.c                                     :+:      :+:    :+:   */
+/*   reg_path.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/02/16 12:42:26 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/18 21:27:58 by nbelouni         ###   ########.fr       */
+/*   Created: 2017/03/22 13:58:45 by nbelouni          #+#    #+#             */
+/*   Updated: 2017/03/23 18:55:51 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
-t_token		*ft_tokenew(int type, char *s, int *level)
+t_reg_path		*ft_reg_pathnew(char *path, char *out, int lvl, t_bool is_abs)
 {
-	t_token	*elem;
+	t_reg_path	*elem;
 
-	if (!(elem = ft_memalloc(sizeof(t_token))))
+	if (!(elem = ft_memalloc(sizeof(t_reg_path))))
 		return (NULL);
-	elem->type = type;
-	elem->select = 0;
-	elem->bt_level = level[0];
-	elem->bc_level = level[1];
-	if (s == NULL)
-		elem->word = NULL;
+	elem->level = lvl;
+	elem->is_abs = is_abs;
+	if (path == NULL)
+		elem->path = NULL;
 	else
-		elem->word = s;
+		elem->path = path;
+	if (out == NULL)
+		elem->out = NULL;
+	else
+		elem->out = out;
 	elem->next = NULL;
 	elem->prev = NULL;
 	return (elem);
 }
 
-void		ft_tokenadd(t_token **begin, t_token *new)
+void		ft_reg_pathadd(t_reg_path **begin, t_reg_path *new)
 {
 	if (*begin != NULL)
 	{
@@ -41,10 +43,10 @@ void		ft_tokenadd(t_token **begin, t_token *new)
 	*begin = new;
 }
 
-void		ft_tokenclear(t_token **list)
+void		ft_reg_pathclear(t_reg_path **list)
 {
-	t_token	*tmp;
-	t_token	*elem;
+	t_reg_path	*tmp;
+	t_reg_path	*elem;
 
 	if (list == NULL)
 		return ;
@@ -60,9 +62,9 @@ void		ft_tokenclear(t_token **list)
 	ft_memdel((void *)list);
 }
 
-void		ft_tokenpush(t_token **begin, t_token *new)
+void		ft_reg_pathpush(t_reg_path **begin, t_reg_path *new)
 {
-	t_token	*elem;
+	t_reg_path	*elem;
 
 	elem = *begin;
 	if (elem == NULL)
@@ -73,10 +75,10 @@ void		ft_tokenpush(t_token **begin, t_token *new)
 	new->prev = elem;
 }
 
-void		ft_tokendestroy(t_token **begin)
+void		ft_reg_pathdestroy(t_reg_path **begin)
 {
-	t_token	*tmp;
-	t_token	*list;
+	t_reg_path	*tmp;
+	t_reg_path	*list;
 
 	list = *begin;
 	tmp = NULL;
@@ -86,9 +88,10 @@ void		ft_tokendestroy(t_token **begin)
 			tmp = list->next;
 		else
 			tmp = NULL;
-		if (list->word)
-			free(list->word);
-		list->word = NULL;
+		if (list->path)
+			ft_strdel(&(list->path));
+		if (list->out)
+			ft_strdel(&(list->out));
 		free(list);
 		list = tmp;
 	}

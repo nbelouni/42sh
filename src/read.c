@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/21 16:47:01 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/22 17:27:09 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/20 15:56:51 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	init_line(t_buf *buf)
 	print_post_curs(buf);
 }
 
-int		read_line(t_buf *buf, t_completion *cplt)
+int		read_line(t_buf *buf, t_completion *cplt, t_lst *hist)
 {
 	unsigned int	x;
 	int				ret;
@@ -96,12 +96,15 @@ int		read_line(t_buf *buf, t_completion *cplt)
 	{
 		if ((err = mv_and_read(buf, x, ret)) < 0 ||
 		(err = cpy_cut_paste(buf, x)) < 0 ||
-		(err = complete_line(buf, cplt, x)) != 0)
+		(err = complete_line(buf, cplt, x)) != 0 ||
+		(err = edit_history(buf, hist, x) != 0))
 			return (err);
 		if (x == RETR)
 		{
 			m_right(calc_len(buf, END));
 			ft_putchar_fd((char)x, 1);
+			ft_strdel(&(buf->last_cmd));
+			buf->cur_hist = NULL;
 			return (0);
 		}
 		x = 0;

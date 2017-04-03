@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/04 17:06:09 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/15 17:45:55 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/20 13:05:15 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,24 +21,6 @@
 **	dans le fichier n'a pas de limite. Si aucun de ces cas n'est trouvé,
 **	la valeur digitale de la value est renvoyée.
 */
-
-char	*ft_get_hist_value(t_elem *elem, int type)
-{
-	if (type == 1)
-	{
-		if (elem->prev != NULL && elem->prev->value != NULL)
-			return (elem->prev->value);
-		else
-			return (elem->value);
-	}
-	else
-	{
-		if (elem->next != NULL && elem->next->value != NULL)
-			return (elem->next->value);
-		else
-			return (NULL);
-	}
-}
 
 int		ft_get_hsize(t_lst *set)
 {

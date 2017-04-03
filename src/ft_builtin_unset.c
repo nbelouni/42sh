@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_builtin_unset.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dogokar <dogokar@student.42.fr>            +#+  +:+       +#+        */
+/*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/20 15:22:49 by dogokar           #+#    #+#             */
-/*   Updated: 2017/03/20 17:43:10 by dogokar          ###   ########.fr       */
+/*   Updated: 2017/03/29 16:08:13 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,14 @@ int		ft_unset(t_core *set, char **args)
 {
 	while (*args != NULL)
 	{
-		if (ft_strchr(*args, '=') != NULL)
-			return (ft_print_error("unset: Not a valid identifier: ", *args, -1));
-		if (ft_unsetenv(set->exp, *args) != 1)
-			if (ft_unsetenv(set->set, *args) != 1)
-				ft_unsetenv(set->env, *args);
+		if (ft_strchr(*args, '=') != NULL || !ft_isalpha(*args[0]))
+			ft_print_error("unset: Not a valid identifier: ", *args, -1);
+		else
+		{
+			if (ft_unsetenv(set->exp, *args) != 1)
+				if (ft_unsetenv(set->set, *args) != 1)
+					ft_unsetenv(set->env, *args);
+		}
 		args++;
 	}
 	return (0);

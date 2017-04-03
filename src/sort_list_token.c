@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sort_list_token.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 16:51:24 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/29 14:46:42 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/03 16:21:08 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ void	ft_find_fd(t_token *list)
 **	On oublie les commentaires, c'est beaucoup trop chiant
 */
 
-int		sort_list_token(t_token **list, t_completion *completion)
+void	sort_list_token(t_token **list, t_completion *completion, t_lst *hist)
 {
 	t_token		*elem;
 
@@ -139,7 +139,8 @@ int		sort_list_token(t_token **list, t_completion *completion)
 		if (isRedir(elem->type))
 			ft_find_fd(elem);
 		if ((elem->type == DIR_L_AMP || elem->type == DIR_R_AMP) && elem->next && check_error_out(elem->next))
-			return (ft_print_error(elem->word, ERR_FD_AMB, ERR_FD));
+//			return (ft_print_error(elem->word, ERR_FD_AMB, ERR_FD));
+			return ;
 		if (((elem->type > START && elem->type < AMP) || (elem->type > AND
 			&& elem->type < DIR_L_AMP)) && elem->next && elem->next->type == CMD)
 			elem->next->type = TARGET;
@@ -154,14 +155,14 @@ int		sort_list_token(t_token **list, t_completion *completion)
 		|| elem->prev->type == ARG))
 			elem->type = ARG;
 		if (elem->type == DL_DIR)
-			here_doc(elem->next, completion);
-		if (elem->type == CMD)
 		{
-			elem = is_local_var(elem);
+			here_doc(elem->next, completion, hist);
 		}
+		if (!elem->prev || is_dir_type(elem->prev->type))
+			expand_args(list, &elem);
 		elem = elem->next;
 	}
 	while ((*list) && (*list)->prev)
 		(*list) = (*list)->prev;
-	return (0);
+	return ;
 }

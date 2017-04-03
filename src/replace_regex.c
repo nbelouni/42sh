@@ -5,114 +5,105 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/03/11 16:24:49 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/14 16:24:35 by nbelouni         ###   ########.fr       */
+/*   Created: 2017/03/30 13:41:24 by nbelouni          #+#    #+#             */
+/*   Updated: 2017/04/01 21:10:19 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
-int		is_regex_in_text(char *s)
+char		**split_args(char *s)
 {
+	char	**new;
 	int		i;
+	int		len;
+	int		begin;
+	int		end;
 
-	i = 0;
-	while (s[i])
+	len = count_slashs(s);
+	if (!(new = ft_memalloc(sizeof(char *) * (len + 1))))
+		return (NULL);
+	begin = (s[0] == '/') ? 1 : 0;
+	i = -1;
+	while (++i < len)
 	{
-		if (is_char(s, i, '?') || is_char(s, i, '*'))
-			return (TRUE);
-		else if (is_char(s, i, '{') && find_next_char(s, i + 1, '}') >= 0)
-			return (TRUE);
-		else if (is_char(s, i, '[') && find_next_char(s, i + 1, ']') >= 0)
-			return (TRUE);
-		i++;
+		end = 0;
+		is_end(s, &end, '\'');
+		is_end(s, &end, '`');
+		is_end(s, &end, '"');
+		end = (find_next_char(s, begin, '/') >= 0) ?
+		end + find_next_char(s, begin, '/') : ft_strlen(s) - begin;
+		if (!(new[i] = ft_strsub(s, begin, end + 1)))
+			return (NULL);
+		begin += end + 1;
 	}
-	return (FALSE);
+	new[len] = NULL;
+	return (new);
 }
 
-int		count_slashs(char *s)
+t_reg_path	*init_curr_path(char *s)
 {
-	int	i;
-	int	n_slash;
+	char		*path;
+	char		*out;
+	t_bool		is_abs;
 
-	i = -1;
-	n_slash = 0;
-	while (s[++i])
-	{
-		if (is_char(s, i, '/'))
-			n_slash++;
-	}
-	return (n_slash);
-}
-
-int		regex(char *s)
-{
-	t_reg_paths	*all_paths;
-	t_reg_paths	*tmp;
-	char		**split_path;
-	char		*join;
-	int			all_paths_len;
-	int			curr_dir;;
-	int			i;
-
-	char		**expansions;
-
-	if (is_regex_in_text(s) == FALSE)
-		return (0);
-	if (!(expansions = find_expansions(&s)))
-		return (-1);
-
-	i = -1;
-	while (expansions[++i])
-	{
-		PUT2("expansions[i] : ");PUT2(expansions[i]);X('\n');
-	}
-	return (TRUE);
-	all_paths_len = count_slashs(s);
-	if (!(all_paths = ft_memalloc(sizeof(t_reg_paths))))
-		return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
 	if (s[0] == '/')
 	{
-		if (!(all_paths->path = ft_strdup("/")))
-			return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
+		if (!(path = ft_strdup("/")))
+			return (NULL);
+		if (!(out = ft_strdup(path)))
+			return (NULL);
+		is_abs = TRUE;
 	}
-	else if (!(all_paths->path = getcwd(NULL, 1024)))
-		return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
-	if (!(split_path = ft_strsplit(s, '/')))
-		return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
+	else
+	{
+		if (!(path = getcwd(NULL, 1024)))
+			return (NULL);
+		out = NULL;
+		is_abs = FALSE;
+	}
+	return (ft_reg_pathnew(path, out, 0, is_abs));
+}
+
+int			which_quotes(char *s, int len)
+{
+	int		w_quotes;
+	int		i;
+
+	w_quotes = 0;
 	i = -1;
-	curr_dir = 0;
-	tmp = all_paths;
-	while (split_path[++i])
+	while (++i < len)
 	{
-		if (is_regex_in_text(split_path[i]) == FALSE)
-		{
-			if (!(tmp->match = ft_memalloc(sizeof(t_reg_paths))))
-				return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
-			if (!(join = ft_strjoin(tmp->path, "/")))
-				return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
-			if (!(tmp->match->path = ft_strjoin(join, split_path[i])))
-				return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
-			ft_strdel(&join);
-		}
-		else
-		{
-			PUT2("REGEXP IN TEXT");PUT2(NULL);X('\n');
-		}
-		tmp = tmp->match;
+		if (is_char(s, i, '"'))
+			w_quotes = (w_quotes == NO_QUOTE) ? D_QUOTE : NO_QUOTE;
+		if (is_char(s, i, '\''))
+			w_quotes = (w_quotes == NO_QUOTE) ? S_QUOTE : NO_QUOTE;
+		if (is_char(s, i, '`'))
+			w_quotes = (w_quotes == NO_QUOTE) ? BT_QUOTE : NO_QUOTE;
 	}
-	tmp = all_paths;
-	while (tmp)
+	return (w_quotes);
+}
+
+t_reg_path	*replace_regex(char *s)
+{
+	char		**args;
+	t_reg_path	*curr_paths;
+	t_reg_path	*final;
+	int			i;
+
+	if (is_regex_in_text(s) == FALSE)
+		return (NULL);
+	if (!(args = split_args(s)))
+		return (NULL);
+	final = NULL;
+	curr_paths = init_curr_path(s);
+	i = -1;
+	while (++i < (int)ft_tablen(args))
 	{
-		t_reg_paths *tmp2 = tmp->match;
-		PUT2("____________________________\nPATH : ");PUT2(tmp->path);X('\n');
-		while (tmp2)
-		{
-			PUT2("MATCH : ");PUT2(tmp2->path);X('\n');
-			tmp2 = tmp2->next;
-		}
-		tmp = tmp->match;
-		
+		find_regex(&curr_paths, &final, args[i], ft_tablen(args));
 	}
-	return (0);
+	if (curr_paths)
+		ft_reg_pathdestroy(&curr_paths);
+	ft_tabdel(args);
+	return (final);
 }

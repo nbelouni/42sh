@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/04 17:18:08 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/14 15:34:57 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/21 17:40:38 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ t_elem		*ft_get_nelem(t_lst *lst, int n)
 	i = (cond == 1) ? 1 : (int)lst->size;
 	while (i != n)
 	{
+		if (!elem)
+			return (NULL);
 		elem = (cond == 1) ? elem->next : elem->prev;
 		i += cond;
 	}

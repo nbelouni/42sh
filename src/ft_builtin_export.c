@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_export.c                                        :+:      :+:    :+:   */
+/*   ft_builtin_export.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dogokar <dogokar@student.42.fr>            +#+  +:+       +#+        */
+/*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/05 10:39:48 by dogokar           #+#    #+#             */
-/*   Updated: 2017/03/20 17:45:51 by dogokar          ###   ########.fr       */
+/*   Updated: 2017/03/29 14:48:18 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,19 +120,19 @@ int			multi_var_cheak(char *argv, t_core *m_env)
 **   gestion des erreurs et debut de fonction
 */
 
-int			ft_builtin_export(char **argv, t_core *m_env)
+int			ft_builtin_export(t_core *m_env, char **argv)
 {
 	int		*opt;
 	int		i;
 	int		result;
 
-	if (!(opt = ft_opt_parse(EXPORT_OPT, argv + 1, 0)))
+	if (!(opt = ft_opt_parse(EXPORT_OPT, argv, 0)))
 		return (ERR_EXIT);
 	if (opt[0] == -1)
 		return (ERR_NEW_CMD);
-	i = opt[0] + 1;
+	i = opt[0];
 	result = 0;
-	if (argv[1] == NULL)
+	if (argv[0] == NULL)
 		ft_print_export(m_env);
 	while (argv[i] != NULL)
 	{
