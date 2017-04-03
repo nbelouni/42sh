@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:09:30 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/30 15:46:08 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/04/01 14:07:10 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ typedef struct		s_core
 	t_lst			*hist;
 	t_lst			*env;
 	t_lst			*exp;
+	sigset_t		*sig_set;
+	t_buf			*buf;
 }					t_core;
 
 # include "builtins.h"
@@ -71,7 +73,7 @@ int					g_sh_tty;
 int					g_sh_is;
 pid_t				g_sh_pgid;
 t_lst				*ft_init_lstset(void);
-t_core				*set;
+t_core				*core;
 
 /*
 **	ft_init.c

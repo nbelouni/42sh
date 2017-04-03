@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 13:52:27 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/03 15:25:07 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/03 16:52:06 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,170 +160,58 @@ t_node_p	create_pipe(t_node_p right_node, t_node_p left_node)
 	Temporary code which join the redirection operator and arguments, --ABSOLUTLY NOT FINAL-- form of redirection. We are using this 
 	solution just to perform some check.
 */
+static t_mode		(tab_mode[7]) = {
+	[0] = { SL_DIR, O_RDONLY, OPEN | CLOSE},
+	[1] = { SR_DIR, O_WRONLY | O_CREAT, OPEN | CLOSE},
+	[2] = { DL_DIR, 0, CLOSE | WRITE},
+	[3] = { DR_DIR, O_WRONLY | O_CREAT | O_APPEND, OPEN | CLOSE},
+	[4] = { LR_DIR, O_RDWR | O_CREAT, OPEN | CLOSE},
+	[5] = { DIR_L_AMP, O_RDWR, 0},
+	[6] = { DIR_R_AMP, O_RDWR, 0},
+};
 
-int	getFlag(int token)
+t_node_p	create_redir(t_tree *nodeRedir, t_node_p left_node)
 {
-	int	flag;
-	
-	if (token IS DIR_L_AMP_MINUS || token IS DIR_R_AMP_MINUS)
-		flag = CLOSE;
-	else
-	{
-		flag = DUP;
-		if (token IS SR_DIR || token IS SL_DIR || token IS DR_DIR || token IS LR_DIR)
-			flag |= OPEN | CLOSE;
-	}
-	return (flag);
-}
+	Io_p			io;
+	int				left;
+	t_process_p		process;
+	int				i;
 
-int	getSrc(int token, char *src)
-{
-	int		dup_src;
-
-	
-	return ((token IS DIR_L_AMP || token IS DIR_R_AMP)? src: 0);
-}
-
-int getTarget(int token, char *target)
-{
-	
-}
-
-int	getPath()
-{}
-
-int	getMode(int token)
-{
-	int mode;
-
-	mode = 0;
-	if (token == DR_DIR || token == SR_DIR)
-		mode = O_WRONLY;
-	else if(token == SL_DIR)
-		mode = O_RDONLY;
-	else if (token == LR_DIR)
-		mode = O_RDWR;
-	if(token == DR_DIR)
-		mode |= O_APPEND;
-	else if (token == DR_DIR || token == SR_DIR)
-		mode |= O_TRUNC;
-	return (mode);
-}
-
-#define LEFT_F(t)	((t == SL_DIR || t == LR_DIR || t == DL_DIR))
-
-t_node_p create_redir(t_tree *nodeRedir, t_node_p left_node)
-{
-	Io_p		io;
-	int			left;
-	t_process_p	process;
-
-	io = new_io(getFlag(TOKEN(nodeRedir)), getMode(TOKEN(nodeRedir)));
+	i = 0;
+	io = new_io();
+	io->str = (nodeRedir->right->cmd)[0];
+	io->flag = DUP;
 	if (!nodeRedir->cmd)
-		left = LEFT_F(TOKEN(nodeRedir))? 0: 1;
+		left = ((TOKEN(nodeRedir) == SL_DIR || TOKEN(nodeRedir) == LR_DIR ||
+		TOKEN(nodeRedir) == DIR_L_AMP || TOKEN(nodeRedir) == DL_DIR) ? 0: 1);
 	else
 		left = atoi((nodeRedir->cmd)[0]);
-	if (TOKEN(nodeRedir) == SR_DIR || TOKEN(nodeRedir) == SL_DIR || TOKEN(nodeRedir) == DR_DIR || TOKEN(nodeRedir) == LR_DIR)
+	io->dup_target = left;
+	while (i < 7)
 	{
-		io->dup_target = left;
-		io->str = (nodeRedir->right->cmd)[0];
-	}
-	else if (TOKEN(nodeRedir) == DIR_L_AMP || TOKEN(nodeRedir) == DIR_R_AMP)
-	{
-		io->dup_src = atoi((nodeRedir->right->cmd)[0]);
-		io->dup_target = left;
-	}
-	else
-		io->close_fd = left;
-	process = ((t_list *)left_node->data)->content;
-	insert_link_bottom(&(process->ioList), new_link(io, sizeof(*io)));
-	return (left_node); 
-}
-
-t_node_p create_redir(t_tree *nodeRedir, t_node_p left_node)
-{
-	Io_p		io;
-	int			left;
-	t_process_p	process;
-
-	io = new_io();
-	io->str = (nodeRedir->right->cmd)[0];
-	io->flag |= DUP;
-	if (!(left = atoi((nodeRedir->cmd)[0])))
-		left = 1 - ((TOKEN(nodeRedir) == SL_DIR)? 1: 0);
-	if (TOKEN(nodeRedir) == SR_DIR || TOKEN(nodeRedir) == SL_DIR || TOKEN(nodeRedir) == DR_DIR)
-	{
-		io->dup_target = left;
-		io->flag |= OPEN | CLOSE;
-	}
-	if (TOKEN(nodeRedir) == DIR_L_AMP || TOKEN(nodeRedir) == DIR_R_AMP)
-	{
-		io->dup_src = atoi((nodeRedir->right->cmd)[0]);
-		io->dup_target = left;
+		if (tab_mode[i].redir == TOKEN(nodeRedir))
+		{
+			io->flag |= tab_mode[i].flag;
+			io->mode = tab_mode[i].mode;
+			if ((i == 5 || i == 6) && (nodeRedir->right->cmd)[0][0] == '-')
+			{
+				io->flag |= CLOSE;
+				io->dup_src = left;
+			}
+			else if (i == 5 || i == 6)
+				io->dup_src = atoi((nodeRedir->right->cmd)[0]);
+		}
+		i++;
 	}
 	process = ((t_list *)left_node->data)->content;
 	insert_link_bottom(&(process->ioList), new_link(io, sizeof(*io)));
 	return (left_node);
 }
 
-/*
-t_node_p create_redir(t_tree *nodeRedir, t_node_p left_node)
+void		spacer(int io)
 {
-	Io_p		io;
-	int			left;
-	t_process_p	process;
+	static int		depth;
 
-	puts("0");
-	io = new_io();
-	io->str = (nodeRedir->right->cmd)[0];
-	if (TOKEN(nodeRedir) != LR_DIR)
-	io->flag |= DUP;
-	puts("0");
-	if (nodeRedir->cmd && !(left = atoi((nodeRedir->cmd)[0])))
-		left = 1 - ((TOKEN(nodeRedir) == SL_DIR)? 1: 0);
-	if (TOKEN(nodeRedir) == SR_DIR || TOKEN(nodeRedir) == SL_DIR
-		|| TOKEN(nodeRedir) == LR_DIR || TOKEN(nodeRedir) == DL_DIR
-		|| TOKEN(nodeRedir) == DR_DIR)
-	{
-		io->dup_target = left;
-		io->flag |= OPEN | CLOSE;
-	}
-	if (TOKEN(nodeRedir) == DR_DIR || TOKEN(nodeRedir) == SR_DIR)
-		io->mode |= O_WRONLY;
-	if (TOKEN(nodeRedir) == DL_DIR)
-		io->flag |= WRITE;
-	if(TOKEN(nodeRedir) == DR_DIR)
-		io->mode |= O_APPEND;
-	if(TOKEN(nodeRedir) == SL_DIR)
-		io->mode |= O_RDONLY;
-	if (TOKEN(nodeRedir) == LR_DIR)
-	{
-		io->mode |= O_RDWR | O_CREAT;
-		io->dup_src = io->dup_target;
-	}
-	if (TOKEN(nodeRedir) == DIR_L_AMP || TOKEN(nodeRedir) == DIR_R_AMP)
-	{
-		if (!nodeRedir->right->cmd)
-		{
-			fputs("CLOSE", stderr);
-			io->flag |= CLOSE;
-			io->dup_src = left;
-		}
-		else
-		{
-			io->dup_src = atoi((nodeRedir->right->cmd)[0]);
-			io->dup_target = left;
-		}
-	}
-	process = ((t_list *)left_node->data)->content;
-	insert_link_bottom(&(process->ioList), new_link(io, sizeof(*io)));
-	return (left_node);
-}
-*/
-void spacer(int io)
-{
-	static int depth;
-	
 	for (int i = 0; io >0 && i < depth ; i++)
 	{
 		putchar('|');
@@ -336,9 +224,9 @@ void printProcess(t_process_p process)
 {
 	spacer(1);
 	printf("[PROCESS]\t");
-	printf("command : <%s>\t", (process->argv)[0]);
-	for (int i = 1; (process->argv)[i];  i++)
-		printf("A%d: <%s>\t", i, (process->argv)[i]);
+//	printf("command : <%s>\t", (process->argv)[0]);
+//	for (int i = 1; (process->argv)[i];  i++)
+//		printf("A%d: <%s>\t", i, (process->argv)[i]);
 	printf("self: <%p>\t\n", &process);
 	spacer(-1);
 }

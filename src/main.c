@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/03 16:16:30 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/03 16:43:27 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,12 +77,10 @@ int 	main(int argc, char **argv, char **envp)
 	t_completion	completion = {NULL, NULL, NULL, NULL};
 	t_buf	*buf;
 	t_token	*list;
-//	t_lst	*env;
 	int		ret;
 	int		ret_read;
 	t_tree	*ast;
 	List_p	jobListBis = NULL;
-	t_core	*core;
 
 	ast = NULL;
 	list = NULL;
@@ -95,8 +93,6 @@ int 	main(int argc, char **argv, char **envp)
 		core->env = ft_env_to_list(envp, core->env);
 	if (init_completion(&completion, core) == ERR_EXIT)
 		return (-1);
-	signal(SIGWINCH, get_sigwinch);
-	signal(SIGINT, get_sigint);
 	if (!(buf = init_buf()))
 		return (ft_print_error("42sh", ERR_MALLOC, ERR_EXIT));
 	set_prompt(PROMPT1, ft_strlen(PROMPT1));
@@ -110,8 +106,7 @@ int 	main(int argc, char **argv, char **envp)
 		{
 			if (is_line_ended(buf) < 0)
 				return (-1);
-			bang_substitution(&(buf->final_line), core);
-			// PUT2("2 buf->final_line : ");PUT2(buf->final_line);X('\n');
+			complete_final_line(buf, list);
 			ret = parse_buf(&list, buf->final_line, &completion, core->hist);
 			if (ret > 0 && list)
 			{
@@ -124,13 +119,7 @@ int 	main(int argc, char **argv, char **envp)
  */
 				ft_push_ast(list, &ast);
 //				print_debug_ast(ast);
-/*				PUT2("\ntest\n");
-				char *av[1];
-
-				av[0] = "ls";
-				av[1] = NULL;
-				execve(av[0], av, envp);
-*///				test_func(ast);
+//				test_func(ast);
 				export_job(ast, &jobListBis);
 //				printJobList(jobListBis);
 				list_iter(jobListBis, (void *)launch_job);

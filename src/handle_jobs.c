@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/03 14:43:04 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/03 16:59:45 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,20 +63,21 @@ t_job *find_job(pid_t pgid)
 /* Return true if all processes in the job have stopped or completed.  */
 int	job_is_stopped (t_job *j)
 {
-  t_process_p p;
-  List_p	ptr;
+	t_process_p p;
+	List_p	ptr;
 
-  ptr = j->waitProcessList;
-//  print_job(j);
-  while (ptr)
-  {
-	  p = ptr->content;
-//	  print_process(p);
-	  if (!p->completed && !p->stopped)
-		  return 0;
-	  ptr = ptr->next;
-  }
-  return 1;
+	ptr = j->waitProcessList;
+	//  print_job(j);
+	while (ptr)
+	{
+		p = ptr->content;
+		//	  PUT2("process : ");E(p->stopped);X('\n');
+		//	  print_process(p);
+		if (!p->completed && !p->stopped)
+			return 0;
+		ptr = ptr->next;
+	}
+	return 1;
 }
 
 /* Return true if all processes in the job have completed.  */
@@ -131,31 +132,35 @@ int	mark_process_status(pid_t pid, int status)
 {
 	t_process_p p;
 
-  if (pid > 0)
-  {
-	  if ((p = getProcessByPid(pid)))
-	  {
-		  p->status = status;
-		  if (WIFSTOPPED(status))
-			  p->stopped = 1;
-		  else
-		  {
-			  p->completed = 1;
-			  last = WEXITSTATUS(status);
-			  if (WIFSIGNALED (status))
-				  fprintf (stderr, "%d: Terminated by signal %d.\n",
-						   (int) pid, WTERMSIG (p->status));
-		  }
-//		  print_process(p);
-		  return 0;		
-	  }
-	  else
-		  return (fprintf (stderr, "No child process %d.\n", pid), -1);
-  }
-  else if (pid == 0 || errno == ECHILD)
-	  return -1;
-  else
-	  return (perror("waitpid"), -1);
+	if (pid > 0)
+	{
+		if ((p = getProcessByPid(pid)))
+		{
+			p->status = status;
+			if (WIFSTOPPED(status))
+			{
+				p->stopped = 1;
+//				PUT2("STOP");
+//				E(pid);
+			}
+			else
+			{
+				p->completed = 1;
+				last = WEXITSTATUS(status);
+				if (WIFSIGNALED (status))
+					fprintf (stderr, "%d: Terminated by signal %d.\n",
+							(int) pid, WTERMSIG (p->status));
+			}
+			//		  print_process(p);
+			return 0;		
+		}
+		else
+			return (fprintf (stderr, "No child process %d.\n", pid), -1);
+	}
+	else if (pid == 0 || errno == ECHILD)
+		return -1;
+	else
+		return (perror("waitpid"), -1);
 }
 
 /* Check for processes that have status information available,
@@ -182,14 +187,16 @@ void	wait_for_job(t_job *j)
 	int status;
 	pid_t pid;
 
- // print_job(j);
-  signal (SIGCHLD, SIG_DFL);
-  while (true)
-  {
-	  pid = waitpid(-1, &status, WUNTRACED);// | WNOHANG);
-	  if (mark_process_status(pid, status) || job_is_stopped(j) || job_is_completed(j))
-		  break ;
-  }
+	sigdelset(core->sig_set, SIGCHLD);
+	sigprocmask(SIG_SETMASK, core->sig_set, NULL);
+//	print_job(j);
+//	signal (SIGCHLD, SIG_DFL);
+	while (true)
+	{
+		pid = waitpid(-1, &status, WUNTRACED);// | WNOHANG);
+		if (mark_process_status(pid, status) || job_is_stopped(j) || job_is_completed(j))
+			break ;
+	}
 }
 
 /* Format information about job status for the user to look at.  */
@@ -214,7 +221,7 @@ void do_job_notification(void)
 		j = (*ptr)->content;
 		if (job_is_completed(j))
 		{
-//			format_job_info (j, "completed");
+			format_job_info (j, "completed");
 			delete_job(POP(ptr));
 		}
 		else if (job_is_stopped(j) && !j->notified)
@@ -245,7 +252,6 @@ static void		put_job_in_foreground(t_job *j, int cont)
 	}
 	wait_for_job (j);
 	tcsetpgrp (g_sh_tty, g_sh_pgid);
-
 //	tcgetattr (g_sh_tty, &j->tmodes);
 //	tcsetattr (g_sh_tty, TCSADRAIN, &shell_tmodes);
 }
@@ -284,6 +290,9 @@ void	launch_process(t_process_p process)
 
 	//  doRedir(process->ioList);
 	list_iter(process->ioList, (void *)doRedir);
+	/*Je l'avais initialement mise ici mais je te l'ai deplace dans MakeChildren*/
+//	if (sigprocmask(SIG_UNBLOCK, core->sig_set, NULL) < 0)/*ERROR a set*/
+//		return ;
 //	print_process(process);
 //	sleep(10);
 	ft_check_exec(process->argv);
@@ -309,24 +318,8 @@ t_node_p	iterInOrder(t_node_p ptr, List_p *stock)
 
 void	doRedir(Io_p io)
 {
-	if (io->flag & OPEN)
-	{
-		if (access(io->str, X_OK) == -1)
-			io->mode |= O_CREAT;
-		io->dup_src = open(io->str, io->mode, DEF_FILE);
-		io->close_fd = io_src->dup_src;
-	}
-	if (io->flag & DUP)
-		dup2(io->dup_src, io->dup_target);
-	if (io->flag & CLOSE)
-		close(io->close_fd);
-}
-/*
-void	doRedir(Io_p io)
-{
 	int		pipefd[2];
 
-	pipe(pipefd);
 	if (io->flag & OPEN)
 	{
 		if (io->flag & CLOSE && access(io->str, X_OK) == -1)
@@ -334,29 +327,27 @@ void	doRedir(Io_p io)
 		io->dup_src = open(io->str, io->mode, DEF_FILE);
 		if (io->dup_src < 0 && io->mode)
 			fputs("42sh: No such file or directory (a placer dans les error)\n", stderr);
-//		E(io->dup_src);X('\n');
 	}
 	if (io->flag & WRITE)
 	{
-		dup2(pipefd[0], STDIN_FILENO);
+		pipe(pipefd);
+		io->dup_src = pipefd[0];
 		write(pipefd[1], io->str, ft_strlen(io->str));
+		close(pipefd[1]);
 	}
 	if (io->flag & DUP)
 	{
-		if (fcntl(io->dup_src, F_GETFL) < 0*//* && errno == EBADF*//*)
+		if (fcntl(io->dup_src, F_GETFL) < 0/* && errno == EBADF (Bad file descriptor)*/)
 			fputs("42sh: Bad file descriptor (a placer dans les error)\n", stderr);
-		E(fcntl(io->dup_src, F_GETFL));X('\n');
-		dprintf(2,"dup <%p>\n", io);
 		dup2(io->dup_src, io->dup_target);
 	}
 	if (io->flag & CLOSE)
 	{
-		dprintf(2,"close <%p>\n", io);
-		close(io->dup_src);
-		close(pipefd[1]);
+		if (io->flag ^ WRITE)
+			close(io->dup_src);
 	}
 }
-*/
+
 int	doPipe(t_process_p p1, t_process_p p2, 	int	*io_pipe)
 {
 	Io_p	io_in;
@@ -380,7 +371,7 @@ int	doPipe(t_process_p p1, t_process_p p2, 	int	*io_pipe)
 	return (io_pipe[1]);
 }
 
-		launch_process(p, pgid, foreground);
+//		launch_process(p, pgid, foreground);
 
 int		giveTerm(int pgid)
 {
@@ -391,7 +382,7 @@ int		giveTerm(int pgid)
 	sigaddset (&set, SIGTTIN);
 	sigaddset (&set, SIGTSTP);
 	sigaddset (&set, SIGCHLD);
-	sigemptyset (&oset);
+	sigemptyset (&set);
 	if (foreground)
 		tcsetpgrp(g_sh_tty, pgid);
 }
@@ -404,15 +395,18 @@ int		makeChildren(t_process_p p, int *pgid, int foreground)
 	pid = fork();
 	if (pid == 0)
 	{
-		signal (SIGINT, SIG_DFL);
+		if (sigprocmask(SIG_UNBLOCK, core->sig_set, NULL) < 0)/*ERROR a set*/
+			return ;
+/*		signal (SIGINT, SIG_DFL);
 		signal (SIGQUIT, SIG_DFL);
 		signal (SIGTSTP, SIG_DFL);
 		signal (SIGTTIN, SIG_DFL);
 		signal (SIGTTOU, SIG_DFL);
 		signal (SIGCHLD, SIG_DFL);
-		pid = getpid();
+*/		pid = getpid();
 		if (*pgid == 0) *pgid = pid;
 		setpgid(pid, *pgid);
+		/*a voir si tu en as besoin besoin normanement tout est set dans init_shell*/
 		giveTerm(*pgid);
 	}
 	else if (pid < 0)
@@ -438,7 +432,7 @@ void	execSimpleCommand(t_process_p p, int fg, int dofork, int *pgid)
 	if (dofork)
 		if (makeChildren(pipeline->content, job->pgid, job->foreground))
 			return ;
-	launchProcess();
+	launch_process();
 }
 
 void	doPipeline(t_job *job, t_list *pipeline)
@@ -467,15 +461,15 @@ void	doPipeline(t_job *job, t_list *pipeline)
 
 void	launch_job(t_job *j)
 {
-  t_node_p	current;
-  List_p	stack;
+	t_node_p	current;
+	List_p	stack;
 
-  current = j->process_tree;
-  stack = NULL;
+	current = j->process_tree;
+	stack = NULL;
 	while ((current = iterInOrder(current, &stack)))
 	{
 		if (current->type == IF)
-		 	current = ((((t_condition_if_p)current->data)->type == IF_OR && last) || (((t_condition_if_p)current->data)->type == IF_AND && !last)) ? current->right : NULL;
+			current = ((((t_condition_if_p)current->data)->type == IF_OR && last) || (((t_condition_if_p)current->data)->type == IF_AND && !last)) ? current->right : NULL;
 		else
 		{
 			doPipeline(j, current->data);
@@ -483,9 +477,9 @@ void	launch_job(t_job *j)
 		}
 	}
 	insert_link_bottom(&jobList, new_link(j, sizeof(*j)));
-  if (j->foreground)
-	put_job_in_foreground(j, 0);
- else
-  put_job_in_background(j, 0);
-  do_job_notification();
+	if (j->foreground)
+		put_job_in_foreground(j, 0);
+	else
+		put_job_in_background(j, 0);
+	do_job_notification();
 }

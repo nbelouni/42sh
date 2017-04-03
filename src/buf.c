@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:43:38 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/20 15:56:47 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/03/31 16:57:06 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ t_buf		*init_buf(void)
 	buf->last_cmd = NULL;
 	buf->to_paste_size = 0;
 	buf->final_line = NULL;
+	core->buf = buf;
 	return (buf);
 }
 

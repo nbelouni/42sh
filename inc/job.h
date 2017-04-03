@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 17:03:19 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/03 15:25:09 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/03 16:51:33 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ********************************************************)****************** */
 
@@ -61,8 +61,8 @@ typedef struct s_process
 {
 	t_process_p		next;		/* struct list ou a changer par left right*/
 	int				token;		/* token */
-//	t_list			*argv;
-	char			**argv;		/* for exec */
+	t_list			*argv;
+//	char			**argv;		/* for exec */
 //	int				*tab_fd;		// ?tab_fd[3]? int stdin, stdout, stderr;  /* standard i/o channels */
 	List_p			ioList;
 	int				dofork;
@@ -94,5 +94,11 @@ t_node_p	create_redir(t_tree *nodeRedir, t_node_p left_node);
 
 char	*iter_cmd(t_node_p process_tree);
 void test_func(t_tree *root);
+
+int		signal_dfl(void);
+int		signal_ign(void);
+
+void	do_job_notification(void);
+void	format_job_info(t_job *job, const char *status);
 
 #endif

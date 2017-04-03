@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 19:31:44 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/24 16:57:11 by alallema         ###   ########.fr       */
+/*   Updated: 2017/03/29 20:06:22 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static int	check_fd_in(t_token **list, char *s, t_pt *p)
 	ret = is_redir(s, p->i + p->len);
 	ret2 = is_agreg(s, p->i + p->len);
 	if (ret != SR_DIR && ret != SL_DIR && ret2 != DIR_L_AMP &&
-		ret2 != DIR_R_AMP && ret != DR_DIR && ret != LR_DIR)
+		ret2 != DIR_R_AMP && ret != DR_DIR && ret != LR_DIR && ret != DL_DIR)
 		return (0);
 	while (p->len - j > 0 && ft_isdigit(s[p->i + p->len - j - 1]) == 1)
 		j++;

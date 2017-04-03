@@ -6,13 +6,11 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 13:08:28 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/03 16:19:38 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/03 16:44:08 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
-
-extern t_lst	*env;
 
 static char		*ft_cut_path(char **s, char *av)
 {
@@ -37,39 +35,6 @@ static char		*ft_cut_path(char **s, char *av)
 }
 
 /*
- **verifie si la cmd est un builting
- */
-
-int			ft_check_built(char **args)
-{
-	int		ret;
-
-	ret = TRUE;
-	if (args != NULL && args[0] != NULL)
-	{
-		if (ft_strcmp(args[0], "exit") == FALSE)
-			ret = FALSE;
-		else if (ft_strcmp(args[0], "cd") == FALSE)
-			ret = FALSE;
-		else if ((ret = ft_strcmp(args[0], "env")) == FALSE)
-			ret = FALSE;
-		else if ((ret = ft_strcmp(args[0], "setenv")) == FALSE)
-			ret = FALSE;
-		else if ((ret = ft_strcmp(args[0], "unsetenv")) == FALSE)
-			ret = FALSE;
-		else if ((ret = ft_strcmp(args[0], "echo")) == FALSE)
-			ret = FALSE;
-		else if (ft_strcmp(args[0], "job") == FALSE ||
-				ft_strcmp(args[0], "fg") == FALSE ||
-				ft_strcmp(args[0], "bg") == FALSE
-				)
-			ret = FALSE;
-		return (ret);
-	}
-	return (FALSE);
-}
-
-/*
  **execute la cmd si est un builtin
  */
 /*
@@ -81,17 +46,19 @@ int			ft_exec_built(char **args)
 	if (args != NULL && args[0] != NULL)
 	{
 		if ((ret = ft_strcmp(args[0], "exit")) == FALSE)
-			ft_builtin_exit(set, args[0], args + 1);
+			ft_builtin_exit(core, args[0], args + 1);
 		else if ((ret = ft_strcmp(args[0], "env")) == FALSE)
-			ft_builtin_env(set->env, &args[1]);
+			ft_builtin_env(core->env, &args[1]);
 		else if ((ret = ft_strcmp(args[0], "setenv")) == FALSE)
-			ft_builtin_setenv(set->env, args[0], args + 1);
+			ft_builtin_setenv(core->env, args[0], args + 1);
 		else if ((ret = ft_strcmp(args[0], "unsetenv")) == FALSE)
-			ft_builtin_unsetenv(set->env, args[0], &args[1]);
+			ft_builtin_unsetenv(core->env, args[0], &args[1]);
 		else if ((ret = ft_strcmp(args[0], "echo")) == FALSE)
-			ft_builtin_echo(set->env, args[0], args + 1);
+			ft_builtin_echo(core->env, args[0], args + 1);
 		else if ((ret = ft_strcmp(args[0], "cd")) == FALSE)
-			ft_builtin_cd(set->env, args[0], args + 1);
+			ft_builtin_cd(core->env, args[0], args + 1);
+		else if ((ret = ft_strcmp(args[0], "fg")) == FALSE)
+			ft_builtin_fg(core, args + 1);
 		return (ret);
 	}
 	return (FALSE);
@@ -110,8 +77,8 @@ void			ft_exec(char **av)
 	t_elem		*tmp;
 
 	close_termios();
-	envp = ft_env_to_tab(set->env);
-	if (!(tmp = ft_find_elem("PATH", set->env)))
+	envp = ft_env_to_tab(core->env);
+	if (!(tmp = ft_find_elem("PATH", core->env)))
 		s = ft_strdup("");
 	else
 		s = ft_strdup(tmp->value);
@@ -156,7 +123,7 @@ int		ft_check_exec(char **cmd)
 
 	ret = TRUE;
 //	if ((ret = ft_exec_built(cmd)) != 0)
-	if ((ret = parse_builtins(set, cmd[0], cmd + 1)) != 0)
+	if ((ret = parse_builtins(core, cmd[0], cmd + 1)) != 0)
 		ft_exec(cmd);
 	return (ret);
 }

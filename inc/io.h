@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/21 11:02:12 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/28 20:42:19 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/03/30 17:23:35 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,18 @@ struct	Io
 };
 
 Io_p new_io();
+
+typedef struct	s_mode
+{
+	int				redir;
+	int				mode;
+	int				flag;
+}				t_mode;
+
+typedef struct	s_redir
+{
+	char			*redir;
+	int				mode;
+}				t_redir;
 
 #endif
