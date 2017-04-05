@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/03 20:26:14 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/04 21:56:51 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,14 +113,36 @@ t_process_p	getProcessByPid(pid_t pid)
 	while (ptrJob)
 	{
 		j = ptrJob->content;
-		print_job(j);
 		ptrProcess = j->waitProcessList;
 		while (ptrProcess)
 		{
 			p = ptrProcess->content;
-			print_process(p);
 			if (p->pid == pid)
 				return (p);
+			ptrProcess = ptrProcess->next;
+		}
+		ptrJob = ptrJob->next;
+	}
+	return (NULL);
+}
+
+t_job	*getJobFromPid(pid_t pid)
+{
+	List_p	ptrJob;
+	List_p	ptrProcess;
+	t_job		*j;
+	t_process_p	p;
+
+	ptrJob = jobList;
+	while (ptrJob)
+	{
+		j = ptrJob->content;
+		ptrProcess = j->waitProcessList;
+		while (ptrProcess)
+		{
+			p = ptrProcess->content;
+			if (p->pid == pid)
+				return (j);
 			ptrProcess = ptrProcess->next;
 		}
 		ptrJob = ptrJob->next;
@@ -137,12 +159,9 @@ int	mark_process_status(pid_t pid, int status)
 		if ((p = getProcessByPid(pid)))
 		{
 			p->status = status;
+			getJobFromPid(pid)->status = status;
 			if (WIFSTOPPED(status))
-			{
 				p->stopped = 1;
-//				PUT2("STOP");
-//				E(pid);
-			}
 			else
 			{
 				p->completed = 1;
@@ -158,7 +177,7 @@ int	mark_process_status(pid_t pid, int status)
 			return (fprintf (stderr, "No child process %d.\n", pid), -1);
 	}
 	else if (pid == 0 || errno == ECHILD)
-		return -1;
+		return (-1);
 	else
 		return (perror("waitpid"), -1);
 }
@@ -173,7 +192,7 @@ void	update_status(void)
 
   while (true)
   {
-    pid = waitpid(WAIT_ANY, &status, WUNTRACED|WNOHANG);
+    pid = waitpid(WAIT_ANY, &status, WUNTRACED | WNOHANG);
 	if (mark_process_status(pid, status))
 		break ;
   }
