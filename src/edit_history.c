@@ -22,6 +22,7 @@ static void	replace_entry(t_buf *buf, char *str)
 	int		i;
 
 	i = buf->size;
+	m_right(calc_len(buf, END));
 	while (--i >= 0)
 	{
 		vb_del(buf, DEL);
@@ -78,14 +79,14 @@ static int	ft_mv_up(t_buf *buf, t_elem **elem, char **last_cmd)
 
 int			edit_history(t_buf *buf, t_lst *hist, int x)
 {
+	if (!hist || !hist->tail)
+		return (0);
 	if (x == UP)
 	{
 		if (buf->cur_hist != hist->head)
 			buf->cur_hist = (buf->cur_hist) ? buf->cur_hist->prev : hist->tail;
 		if (ft_mv_up(buf, &(buf->cur_hist), &(buf->last_cmd)) == ERR_EXIT)
-		{
 			return (ERR_EXIT);
-		}
 	}
 	if (x == DOWN)
 	{
