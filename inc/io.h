@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/21 11:02:12 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/30 17:23:35 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/05 16:57:21 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,27 +18,20 @@
 # define	DUP		4
 # define	WRITE	8
 
-//(x == DIR_AMP || x == SR_DIR || x == SL_DIR || x == DR_DIR || x == DL_DIR)
+//typedef struct Io	*Io_p;
+//typedef struct t_io	*io_p;
 
-typedef struct Io	*Io_p;
-/*
-enum	IoType
-{
-	IO_PIPE,
-	IO_SR,
-	
-};
-*/
-struct	Io
+typedef struct	s_io
 {
 	int		flag;
+	int		mode;
 	int		dup_src;
 	int		dup_target;
-	int		mode;
+	int		tab_fd[2];
 	char	*str;
-};
+}				t_io;
 
-Io_p new_io();
+t_io	*new_io();
 
 typedef struct	s_mode
 {

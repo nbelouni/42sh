@@ -76,6 +76,7 @@ SRCS = 	ft_builtin_cd.c		\
 		find_regex.c		\
 		expand.c			\
 		job.c				\
+		job_redir.c			\
 		is_local_var.c		\
 		ft_print.c			\
 		hash.c				\
@@ -99,7 +100,6 @@ SRCS = 	ft_builtin_cd.c		\
 		ft_bang_substitution.c\
 		ft_quick_substitution.c\
 		edit_history.c	
-#		ft_print.c
 
 SRCC = $(addprefix $(SDIR),$(SRCS))
 

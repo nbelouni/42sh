@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/23 16:03:43 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/03 19:07:21 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/05 16:52:15 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	*iter_iolist_cmd(t_list *io_list);
 
 static t_redir		(tab_redir[7]) = {
 	[0] = { "< ", O_RDONLY},
-	[1] = { "> ", O_WRONLY | O_CREAT},
+	[1] = { "> ", O_WRONLY | O_CREAT | O_TRUNC},
 	[2] = { "<< ", 0},
 	[3] = { ">> ", O_WRONLY | O_CREAT | O_APPEND},
 	[4] = { "<> ", O_RDWR | O_CREAT},
@@ -36,7 +36,7 @@ static char			*ft_fix_join(char *s, char *buf)
 	return (s);
 }
 
-char	*copy_redir(Io_p io)
+char	*copy_redir(t_io *io)
 {
 	char	*s;
 	int		i;

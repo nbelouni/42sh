@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 13:52:27 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/03 22:20:32 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/05 17:41:01 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,6 +186,7 @@ t_node_p	create_pipe(t_node_p right_node, t_node_p left_node)
 	Temporary code which join the redirection operator and arguments, --ABSOLUTLY NOT FINAL-- form of redirection. We are using this 
 	solution just to perform some check.
 */
+/*
 static t_mode		(tab_mode[7]) = {
 	[0] = { SL_DIR, O_RDONLY, OPEN | CLOSE},
 	[1] = { SR_DIR, O_WRONLY, OPEN | CLOSE},
@@ -233,7 +234,7 @@ t_node_p	create_redir(t_tree *nodeRedir, t_node_p left_node)
 	insert_link_bottom(&(process->ioList), new_link(io, sizeof(*io)));
 	return (left_node);
 }
-
+*/
 void		spacer(int io)
 {
 	static int		depth;
@@ -245,7 +246,7 @@ void		spacer(int io)
 	}
 	depth += io;
 }
-
+/*
 void printProcess(t_process_p process)
 {
 	spacer(1);
@@ -309,7 +310,7 @@ void test_func(t_tree *root)
 	export_job(root, &Jobs);
 	printJobList(Jobs);
 }
-
+*/
 void	*iterPreOrder(t_node_p Node, List_p *stack)
 {
 	if (!Node && !*stack)

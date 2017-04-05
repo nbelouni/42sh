@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 16:51:24 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/03 22:13:16 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/05 16:38:44 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,11 +87,12 @@ int		check_error_out(t_token *elem)
 
 void	ft_swap_in(t_token **list)
 {
-//	char	*s;
-//	int		ret;
+	t_token		*tmp;
 
 	(*list)->next->word = (*list)->word;
+	tmp = (*list)->next;
 	ft_tokenclear(list);
+	(*list) = tmp;
 }
 
 void	ft_find_fd(t_token *list)
@@ -114,17 +115,14 @@ void	ft_find_fd(t_token *list)
 void	sort_list_token(t_token **list, t_completion *completion, t_lst *hist)
 {
 	t_token		*elem;
-	t_token		*tmp;
 
 	elem = *list;
 	while (elem)
 	{
 		if (elem->type == FD_IN)
 		{
-			tmp = elem->next;
 			ft_swap_in(&elem);
-			elem = tmp;
-			if (!elem->prev)
+			if (elem && !elem->prev)
 				*list = elem;
 		}
 		if (isRedir(elem->type))

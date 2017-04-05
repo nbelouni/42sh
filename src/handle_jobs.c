@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/03 22:21:52 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/05 18:03:19 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,12 +67,12 @@ int	job_is_stopped (t_job *j)
 	List_p	ptr;
 
 	ptr = j->waitProcessList;
-	print_job(j);
+//	print_job(j);
 	while (ptr)
 	{
 		p = ptr->content;
 		//	  PUT2("process : ");E(p->stopped);X('\n');
-			  print_process(p);
+//			  print_process(p);
 		if (!p->completed && !p->stopped)
 			return 0;
 		ptr = ptr->next;
@@ -113,12 +113,12 @@ t_process_p	getProcessByPid(pid_t pid)
 	while (ptrJob)
 	{
 		j = ptrJob->content;
-		print_job(j);
+//		print_job(j);
 		ptrProcess = j->waitProcessList;
 		while (ptrProcess)
 		{
 			p = ptrProcess->content;
-			print_process(p);
+//			print_process(p);
 			if (p->pid == pid)
 				return (p);
 			ptrProcess = ptrProcess->next;
@@ -151,7 +151,7 @@ int	mark_process_status(pid_t pid, int status)
 					fprintf (stderr, "%d: Terminated by signal %d.\n",
 							(int) pid, WTERMSIG (p->status));
 			}
-					  print_process(p);
+//					  print_process(p);
 			return 0;		
 		}
 		else
@@ -189,7 +189,7 @@ void	wait_for_job(t_job *j)
 
 //	sigdelset(core->sig_set, SIGCHLD);
 //	sigprocmask(SIG_SETMASK, core->sig_set, NULL);
-	print_job(j);
+//	print_job(j);
 	signal (SIGCHLD, SIG_DFL);
 	while (true)
 	{
@@ -282,21 +282,24 @@ void	continue_job (t_job *j, int foreground)
     put_job_in_background (j, 1);
 }
 
-void	doRedir(Io_p io);
+//void	doRedir(Io_p io);
+void	doRedir(t_io *io);
+void	restore_fd(t_io *io);
+t_io	*iter_retur_prev(t_list *list, void *(f)(void *));
 
 void	launch_process(t_process_p process)
 {
-	//  doRedir(process->ioList);
-	list_iter(process->ioList, (void *)doRedir);
+	t_io	*io_prev;
+
+//	list_iter(process->ioList, (void *)doRedir);
+	io_prev = iter_retur_prev(process->ioList, (void *)doRedir);
 	/*Je l'avais initialement mise ici mais je te l'ai deplace dans MakeChildren*/
 //	if (sigprocmask(SIG_UNBLOCK, core->sig_set, NULL) < 0)/*ERROR a set*/
 //		return ;
 //	print_process(process);
 //	sleep(10);
 	ft_check_exec(process->argv);
-//	execvp(p->argv[0], p->argv);
-//	perror("execvp");
-//	exit (1);
+	restore_fd(io_prev);
 }
 
 t_node_p	iterInOrder(t_node_p ptr, List_p *stock)
@@ -314,7 +317,8 @@ t_node_p	iterInOrder(t_node_p ptr, List_p *stock)
 	return (NULL);
 }
 
-void	doRedir(Io_p io)
+
+void	doRedir(t_io *io)
 {
 	int		pipefd[2];
 
@@ -344,12 +348,13 @@ void	doRedir(Io_p io)
 		if (io->flag ^ WRITE)
 			close(io->dup_src);
 	}
+//	restore_fd(io);
 }
 
 int	doPipe(t_process_p p1, t_process_p p2, 	int	*io_pipe)
 {
-	Io_p	io_in;
-	Io_p	io_out;
+	t_io	*io_in;
+	t_io	*io_out;
 
 	if (pipe(io_pipe) == -1)
 	{
