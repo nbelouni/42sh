@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/01 21:48:26 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/04/06 20:51:20 by dogokar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,8 @@ int		parse(t_core *core, char *line, char **envp)
 
 
 /*
-**	  init_core initialisation des liste d'env
-*/
+ **	  init_core initialisation des liste d'env
+ */
 
 t_core 		*ft_creat_core(char **envp)
 {
@@ -85,8 +85,8 @@ t_core 		*ft_creat_core(char **envp)
 }
 
 /*
-**   si l'entree est different du terminal va lire ligne par ligne GNL
-*/
+ **   si l'entree est different du terminal va lire ligne par ligne GNL
+ */
 int 	read_ext(t_buf *buf, t_completion *comp, t_core *core, t_token *list)
 {
 	int i;
@@ -103,9 +103,7 @@ int 	read_ext(t_buf *buf, t_completion *comp, t_core *core, t_token *list)
 			PUT2("\n line "); E(i);
 			ft_print_token_list(&list);
 			++i;
-			//ft_strdel(&line);
 		}
-		PUT2("par ici\n");
 		return (0);
 	}
 	return (1);
@@ -138,46 +136,43 @@ int 	main(int argc, char **argv, char **envp)
 	if (read_ext(buf, &completion, core, list) == 1)
 	{
 		init_curs();
-		while (42)
+		while ((ret_read = read_line(buf, &completion, core->hist)) != ERR_EXIT)
 		{
-			if ((ret_read = read_line(buf, &completion, core->hist)) != ERR_EXIT)
+			close_termios();
+			if (ret_read != TAB)
 			{
-				close_termios();
-				if (ret_read != TAB)
+				if (is_line_ended(buf) < 0)
+					return (-1);
+				bang_substitution(&(buf->final_line), core);
+				ret = parse_buf(&list, buf->final_line, &completion, core->hist);
+				if (ret > 0 && list)
 				{
-					if (is_line_ended(buf) < 0)
-					return (-1);
-					bang_substitution(&(buf->final_line), core);
-					ret = parse_buf(&list, buf->final_line, &completion, core->hist);
-					if (ret > 0 && list)
-					{
-						parse(core, buf->final_line, envp);
-/*
-**			ft_push_ast(list, &ast);
-**				. remplace $var
-**				. ajoute arguments si regex
-**				. supprime '\'', '"' , '`' et '\\'
-**
-**				. sera remplacee quqnd je saurais ou la mettre
-**				regexp_in_tree(ast, core);
-**
-*/
-	//			print_debug_ast(ast);
-	//			free_ast(ast);
+					parse(core, buf->final_line, envp);
+					/*
+					 **			ft_push_ast(list, &ast);
+					 **				. remplace $var
+					 **				. ajoute arguments si regex
+					 **				. supprime '\'', '"' , '`' et '\\'
+					 **
+					 **				. sera remplacee quqnd je saurais ou la mettre
+					 **				regexp_in_tree(ast, core);
+					 **
+					 */
+					//			print_debug_ast(ast);
+					//			free_ast(ast);
 
-					}
-					if (ret != ERR_NEW_PROMPT)
-					ft_strdel(&(buf->final_line));
-					else
-					complete_final_line(buf, list);
-					if (list)
-					ft_tokendestroy(&list); //clean la list a mettre a la fin
-					ft_bzero(buf->line, BUFF_SIZE);
-					buf->size = 0;
-					clean_pos_curs();
-					if (init_completion(&completion, core) == ERR_EXIT)
-					return (-1);
 				}
+				if (ret != ERR_NEW_PROMPT)
+					ft_strdel(&(buf->final_line));
+				else
+					complete_final_line(buf, list);
+				if (list)
+					ft_tokendestroy(&list); //clean la list a mettre a la fin
+				ft_bzero(buf->line, BUFF_SIZE);
+				buf->size = 0;
+				clean_pos_curs();
+				if (init_completion(&completion, core) == ERR_EXIT)
+					return (-1);
 			}
 			if (ret_read == END_EOT)
 				break ;

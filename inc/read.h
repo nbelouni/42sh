@@ -139,6 +139,7 @@ typedef struct	s_buf
 	char		*to_paste;
 	int			to_paste_size;
 	char		*final_line;
+	int 		istty;
 }				t_buf;
 
 /*
@@ -387,7 +388,7 @@ void			print_pre_curs(t_buf *buf);
 */
 /*
 **	is_line_ended.c
-**	si ligne finie : 
+**	si ligne finie :
 **		met buf.line dans buf.final_line
 **	sinon
 **		concatene buf.final_line et buf.line
