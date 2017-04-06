@@ -69,7 +69,7 @@ int		parse(t_core *core, char *line, char **envp)
 **	  init_core initialisation des liste d'env
 */
 
-t_core 		*ft_creat_env(char **envp)
+t_core 		*ft_creat_core(char **envp)
 {
 	t_core *core;
 
@@ -82,6 +82,33 @@ t_core 		*ft_creat_env(char **envp)
 		core->env = ft_default_env();
 	ft_histopt_r(&(core->hist), core->set, NULL);
 	return (core);
+}
+
+/*
+**   si l'entree est different du terminal va lire ligne par ligne GNL
+*/
+int 	read_ext(t_buf *buf, t_completion *comp, t_core *core, t_token *list)
+{
+	int i;
+	char *line = NULL;
+
+	i = 0;
+	if (buf->istty == 1)
+	{
+		while (get_next_line(0, &line) > 0)
+		{
+			buf->final_line = line;
+			PUT2(buf->final_line);
+			parse_buf(&list, buf->final_line, comp, core->hist);
+			PUT2("\n line "); E(i);
+			ft_print_token_list(&list);
+			++i;
+			//ft_strdel(&line);
+		}
+		PUT2("par ici\n");
+		return (0);
+	}
+	return (1);
 }
 
 int 	main(int argc, char **argv, char **envp)
@@ -98,30 +125,35 @@ int 	main(int argc, char **argv, char **envp)
 
 	ast = NULL;
 	list = NULL;
-	core = ft_creat_env(envp);
+	core = ft_creat_core(envp);
 	if (init_completion(&completion, core) == ERR_EXIT)
 		return (-1);
 	signal(SIGWINCH, get_sigwinch);
 	signal(SIGINT, get_sigint);
 	if (!(buf = init_buf()))
 		return (ft_print_error("42sh", ERR_MALLOC, ERR_EXIT));
+	if (!isatty(0))
+		buf->istty = 1;
 	set_prompt(PROMPT1, ft_strlen(PROMPT1));
-	init_curs();
-	while ((ret_read = read_line(buf, &completion, core->hist)) != ERR_EXIT)
+	if (read_ext(buf, &completion, core, list) == 1)
 	{
-		close_termios();
-		if (ret_read != TAB)
+		init_curs();
+		while (42)
 		{
-			if (is_line_ended(buf) < 0)
-				return (-1);
-			bang_substitution(&(buf->final_line), core);
-			ret = parse_buf(&list, buf->final_line, &completion, core->hist);
-			if (ret > 0 && list)
+			if ((ret_read = read_line(buf, &completion, core->hist)) != ERR_EXIT)
 			{
-					parse(core, buf->final_line, envp);
-	//			ft_push_ast(list, &ast);
-
+				close_termios();
+				if (ret_read != TAB)
+				{
+					if (is_line_ended(buf) < 0)
+					return (-1);
+					bang_substitution(&(buf->final_line), core);
+					ret = parse_buf(&list, buf->final_line, &completion, core->hist);
+					if (ret > 0 && list)
+					{
+						parse(core, buf->final_line, envp);
 /*
+**			ft_push_ast(list, &ast);
 **				. remplace $var
 **				. ajoute arguments si regex
 **				. supprime '\'', '"' , '`' et '\\'
@@ -133,24 +165,25 @@ int 	main(int argc, char **argv, char **envp)
 	//			print_debug_ast(ast);
 	//			free_ast(ast);
 
+					}
+					if (ret != ERR_NEW_PROMPT)
+					ft_strdel(&(buf->final_line));
+					else
+					complete_final_line(buf, list);
+					if (list)
+					ft_tokendestroy(&list); //clean la list a mettre a la fin
+					ft_bzero(buf->line, BUFF_SIZE);
+					buf->size = 0;
+					clean_pos_curs();
+					if (init_completion(&completion, core) == ERR_EXIT)
+					return (-1);
+				}
 			}
-			if (ret != ERR_NEW_PROMPT)
-				ft_strdel(&(buf->final_line));
-			else
-				complete_final_line(buf, list);
-			if (list)
-				ft_tokendestroy(&list); //clean la list a mettre a la fin
-			ft_bzero(buf->line, BUFF_SIZE);
-			buf->size = 0;
-			clean_pos_curs();
-			if (init_completion(&completion, core) == ERR_EXIT)
-				return (-1);
+			if (ret_read == END_EOT)
+				break ;
 		}
-		if (ret_read == END_EOT)
-			break ;
-		// while (1) ;
+		close_termios();
 	}
-	close_termios();
 	free_buf(buf);
 	return (0);
 }
