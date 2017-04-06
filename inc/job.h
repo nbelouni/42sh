@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 17:03:19 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/05 14:48:22 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/06 16:55:35 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ********************************************************)****************** */
 
@@ -105,5 +105,6 @@ int			signal_ign(void);
 void		do_job_notification(void);
 void		format_job_info(t_job *job, const char *status);
 t_node_p	create_redir(t_tree *nodeRedir, t_node_p left_node);
+char		*iter_iolist_cmd(t_list *io_list);
 
 #endif

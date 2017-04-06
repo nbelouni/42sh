@@ -6,13 +6,14 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/21 11:02:14 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/05 16:58:05 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/06 17:19:15 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "42sh.h"
 #include "io.h"
 
-t_io *new_io(int flag, int mode)
+t_io	*new_io(int flag, int mode)
 {
 	t_io	*io;
 
@@ -23,6 +24,5 @@ t_io *new_io(int flag, int mode)
 	io->mode = mode;
 	io->tab_fd[0] = -1;
 	io->tab_fd[1] = -1;
-	return(io);
+	return (io);
 }
-

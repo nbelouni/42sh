@@ -6,14 +6,14 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 16:51:24 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/05 16:38:44 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/06 17:21:51 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
 /*
-**	A check si pas de cmd avant token redir
+**A check si pas de cmd avant token redir
 */
 
 t_token	*move_for_token(t_token *elem)
@@ -89,6 +89,9 @@ void	ft_swap_in(t_token **list)
 {
 	t_token		*tmp;
 
+	tmp = (*list);
+	if (tmp && tmp->next && tmp->next->word)
+		free(tmp->next->word);
 	(*list)->next->word = (*list)->word;
 	tmp = (*list)->next;
 	ft_tokenclear(list);
@@ -108,8 +111,8 @@ void	ft_find_fd(t_token *list)
 }
 
 /*
-**	Faut faire des check avant de trier la liste, pour l'instant on garde ca
-**	On oublie les commentaires, c'est beaucoup trop chiant
+**Faut faire des check avant de trier la liste, pour l'instant on garde ca
+**On oublie les commentaires, c'est beaucoup trop chiant
 */
 
 void	sort_list_token(t_token **list, t_completion *completion, t_lst *hist)
