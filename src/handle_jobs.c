@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/05 18:03:19 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/06 15:18:44 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -282,24 +282,17 @@ void	continue_job (t_job *j, int foreground)
     put_job_in_background (j, 1);
 }
 
-//void	doRedir(Io_p io);
-void	doRedir(t_io *io);
+void	apply_redir(t_io *io);
 void	restore_fd(t_io *io);
-t_io	*iter_retur_prev(t_list *list, void *(f)(void *));
 
 void	launch_process(t_process_p process)
 {
-	t_io	*io_prev;
-
-//	list_iter(process->ioList, (void *)doRedir);
-	io_prev = iter_retur_prev(process->ioList, (void *)doRedir);
+	list_iter(process->ioList, (void *)apply_redir);
 	/*Je l'avais initialement mise ici mais je te l'ai deplace dans MakeChildren*/
 //	if (sigprocmask(SIG_UNBLOCK, core->sig_set, NULL) < 0)/*ERROR a set*/
 //		return ;
 //	print_process(process);
-//	sleep(10);
 	ft_check_exec(process->argv);
-	restore_fd(io_prev);
 }
 
 t_node_p	iterInOrder(t_node_p ptr, List_p *stock)
@@ -318,7 +311,7 @@ t_node_p	iterInOrder(t_node_p ptr, List_p *stock)
 }
 
 
-void	doRedir(t_io *io)
+void	apply_redir(t_io *io)
 {
 	int		pipefd[2];
 
@@ -346,9 +339,11 @@ void	doRedir(t_io *io)
 	if (io->flag & CLOSE)
 	{
 		if (io->flag ^ WRITE)
+		{
+			PUT2("\nCLOSE\n");
 			close(io->dup_src);
+		}
 	}
-//	restore_fd(io);
 }
 
 int	doPipe(t_process_p p1, t_process_p p2, 	int	*io_pipe)
@@ -356,6 +351,7 @@ int	doPipe(t_process_p p1, t_process_p p2, 	int	*io_pipe)
 	t_io	*io_in;
 	t_io	*io_out;
 
+	PUT2("PIPE");
 	if (pipe(io_pipe) == -1)
 	{
 		perror("pipe");
@@ -363,6 +359,8 @@ int	doPipe(t_process_p p1, t_process_p p2, 	int	*io_pipe)
 	}
 	io_in = new_io();
 	io_out = new_io();
+	io_in->tab_fd[0] = dup(STDOUT_FILENO);
+	io_out->tab_fd[1] = dup(STDIN_FILENO);
 	io_in->flag = DUP | CLOSE;
 	io_out->flag = DUP | CLOSE;
 	io_in->dup_src = io_pipe[1];
@@ -373,8 +371,6 @@ int	doPipe(t_process_p p1, t_process_p p2, 	int	*io_pipe)
 	PUSH(&(p2->ioList), io_out);
 	return (io_pipe[1]);
 }
-
-//		launch_process(p, pgid, foreground);
 
 void	giveTerm(int pgid, int foreground)
 {
@@ -464,6 +460,7 @@ void	doPipeline(t_job *job, t_list *pipeline)
 	{
 		out = (pipeline->next)? doPipe(pipeline->content, pipeline->next->content, io_pipe): STDOUT_FILENO;
 		execSimpleCommand(pipeline->content, job->foreground, dofork, &(job->pgid));
+		list_iter(((t_process_p)pipeline->content)->ioList, (void *)restore_fd);
 		if (out != STDOUT_FILENO)
 			close(out);
 		if (in != STDIN_FILENO)

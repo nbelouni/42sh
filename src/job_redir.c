@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/05 14:45:12 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/05 22:35:34 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/06 14:57:37 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,10 @@
 #include "job.h"
 #include "io.h"
 
+/* 
+	Temporary code which join the redirection operator and arguments, --ABSOLUTLY NOT FINAL-- form of redirection. We are using this 
+	solution just to perform some check.
+*/
 static t_mode		(tab_mode[7]) = {
 	[0] = { SL_DIR, O_RDONLY, OPEN | CLOSE},
 	[1] = { SR_DIR, O_WRONLY | O_CREAT | O_TRUNC, OPEN | CLOSE},
@@ -68,31 +72,31 @@ void		restore_fd(t_io *io)
 {
 	if (!io)
 		return ;
-	PUT2("io->tab_fd[0]\n");
-	E(io->tab_fd[0]);X('\n');
-	PUT2("io->tab_fd[1]\n");
-	E(io->tab_fd[1]);X('\n');
+//	PUT2("io->tab_fd[0]\n");
+//	E(io->tab_fd[0]);X('\n');
+//	PUT2("io->tab_fd[1]\n");
+//	E(io->tab_fd[1]);X('\n');
 //	PUT2("io->str\n");
 //	PUT2(io->str);X('\n');
 	if (io->tab_fd[0] !=-1)
 	{
 		dup2(io->tab_fd[0], io->dup_target);
-//		close(io->tab_fd[0]);
+		close(io->tab_fd[0]);
 	}
 	if (io->tab_fd[1] !=-1)
 	{
 		dup2(io->tab_fd[1], io->dup_src);
-//		close(io->tab_fd[1]);
+		close(io->tab_fd[1]);
 	}
 }
 
 void		save_fd(t_io *io, int type_redir)
 {
 	(void)type_redir;
-	PUT2("io->dup_src\n");
-	E(io->dup_src);X('\n');
-	PUT2("io->dup_target\n");
-	E(io->dup_target);X('\n');
+//	PUT2("io->dup_src\n");
+//	E(io->dup_src);X('\n');
+//	PUT2("io->dup_target\n");
+//	E(io->dup_target);X('\n');
 	io->tab_fd[0] = dup(io->dup_target);
 	if (type_redir == DIR_L_AMP || type_redir == DIR_R_AMP)
 		io->tab_fd[1] = dup(io->dup_src);

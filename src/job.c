@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 13:52:27 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/05 17:41:01 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/06 12:49:22 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,59 +182,7 @@ t_node_p	create_pipe(t_node_p right_node, t_node_p left_node)
 	delete_node(right_node);
 	return (left_node);
 }
-/* 
-	Temporary code which join the redirection operator and arguments, --ABSOLUTLY NOT FINAL-- form of redirection. We are using this 
-	solution just to perform some check.
-*/
-/*
-static t_mode		(tab_mode[7]) = {
-	[0] = { SL_DIR, O_RDONLY, OPEN | CLOSE},
-	[1] = { SR_DIR, O_WRONLY, OPEN | CLOSE},
-	[2] = { DL_DIR, 0, CLOSE | WRITE},
-	[3] = { DR_DIR, O_WRONLY | O_APPEND, OPEN | CLOSE},
-	[4] = { LR_DIR, O_RDWR, OPEN | CLOSE},
-	[5] = { DIR_L_AMP, O_RDWR, 0},
-	[6] = { DIR_R_AMP, O_RDWR, 0},
-};
 
-t_node_p	create_redir(t_tree *nodeRedir, t_node_p left_node)
-{
-	Io_p			io;
-	int				left;
-	t_process_p		process;
-	int				i;
-
-	i = 0;
-	io = new_io();
-	io->str = (nodeRedir->right->cmd)[0];
-	io->flag = DUP;
-	if (!nodeRedir->cmd)
-		left = ((TOKEN(nodeRedir) == SL_DIR || TOKEN(nodeRedir) == LR_DIR ||
-		TOKEN(nodeRedir) == DIR_L_AMP || TOKEN(nodeRedir) == DL_DIR) ? 0: 1);
-	else
-		left = atoi((nodeRedir->cmd)[0]);
-	io->dup_target = left;
-	while (i < 7)
-	{
-		if (tab_mode[i].redir == TOKEN(nodeRedir))
-		{
-			io->flag |= tab_mode[i].flag;
-			io->mode = tab_mode[i].mode;
-			if ((i == 5 || i == 6) && (nodeRedir->right->cmd)[0][0] == '-')
-			{
-				io->flag |= CLOSE;
-				io->dup_src = left;
-			}
-			else if (i == 5 || i == 6)
-				io->dup_src = atoi((nodeRedir->right->cmd)[0]);
-		}
-		i++;
-	}
-	process = ((t_list *)left_node->data)->content;
-	insert_link_bottom(&(process->ioList), new_link(io, sizeof(*io)));
-	return (left_node);
-}
-*/
 void		spacer(int io)
 {
 	static int		depth;
