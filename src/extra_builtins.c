@@ -88,11 +88,11 @@ void			print_current(t_job *j)
 	ft_putstr_fd("+", 1);
 }
 
-void			(*choose_func(int opt))(t_job *)
+void			(*choose_func(int flag))(t_job *)
 {
-	if (opt == 'p')
+	if (flag == (int)'p')
 		return(&print_optp);
-	else if (opt == 'l')
+	else if (flag == (int)'l')
 		return(&print_optl);
 	else
 		return(&print_no_opt);
@@ -111,9 +111,9 @@ void			(*choose_func(int opt))(t_job *)
 */
 
 
-static int      ft_builtin_jobs(t_core *core, char **args)
+static int	ft_builtin_jobs(t_core *core, char **args)
 {
-	void (*print_func)();
+	void	(*print_func)();
 	t_job	*j;
 	
 	print_func = choose_func(opt);
@@ -139,18 +139,41 @@ static int      ft_builtin_jobs(t_core *core, char **args)
 **
 */
 
-static int      ft_builtin_bg(t_core *core, char **args)
+static int		exec_job_bg(t_job *j)
 {
-	t_job	*j;
-	
-	j = list_get_nth(jobList, n);
 	if (job_is_stopped(j) && !j->foreground)
 	{
 		j->foreground = 0;
 		continue_job(j, j->foreground); // continue_job(j);
 	}
 	else
+	{
 		print("already running in background");
+		return (-1);
+	}
+	return (0);
+}
+
+static int      ft_builtin_bg(t_core *core, char **args)
+{
+	t_job	*j;
+	
+	(void)core;
+	if (args && args[0])
+	{
+		j = ft_get_job(joblist, args[0]);
+		exec_job_bg(j);
+	}
+	else
+	{
+		j = joblist;
+		while (j)
+		{
+			exec_job_bg(j);
+			j = j->next;
+		}
+	}
+	return (0);
 }
 
 /*

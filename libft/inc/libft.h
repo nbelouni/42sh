@@ -12,6 +12,7 @@
 
 #ifndef LIBFT_H
 # define LIBFT_H
+
 # include <unistd.h>
 # include <string.h>
 # include <stdlib.h>
@@ -19,8 +20,10 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <dirent.h>
+
 # include "error.h"
 # include "color.h"
+# include "option.h"
 
 # define BUFF_SIZE 2048
 
@@ -112,6 +115,5 @@ void				ft_tabdel_and_init(char ***tab);
 char				*ft_strreplace(char *o, const char *s, const char *r);
 int					ft_intlen(int n);
 void				ft_putnchar(char c, int n);
-
 
 #endif
