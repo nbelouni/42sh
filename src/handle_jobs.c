@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/06 18:35:25 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/07 17:16:08 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -285,7 +285,7 @@ void	continue_job (t_job *j, int foreground)
 void	apply_redir(t_io *io);
 void	restore_fd(t_io *io);
 
-void	launch_process(t_process_p process)
+void	launch_process(t_process_p process, int dofork)
 {
 	list_iter(process->ioList, (void *)apply_redir);
 	/*Je l'avais initialement mise ici mais je te l'ai deplace dans MakeChildren*/
@@ -293,6 +293,8 @@ void	launch_process(t_process_p process)
 //		return ;
 //	print_process(process);
 	ft_check_exec(process->argv);
+	if (dofork)
+		exit(1);
 }
 
 t_node_p	iterInOrder(t_node_p ptr, List_p *stock)
@@ -424,7 +426,7 @@ void	execSimpleCommand(t_process_p p, int fg, int dofork, int *pgid)
 	if (dofork)
 		if (makeChildren(p, pgid, fg))
 			return ;
-	launch_process(p);
+	launch_process(p, dofork);
 }
 
 int		shouldfork(t_job *j, List_p pipeline)
@@ -452,7 +454,7 @@ void	doPipeline(t_job *job, t_list *pipeline)
 	{
 		out = (pipeline->next)? doPipe(pipeline->content, pipeline->next->content, io_pipe): STDOUT_FILENO;
 		execSimpleCommand(pipeline->content, job->foreground, dofork, &(job->pgid));
-		list_iter(((t_process_p)pipeline->content)->ioList, (void *)restore_fd);
+		list_iter_int(((t_process_p)pipeline->content)->ioList, (void *)restore_fd, dofork);
 		if (out != STDOUT_FILENO)
 			close(out);
 		if (in != STDIN_FILENO)

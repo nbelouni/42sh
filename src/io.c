@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/21 11:02:14 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/06 17:19:15 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/07 17:06:48 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,6 @@ t_io	*new_io(int flag, int mode)
 	io->mode = mode;
 	io->tab_fd[0] = -1;
 	io->tab_fd[1] = -1;
+	io->tab_fd[2] = -1;
 	return (io);
 }

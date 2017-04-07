@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/05 14:45:12 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/06 16:41:56 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/07 17:18:21 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,22 +55,16 @@ void		set_mode_redir(t_tree *node_redir, t_io *io, int left)
 	}
 }
 
-t_io		*iter_retur_prev(t_list *list, void *(f)(void *))
+void		list_iter_int(t_list *list, void *(f)(void *, int), int dofork)
 {
-	t_list	*prev;
-
-	prev = list;
 	while (list)
 	{
-		f(list->content);
+		f(list->content, dofork);
 		list = list->next;
 	}
-	if (prev)
-		return (prev->content);
-	return (NULL);
 }
 
-void		restore_fd(t_io *io)
+void		restore_fd(t_io *io, int dofork)
 {
 	if (!io)
 		return ;
@@ -79,6 +73,8 @@ void		restore_fd(t_io *io)
 		dup2(io->tab_fd[0], io->dup_target);
 		close(io->tab_fd[0]);
 	}
+	if (!dofork)
+		close(io->dup_target);
 	if (io->tab_fd[1] != -1)
 	{
 		dup2(io->tab_fd[1], io->dup_src);
