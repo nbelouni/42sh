@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 13:25:54 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/22 11:34:06 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/07 17:25:47 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,7 @@
 
 int				exec_cmd(t_tree *root, t_lst *env);
 int				ft_init_gpr(t_tree *root, t_lst *env);
-//void			ft_exec(char **s, t_lst *env);
-int				ft_check_exec(char **cmd);
+int				ft_check_exec(char ***cmd);
 int				ft_check_built(char **av);
 int				ft_exec_built(char **args);
 

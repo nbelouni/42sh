@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/07 17:16:08 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/07 17:23:15 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -292,7 +292,7 @@ void	launch_process(t_process_p process, int dofork)
 //	if (sigprocmask(SIG_UNBLOCK, core->sig_set, NULL) < 0)/*ERROR a set*/
 //		return ;
 //	print_process(process);
-	ft_check_exec(process->argv);
+	ft_check_exec(&(process->argv));
 	if (dofork)
 		exit(1);
 }
