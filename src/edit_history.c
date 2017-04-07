@@ -22,6 +22,7 @@ static void	replace_entry(t_buf *buf, char *str)
 	int		i;
 
 	i = buf->size;
+	m_right(calc_len(buf, END));
 	while (--i >= 0)
 	{
 		vb_del(buf, DEL);
