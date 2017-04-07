@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/07 18:31:32 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/07 18:51:05 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -275,15 +275,12 @@ void	mark_job_as_running (t_job *j)
 
 void	continue_job (t_job *j, int foreground)
 {
-  mark_job_as_running (j);
-  if (foreground)
-    put_job_in_foreground (j, 1);
-  else
-    put_job_in_background (j, 1);
+	mark_job_as_running (j);
+	if (foreground)
+		put_job_in_foreground (j, 1);
+	else
+		put_job_in_background (j, 1);
 }
-
-void	apply_redir(t_io *io);
-void	restore_fd(t_io *io);
 
 void	launch_process(t_process_p process, int dofork)
 {
@@ -416,13 +413,8 @@ int		makeChildren(t_process_p p, int *pgid, int foreground)
 	return (pid);
 }
 
-
-
 void	execSimpleCommand(t_process_p p, int fg, int dofork, int *pgid)
 {
-//	int			pid;
-//	int			fpid;
-
 	if (dofork)
 		if (makeChildren(p, pgid, fg))
 			return ;

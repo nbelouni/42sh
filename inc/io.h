@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/21 11:02:12 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/07 17:17:26 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/07 18:48:21 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,5 +46,7 @@ char			*copy_redir(t_io *io);
 char			*copy_process(t_process_p process);
 char			*ft_fix_join(char *s, char *buf);
 void			list_iter_int(t_list *list, void *(f)(void *, int), int d);
+void			apply_redir(t_io *io);
+void			restore_fd(t_io *io);
 
 #endif
