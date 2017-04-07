@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 16:51:24 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/06 17:21:51 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/07 17:29:54 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,7 @@ void	sort_list_token(t_token **list, t_completion *completion, t_lst *hist)
 		{
 			here_doc(elem->next, completion, hist);
 		}
-		if (!elem->prev || is_dir_type(elem->prev->type))
+		if (!elem->prev || !is_dir_type(elem->prev->type))
 			expand_args(list, &elem);
 		elem = elem->next;
 	}

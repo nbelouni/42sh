@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/03 22:14:35 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/07 17:16:41 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,7 @@ int 	main(int argc, char **argv, char **envp)
  *				edit_cmd(list, env);
  */
 				ft_push_ast(list, &ast);
+//				regexp_in_tree(ast, core);
 //				print_debug_ast(ast);
 //				test_func(ast);
 				export_job(ast, &jobListBis);
@@ -129,7 +130,6 @@ int 	main(int argc, char **argv, char **envp)
 **				. supprime '\'', '"' , '`' et '\\'
 **
 **				. sera remplacee quqnd je saurais ou la mettre
-**				regexp_in_tree(ast, core);
 **
 */
 
