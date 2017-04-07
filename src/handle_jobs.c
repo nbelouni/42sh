@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/04 21:56:51 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/07 19:22:18 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,7 +159,7 @@ int	mark_process_status(pid_t pid, int status)
 		if ((p = getProcessByPid(pid)))
 		{
 			p->status = status;
-			getJobFromPid(pid)->status = status;
+			// getJobFromPid(pid)->status = status;
 			if (WIFSTOPPED(status))
 				p->stopped = 1;
 			else
@@ -253,8 +253,16 @@ void do_job_notification(void)
 	}
 }
 
+extern t_job *last_job;
+
+t_job			*get_last_job(void)
+{
+	return (last_job = ((last_job) ? last_job : jobList->content));
+}
+
 static void		put_job_in_background(t_job *j, int cont)
 {
+	last_job = j;
 	if (cont)
 		if (kill(-j->pgid, SIGCONT) < 0)
 			perror("kill (SIGCONT)");
@@ -262,6 +270,7 @@ static void		put_job_in_background(t_job *j, int cont)
 
 static void		put_job_in_foreground(t_job *j, int cont)
 {
+	last_job = j;
 	tcsetpgrp (g_sh_tty, j->pgid);
 	if (cont)
 	{

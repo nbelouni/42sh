@@ -74,6 +74,14 @@ int					g_sh_is;
 pid_t				g_sh_pgid;
 t_lst				*ft_init_lstset(void);
 t_core				*core;
+extern List_p	jobList;
+
+
+int	job_is_stopped (t_job *j);
+int	job_is_completed(t_job *j);
+void	continue_job (t_job *j, int foreground);
+t_job			*ft_get_job(char *arg);
+t_job			*get_last_job(void);
 
 /*
 **	ft_init.c

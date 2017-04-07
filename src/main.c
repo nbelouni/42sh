@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/03 20:06:44 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/07 19:29:48 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	export_job(t_tree *root, List_p *job_list);
 void	printJobList(List_p jobList);
 
 List_p	jobList = NULL;
+t_job	*last_job = NULL;
 
 static t_builtin_array builtin_array[] =
 {
@@ -29,9 +30,9 @@ static t_builtin_array builtin_array[] =
 	{"history", &ft_builtin_history},
 	{"unset", &ft_builtin_unset},
 	{"export", &ft_builtin_export},
-	// {"jobs", &ft_builtin_jobs},
-	// {"fg", &ft_builtin_fg},
-	// {"bg", &ft_builtin_bg},
+	{"jobs", &ft_builtin_jobs},
+	{"fg", &ft_builtin_fg},
+	{"bg", &ft_builtin_bg},
 	{NULL, NULL}
 };
 
@@ -111,7 +112,7 @@ int 	main(int argc, char **argv, char **envp)
 			ret = parse_buf(&list, buf->final_line, &completion, core->hist);
 			if (ret > 0 && list)
 			{
-
+			
 	//			ft_push_ast(list, &ast);
 
 /*
