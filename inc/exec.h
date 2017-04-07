@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 13:25:54 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/07 17:25:47 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/07 19:06:20 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,6 @@ void		 	ft_redir_right(t_tree *node, t_lst *env);
 void			ft_exec_node(t_tree *node, t_lst *env);
 
 void			print_tree(t_tree *root);
+int				parse_builtins(t_core *core, char *cmd, char **cmd_args);
 
 #endif
