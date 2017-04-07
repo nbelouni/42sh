@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/05 14:45:12 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/07 17:18:21 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/07 18:28:43 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ void		list_iter_int(t_list *list, void *(f)(void *, int), int dofork)
 
 void		restore_fd(t_io *io, int dofork)
 {
+	(void)dofork;
 	if (!io)
 		return ;
 	if (io->tab_fd[0] != -1)
