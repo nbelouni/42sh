@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/11 12:30:14 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/03 16:45:03 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/07 17:32:59 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ typedef struct		s_tree
 {
 	int				token;
 	char			**cmd;
-	t_list			*argv;
 	t_token			*token_or;
 	struct s_tree	*father;
 	struct s_tree	*left;

@@ -6,7 +6,7 @@
 /*   By: dogokar <dogokar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 14:41:10 by dogokar           #+#    #+#             */
-/*   Updated: 2017/03/30 13:18:42 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/04/07 17:32:51 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ t_tree  *add_tree(t_token *lst)
 	node = ft_memalloc(sizeof(t_tree));
 	node->token_or = lst;
 	node->cmd = NULL;
-	node->argv = concate_argv(lst);
 	node->father = NULL;
 	node->left = NULL;
 	node->right = NULL;
@@ -262,24 +261,6 @@ char  **concate_cmd(t_token *lst)
 	argv[count] = NULL;
 	return (argv);
 }
-
-t_list	*concate_argv(t_token *lst)
-{
-	t_token	*tmp;
-	t_list	*elem;
-
-	tmp = lst;
-	if (!(elem = ft_lstnew(tmp->word, ft_strlen(tmp->word))))
-		return (NULL);
-	tmp = tmp->next;
-	while (tmp && tmp->type == ARG)
-	{
-		ft_lstpush(&elem, tmp->word, (size_t)ft_strlen(tmp->word));
-		tmp->select = 1;
-		tmp = tmp->next;
-	}
-	return (elem);
-}
 /*
 ** print le char ** pour le debug
 */
@@ -437,7 +418,7 @@ void	print_debug_ast(t_tree *node)
 //	if (node->argv)
 //		PUT2(node->cmd[0]);
 //	if (node->token_or->word)
-	print_lst(node->argv);
+//	print_lst(node->argv);
 //	else
 //		PUT2(node->token_or->word);
 	if (node->right)
@@ -455,22 +436,6 @@ void free_content_ast(t_tree *node)
 	node->cmd = NULL;
 }
 
-void	free_list_ast(t_tree *node)
-{
-	t_list	*elem;
-	t_list	*tmp;
-
-	elem = node->argv;
-	while (elem)
-	{
-		tmp = elem->next;
-		ft_memdel((void *)&(elem->content));
-		ft_memdel((void *)&elem);
-		elem = tmp;
-	}
-	node->argv = NULL;
-}
-
 void	free_ast(t_tree *ast)
 {
 	if (!ast)
@@ -484,7 +449,6 @@ void	free_ast(t_tree *ast)
 		free_ast(ast->right);
 //		ft_memdel((void *)&ast);
 	free_content_ast(ast);
-	free_list_ast(ast);
 	free(ast);
 }
 
