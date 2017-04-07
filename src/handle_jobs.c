@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/07 18:51:05 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/07 19:16:32 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -332,7 +332,8 @@ void	apply_redir(t_io *io)
 	{
 		if (fcntl(io->dup_src, F_GETFL) < 0/* && errno == EBADF (Bad file descriptor)*/)
 			fputs("42sh: Bad file descriptor (a placer dans les error)\n", stderr);
-		dup2(io->dup_src, io->dup_target);
+		else
+			dup2(io->dup_src, io->dup_target);
 	}
 	if (io->flag & CLOSE && io->flag ^ WRITE)
 		close(io->dup_src);

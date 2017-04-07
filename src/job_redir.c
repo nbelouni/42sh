@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/05 14:45:12 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/07 18:28:43 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/07 19:14:43 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void		restore_fd(t_io *io, int dofork)
 		dup2(io->tab_fd[0], io->dup_target);
 		close(io->tab_fd[0]);
 	}
-	if (!dofork)
+	if (!dofork && io->mode == 0 && fcntl(io->dup_src, F_GETFL) < 0)
 		close(io->dup_target);
 	if (io->tab_fd[1] != -1)
 	{
