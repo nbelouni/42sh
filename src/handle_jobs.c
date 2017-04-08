@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/07 19:16:32 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/08 19:21:33 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,13 @@ void print_job(t_job *job)
 	dprintf(2, "\tForeground : <%d>\t pgid : <%d>\t notified : <%d>\n", job->foreground, job->pgid, job->notified);
 }
 
-extern	List_p	jobList;
+extern	t_list	*jobList;
 int last = 0;
 
 t_job *find_job(pid_t pgid)
 {
   t_job		*j;
-  List_p	ptr;
+  t_list	*ptr;
 
   ptr = jobList;
   while (ptr)
@@ -63,10 +63,10 @@ t_job *find_job(pid_t pgid)
 /* Return true if all processes in the job have stopped or completed.  */
 int	job_is_stopped (t_job *j)
 {
-	t_process_p p;
-	List_p	ptr;
+	t_process_p	p;
+	t_list		*ptr;
 
-	ptr = j->waitProcessList;
+	ptr = j->wait_process_list;
 //	print_job(j);
 	while (ptr)
 	{
@@ -83,10 +83,10 @@ int	job_is_stopped (t_job *j)
 /* Return true if all processes in the job have completed.  */
 int	job_is_completed(t_job *j)
 {
-	t_process_p p;
-	List_p	ptr;
+	t_process_p	p;
+	t_list		*ptr;
 
-  ptr = j->waitProcessList;
+  ptr = j->wait_process_list;
 //  print_job(j);
   while (ptr)
   {
@@ -104,8 +104,8 @@ int	job_is_completed(t_job *j)
 
 t_process_p	getProcessByPid(pid_t pid)
 {
-	List_p	ptrJob;
-	List_p	ptrProcess;
+	t_list	*ptrJob;
+	t_list	*ptrProcess;
 	t_job		*j;
 	t_process_p	p;
 
@@ -114,7 +114,7 @@ t_process_p	getProcessByPid(pid_t pid)
 	{
 		j = ptrJob->content;
 //		print_job(j);
-		ptrProcess = j->waitProcessList;
+		ptrProcess = j->wait_process_list;
 		while (ptrProcess)
 		{
 			p = ptrProcess->content;
@@ -211,8 +211,8 @@ void	format_job_info(t_job *j, const char *status)
 
 void do_job_notification(void)
 {
-	t_job *j;
-	List_p	*ptr;
+	t_job	*j;
+	t_list	**ptr;
 	
 	update_status();
 	ptr = &jobList;
@@ -259,9 +259,9 @@ static void		put_job_in_foreground(t_job *j, int cont)
 void	mark_job_as_running (t_job *j)
 {
   t_process_p	p;
-  List_p	ptr;
+  t_list		*ptr;
 
-  ptr = j->waitProcessList;
+  ptr = j->wait_process_list;
   while (ptr)
   {
 	  p = ptr->content;
@@ -284,7 +284,7 @@ void	continue_job (t_job *j, int foreground)
 
 void	launch_process(t_process_p process, int dofork)
 {
-	list_iter(process->ioList, (void *)apply_redir);
+	list_iter(process->io_list, (void *)apply_redir);
 	/*Je l'avais initialement mise ici mais je te l'ai deplace dans MakeChildren*/
 //	if (sigprocmask(SIG_UNBLOCK, core->sig_set, NULL) < 0)/*ERROR a set*/
 //		return ;
@@ -294,7 +294,7 @@ void	launch_process(t_process_p process, int dofork)
 		exit(1);
 }
 
-t_node_p	iterInOrder(t_node_p ptr, List_p *stock)
+t_node_p	iterInOrder(t_node_p ptr, t_list **stock)
 {
 	while (ptr || *stock)
 	{
@@ -359,8 +359,8 @@ int	doPipe(t_process_p p1, t_process_p p2, 	int	*io_pipe)
 	io_in->dup_target = STDOUT_FILENO;
 	io_out->dup_src = io_pipe[0];
 	io_out->dup_target = STDIN_FILENO;
-	PUSH(&(p1->ioList), io_in);
-	PUSH(&(p2->ioList), io_out);
+	PUSH(&(p1->io_list), io_in);
+	PUSH(&(p2->io_list), io_out);
 	return (io_pipe[1]);
 }
 
@@ -422,7 +422,7 @@ void	execSimpleCommand(t_process_p p, int fg, int dofork, int *pgid)
 	launch_process(p, dofork);
 }
 
-int		shouldfork(t_job *j, List_p pipeline)
+int		shouldfork(t_job *j, t_list *pipeline)
 {
 	int dofork = 0;
 	t_process_p	p;
@@ -447,14 +447,14 @@ void	doPipeline(t_job *job, t_list *pipeline)
 	{
 		out = (pipeline->next)? doPipe(pipeline->content, pipeline->next->content, io_pipe): STDOUT_FILENO;
 		execSimpleCommand(pipeline->content, job->foreground, dofork, &(job->pgid));
-		list_iter_int(((t_process_p)pipeline->content)->ioList, (void *)restore_fd, dofork);
+		list_iter_int(((t_process_p)pipeline->content)->io_list, (void *)restore_fd, dofork);
 		if (out != STDOUT_FILENO)
 			close(out);
 		if (in != STDIN_FILENO)
 			close(in);
 		in = io_pipe[0];
-		delete_list(&(((t_process_p)pipeline->content)->ioList), &free);
-		insert_link_bottom(&job->waitProcessList, new_link(memcpy(malloc(pipeline->content_size), pipeline->content, pipeline->content_size), pipeline->content_size));
+		delete_list(&(((t_process_p)pipeline->content)->io_list), &free);
+		insert_link_bottom(&job->wait_process_list, new_link(memcpy(malloc(pipeline->content_size), pipeline->content, pipeline->content_size), pipeline->content_size));
 		pipeline = pipeline->next;
 	}
 }
@@ -462,7 +462,7 @@ void	doPipeline(t_job *job, t_list *pipeline)
 void	launch_job(t_job *j)
 {
 	t_node_p	current;
-	List_p	stack;
+	t_list		*stack;
 
 	current = j->process_tree;
 	stack = NULL;

@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 13:52:27 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/06 16:08:17 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/08 19:24:51 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	print_stack(t_tree *elem)
 	printf("\tToken : <%d>\n", elem->token);
 }
 
-int	iter_post_ord(t_tree **ptr, List_p *stock)
+int	iter_post_ord(t_tree **ptr, t_list **stock)
 {
 	while (*ptr)
 	{
@@ -42,8 +42,8 @@ int	iter_post_ord(t_tree **ptr, List_p *stock)
 
 t_node_p	create_process_tree(t_tree *root)
 {
-	List_p	stack;
-	List_p	stock;
+	t_list	*stack;
+	t_list	*stock;
 
 	stock = NULL;
 	stack = NULL;
@@ -79,7 +79,7 @@ t_job	*create_job(t_tree *root, int foreground)
 	return (job);
 }
 
-void	export_job(t_tree *root, List_p *job_list)
+void	export_job(t_tree *root, t_list **job_list)
 {
 	while (root && (TOKEN(root) IS AMP || TOKEN(root) IS DOT))
 	{
@@ -178,7 +178,7 @@ t_node_p	create_condition_if(t_tree *nodeConditionIf, t_node_p right_node, t_nod
 
 t_node_p	create_pipe(t_node_p right_node, t_node_p left_node)
 {
-	insert_link_bottom((List_p *)&(left_node->data), right_node->data);
+	insert_link_bottom((t_list **)&(left_node->data), right_node->data);
 	delete_node(right_node);
 	return (left_node);
 }
@@ -259,7 +259,7 @@ void test_func(t_tree *root)
 	printJobList(Jobs);
 }
 */
-void	*iterPreOrder(t_node_p Node, List_p *stack)
+void	*iterPreOrder(t_node_p Node, t_list **stack)
 {
 	if (!Node && !*stack)
 		return (NULL);
@@ -283,8 +283,8 @@ void	deleteProcess(t_process_p process)
 {
 	if (!process)
 		return ;
-	if (process->ioList)
-		delete_list(&(process->ioList), &free);
+	if (process->io_list)
+		delete_list(&(process->io_list), &free);
 	free(process);
 }
 
@@ -295,12 +295,12 @@ void	deleteProcessTreeNode(int type, void *data)
 	if (type == IF)
 		deleteConditionIf(data);
 	else
-		delete_list((List_p *)&data, (void *)deleteProcess);
+		delete_list((t_list **)&data, (void *)deleteProcess);
 }
 
 void	delete_tree(t_node_p summitNode, void (f)(int, void *))
 {
-	List_p	stack = NULL;
+	t_list	*stack = NULL;
 
 	while ((summitNode = iterPreOrder(summitNode, &stack)))
 	{
@@ -312,6 +312,6 @@ void	delete_tree(t_node_p summitNode, void (f)(int, void *))
 void	delete_job(t_job *j)
 {
 	delete_tree(j->process_tree, deleteProcessTreeNode);
-	delete_list(&j->waitProcessList, (void * )deleteProcess);
+	delete_list(&j->wait_process_list, (void * )deleteProcess);
 	free(j);
 }

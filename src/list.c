@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/20 20:01:32 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/08 18:16:25 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/08 19:22:32 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	*new_link(void *content, size_t content_size)
 {
-	List_p	link;
+	t_list	*link;
 
 	link = malloc(sizeof(*link));
 	bzero(link, sizeof(*link));
@@ -23,7 +23,7 @@ void	*new_link(void *content, size_t content_size)
 	return (link);
 }
 
-void	delete_list(List_p *ref_head, void (f)(void *))
+void	delete_list(t_list **ref_head, void (f)(void *))
 {
 	void	*ptr;
 
@@ -35,7 +35,7 @@ void	delete_list(List_p *ref_head, void (f)(void *))
 	}
 }
 
-void	*delete_link(List_p link)
+void	*delete_link(t_list *link)
 {
 	void	*content;
 
@@ -44,7 +44,7 @@ void	*delete_link(List_p link)
 	return (content);
 }
 
-void	*remove_link_content(List_p *ref_head, void *content)
+void	*remove_link_content(t_list **ref_head, void *content)
 {
 	while (*ref_head)
 	{
@@ -55,9 +55,9 @@ void	*remove_link_content(List_p *ref_head, void *content)
 	return (content);
 }
 
-void	*remove_link_top(List_p *ref_head_top)
+void	*remove_link_top(t_list **ref_head_top)
 {
-	List_p	link;
+	t_list	*link;
 
 	link = *ref_head_top;
 	(*ref_head_top) = (*ref_head_top)->next;
@@ -65,9 +65,9 @@ void	*remove_link_top(List_p *ref_head_top)
 	return (link);
 }
 
-void	insert_link_top(List_p *ref_head_top, List_p sub_link_chain)
+void	insert_link_top(t_list **ref_head_top, t_list *sub_link_chain)
 {
-	List_p	link;
+	t_list	*link;
 
 	link = sub_link_chain;
 	while (link->next)
@@ -76,14 +76,14 @@ void	insert_link_top(List_p *ref_head_top, List_p sub_link_chain)
 	*ref_head_top = sub_link_chain;
 }
 
-void	insert_link_bottom(List_p *ref_head_top, List_p sub_link_chain)
+void	insert_link_bottom(t_list **ref_head_top, t_list *sub_link_chain)
 {
 	while (*ref_head_top)
 		ref_head_top = &(*ref_head_top)->next;
 	*ref_head_top = sub_link_chain;
 }
 
-void	list_iter(List_p list, void (f)(void *))
+void	list_iter(t_list *list, void (f)(void *))
 {
 	while (list)
 	{
@@ -92,7 +92,7 @@ void	list_iter(List_p list, void (f)(void *))
 	}
 }
 
-void	*list_iter_while(List_p list, void *(f)(void *))
+void	*list_iter_while(t_list *list, void *(f)(void *))
 {
 	void	*result;
 

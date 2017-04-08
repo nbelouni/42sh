@@ -6,17 +6,17 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/07 17:16:41 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/04/08 19:26:52 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
 void	launch_job(t_job *j);
-void	export_job(t_tree *root, List_p *job_list);
-void	printJobList(List_p jobList);
+void	export_job(t_tree *root, t_list **job_list);
+void	printJobList(t_list *jobList);
 
-List_p	jobList = NULL;
+t_list	*jobList = NULL;
 
 static t_builtin_array builtin_array[] =
 {
@@ -80,7 +80,7 @@ int 	main(int argc, char **argv, char **envp)
 	int		ret;
 	int		ret_read;
 	t_tree	*ast;
-	List_p	jobListBis = NULL;
+	t_list	*jobListBis = NULL;
 
 	ast = NULL;
 	list = NULL;

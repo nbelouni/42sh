@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/05 14:45:12 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/07 19:14:43 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/08 19:03:37 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,6 @@ t_node_p	create_redir(t_tree *node_redir, t_node_p left_node)
 	set_mode_redir(node_redir, io, left);
 	save_fd(io, TOKEN(node_redir));
 	process = ((t_list *)left_node->data)->content;
-	insert_link_bottom(&(process->ioList), new_link(io, sizeof(*io)));
+	insert_link_bottom(&(process->io_list), new_link(io, sizeof(*io)));
 	return (left_node);
 }

@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/23 16:03:43 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/08 17:57:43 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/08 18:52:08 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,6 @@ char		*copy_process(t_process_p process)
 		free(tmp);
 		i++;
 	}
-	s = ft_fix_join(s, iter_iolist_cmd(process->ioList));
+	s = ft_fix_join(s, iter_iolist_cmd(process->io_list));
 	return (s);
 }
