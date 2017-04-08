@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/05 14:45:12 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/08 20:05:06 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/08 21:37:12 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void		set_mode_redir(t_tree *node_redir, t_io *io, int left)
 				io->dup_src = left;
 			}
 			else if (i == 5 || i == 6)
-				io->dup_src = atoi((node_redir->right->cmd)[0]);
+				io->dup_src = ft_atoi((node_redir->right->cmd)[0]);
 		}
 		i++;
 	}
@@ -102,7 +102,7 @@ t_node_p	create_redir(t_tree *node_redir, t_node_p left_node)
 		left = ((TOKEN(node_redir) == SL_DIR || TOKEN(node_redir) == LR_DIR ||
 		TOKEN(node_redir) == DIR_L_AMP || TOKEN(node_redir) == DL_DIR) ? 0 : 1);
 	else
-		left = atoi((node_redir->cmd)[0]);
+		left = ft_atoi((node_redir->cmd)[0]);
 	io->dup_target = left;
 	set_mode_redir(node_redir, io, left);
 	save_fd(io, TOKEN(node_redir));
