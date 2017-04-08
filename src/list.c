@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/20 20:01:32 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/24 18:02:45 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/08 18:16:25 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,13 @@ void	*new_link(void *content, size_t content_size)
 	return (link);
 }
 
-void	delete_list(List_p *refHead, void (f)(void *))
+void	delete_list(List_p *ref_head, void (f)(void *))
 {
-	void *ptr;
-	
-	while (*refHead)
+	void	*ptr;
+
+	while (*ref_head)
 	{
-		ptr = delete_link(remove_link_top(refHead));
+		ptr = delete_link(remove_link_top(ref_head));
 		if (f)
 			f(ptr);
 	}
@@ -44,43 +44,43 @@ void	*delete_link(List_p link)
 	return (content);
 }
 
-void	*remove_link_content(List_p *refHead, void *content)
+void	*remove_link_content(List_p *ref_head, void *content)
 {
-	while (*refHead)
+	while (*ref_head)
 	{
-		if ((*refHead)->content == content)
-			return (remove_link_top(refHead));
-		refHead = &(*refHead)->next;
+		if ((*ref_head)->content == content)
+			return (remove_link_top(ref_head));
+		ref_head = &(*ref_head)->next;
 	}
 	return (content);
 }
 
-void	*remove_link_top(List_p *refHeadTop)
+void	*remove_link_top(List_p *ref_head_top)
 {
 	List_p	link;
 
-	link = *refHeadTop;
-	(*refHeadTop) = (*refHeadTop)->next;
+	link = *ref_head_top;
+	(*ref_head_top) = (*ref_head_top)->next;
 	link->next = NULL;
 	return (link);
 }
 
-void	insert_link_top(List_p *refHeadTop, List_p subLinkChain)
+void	insert_link_top(List_p *ref_head_top, List_p sub_link_chain)
 {
 	List_p	link;
 
-	link = subLinkChain;
+	link = sub_link_chain;
 	while (link->next)
 		link = link->next;
-	link->next = *refHeadTop;
-	*refHeadTop = subLinkChain;
+	link->next = *ref_head_top;
+	*ref_head_top = sub_link_chain;
 }
 
-void	insert_link_bottom(List_p *refHeadTop, List_p subLinkChain)
+void	insert_link_bottom(List_p *ref_head_top, List_p sub_link_chain)
 {
-	while (*refHeadTop)
-		refHeadTop = &(*refHeadTop)->next;
-	*refHeadTop = subLinkChain;
+	while (*ref_head_top)
+		ref_head_top = &(*ref_head_top)->next;
+	*ref_head_top = sub_link_chain;
 }
 
 void	list_iter(List_p list, void (f)(void *))

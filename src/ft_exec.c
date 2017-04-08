@@ -6,11 +6,15 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 13:08:28 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/07 19:06:01 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/08 18:03:24 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exec.h"
+
+/*
+** decoupe la path pour effectue l'execution du binaire dans chaque dossier
+*/
 
 static char		*ft_cut_path(char **s, char *av)
 {
@@ -36,6 +40,7 @@ static char		*ft_cut_path(char **s, char *av)
 
 /*
 ** fonction d'execution des commandes via execve
+** lstat verifie l'authorisation d'execution
 */
 
 void			not_binary(char *s, char *s2, char **av, char **envp)
@@ -67,6 +72,11 @@ void			not_binary(char *s, char *s2, char **av, char **envp)
 	}
 }
 
+/*
+** recuperer l'env pour execve
+** remplace le path pour l'envoie a execve
+*/
+
 void			ft_exec(char **av)
 {
 	char		*s;
@@ -88,7 +98,8 @@ void			ft_exec(char **av)
 }
 
 /*
-**sert a retourner si la cmd est un builtin
+** edit_cmd remplace la commande avec la completion
+** sert a retourner si la cmd c'est un builtin
 */
 
 int				ft_check_exec(char ***cmd)

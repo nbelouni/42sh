@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 13:25:54 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/07 19:06:20 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/08 15:50:24 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ void			get_sig_ign(void);
 void			wait_job(t_list *job_list);
 
 void			ft_dot(t_tree *node, t_lst *env);
-void	 		ft_pipe(t_tree *node, t_lst *env);
+void			ft_pipe(t_tree *node, t_lst *env);
 void			ft_or_and(t_tree *node, t_lst *env, int token);
-void		 	ft_redir_right(t_tree *node, t_lst *env);
+void			ft_redir_right(t_tree *node, t_lst *env);
 void			ft_exec_node(t_tree *node, t_lst *env);
 
 void			print_tree(t_tree *root);

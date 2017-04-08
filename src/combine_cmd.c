@@ -6,12 +6,22 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/06 16:52:53 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/06 18:12:50 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/08 17:58:03 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 #include "io.h"
+
+/*
+** fonctionne avec create_cmd_for_job
+** iter sur la liste des job et des processus
+** pour recuperer la commande a afficher pour job
+*/
+
+/*
+** iter sur la pipeline et join les commandes pour les retourner a l'iterateur
+*/
 
 static char		*listiter_cmd(t_list *lst, char *(*f)(t_list *elem), int i)
 {
@@ -34,15 +44,30 @@ static char		*listiter_cmd(t_list *lst, char *(*f)(t_list *elem), int i)
 	return (s);
 }
 
+/*
+** iterateur de liste qui concatene les redirection et les retourne
+*/
+
 char			*iter_iolist_cmd(t_list *io_list)
 {
 	return (listiter_cmd(io_list, (void *)copy_redir, 0));
 }
 
+/*
+** iterateur de liste qui concatene chaque commande de
+** chaque process et les retourne prend la liste de process au depart
+** d'un noeud
+*/
+
 static char		*iter_process_cmd(t_list *process_list)
 {
 	return (listiter_cmd(process_list, (void *)copy_process, 1));
 }
+
+/*
+** recupere le premier noeud de l'arbre de process et iter dessus en
+** fonction des noeuds conditions
+*/
 
 char			*iter_cmd(t_node_p process_tree)
 {

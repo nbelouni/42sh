@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 20:07:22 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/22 18:39:34 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/08 15:58:56 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,10 @@ enum				e_flag
 	BT_QUOTE
 };
 
-/*Ne pas changer l'ordre des tokens please*/
+/*
+**Ne pas changer l'ordre des tokens please
+*/
+
 enum				e_token
 {
 	NO_TOKEN,
@@ -89,7 +92,5 @@ void				clear_cmd();
 void				destroy_cmd();
  *
  */
-
-
 
 #endif

@@ -6,9 +6,9 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 17:03:19 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/07 19:16:15 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/08 15:56:15 by alallema         ###   ########.fr       */
 /*                                                                            */
-/* ********************************************************)****************** */
+/* ************************************************************************** */
 
 #ifndef JOB_H
 # define JOB_H
@@ -19,11 +19,11 @@
 # include <sys/uio.h>
 # include <signal.h>
 
-#define IS ==
-#define TOKEN(x) (((t_tree *)x)->token)
-#define isCondition(x) (x == OR || x == AND)
-#define isRedir(x) (x == DIR_L_AMP || x == DIR_R_AMP || x == SR_DIR || x == SL_DIR || x == DR_DIR || x == DL_DIR || x == LR_DIR)
-#define DEF_FILE 0644
+# define IS ==
+# define TOKEN(x) (((t_tree *)x)->token)
+# define isCondition(x) (x == OR || x == AND)
+# define isRedir(x) (x == DIR_L_AMP || x == DIR_R_AMP || x == SR_DIR || x == SL_DIR || x == DR_DIR || x == DL_DIR || x == LR_DIR)
+# define DEF_FILE 0644
 
 typedef struct s_list *List_p;
 
@@ -35,9 +35,9 @@ typedef enum	e_type_node
 	IF
 }				t_type_node;
 
-# define	BUILTIN	0x1
-# define	DOFORK 0x2
-# define	ALREADY_FORK 0x4
+# define BUILTIN 0x1
+# define DOFORK 0x2
+# define ALREADY_FORK 0x4
 
 typedef enum	e_type_if
 {
@@ -45,7 +45,7 @@ typedef enum	e_type_if
 	IF_AND
 }				t_type_if;
 
-struct s_node{
+struct			s_node{
 	void *data;
 	size_t	size;
 	t_type_node	type;
@@ -55,18 +55,18 @@ struct s_node{
 
 typedef struct s_condition_if *t_condition_if_p;
 
-struct s_condition_if{
+struct			s_condition_if{
 	t_type_if type;
 };
 
 typedef struct s_process *t_process_p;
-	
-typedef struct s_process
+
+typedef struct	s_process
 {
-	t_process_p		next;		/* struct list ou a changer par left right*/
-	int				token;		/* token */
+	t_process_p		next;
+	int				token;
 	int				flag;
-	char			**argv;		/* for exec */
+	char			**argv;
 	List_p			ioList;
 	char			*temp_redir;
 	pid_t			pid;		/* process ID */

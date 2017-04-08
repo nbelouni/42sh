@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 16:51:24 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/07 17:29:54 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/04/08 18:30:52 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,8 @@
 **A check si pas de cmd avant token redir
 */
 
-t_token	*move_for_token(t_token *elem)
+void	move_elem(t_token *tmp, t_token *elem, t_token *ret)
 {
-	t_token	*tmp;
-	t_token	*ret;
-
-	tmp = elem->prev;
-	while (tmp->prev && (tmp->type == TARGET || is_dir_type(tmp->type)))
-		tmp = tmp->prev;
-	if (!is_dir_type(tmp->type))
-		tmp = tmp->next;
-	ret = elem->next;
 	if (tmp && tmp->prev)
 	{
 		tmp = tmp->prev;
@@ -49,8 +40,21 @@ t_token	*move_for_token(t_token *elem)
 		tmp->prev = elem;
 		elem->prev = NULL;
 		elem->type = CMD;
-//		ft_print_token_list(&elem);
 	}
+}
+
+t_token	*move_for_token(t_token *elem)
+{
+	t_token	*tmp;
+	t_token	*ret;
+
+	tmp = elem->prev;
+	while (tmp->prev && (tmp->type == TARGET || is_dir_type(tmp->type)))
+		tmp = tmp->prev;
+	if (!is_dir_type(tmp->type))
+		tmp = tmp->next;
+	ret = elem->next;
+	move_elem(tmp, elem, ret);
 	return (ret);
 }
 
@@ -130,11 +134,12 @@ void	sort_list_token(t_token **list, t_completion *completion, t_lst *hist)
 		}
 		if (isRedir(elem->type))
 			ft_find_fd(elem);
-		if ((elem->type == DIR_L_AMP || elem->type == DIR_R_AMP) && elem->next && check_error_out(elem->next))
+		if ((elem->type == DIR_L_AMP || elem->type == DIR_R_AMP) &&
+			elem->next && check_error_out(elem->next))
 //			return (ft_print_error(elem->word, ERR_FD_AMB, ERR_FD));
 			return ;
 		if (((elem->type > START && elem->type < AMP) || (elem->type > AND
-			&& elem->type < DIR_L_AMP)) && elem->next && elem->next->type == CMD)
+		&& elem->type < DIR_L_AMP)) && elem->next && elem->next->type == CMD)
 			elem->next->type = TARGET;
 		if (elem->type == TARGET && elem->next &&
 		(elem->next->type == CMD || elem->next->type == ARG))

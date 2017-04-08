@@ -6,12 +6,18 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/23 16:03:43 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/06 16:58:20 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/08 17:57:43 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 #include "io.h"
+
+/*
+** fonctionne avec combine_cmd
+** iter sur la liste des job et des processus
+** pour recuperer la commande a afficher pour job
+*/
 
 static t_redir		(g_tab_redir[7]) = {
 	[0] = { "< ", O_RDONLY},
@@ -33,6 +39,11 @@ char		*ft_fix_join(char *s, char *buf)
 	free(buf);
 	return (s);
 }
+
+/*
+** recupere la struct io de chqaue maillon de list pour la comparer
+** et inserer le bon token dans la commande
+*/
 
 char		*copy_redir(t_io *io)
 {
@@ -61,6 +72,10 @@ char		*copy_redir(t_io *io)
 	s = ft_fix_join(s, ft_strdup(" "));
 	return (s);
 }
+
+/*
+** copy le tableau de commande dans une meme string
+*/
 
 char		*copy_process(t_process_p process)
 {
