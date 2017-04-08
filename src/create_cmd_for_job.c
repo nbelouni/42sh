@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/23 16:03:43 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/08 22:08:07 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/08 22:11:28 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,14 +58,9 @@ char		*copy_redir(t_io *io)
 	{
 		while (i < 7)
 		{
-//			E(i);
 			if (io->mode == g_tab_redir[i].mode)
 			{
-				E(io->mode);X('\n');
-				PUT2("OK\n");
-				if (i == 5 || i == 6)
-					tmp = ft_itoa(io->dup_target);
-				if (i != 5 && i != 6 && io->dup_target && io->dup_target != 1)
+				if ((i == 5 || i == 6) || io->dup_target != 1)
 					tmp = ft_itoa(io->dup_target);
 				s = ft_strjoin(g_tab_redir[i].redir, io->str);
 			}
