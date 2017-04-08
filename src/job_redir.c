@@ -6,12 +6,11 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/05 14:45:12 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/08 19:03:37 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/08 20:05:06 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
-#include "hash.h"
 #include "list.h"
 #include "job.h"
 #include "io.h"

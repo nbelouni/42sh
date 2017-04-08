@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 13:52:27 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/08 19:24:51 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/08 19:52:47 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,11 @@ t_node_p	create_process_tree(t_tree *root)
 		{
 			if (TOKEN(root) IS CMD)
 				PUSH(&stack, create_process(root));
-			else if (isCondition(TOKEN(root)))
+			else if ((TOKEN(root)) == OR || (TOKEN(root)) == AND)
 				PUSH(&stack, create_condition_if(root, POP(&stack), POP(&stack)));//Condition, right_node, left_node
 			else if (TOKEN(root) IS PIPE)
 				PUSH(&stack, create_pipe(POP(&stack), POP(&stack)));//right_node, left_node
-			else if (isRedir(TOKEN(root)))
+			else if (is_dir_type(TOKEN(root)))
 				PUSH(&stack, create_redir(root, POP(&stack)));//Redir, targetNode, left_node
 			root = NULL;
 		}

@@ -6,7 +6,7 @@
 /*   By: dogokar <dogokar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 14:41:10 by dogokar           #+#    #+#             */
-/*   Updated: 2017/04/08 17:44:06 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/08 19:50:50 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -300,7 +300,7 @@ t_tree			*recurs_creat_tree(t_token *lst)
 	node->token = tmp->type;
 	if (tmp->type == CMD)
 		node->cmd = concate_cmd(tmp);
-	if (isRedir(tmp->type))
+	if (is_dir_type(tmp->type))
 		node->cmd = copy_fd(tmp);
 	if (tmp->type == TARGET)
 		node->cmd = copy_fd(tmp);
@@ -362,7 +362,7 @@ t_tree			*new_tree(t_token *lst)
 		node->token = tmp->type;
 		if (tmp->type == CMD)
 			node->cmd = concate_cmd(tmp);
-		if (isRedir(tmp->type))
+		if (is_dir_type(tmp->type))
 			node->cmd = copy_fd(tmp);
 		if (tmp->type == TARGET)
 			node->cmd = copy_fd(tmp);

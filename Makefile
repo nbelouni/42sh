@@ -57,6 +57,7 @@ SRCS = 	ft_builtin_cd.c		\
 		is_check.c			\
 		sort_list.c			\
 		sort_list_token.c	\
+		sort_list_token2.c	\
 		can_create_tree.c	\
 		completion.c		\
 		is_token_type.c		\
