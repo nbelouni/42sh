@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 18:10:58 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/31 17:00:27 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/09 05:22:25 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,12 @@ void		get_sigwinch(int sig)
 	if (sig == SIGWINCH)
 		get_win();
 	return ;
+}
+
+void		sigchld_handler(int sigchld)
+{
+	(void)sigchld;
+	do_job_notification();
 }
 
 void		get_sigint(int sig)

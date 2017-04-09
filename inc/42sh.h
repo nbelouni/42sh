@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:09:30 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/01 14:07:10 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/09 01:26:05 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,4 +130,8 @@ void				ft_del_list(t_lst *lst);
 int					ft_pwd_swap(t_lst *env, char *owd, char *cwd);
 
 
+void		blockSignal(int sig, sigset_t *set, sigset_t *oset);
+void	unblockSignal(sigset_t *oset);
+void		restoreOriginalsHandler();
+	
 #endif

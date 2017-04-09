@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/07 19:22:18 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/04/09 06:36:41 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,10 +113,12 @@ t_process_p	getProcessByPid(pid_t pid)
 	while (ptrJob)
 	{
 		j = ptrJob->content;
+		print_job(j);
 		ptrProcess = j->waitProcessList;
 		while (ptrProcess)
 		{
 			p = ptrProcess->content;
+			print_process(p);
 			if (p->pid == pid)
 				return (p);
 			ptrProcess = ptrProcess->next;
@@ -205,17 +207,19 @@ void	wait_for_job(t_job *j)
 {
 	int status;
 	pid_t pid;
-
-//	sigdelset(core->sig_set, SIGCHLD);
-//	sigprocmask(SIG_SETMASK, core->sig_set, NULL);
+	sigset_t	set;
+	sigset_t	oset;
+	
 	print_job(j);
-	signal (SIGCHLD, SIG_DFL);
+	blockSignal(SIGCHLD, &set, &oset);
+//	signal (SIGCHLD, SIG_DFL);
 	while (true)
 	{
 		pid = waitpid(-1, &status, WUNTRACED);// | WNOHANG);
 		if (mark_process_status(pid, status) || job_is_stopped(j) || job_is_completed(j))
 			break ;
 	}
+	unblockSignal(&oset);
 }
 
 /* Format information about job status for the user to look at.  */
@@ -316,15 +320,10 @@ void	launch_process(t_process_p process)
 {
 	//  doRedir(process->ioList);
 	list_iter(process->ioList, (void *)doRedir);
-	/*Je l'avais initialement mise ici mais je te l'ai deplace dans MakeChildren*/
-//	if (sigprocmask(SIG_UNBLOCK, core->sig_set, NULL) < 0)/*ERROR a set*/
-//		return ;
-//	print_process(process);
-//	sleep(10);
+	restoreOriginalsHandler();
+	print_process(process);
 	ft_check_exec(process->argv);
-//	execvp(p->argv[0], p->argv);
-//	perror("execvp");
-//	exit (1);
+	exit(0);
 }
 
 t_node_p	iterInOrder(t_node_p ptr, List_p *stock)
@@ -405,10 +404,10 @@ void	giveTerm(int pgid, int foreground)
 	sigset_t set;
 
 	sigemptyset (&set);
-	sigaddset (&set, SIGTTOU);
-	sigaddset (&set, SIGTTIN);
-	sigaddset (&set, SIGTSTP);
-	sigaddset (&set, SIGCHLD);
+	sigaddset(&set, SIGTTOU);
+	sigaddset(&set, SIGTTIN);
+	sigaddset(&set, SIGTSTP);
+	sigaddset(&set, SIGCHLD);
 	sigemptyset (&set);
 	if (foreground)
 		tcsetpgrp(g_sh_tty, pgid);
@@ -423,14 +422,7 @@ int		makeChildren(t_process_p p, int *pgid, int foreground)
 	pid = fork();
 	if (pid == 0)
 	{
-//		if (sigprocmask(SIG_UNBLOCK, core->sig_set, NULL) < 0)/*ERROR a set*/
-//			return ;
-		signal (SIGINT, SIG_DFL);
-		signal (SIGQUIT, SIG_DFL);
-		signal (SIGTSTP, SIG_DFL);
-		signal (SIGTTIN, SIG_DFL);
-		signal (SIGTTOU, SIG_DFL);
-		signal (SIGCHLD, SIG_DFL);
+//		restoreOriginalsHandler();
 		fpid = getpid();
 		if (*pgid == 0) *pgid = fpid;
 		setpgid(fpid, *pgid);
@@ -454,9 +446,6 @@ int		makeChildren(t_process_p p, int *pgid, int foreground)
 
 void	execSimpleCommand(t_process_p p, int fg, int dofork, int *pgid)
 {
-//	int			pid;
-//	int			fpid;
-
 	if (dofork)
 		if (makeChildren(p, pgid, fg))
 			return ;
