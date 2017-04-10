@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 17:03:19 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/08 19:56:14 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/10 07:37:39 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,11 @@
 # include <sys/uio.h>
 # include <signal.h>
 
-# define IS ==
-# define TOKEN(x) (((t_tree *)x)->token)
-# define DEF_FILE 0644
+#define IS ==
+#define TOKEN(x) (((t_tree *)x)->token)
+#define isCondition(x) (x == OR || x == AND)
+#define isRedir(x) (x == DIR_L_AMP || x == DIR_R_AMP || x == SR_DIR || x == SL_DIR || x == DR_DIR || x == DL_DIR || x == LR_DIR)
+#define DEF_FILE 0644
 
 typedef struct s_list *List_p;
 
@@ -86,6 +88,7 @@ typedef struct		s_process
 
 typedef struct		s_job
 {
+	int				status;
 	struct s_job	*next;
 	char			*command;
 	t_node_p		process_tree;

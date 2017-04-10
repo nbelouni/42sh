@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/08 19:26:52 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/10 08:55:35 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	export_job(t_tree *root, t_list **job_list);
 void	printJobList(t_list *jobList);
 
 t_list	*jobList = NULL;
+t_job	*last_job = NULL;
 
 static t_builtin_array builtin_array[] =
 {
@@ -29,9 +30,9 @@ static t_builtin_array builtin_array[] =
 	{"history", &ft_builtin_history},
 	{"unset", &ft_builtin_unset},
 	{"export", &ft_builtin_export},
-	// {"jobs", &ft_builtin_jobs},
-	// {"fg", &ft_builtin_fg},
-	// {"bg", &ft_builtin_bg},
+	{"jobs", &ft_builtin_jobs},
+	{"fg", &ft_builtin_fg},
+	{"bg", &ft_builtin_bg},
 	{NULL, NULL}
 };
 
@@ -110,6 +111,9 @@ int 	main(int argc, char **argv, char **envp)
 			ret = parse_buf(&list, buf->final_line, &completion, core->hist);
 			if (ret > 0 && list)
 			{
+				dprintf(2, "Down\n");
+	//			ft_push_ast(list, &ast);
+
 /*
  *				enleve les quotes et les backslash -> va changer de place
  *				edit_cmd(list, env);

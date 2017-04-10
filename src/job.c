@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 13:52:27 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/08 19:52:47 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/10 08:49:18 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,8 @@ t_job	*create_job(t_tree *root, int foreground)
 
 void	export_job(t_tree *root, t_list **job_list)
 {
+	t_job	*j;
+	
 	while (root && (TOKEN(root) IS AMP || TOKEN(root) IS DOT))
 	{
 		insert_link_bottom(job_list, new_link(create_job(root->left, (TOKEN(root) IS DOT) ? 1: 0), sizeof(t_job)));
@@ -88,6 +90,8 @@ void	export_job(t_tree *root, t_list **job_list)
 	}
 	if (root)
 		insert_link_bottom(job_list, new_link(create_job(root, 1), sizeof(t_job)));
+	j = TOP((*job_list));
+	dprintf(2, "%s : j :: <%p> && PTree :: <%p>\n", __func__, j, j->process_tree);
 }
 
 t_condition_if_p new_condition_if(t_type_if type)
@@ -152,6 +156,11 @@ int			isBuiltin(char **args)
 			return (TRUE);
 		else if (!ft_strcmp(args[0], "fg"))
 			return (TRUE);
+		else if (!ft_strcmp(args[0], "jobs"))
+			return (TRUE);
+		else if (!ft_strcmp(args[0], "bg"))
+			return (TRUE);
+		
 	}
 	return (FALSE);
 }

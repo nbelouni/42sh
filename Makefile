@@ -95,13 +95,18 @@ SRCS = 	ft_builtin_cd.c		\
 		ft_history_tools.c	\
 		ft_builtin_history.c\
 		ft_builtin_bang.c	\
+		ft_builtin_bg.c	\
+		ft_builtin_fg.c	\
+		ft_builtin_jobs.c	\
 		ft_default_set.c	\
 		ft_bang_alphanum_sub.c\
 		ft_bang_special_sub.c\
 		ft_bang_substitution.c\
 		ft_quick_substitution.c\
 		combine_cmd.c		\
-		edit_history.c	
+		edit_history.c		\
+		extra_builtins.c
+#		ft_getopt.c
 
 SRCC = $(addprefix $(SDIR),$(SRCS))
 

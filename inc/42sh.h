@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:09:30 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/05 14:55:30 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/09 01:26:05 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,14 @@ int					g_sh_is;
 pid_t				g_sh_pgid;
 t_lst				*ft_init_lstset(void);
 t_core				*core;
+extern List_p	jobList;
+
+
+int	job_is_stopped (t_job *j);
+int	job_is_completed(t_job *j);
+void	continue_job (t_job *j, int foreground);
+t_job			*ft_get_job(char *arg);
+t_job			*get_last_job(void);
 
 /*
 **	ft_init.c
@@ -122,4 +130,8 @@ void				ft_del_list(t_lst *lst);
 int					ft_pwd_swap(t_lst *env, char *owd, char *cwd);
 
 
+void		blockSignal(int sig, sigset_t *set, sigset_t *oset);
+void	unblockSignal(sigset_t *oset);
+void		restoreOriginalsHandler();
+	
 #endif
