@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/10 16:21:02 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/10 17:08:37 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,14 @@
 #include <sys/wait.h>
 #include <signal.h>
 
+int		should_wait;
+
 void	delete_job(t_job *j);
 
 void	sigchldhandler(int sig)
 {
 	(void)sig;
-	dprintf(2, "in handler\n");
-	
+	dprintf(2, "in handler\n");	
 }
 
 void print_process(t_process_p process)
@@ -193,10 +194,13 @@ void	update_status(void)
 
   while (true)
   {
+	  dprintf(2, "%s -- in \n", __func__);	
     pid = waitpid(WAIT_ANY, &status, WUNTRACED | WNOHANG);
+	dprintf(2, "%s\n", __func__);	
 	if (mark_process_status(pid, status))
 		break ;
   }
+  	dprintf(2, "%s -- out \n", __func__);	
 }
 
 /* Check for processes that have status information available,
@@ -212,12 +216,17 @@ void	wait_for_job(t_job *j)
 	print_job(j);
 	blockSignal(SIGCHLD, &set, &oset);
 //	signal (SIGCHLD, SIG_DFL);
+	if (!should_wait)
+		return ;
 	while (true)
 	{
+		dprintf(2, "%s -- in \n", __func__);	
 		pid = waitpid(-1, &status, WUNTRACED);// | WNOHANG);
+		dprintf(2, "%s\n", __func__);	
 		if (mark_process_status(pid, status) || job_is_stopped(j) || job_is_completed(j))
 			break ;
 	}
+	dprintf(2, "%s -- out \n", __func__);	
 	unblockSignal(&oset);
 }
 
@@ -273,8 +282,11 @@ static void		put_job_in_background(t_job *j, int cont)
 
 static void		put_job_in_foreground(t_job *j, int cont)
 {
+	if (!should_wait)
+		return ;
 	last_job = j;
 	tcsetpgrp (g_sh_tty, j->pgid);
+	dprintf(2, "%s -- in \n", __func__);	
 	if (cont)
 	{
 //		tcsetattr (g_sh_tty, TCSADRAIN, &j->tmodes);
@@ -282,6 +294,7 @@ static void		put_job_in_foreground(t_job *j, int cont)
 			perror ("kill (SIGCONT)");
 	}
 	wait_for_job (j);
+	dprintf(2, "%s\n", __func__);	
 	tcsetpgrp (g_sh_tty, g_sh_pgid);
 //	tcgetattr (g_sh_tty, &j->tmodes);
 //	tcsetattr (g_sh_tty, TCSADRAIN, &shell_tmodes);
@@ -453,7 +466,9 @@ int		shouldfork(t_job *j, t_list *pipeline)
 
 	p = pipeline->content;
 	if (j->foreground == 0 || pipeline->next || !(p->flag & BUILTIN))
-		dofork = 1;
+	{
+		dofork = should_wait = 1;
+	}
 	return (dofork);
 }
 
@@ -491,6 +506,7 @@ void	launch_job(t_job *j)
 
 	current = j->process_tree;
 	stack = NULL;
+	should_wait = 0;
 	dprintf(2, "%s : j :: <%p> && PTree :: <%p>\n", __func__, j, j->process_tree);
 	while ((current = iterInOrder(current, &stack)))
 	{

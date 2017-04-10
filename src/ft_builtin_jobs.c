@@ -6,7 +6,7 @@
 /*   By: maissa-b <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/07 19:28:11 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/04/10 07:35:54 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/10 17:02:19 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void			print_optp(t_job *j);
 void			print_optl(t_job *j);
 void			print_no_opt(t_job *j);
 void			print_pgid(t_job *j);
-
+void print_job(t_job *job);
 /**/
 
 

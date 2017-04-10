@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/04 15:58:54 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/10 07:36:22 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/10 16:31:56 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void			print_optp(t_job *j)
 
 void			print_state_long(t_job *j)
 {
-	if (job_is_stopped(j) && !j->notified)
+	if (job_is_stopped(j) && j->notified)
 	{
 		ft_putstr_fd("Suspended: ", 1);
 		ft_putnbr_fd(WSTOPSIG(j->status), 1);
@@ -84,7 +84,7 @@ void			print_state_long(t_job *j)
 
 void			print_state_short(t_job *j)
 {
-	if (job_is_stopped(j) && !j->notified)
+	if (job_is_stopped(j) && j->notified)
 		ft_putstr_fd("Stopped", 1);
 	else if(job_is_completed(j))
 		ft_putstr_fd("Done", 1);
