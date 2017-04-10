@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/23 16:03:43 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/08 22:11:28 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/10 22:34:48 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 */
 
 static t_redir		(g_tab_redir[7]) = {
-	[0] = { "< ", O_RDONLY},
+	[0] = { "< ", O_RDONLY | O_NONBLOCK},
 	[1] = { "> ", O_WRONLY | O_CREAT | O_TRUNC},
 	[2] = { "<< ", 0},
 	[3] = { ">> ", O_WRONLY | O_CREAT | O_APPEND},
@@ -60,7 +60,7 @@ char		*copy_redir(t_io *io)
 		{
 			if (io->mode == g_tab_redir[i].mode)
 			{
-				if ((i == 5 || i == 6) || io->dup_target != 1)
+				if ((i == 5 || i == 6) || (io->dup_target != 1 && i != 0))
 					tmp = ft_itoa(io->dup_target);
 				s = ft_strjoin(g_tab_redir[i].redir, io->str);
 			}

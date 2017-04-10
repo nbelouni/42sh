@@ -6,7 +6,7 @@
 /*   By: maissa-b <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/07 19:28:11 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/04/10 17:02:19 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/10 21:22:37 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,21 +73,21 @@ t_job			*ft_get_job(char *arg)
 		else
 		{
 	//		if (arg[1] == '+' || arg[1] == '-')   /* Partie si on decide de prendre un job par rapport a sa priorite + ou - */
-	//			job = get_prior_job(jobList, arg[1]);
+	//			job = get_prior_job(job_list, arg[1]);
 	/*else*/if (ft_strisdigit(&arg[1]))
-				job = list_get_nth(jobList, ft_atoi(&(arg[1])));
+				job = list_get_nth(job_list, ft_atoi(&(arg[1])));
 			else
 			{
-				job = cmp_job(&(arg[1]), jobList);
+				job = cmp_job(&(arg[1]), job_list);
 			}
 		}
 	}
 	else
 	{
 		if (ft_strisdigit(&arg[0]))
-			job = list_get_nth(jobList, ft_atoi(&arg[0]));
+			job = list_get_nth(job_list, ft_atoi(&arg[0]));
 		else
-			job = cmp_job(&(arg[0]), jobList);
+			job = cmp_job(&(arg[0]), job_list);
 	}
 	return (job);
 }
@@ -142,7 +142,7 @@ int			ft_builtin_jobs(t_core *core, char **args)
 				return (-1);
 	print_func = choose_func(flag);
 	if (!(args[opt.opt_ind]) || !(args && args[0]))
-		list_iter(jobList, print_func);
+		list_iter(job_list, print_func);
 	else
 		check_all_jobs(&(args[opt.opt_ind]), print_func);
 	return (0);

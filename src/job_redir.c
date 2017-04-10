@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/05 14:45:12 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/08 22:08:18 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/10 22:34:50 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 */
 
 static t_mode		(g_tab_mode[7]) = {
-	[0] = { SL_DIR, O_RDONLY, OPEN | CLOSE},
+	[0] = { SL_DIR, O_RDONLY | O_NONBLOCK, OPEN | CLOSE},
 	[1] = { SR_DIR, O_WRONLY | O_CREAT | O_TRUNC, OPEN | CLOSE},
 	[2] = { DL_DIR, 0, CLOSE | WRITE},
 	[3] = { DR_DIR, O_WRONLY | O_APPEND | O_CREAT, OPEN | CLOSE},

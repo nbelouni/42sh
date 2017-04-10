@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 13:52:27 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/10 18:19:34 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/10 21:14:18 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,17 +192,17 @@ t_node_p	create_pipe(t_node_p right_node, t_node_p left_node)
 	return (left_node);
 }
 
-void	*iter_pre_order(t_node_p Node, t_list **stack)
+void	*iter_pre_order(t_node_p node, t_list **stack)
 {
-	if (!Node && !*stack)
+	if (!node && !*stack)
 		return (NULL);
 	if (*stack)
-		Node = POP(stack);
-	if (Node->right)
-		PUSH(stack, Node->right);
-	if (Node->right)
-		PUSH(stack, Node->left);
-	return (Node);
+		node = POP(stack);
+	if (node->right)
+		PUSH(stack, node->right);
+	if (node->right)
+		PUSH(stack, node->left);
+	return (node);
 }
 
 void	delete_condition_if(t_condition_if_p condition_if)
@@ -233,8 +233,9 @@ void	delete_process_tree_node(int type, void *data)
 
 void	delete_tree(t_node_p summit_node, void (f)(int, void *))
 {
-	t_list	*stack = NULL;
+	t_list	*stack;
 
+	stack = NULL;
 	while ((summit_node = iter_pre_order(summit_node, &stack)))
 	{
 		f(summit_node->type, delete_node(summit_node));
@@ -245,6 +246,6 @@ void	delete_tree(t_node_p summit_node, void (f)(int, void *))
 void	delete_job(t_job *j)
 {
 	delete_tree(j->process_tree, delete_process_tree_node);
-	delete_list(&j->wait_process_list, (void * )delete_process);
+	delete_list(&j->wait_process_list, (void *)delete_process);
 	free(j);
 }

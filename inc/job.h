@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 17:03:19 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/10 20:01:59 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/10 21:16:30 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,8 @@ typedef struct		s_job
 ** flag : mode exec
 ** foreground : foreground or background
 */
+
+void				delete_job(t_job *j);
 
 t_node_p			create_process(t_tree *node_process);
 t_node_p			create_condition_if(t_tree *node_condition_if,

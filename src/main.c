@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/10 08:55:35 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/10 21:21:55 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 void	launch_job(t_job *j);
 void	export_job(t_tree *root, t_list **job_list);
-void	printJobList(t_list *jobList);
+void	printJobList(t_list *job_list);
 
-t_list	*jobList = NULL;
+t_list	*job_list = NULL;
 t_job	*last_job = NULL;
 
 static t_builtin_array builtin_array[] =
@@ -81,7 +81,7 @@ int 	main(int argc, char **argv, char **envp)
 	int		ret;
 	int		ret_read;
 	t_tree	*ast;
-	t_list	*jobListBis = NULL;
+	t_list	*job_list_bis = NULL;
 
 	ast = NULL;
 	list = NULL;
@@ -102,7 +102,7 @@ int 	main(int argc, char **argv, char **envp)
 	while ((ret_read = read_line(buf, &completion, core->hist)) != ERR_EXIT)
 	{
 		close_termios();
-		jobListBis = NULL;
+		job_list_bis = NULL;
 		if (ret_read != TAB)
 		{
 			if (is_line_ended(buf) < 0)
@@ -122,10 +122,10 @@ int 	main(int argc, char **argv, char **envp)
 //				regexp_in_tree(ast, core);
 //				print_debug_ast(ast);
 //				test_func(ast);
-				export_job(ast, &jobListBis);
-//				printJobList(jobListBis);
-				list_iter(jobListBis, (void *)launch_job);
-				delete_list(&jobListBis, NULL);
+				export_job(ast, &job_list_bis);
+//				printJobList(job_list_bis);
+				list_iter(job_list_bis, (void *)launch_job);
+				delete_list(&job_list_bis, NULL);
 				free_ast(ast);
 //				free(ast);
 /*
