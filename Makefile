@@ -114,11 +114,11 @@ ODIR = ./obj/
 OBJS = $(SRCS:.c=.o)
 OBCC = $(addprefix $(ODIR),$(OBJS))
 
-FLAG =  -Wall -Werror -Wextra -DDEBUG_F  -g #-fsanitize=address
+FLAG =  -Wall -Werror -Wextra -DDEBUG_F  -g -fsanitize=address
 
 $(NAME): $(OBCC)
 	make -C ./libft/
-	gcc $(FLAG) $(OBCC) -ltermcap -L$(LDIR) $(LIBS) -o $(NAME)
+	gcc -v $(FLAG) $(OBCC) -ltermcap -L$(LDIR) $(LIBS) -o $(NAME)
 
 $(ODIR)%.o: $(SDIR)%.c Makefile
 	@mkdir -p $(ODIR)
