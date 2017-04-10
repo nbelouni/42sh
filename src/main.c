@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/07 19:29:48 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/04/10 08:55:35 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ int 	main(int argc, char **argv, char **envp)
 			ret = parse_buf(&list, buf->final_line, &completion, core->hist);
 			if (ret > 0 && list)
 			{
-			
+				dprintf(2, "Down\n");
 	//			ft_push_ast(list, &ast);
 
 /*

@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/09 06:36:41 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/10 08:54:02 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,7 @@ int	job_is_stopped (t_job *j)
 	while (ptr)
 	{
 		p = ptr->content;
-		//	  PUT2("process : ");E(p->stopped);X('\n');
-			  print_process(p);
+		print_process(p);
 		if (!p->completed && !p->stopped)
 			return 0;
 		ptr = ptr->next;
@@ -161,7 +160,7 @@ int	mark_process_status(pid_t pid, int status)
 		if ((p = getProcessByPid(pid)))
 		{
 			p->status = status;
-			// getJobFromPid(pid)->status = status;
+			getJobFromPid(pid)->status = status;
 			if (WIFSTOPPED(status))
 				p->stopped = 1;
 			else
@@ -473,6 +472,7 @@ void	doPipeline(t_job *job, t_list *pipeline)
 	in = STDIN_FILENO;
 	dofork |= shouldfork(job, pipeline);
 	dprintf(2, "Dofork : <%d>\n", dofork);
+	print_job(job);
 	while (pipeline)
 	{
 		out = (pipeline->next)? doPipe(pipeline->content, pipeline->next->content, io_pipe): STDOUT_FILENO;
@@ -491,12 +491,14 @@ void	doPipeline(t_job *job, t_list *pipeline)
 void	launch_job(t_job *j)
 {
 	t_node_p	current;
-	List_p	stack;
+	List_p		stack;
 
 	current = j->process_tree;
 	stack = NULL;
+	dprintf(2, "%s : j :: <%p> && PTree :: <%p>\n", __func__, j, j->process_tree);
 	while ((current = iterInOrder(current, &stack)))
 	{
+		dprintf(2, "%s : current :: <%p>\n", __func__, current);
 		if (current->type == IF)
 			current = ((((t_condition_if_p)current->data)->type == IF_OR && last) || (((t_condition_if_p)current->data)->type == IF_AND && !last)) ? current->right : NULL;
 		else

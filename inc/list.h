@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/20 19:57:37 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/24 14:48:00 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/10 07:12:13 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,5 +38,6 @@ void	*delete_link(List_p link);
 void	*new_link(void *size, size_t content_size);
 void	insert_link_bottom(List_p *refHeadTop, List_p subLinkChain);
 void	delete_list(List_p *refHead, void(f)(void *));
+void	*list_get_nth(List_p list, uint32_t nth);
 
 #endif

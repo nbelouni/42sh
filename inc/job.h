@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 17:03:19 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/03 19:28:22 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/10 07:37:39 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ********************************************************)****************** */
 
@@ -80,6 +80,7 @@ typedef struct s_process
 /* A job is a pipeline of processes.  */
 typedef struct	s_job
 {
+	int				status;
 	struct s_job	*next;
 	char			*command;		/* command line, used for messages */
 	t_node_p		process_tree;	/* list of processes in this job */

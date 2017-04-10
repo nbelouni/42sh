@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 18:10:58 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/09 05:22:25 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/10 08:43:25 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void		get_sigwinch(int sig)
 void		sigchld_handler(int sigchld)
 {
 	(void)sigchld;
+	dprintf(2,"recceived sigchld\n");
 	do_job_notification();
 }
 
@@ -44,7 +45,6 @@ void		get_sigint(int sig)
 	if (sig == SIGINT)
 	{
 		ft_bzero(core->buf->line, BUFF_SIZE);
-//		sigaddset(set->sig_set, SIGINT);
 		ft_putstr_fd("\n42sh.$ ", 1);
 	}
 	return ;

@@ -6,7 +6,7 @@
 /*   By: maissa-b <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/06 16:21:14 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/04/06 16:21:25 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/04/10 07:33:01 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,5 +30,6 @@ typedef struct	s_opt
 }				t_opt;
 
 int				ft_getopt(int argc, char **argv, char *optstr, t_opt *st_opt);
+void			init_optstruct(t_opt *opt_struct);
 
 #endif

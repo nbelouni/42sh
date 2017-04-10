@@ -6,12 +6,29 @@
 /*   By: maissa-b <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/07 19:28:11 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/04/07 19:29:47 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/04/10 07:35:54 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 #define JOBS_OPT ":l:p:"
+
+/*
+** To put somewhere else soon
+*/
+
+void			(*choose_func(int flag))(t_job *);
+void			print_current(t_job *j);
+void			print_command(t_job *j);
+void			print_state_short(t_job *j);
+void			print_state_long(t_job *j);
+void			print_optp(t_job *j);
+void			print_optl(t_job *j);
+void			print_no_opt(t_job *j);
+void			print_pgid(t_job *j);
+
+/**/
+
 
 static void	put_error_job(char *bad_job)
 {
@@ -39,7 +56,7 @@ t_job			*cmp_job(char *cmd, t_list *job_list)
 		job_list = job_list->next;
 	}
 	if (count == 0)
-		print error
+		return (perror(__func__), NULL);
 	else
 		return (job);
 }
@@ -61,7 +78,7 @@ t_job			*ft_get_job(char *arg)
 				job = list_get_nth(jobList, ft_atoi(&(arg[1])));
 			else
 			{
-				job = cmp_job(&(arg[1]), jobList)
+				job = cmp_job(&(arg[1]), jobList);
 			}
 		}
 	}
@@ -84,7 +101,7 @@ static int	check_all_jobs(char **args, void (*print_func)())
 	i = -1;
 	while (args[++i])
 	{
-		job = ft_get_job(jobList, args[i]);
+		job = ft_get_job(args[i]);
 		if (job)
 			print_func(job);
 		else
@@ -118,21 +135,15 @@ int			ft_builtin_jobs(t_core *core, char **args)
 	
 	(void)core;
 	init_optstruct(&opt);
-	if (!args || !args[0])
-		listiter(jobList, &print_no_opt);
-	else
-	{
-		flag = 0; /* cas de l'option sans arg derriere flag = (int)l ou (int)p */
-		while ((ret = ft_getopt(ft_tablen(args)), argv, JOBS_OPT, &opt) != -1)
-		{
+	flag = 0; /* cas de l'option sans arg derriere flag = (int)l ou (int)p */
+	if (args && args[0])
+		while ((ret = ft_getopt(ft_tablen(args), args, JOBS_OPT, &opt)) != -1)
 			if ((flag = check_jobsopt_c(&opt, ret)) == -1)
 				return (-1);
-		}
-		print_func = choose_func(flag);
-		if (!(args[opt->opt_ind]))
-			listiter(jobList, &print_func);
-		else
-			check_all_jobs(&(args[opt.opt_ind]), &print_func);
-	}
+	print_func = choose_func(flag);
+	if (!(args[opt.opt_ind]) || !(args && args[0]))
+		list_iter(jobList, print_func);
+	else
+		check_all_jobs(&(args[opt.opt_ind]), print_func);
 	return (0);
 }
