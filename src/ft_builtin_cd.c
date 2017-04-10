@@ -89,8 +89,7 @@ static int	ft_cd(t_lst *env, int *opt, char *s, mode_t m)
 			return (ft_free_and_return(ERR_EXIT, owd, b2, NULL));
 	}
 	ret = ft_pwd_swap(env, owd, b2);
-	(buf) ? ft_strdel(&buf) : NULL;
-	return (ft_free_and_return(ret, owd, NULL, NULL));
+	return (ft_free_and_return(ret, owd, buf, b2));
 }
 
 /*
