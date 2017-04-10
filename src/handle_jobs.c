@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/10 14:03:24 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/10 16:21:02 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -317,7 +317,8 @@ void	launch_process(t_process_p process, int dofork)
 {
 	//  doRedir(process->ioList);
 	list_iter(process->io_list, (void *)apply_redir);
-	restoreOriginalsHandler();
+	if (dofork)
+		restoreOriginalsHandler();
 	print_process(process);
 	ft_check_exec(&process->argv);
 	if (dofork)
