@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:09:30 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/10 18:03:09 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/10 19:47:36 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ typedef struct		s_core
 	t_lst			*hist;
 	t_lst			*env;
 	t_lst			*exp;
-	sigset_t		*sig_set;
+	sigset_t		sig_set;
 	t_buf			*buf;
 }					t_core;
 

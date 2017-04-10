@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 13:08:51 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/10 18:03:21 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/10 19:53:41 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,6 @@ void		init_shell(void)
 		while (tcgetpgrp(g_sh_tty) != (g_sh_pgid = getpgrp()))
 			kill(-g_sh_pgid, SIGTTIN);
 		init_signal();
-		if (sigprocmask(SIG_BLOCK, core->sig_set, NULL) < 0)
-			return ;
 		g_sh_pgid = getpid();
 		if (setpgid(g_sh_pgid, g_sh_pgid) < 0)
 		{

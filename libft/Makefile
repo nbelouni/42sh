@@ -6,13 +6,13 @@
 #    By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/11/05 17:19:47 by nbelouni          #+#    #+#              #
-#    Updated: 2017/04/10 18:54:29 by llaffile         ###   ########.fr        #
+#    Updated: 2017/04/10 19:42:28 by alallema         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME= libft.a
 CC= gcc
-CFLAGS= -Wall -Werror -Wextra  -g -fsanitize=address
+CFLAGS= -Wall -Werror -Wextra # -g -fsanitize=address
 INC=  -I./inc
 OBJ=ft_bzero.o ft_isalnum.o ft_isalpha.o ft_isascii.o ft_isdigit.o\
 	ft_isprint.o ft_memccpy.o ft_memchr.o ft_memcmp.o ft_memcpy.o\
