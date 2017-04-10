@@ -18,7 +18,7 @@
 typedef struct	s_builtin_array
 {
 	char		*cmd;
-	int			(*func)(t_core *, char **);
+	int			(* const func)(t_core *, char **);
 }				t_builtin_array;
 
 // typedef enum builtin_table

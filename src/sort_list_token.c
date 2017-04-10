@@ -12,11 +12,6 @@
 
 #include "42sh.h"
 
-/*
-**	Faut faire des check avant de trier la liste, pour l'instant on garde ca
-**	On oublie les commentaires, c'est beaucoup trop chiant
-*/
-
 void	sort_list_token(t_token **list, t_completion *completion, t_lst *hist)
 {
 	t_token		*elem;
@@ -31,6 +26,8 @@ void	sort_list_token(t_token **list, t_completion *completion, t_lst *hist)
 		{
 			here_doc(elem->next, completion, hist);
 		}
+		if (!elem->prev || is_dir_type(elem->prev->type))
+			expand_args(list, &elem);
 		elem = elem->next;
 	}
 }

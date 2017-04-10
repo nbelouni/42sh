@@ -107,6 +107,7 @@ char				*ft_free_and_dup(char *dst, char *src);
 char				*ft_strlchr(char *str, char c);
 char				*ft_free_and_join(char *str1, char *str2);
 void				ft_tabdel(char **tab);
+void				ft_tabdel_and_init(char ***tab);
 char				*ft_strreplace(char *o, const char *s, const char *r);
 int					ft_intlen(int n);
 void				ft_putnchar(char c, int n);

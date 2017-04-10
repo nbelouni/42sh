@@ -72,6 +72,7 @@ t_lst				*ft_init_lstset(void);
 */
 
 t_core				*ft_init_core(void);
+t_lst				*ft_default_env(void);
 t_lst				*ft_init_list(void);
 t_elem				*ft_init_elem(void);
 char				**ft_env_to_tab(t_lst *lst);

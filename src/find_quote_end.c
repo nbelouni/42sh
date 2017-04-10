@@ -27,6 +27,21 @@ int		is_end(char *s, int *i, char c)
 	return (TRUE);
 }
 
+int		is_begin(char *s, int *i, char c)
+{
+	int		len;
+
+	if (is_char(s, *i, c))
+	{
+		*i -= 1;
+		if ((len = find_prev_char(s, *i, c)) < 0)
+			return (FALSE);
+		else
+			*i -= len;
+	}
+	return (TRUE);
+}
+
 int		btq_in_dquote(char *s, int *i, int *n_dquote)
 {
 	(*n_dquote) += 1;
