@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/10 18:02:47 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/10 18:47:36 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 #include <sys/wait.h>
 #include <signal.h>
 
-int		should_wait;
 
 void	delete_job(t_job *j);
 
@@ -27,16 +26,18 @@ void	sigchldhandler(int sig)
 	dprintf(2, "in handler\n");	
 }
 
-void print_process(t_process_p process)
+void print_process(t_process_p process, char *func)
 {
+	dprintf(2, "In %s\n", func);
 	dprintf(2, "[PROCESS]\n");
 	dprintf(2, "\tself: <%p>\n", process);
 	dprintf(2, "\tpid: <%d>\n", process->pid);
 	dprintf(2, "\tcompleted: <%d>\tstopped: <%d>\tstatus: <%d>\n", process->completed, process->stopped, process->status);
 }
 
-void print_job(t_job *job)
+void print_job(t_job *job, char *func)
 {
+	dprintf(2, "In %s\n", func);
 	dprintf(2, "[JOB]\n");
 	dprintf(2, "\tCommand : <%s>\n", job->command);
 	dprintf(2, "\tForeground : <%d>\t pgid : <%d>\t notified : <%d>\n", job->foreground, job->pgid, job->notified);
@@ -72,7 +73,7 @@ int	job_is_stopped (t_job *j)
 	while (ptr)
 	{
 		p = ptr->content;
-		print_process(p);
+		print_process(p, (char *)__func__);
 		if (!p->completed && !p->stopped)
 			return 0;
 		ptr = ptr->next;
@@ -213,11 +214,9 @@ void	wait_for_job(t_job *j)
 	sigset_t	set;
 	sigset_t	oset;
 	
-	print_job(j);
+	print_job(j, (char *)__func__);
 	block_signal(SIGCHLD, &set, &oset);
 //	signal (SIGCHLD, SIG_DFL);
-	if (!should_wait)
-		return ;
 	while (true)
 	{
 		dprintf(2, "%s -- in \n", __func__);	
@@ -254,6 +253,7 @@ void do_job_notification(void)
 		{
 			format_job_info (j, "completed");
 			delete_job(POP(ptr));
+			dprintf(2, "%s -- Delete \n", __func__);	
 		}
 		else if (job_is_stopped(j) && !j->notified)
 		{
@@ -282,7 +282,7 @@ static void		put_job_in_background(t_job *j, int cont)
 
 static void		put_job_in_foreground(t_job *j, int cont)
 {
-	if (!should_wait)
+	if (!(j->flag & WAIT))
 		return ;
 	last_job = j;
 	tcsetpgrp (g_sh_tty, j->pgid);
@@ -332,10 +332,12 @@ void	launch_process(t_process_p process, int dofork)
 	list_iter(process->io_list, (void *)apply_redir);
 	if (dofork)
 		restore_originals_handler();
-	print_process(process);
+	print_process(process, (char *)__func__);
 	ft_check_exec(&process->argv);
 	if (dofork)
 		exit(1);
+	else
+		process->completed = 1;
 }
 
 t_node_p	iterInOrder(t_node_p ptr, t_list **stock)
@@ -443,7 +445,7 @@ int		makeChildren(t_process_p p, int *pgid, int foreground)
 		exit (1);
 	}
 	else
-	{
+{
 		p->pid = pid;
 		if (*pgid == 0) *pgid = pid;
 		setpgid(pid, *pgid);
@@ -467,7 +469,8 @@ int		shouldfork(t_job *j, t_list *pipeline)
 	p = pipeline->content;
 	if (j->foreground == 0 || pipeline->next || !(p->flag & BUILTIN))
 	{
-		dofork = should_wait = 1;
+		dofork = 1;
+		j->flag = WAIT;
 	}
 	return (dofork);
 }
@@ -482,7 +485,7 @@ void	doPipeline(t_job *job, t_list *pipeline)
 	in = STDIN_FILENO;
 	dofork |= shouldfork(job, pipeline);
 	dprintf(2, "Dofork : <%d>\n", dofork);
-	print_job(job);
+	print_job(job, (char *)__func__);
 	while (pipeline)
 	{
 		out = (pipeline->next)? doPipe(pipeline->content, pipeline->next->content, io_pipe): STDOUT_FILENO;
@@ -506,7 +509,6 @@ void	launch_job(t_job *j)
 
 	current = j->process_tree;
 	stack = NULL;
-	should_wait = 0;
 	dprintf(2, "%s : j :: <%p> && PTree :: <%p>\n", __func__, j, j->process_tree);
 	while ((current = iterInOrder(current, &stack)))
 	{

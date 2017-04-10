@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 17:03:19 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/10 07:37:39 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/10 18:23:16 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ typedef enum		e_type_node
 # define BUILTIN 0x1
 # define DOFORK 0x2
 # define ALREADY_FORK 0x4
+# define WAIT 0x8
 
 typedef enum		e_type_if
 {

@@ -6,21 +6,20 @@
 /*   By: maissa-b <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/07 19:23:30 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/04/10 17:03:14 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/10 18:43:15 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
-void print_job(t_job *job);
+void print_job(t_job *job, char* func);
 
 static int	exec_job_fg(t_job *job)
 {
 	if (job_is_stopped(job))
 	{
 		job->foreground = 1;
-		print_job(job);
-		dprintf(2, "%s\n", __func__);
+		print_job(job, (char *)__func__);
 		continue_job(job, job->foreground); // continue_job(j);
 	}
 	return (0);
