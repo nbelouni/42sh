@@ -6,25 +6,24 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 13:08:51 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/10 08:45:34 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/10 18:03:21 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
-extern int			g_sh_tty;
-extern int			g_sh_is;
-extern pid_t		g_sh_pgid;
-sigset_t			originalSet;
-volatile sig_atomic_t	sigwinch_n;
-# define MAXJOBS	30
+extern int				g_sh_tty;
+extern int				g_sh_is;
+extern pid_t			g_sh_pgid;
+sigset_t				g_original_set;
+
+#define MAXJOBS 30
 
 void		sigchld_handler(int sigchld);
 
+static sig_t	g_originals[NSIG];
 
-static sig_t	originals[NSIG];
-
-void		init_signal()
+void		init_signal(void)
 {
 	signal(SIGTSTP, SIG_IGN);
 	signal(SIGTTIN, SIG_IGN);
@@ -34,7 +33,7 @@ void		init_signal()
 	signal(SIGINT, get_sigint);
 }
 
-void		blockSignal(int sig, sigset_t *set, sigset_t *oset)
+void		block_signal(int sig, sigset_t *set, sigset_t *oset)
 {
 	sigemptyset(set);
 	sigaddset(set, sig);
@@ -42,38 +41,36 @@ void		blockSignal(int sig, sigset_t *set, sigset_t *oset)
 	sigprocmask(SIG_BLOCK, set, oset);
 }
 
-void	unblockSignal(sigset_t *oset)
+void		unblock_signal(sigset_t *oset)
 {
-	sigprocmask (SIG_SETMASK, oset, (sigset_t *)NULL);
+	sigprocmask(SIG_SETMASK, oset, (sigset_t *)NULL);
 }
 
-void		saveOriginalsHandler()
+void		save_originals_handler(void)
 {
 	int		i;
 
 	i = 1;
 	while (i < NSIG)
 	{
-		if ((originals[i] = signal(i, SIG_IGN)) == SIG_ERR){
+		if ((g_originals[i] = signal(i, SIG_IGN)) == SIG_ERR)
 			perror(__func__);
-//			printf("%p amd <%d>\n", originals[i], i);
-		}
-		signal(i, originals[i]);
+		signal(i, g_originals[i]);
 		i++;
 	}
-	originals[SIGTSTP] = SIG_DFL;
-	originals[SIGTTIN] = SIG_DFL;
-	originals[SIGTTOU] = SIG_DFL;
+	g_originals[SIGTSTP] = SIG_DFL;
+	g_originals[SIGTTIN] = SIG_DFL;
+	g_originals[SIGTTOU] = SIG_DFL;
 }
 
-void		restoreOriginalsHandler()
+void		restore_originals_handler(void)
 {
 	int		i;
 
 	i = 1;
 	while (i < NSIG)
 	{
-		if (signal(i, originals[i]) == SIG_ERR)
+		if (signal(i, g_originals[i]) == SIG_ERR)
 			perror(__func__);
 		i++;
 	}
@@ -81,16 +78,16 @@ void		restoreOriginalsHandler()
 
 void		init_shell(void)
 {
-	sigemptyset(&originalSet);
-	sigprocmask(SIG_BLOCK, NULL, &originalSet);
-	sigdelset(&originalSet, SIGCHLD);
-	saveOriginalsHandler();
+	sigemptyset(&g_original_set);
+	sigprocmask(SIG_BLOCK, NULL, &g_original_set);
+	sigdelset(&g_original_set, SIGCHLD);
+	save_originals_handler();
 	g_sh_tty = STDIN_FILENO;
 	g_sh_is = isatty(g_sh_tty);
 	if (g_sh_is)
 	{
 		while (tcgetpgrp(g_sh_tty) != (g_sh_pgid = getpgrp()))
-			kill (- g_sh_pgid, SIGTTIN);
+			kill(-g_sh_pgid, SIGTTIN);
 		init_signal();
 		if (sigprocmask(SIG_BLOCK, core->sig_set, NULL) < 0)
 			return ;
@@ -101,7 +98,6 @@ void		init_shell(void)
 			exit(1);
 		}
 		tcsetpgrp(g_sh_tty, g_sh_pgid);
-//		tcgetattr (shell_terminal, &shell_tmodes);
 	}
-		signal(SIGCHLD, sigchld_handler);
+	signal(SIGCHLD, sigchld_handler);
 }

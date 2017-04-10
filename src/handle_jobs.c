@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/10 17:08:37 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/10 18:02:47 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,7 +214,7 @@ void	wait_for_job(t_job *j)
 	sigset_t	oset;
 	
 	print_job(j);
-	blockSignal(SIGCHLD, &set, &oset);
+	block_signal(SIGCHLD, &set, &oset);
 //	signal (SIGCHLD, SIG_DFL);
 	if (!should_wait)
 		return ;
@@ -227,7 +227,7 @@ void	wait_for_job(t_job *j)
 			break ;
 	}
 	dprintf(2, "%s -- out \n", __func__);	
-	unblockSignal(&oset);
+	unblock_signal(&oset);
 }
 
 /* Format information about job status for the user to look at.  */
@@ -331,7 +331,7 @@ void	launch_process(t_process_p process, int dofork)
 	//  doRedir(process->ioList);
 	list_iter(process->io_list, (void *)apply_redir);
 	if (dofork)
-		restoreOriginalsHandler();
+		restore_originals_handler();
 	print_process(process);
 	ft_check_exec(&process->argv);
 	if (dofork)
@@ -431,7 +431,7 @@ int		makeChildren(t_process_p p, int *pgid, int foreground)
 	pid = fork();
 	if (pid == 0)
 	{
-//		restoreOriginalsHandler();
+//		restore_originals_handler();
 		fpid = getpid();
 		if (*pgid == 0) *pgid = fpid;
 		setpgid(fpid, *pgid);

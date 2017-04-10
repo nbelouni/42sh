@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/21 11:02:12 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/07 19:07:16 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/10 18:10:30 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,6 @@ char			*ft_fix_join(char *s, char *buf);
 void			list_iter_int(t_list *list, void *(f)(void *, int), int d);
 void			apply_redir(t_io *io);
 void			restore_fd(t_io *io, int dofork);
+int				is_builtin(char **args);
 
 #endif
