@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 17:03:19 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/10 18:23:16 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/10 20:01:59 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,9 @@
 # include <sys/uio.h>
 # include <signal.h>
 
-#define IS ==
-#define TOKEN(x) (((t_tree *)x)->token)
-#define isCondition(x) (x == OR || x == AND)
-#define isRedir(x) (x == DIR_L_AMP || x == DIR_R_AMP || x == SR_DIR || x == SL_DIR || x == DR_DIR || x == DL_DIR || x == LR_DIR)
-#define DEF_FILE 0644
+# define IS ==
+# define TOKEN(x) (((t_tree *)x)->token)
+# define DEF_FILE 0644
 
 typedef struct s_list *List_p;
 

@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 13:08:51 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/10 19:53:41 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/10 19:58:02 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,19 +19,7 @@ sigset_t				g_original_set;
 
 #define MAXJOBS 30
 
-void		sigchld_handler(int sigchld);
-
 static sig_t	g_originals[NSIG];
-
-void		init_signal(void)
-{
-	signal(SIGTSTP, SIG_IGN);
-	signal(SIGTTIN, SIG_IGN);
-	signal(SIGTTOU, SIG_IGN);
-	signal(SIGWINCH, get_sigwinch);
-	signal(SIGQUIT, SIG_IGN);
-	signal(SIGINT, get_sigint);
-}
 
 void		block_signal(int sig, sigset_t *set, sigset_t *oset)
 {

@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/10 18:47:36 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/10 20:27:27 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,8 +131,8 @@ t_process_p	getProcessByPid(pid_t pid)
 
 t_job	*getJobFromPid(pid_t pid)
 {
-	List_p	ptrJob;
-	List_p	ptrProcess;
+	t_list	*ptrJob;
+	t_list	*ptrProcess;
 	t_job		*j;
 	t_process_p	p;
 
@@ -275,6 +275,7 @@ t_job			*get_last_job(void)
 static void		put_job_in_background(t_job *j, int cont)
 {
 	last_job = j;
+	dprintf(2, "%s -- in \n", __func__);	
 	if (cont)
 		if (kill(-j->pgid, SIGCONT) < 0)
 			perror("kill (SIGCONT)");
@@ -328,7 +329,6 @@ void	continue_job (t_job *j, int foreground)
 
 void	launch_process(t_process_p process, int dofork)
 {
-	//  doRedir(process->ioList);
 	list_iter(process->io_list, (void *)apply_redir);
 	if (dofork)
 		restore_originals_handler();

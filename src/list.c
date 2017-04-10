@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/20 20:01:32 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/10 08:55:40 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/10 20:03:34 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,11 +92,6 @@ void	list_iter(t_list *list, void (f)(void *))
 	}
 }
 
-/*
-List_p	*list_map(List_p list, void *(f)(void *))
-{}
-*/
-
 void	*list_iter_while(t_list *list, void *(f)(void *))
 {
 	void	*result;
@@ -110,7 +105,7 @@ void	*list_iter_while(t_list *list, void *(f)(void *))
 	return (NULL);
 }
 
-void	*list_get_nth(List_p list, uint32_t nth)
+void	*list_get_nth(t_list *list, uint32_t nth)
 {	
 	while (list)
 	{

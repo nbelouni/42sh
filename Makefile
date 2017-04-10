@@ -106,7 +106,6 @@ SRCS = 	ft_builtin_cd.c		\
 		combine_cmd.c		\
 		edit_history.c		\
 		extra_builtins.c
-#		ft_getopt.c
 
 SRCC = $(addprefix $(SDIR),$(SRCS))
 

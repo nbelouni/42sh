@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 18:10:58 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/10 08:43:25 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/10 19:57:35 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,14 @@ void		get_sigint(int sig)
 		ft_putstr_fd("\n42sh.$ ", 1);
 	}
 	return ;
+}
+
+void		init_signal(void)
+{
+	signal(SIGTSTP, SIG_IGN);
+	signal(SIGTTIN, SIG_IGN);
+	signal(SIGTTOU, SIG_IGN);
+	signal(SIGWINCH, get_sigwinch);
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, get_sigint);
 }

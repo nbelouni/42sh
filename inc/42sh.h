@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:09:30 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/10 19:47:36 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/10 20:29:45 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ typedef struct		s_core
 	t_lst			*hist;
 	t_lst			*env;
 	t_lst			*exp;
-	sigset_t		sig_set;
 	t_buf			*buf;
 }					t_core;
 
@@ -74,14 +73,16 @@ int					g_sh_is;
 pid_t				g_sh_pgid;
 t_lst				*ft_init_lstset(void);
 t_core				*core;
-extern List_p	jobList;
+extern t_list		*jobList;
 
 
-int	job_is_stopped (t_job *j);
-int	job_is_completed(t_job *j);
-void	continue_job (t_job *j, int foreground);
+int				job_is_stopped (t_job *j);
+int				job_is_completed(t_job *j);
+void			continue_job (t_job *j, int foreground);
 t_job			*ft_get_job(char *arg);
 t_job			*get_last_job(void);
+void			sigchld_handler(int sigchld);
+void			init_signal(void);
 
 /*
 **	ft_init.c
