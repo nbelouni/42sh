@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/21 16:47:01 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/20 15:56:51 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/04/11 15:18:49 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,9 @@ int		read_line(t_buf *buf, t_completion *cplt, t_lst *hist)
 			(err = cpy_cut_paste(buf, x)) < 0 ||
 			(err = complete_line(buf, cplt, x)) != 0 ||
 			(err = edit_history(buf, hist, x) != 0))
-			return (err);
+			{
+				return (err);
+			}
 			if (x == RETR)
 			{
 				m_right(calc_len(buf, END));
