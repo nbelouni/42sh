@@ -26,13 +26,13 @@ static int	is_optend(t_opt **st_opt, char **index_ptr, char **argv, int argc)
 	if ((*st_opt)->opt_ind >= argc || \
 		*((*index_ptr) = argv[(*st_opt)->opt_ind]) != '-')
 	{
-		(*index_ptr) = RESET;
+		(*index_ptr) = "";
 		return (-1);
 	}
 	if ((*index_ptr)[1] && *(++(*index_ptr)) == '-')
 	{
 		++((*st_opt)->opt_ind);
-		(*index_ptr) = RESET;
+		(*index_ptr) = "";
 		return (-1);
 	}
 	return (0);
@@ -58,7 +58,7 @@ static int	opt_is_invalid(t_opt **st_opt, char *index, char *optstr)
 
 static int	stop_optparse(t_opt *st_opt, char *prog, char **index, char *optstr)
 {
-	(*index) = RESET;
+	(*index) = "";
 	if (*optstr == ':')
 		return (NO_ARG);
 	write(2, prog, ft_strlen(prog));
@@ -79,7 +79,7 @@ static void	no_optarg(t_opt **st_opt, char *index)
 
 int			ft_getopt(int ac, char **av, char *ops, t_opt *st_opt)
 {
-	static char	*index = RESET;
+	static char	*index = "";
 	char		*ptr;
 
 	if (st_opt->opt_res || !(*index))
@@ -100,7 +100,7 @@ int			ft_getopt(int ac, char **av, char *ops, t_opt *st_opt)
 			return (stop_optparse(st_opt, av[0], &index, ops));
 		else
 			st_opt->opt_arg = av[st_opt->opt_ind];
-		index = RESET;
+		index = "";
 		++(st_opt->opt_ind);
 	}
 	return (st_opt->opt_char);

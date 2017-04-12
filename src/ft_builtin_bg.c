@@ -32,26 +32,18 @@ static int		exec_job_bg(t_job *job)
 
 int      ft_builtin_bg(t_core *core, char **args)
 {
+	t_job	*job;
+
 	(void)core;
 	if (args && args[0])
 	{
-		exec_job_bg(ft_get_job(args[0]));
+		if ((job = ft_get_job(args[0])) == NULL)
+			return(ft_print_error("42sh: bg: No such job: ", args[0], -1));
 	}
 	else
 	{
-		exec_job_bg(get_last_job());
+		if ((job = get_last_job()) == NULL)
+			return (ft_print_error("42sh: bg: ", "current: No such job", -1));
 	}
-	return (0);
+	return (exec_job_bg(job));
 }
-/*
-int	main(void)
-{
-	t_job *test;
-	char	*args;
-
-	test = malloc(sizeof(t_job));
-	scanf("bg %s", args)
-	creat_job()
-	return (0);
-}
-*/
