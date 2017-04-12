@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 16:51:24 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/08 21:37:27 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/12 12:31:31 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ void	ft_find_fd(t_token *list)
 	char	*s;
 
 	s = NULL;
-	if (list && list->word && !ft_atoi(list->word))
+	if (list && list->word && !ft_atoi(list->word) &&
+		ft_strcmp(list->word, "0") != 0)
 	{
 		free(list->word);
 		list->word = NULL;
