@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:09:30 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/09 01:26:05 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/12 14:01:57 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int					g_sh_is;
 pid_t				g_sh_pgid;
 t_lst				*ft_init_lstset(void);
 t_core				*core;
-extern List_p	jobList;
+extern List_p		jobList;
 
 
 int	job_is_stopped (t_job *j);

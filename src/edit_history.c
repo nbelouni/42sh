@@ -78,6 +78,8 @@ static int	ft_mv_up(t_buf *buf, t_elem **elem, char **last_cmd)
 
 int			edit_history(t_buf *buf, t_lst *hist, int x)
 {
+	if (!hist || !hist->tail)
+		return (-1);
 	if (x == UP)
 	{
 		if (buf->cur_hist != hist->head)
