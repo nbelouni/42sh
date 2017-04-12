@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 19:31:44 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/12 19:21:06 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/29 20:06:22 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,13 @@ int			check_fd_out(t_token **list, char *s, t_pt *p)
 {
 	int		ret;
 
-	while (s[p->i + p->len] && ft_isdigit(s[p->i + p->len]) == 1)
+	while (s[p->i + p->len] && ft_isalnum(s[p->i + p->len]) == 1)
+		p->len++;
+	if (p->len == 0 && s[p->i + p->len] == '-')
 		p->len++;
 	if (p->len != 0)
 	{
-		p->type = FD_OUT;
+		p->type = TARGET;
 		if ((ret = parse_list(list, ft_strsub(s, p->i, p->len), p)))
 			return (ret);
 		p->i = p->i + p->len;
@@ -55,16 +57,18 @@ int			check_fd_out(t_token **list, char *s, t_pt *p)
 	return (0);
 }
 
-static int	check_fd_in(char *s, t_pt *p)
+static int	check_fd_in(t_token **list, char *s, t_pt *p)
 {
 	int		j;
 	int		ret;
 	int		ret2;
 
+	(void)list;
 	j = 0;
 	ret = is_redir(s, p->i + p->len);
 	ret2 = is_agreg(s, p->i + p->len);
-	if (ret != SR_DIR && ret != SL_DIR && ret2 != DIR_AMP)
+	if (ret != SR_DIR && ret != SL_DIR && ret2 != DIR_L_AMP &&
+		ret2 != DIR_R_AMP && ret != DR_DIR && ret != LR_DIR && ret != DL_DIR)
 		return (0);
 	while (p->len - j > 0 && ft_isdigit(s[p->i + p->len - j - 1]) == 1)
 		j++;
@@ -86,7 +90,7 @@ int			cut_cmd(t_token **list, char *s, t_pt *p)
 		cut_quote(s, p);
 		p->len++;
 	}
-	if (check_fd_in(s, p) > 0)
+	if (check_fd_in(list, s, p) > 0)
 		p->type = FD_IN;
 	else
 		p->type = CMD;

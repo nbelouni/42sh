@@ -22,8 +22,8 @@
 test sous-shell& accolade
 
  .() := sous-shell
-	. n'applieque pqs les changements au shell
-	. child scope
+	. n'applique pas les changements au shell
+	. child scope (env)
 
  .{} := accolade
  	.applique les changements au shell
@@ -74,3 +74,21 @@ bash: 2147483647: Bad file descriptor
   //int *ft_opt_parse(char *opts, char **args, size_t overwrite)
   #define UNSET_OPT "iu" -> opt{pos/code erreur, 1/0, 1/0}
    exemple opt[1] -> 1
+
+	TOKEN A FAIRE
+	<> -> == < a voir
+	<& && >& sont differents a changer a checker
+
+--->>> Penser a aller chercher la liste d'arguments dans t_list *argv
+		a la place de char **cmd
+
+typedef struct		s_tree
+{
+	int				token;
+	char			**cmd;
+	t_list			*argv;
+	t_token			*token_or;
+	struct s_tree	*father;
+	struct s_tree	*left;
+	struct s_tree	*right;
+}					t_tree;

@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/16 12:42:26 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/18 21:27:58 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/04/06 16:30:21 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,18 @@ void		ft_tokenclear(t_token **list)
 	elem = (*list)->prev;
 	tmp = (*list)->next;
 	if (!elem)
+	{
+		elem = *list;
 		*list = (*list)->next;
+		(*list)->prev = NULL;
+		free(elem);
+	}
 	else
 	{
 		elem->next = tmp;
 		tmp->prev = elem;
+		ft_memdel((void *)list);
 	}
-	ft_memdel((void *)list);
 }
 
 void		ft_tokenpush(t_token **begin, t_token *new)

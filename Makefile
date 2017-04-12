@@ -7,7 +7,11 @@ INCS = 42sh.h		\
 	   lex.h		\
 	   exec.h		\
 	   completion.h	\
-	   globbing.h
+	   globbing.h	\
+		job.h	\
+	  	hash.h	\
+	  	list.h	\
+	  	io.h
 INCC = $(addprefix $(IDIR), $(INCS))
 
 LDIR = ./libft
@@ -53,6 +57,7 @@ SRCS = 	ft_builtin_cd.c		\
 		is_check.c			\
 		sort_list.c			\
 		sort_list_token.c	\
+		sort_list_token2.c	\
 		can_create_tree.c	\
 		completion.c		\
 		is_token_type.c		\
@@ -71,6 +76,16 @@ SRCS = 	ft_builtin_cd.c		\
 		match_regex.c		\
 		find_regex.c		\
 		expand.c			\
+		job.c				\
+		job_redir.c			\
+		is_local_var.c		\
+		ft_print.c			\
+		hash.c				\
+		list.c				\
+		io.c				\
+		handle_jobs.c		\
+		init_shell.c		\
+		create_cmd_for_job.c\
 		ft_get_history.c	\
 		ft_set_history.c	\
 		ft_histopt_filename.c\
@@ -80,14 +95,17 @@ SRCS = 	ft_builtin_cd.c		\
 		ft_history_tools.c	\
 		ft_builtin_history.c\
 		ft_builtin_bang.c	\
+		ft_builtin_bg.c	\
+		ft_builtin_fg.c	\
+		ft_builtin_jobs.c	\
 		ft_default_set.c	\
 		ft_bang_alphanum_sub.c\
 		ft_bang_special_sub.c\
 		ft_bang_substitution.c\
 		ft_quick_substitution.c\
+		combine_cmd.c		\
 		edit_history.c		\
-		ft_print.c
-
+		extra_builtins.c
 
 SRCC = $(addprefix $(SDIR),$(SRCS))
 
@@ -95,15 +113,15 @@ ODIR = ./obj/
 OBJS = $(SRCS:.c=.o)
 OBCC = $(addprefix $(ODIR),$(OBJS))
 
-FLAG = -g -Wall -Werror -Wextra
+FLAG =  -Wall -Werror -Wextra -DDEBUG_F  -g -fsanitize=address -UTOSTOP
 
 $(NAME): $(OBCC)
 	make -C ./libft/
-	gcc $(FLAG) $(OBCC) -ltermcap -L$(LDIR) $(LIBS) -o $(NAME)
+	gcc -v $(FLAG) $(OBCC) -ltermcap -L$(LDIR) $(LIBS) -o $(NAME)
 
-$(ODIR)%.o: $(SDIR)%.c
+$(ODIR)%.o: $(SDIR)%.c Makefile
 	@mkdir -p $(ODIR)
-	gcc $(FLAG) -c $^ -o $@ -I$(IDIR) -I$(ILIB)
+	gcc $(FLAG) -c $< -o $@ -I$(IDIR) -I$(ILIB)
 
 all: $(NAME)
 

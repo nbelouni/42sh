@@ -6,25 +6,25 @@
 /*   By: dogokar <dogokar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 14:41:10 by dogokar           #+#    #+#             */
-/*   Updated: 2017/03/30 13:18:42 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/04/08 19:50:50 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
-# define LENLIB  10
+#define LENLIB  12
 
-t_tree *init_node(void)
+t_tree			*init_node(void)
 {
-	t_tree *node;
+	t_tree	*node;
 
 	if (!(node = ft_memalloc(sizeof(t_tree))))
-		return(NULL);
+		return (NULL);
 	ft_memset(node, 0, sizeof(node));
 	return (node);
 }
 
-t_lvl   *initlvl(int bt_lvl, int bc_lvl)
+t_lvl			*initlvl(int bt_lvl, int bc_lvl)
 {
 	t_lvl *lvl;
 
@@ -35,21 +35,23 @@ t_lvl   *initlvl(int bt_lvl, int bc_lvl)
 	return (lvl);
 }
 
-static  t_lib lib_op[LENLIB] =
+static t_lib	g_lib_op[LENLIB] =
 {
-	{.toke = DOT, .priority = 10},
+	{.toke = DOT, .priority = 11},
 	{.toke = OR, .priority = 9},
-	{.toke = AND, .priority = 9},
+	{.toke = AND, .priority = 10},
 	{.toke = PIPE, .priority = 8},
 	{.toke = SL_DIR, .priority = 7},
 	{.toke = SR_DIR, .priority = 7},
-	{.toke = AMP, .priority = 7},
+	{.toke = AMP, .priority = 11},
 	{.toke = DL_DIR, .priority = 7},
 	{.toke = DR_DIR, .priority = 7},
-	{.toke = DIR_AMP, .priority = 7},
+	{.toke = LR_DIR, .priority = 7},
+	{.toke = DIR_L_AMP, .priority = 7},
+	{.toke = DIR_R_AMP, .priority = 7},
 };
 
-t_tree  *add_tree(t_token *lst)
+t_tree			*add_tree(t_token *lst)
 {
 	t_tree *node;
 
@@ -62,39 +64,40 @@ t_tree  *add_tree(t_token *lst)
 	return (node);
 }
 
-t_lib  *cheak_lib(t_token *node)
+t_lib			*cheak_lib(t_token *node)
 {
 	int i;
 
 	i = 0;
 	while (i < LENLIB)
 	{
-		if (node->type == lib_op[i].toke)
-			return (&lib_op[i]);
+		if (node->type == g_lib_op[i].toke)
+			return (&g_lib_op[i]);
 		++i;
 	}
 	return (NULL);
 }
 
 /*
- ** compare les operateur par rappot à la lib_op
- */
+** compare les operateur par rappot à la g_lib_op
+*/
 
-int  compare_token_op(t_token *node_lst, t_token *tmp)
+int				compare_token_op(t_token *node_lst, t_token *tmp)
 {
-	t_lib  *lib_lst;
-	t_lib  *lib_tmp;
-
+	t_lib	*lib_lst;
+	t_lib	*lib_tmp;
 
 	lib_lst = NULL;
 	lib_lst = cheak_lib(node_lst);
 	lib_tmp = NULL;
 	lib_tmp = cheak_lib(tmp);
 	if (!lib_lst && lib_tmp)
-		return(1);
+		return (1);
 	else if (lib_lst && lib_tmp)
 	{
-		if (lib_lst->priority < lib_tmp->priority)
+		if (lib_lst->priority == lib_tmp->priority && lib_lst->priority > 10)
+			return (0);
+		if (lib_lst->priority <= lib_tmp->priority)
 			return (1);
 		else
 			return (0);
@@ -103,14 +106,14 @@ int  compare_token_op(t_token *node_lst, t_token *tmp)
 		return (0);
 }
 
-int  compare_token_com(t_token *node_lst, t_token *tmp)
+int				compare_token_com(t_token *node_lst, t_token *tmp)
 {
-	if(!node_lst && tmp->type == CMD)
+	if (!node_lst && tmp->type == CMD)
 		return (1);
 	return (0);
 }
 
-int     test_lvl(int bt_lvl, int bc_lvl, t_lvl *lvl)
+int				test_lvl(int bt_lvl, int bc_lvl, t_lvl *lvl)
 {
 	if (bt_lvl == lvl->bt_lvl && bc_lvl == lvl->bc_lvl)
 		return (0);
@@ -118,25 +121,15 @@ int     test_lvl(int bt_lvl, int bc_lvl, t_lvl *lvl)
 		return (1);
 }
 
-// int    escape_brac(t_token *lst)
-// {
-//   if (lst->type == O_BRACE || lst->type == C_BRACE || lst->type == O_BRACKET
-//     || lst->type == C_BRACKET)
-//     return (1);
-//     else
-//     return (0);
-//   }
-
 /*
- **    regle pour parser la liste et inserer les token au bon endroit
- */
+**    regle pour parser la liste et inserer les token au bon endroit
+*/
 
-int  priority(t_token *node_lst, t_token *tmp, t_lvl *lvl)
+int				priority(t_token *node_lst, t_token *tmp, t_lvl *lvl)
 {
-	int tmp_bt;
-	int tmp_bc;
+	int		tmp_bt;
+	int		tmp_bc;
 
-	(void)lvl;
 	tmp_bt = tmp->bt_level;
 	tmp_bc = tmp->bc_level;
 	if (!node_lst && tmp->select == 0 && (test_lvl(tmp_bt, tmp_bc, lvl) == 0))
@@ -151,16 +144,17 @@ int  priority(t_token *node_lst, t_token *tmp, t_lvl *lvl)
 }
 
 /*
- ** fonction qui va chercher le bon element dans la list
- ** recursive lorsqu'il trouve plus d'element et que le bt ou bc lvl est incrementer
- */
+** fonction qui va chercher le bon element dans la list
+** recursive lorsqu'il trouve plus d'element et que le bt
+** ou bc lvl est incrementer
+*/
 
-t_token *search_toke(t_token *lst, t_lvl *lvl)
+t_token			*search_toke(t_token *lst, t_lvl *lvl)
 {
-	t_token   *tmp;
-	t_token   *node_lst;
-	t_lvl     *lvl_up;
-	int       first_time;
+	t_token	*tmp;
+	t_token	*node_lst;
+	t_lvl	*lvl_up;
+	int		first_time;
 
 	tmp = lst;
 	first_time = 0;
@@ -169,7 +163,7 @@ t_token *search_toke(t_token *lst, t_lvl *lvl)
 	if (lst == NULL)
 		return (NULL);
 	if (lvl == NULL)
-		lvl = initlvl(0,0);
+		lvl = initlvl(0, 0);
 	if (tmp->select == 1)
 		tmp = tmp->next;
 	while (tmp && tmp->select == 0)
@@ -177,6 +171,8 @@ t_token *search_toke(t_token *lst, t_lvl *lvl)
 		if (first_time == 0 && test_lvl(tmp->bt_level, tmp->bc_level, lvl))
 		{
 			first_time = 1;
+			if (lvl_up)
+				free(lvl_up);
 			lvl_up = initlvl(tmp->bt_level, tmp->bc_level);
 		}
 		if (priority(node_lst, tmp, lvl))
@@ -191,12 +187,12 @@ t_token *search_toke(t_token *lst, t_lvl *lvl)
 }
 
 /*
- ** remonte la liste
- */
+** remonte la liste
+*/
 
-t_token *search_toke_prev(t_token *lst, t_lvl *lvl)
+t_token			*search_toke_prev(t_token *lst, t_lvl *lvl)
 {
-	t_token   *tmp;
+	t_token	*tmp;
 
 	tmp = lst;
 	if (lst == NULL)
@@ -204,18 +200,18 @@ t_token *search_toke_prev(t_token *lst, t_lvl *lvl)
 	if (tmp->select == 1)
 		tmp = tmp->prev;
 	while (tmp && tmp->prev && tmp->select == 0)
-		tmp  = tmp->prev;
+		tmp = tmp->prev;
 	return (search_toke(tmp, lvl));
 }
 
 /*
- ** cree le char **  ex: ls -la tmp
- */
+** cree le char **  ex: ls -la tmp
+*/
 
-void cmd_len(t_token *lst, int *i, int *j)
+void			cmd_len(t_token *lst, int *i, int *j)
 {
-	t_token *tmp;
-	int tmpi;
+	t_token	*tmp;
+	int		tmpi;
 
 	tmp = lst;
 	tmpi = 0;
@@ -228,13 +224,13 @@ void cmd_len(t_token *lst, int *i, int *j)
 	}
 }
 
-char  **concate_cmd(t_token *lst)
+char			**concate_cmd(t_token *lst)
 {
-	t_token *tmp;
-	int     i;
-	int      j;
-	int       count;
-	char     **argv;
+	t_token	*tmp;
+	int		i;
+	int		j;
+	int		count;
+	char	**argv;
 
 	tmp = lst;
 	count = 0;
@@ -244,7 +240,8 @@ char  **concate_cmd(t_token *lst)
 	argv = NULL;
 	if (!(argv = (char **)malloc(sizeof(char*) * (i * j + 1))))
 		return (NULL);
-	while (tmp && (count <= i -1))
+	argv[i * j] = NULL;
+	while (tmp && (count <= i - 1))
 	{
 		argv[count] = ft_strdup(tmp->word);
 		++count;
@@ -256,12 +253,12 @@ char  **concate_cmd(t_token *lst)
 }
 
 /*
- ** print le char ** pour le debug
- */
+** print le char ** pour le debug
+*/
 
-void print_tab(char **tabol)
+void			print_tab(char **tabol)
 {
-	int i;
+	int		i;
 
 	i = 0;
 	while (tabol[i] != NULL)
@@ -273,13 +270,29 @@ void print_tab(char **tabol)
 }
 
 /*
- ** recursive de creation de ast
- */
+** recursive de creation de ast
+*/
 
-t_tree *recurs_creat_tree(t_token *lst)
+char			**copy_fd(t_token *tmp)
 {
-	t_token *tmp;
-	t_tree  *node;
+	char	**cmd;
+
+	if (!(cmd = ft_memalloc(sizeof(char *) * 2)))
+		return (NULL);
+	if (tmp && tmp->word)
+	{
+		cmd[0] = ft_strdup(tmp->word);
+		cmd[1] = NULL;
+		return (cmd);
+	}
+	else
+		return (NULL);
+}
+
+t_tree			*recurs_creat_tree(t_token *lst)
+{
+	t_token	*tmp;
+	t_tree	*node;
 
 	tmp = lst;
 	node = NULL;
@@ -287,7 +300,11 @@ t_tree *recurs_creat_tree(t_token *lst)
 	node->token = tmp->type;
 	if (tmp->type == CMD)
 		node->cmd = concate_cmd(tmp);
-	node->right= creat_right(tmp, NULL);
+	if (is_dir_type(tmp->type))
+		node->cmd = copy_fd(tmp);
+	if (tmp->type == TARGET)
+		node->cmd = copy_fd(tmp);
+	node->right = creat_right(tmp, NULL);
 	if (node->right)
 		node->right->father = node;
 	node->left = creat_left(tmp, NULL);
@@ -297,12 +314,12 @@ t_tree *recurs_creat_tree(t_token *lst)
 }
 
 /*
- ** branche de gauche
- */
+** branche de gauche
+*/
 
-t_tree *creat_left(t_token *lst, t_lvl *lvl)
+t_tree			*creat_left(t_token *lst, t_lvl *lvl)
 {
-	t_token  *tmp;
+	t_token	*tmp;
 
 	tmp = NULL;
 	if (!(tmp = search_toke_prev(lst, lvl)))
@@ -312,27 +329,28 @@ t_tree *creat_left(t_token *lst, t_lvl *lvl)
 }
 
 /*
- ** branche de droite
- */
+** branche de droite
+*/
 
-t_tree   *creat_right(t_token *lst, t_lvl *lvl)
+t_tree			*creat_right(t_token *lst, t_lvl *lvl)
 {
-	t_token  *tmp;
+	t_token	*tmp;
 
 	tmp = NULL;
 	if (!(tmp = search_toke(lst, lvl)))
-		return(NULL);
+		return (NULL);
 	tmp->select = 1;
 	return (recurs_creat_tree(tmp));
 }
 
 /*
- ** cree la tete de ast
- */
-t_tree  *new_tree(t_token *lst)
+** cree la tete de ast
+*/
+
+t_tree			*new_tree(t_token *lst)
 {
-	t_tree  *node;
-	t_token  *tmp;
+	t_tree	*node;
+	t_token	*tmp;
 
 	node = NULL;
 	tmp = NULL;
@@ -344,6 +362,10 @@ t_tree  *new_tree(t_token *lst)
 		node->token = tmp->type;
 		if (tmp->type == CMD)
 			node->cmd = concate_cmd(tmp);
+		if (is_dir_type(tmp->type))
+			node->cmd = copy_fd(tmp);
+		if (tmp->type == TARGET)
+			node->cmd = copy_fd(tmp);
 		node->right = creat_right(tmp, NULL);
 		if (node->right)
 			node->right->father = node;
@@ -355,13 +377,12 @@ t_tree  *new_tree(t_token *lst)
 }
 
 /*
- **       print ast pour le debug
- **
- */
+**  print ast pour le debug
+*/
 
-void print_debug_ast(t_tree *node)
+void			print_debug_ast(t_tree *node)
 {
-	if(!node)
+	if (!node)
 	{
 		PUT2("\n node = NULL");
 		return ;
@@ -371,11 +392,7 @@ void print_debug_ast(t_tree *node)
 		PUT2(" \n node->left");
 		print_debug_ast(node->left);
 	}
-		PUT2("\n node ======>>>>>> ");
-	if (node->token == CMD)
-		print_tab(node->cmd);
-	else
-		PUT2(node->token_or->word);
+	PUT2("\n node ======>>>>>> ");
 	if (node->right)
 	{
 		PUT2(" \n node->right");
@@ -384,33 +401,30 @@ void print_debug_ast(t_tree *node)
 	PUT2(" \n up");
 }
 
-
-void free_content_ast(t_tree *node)
+void			free_content_ast(t_tree *node)
 {
 	if (node->cmd != NULL)
 		ft_tabdel(node->cmd);
 	node->cmd = NULL;
 }
 
-void free_ast(t_tree *ast)
+void			free_ast(t_tree *ast)
 {
 	if (!ast)
 	{
-//		PUT2("fin de branche");
 		return ;
 	}
-	else
-	{
-		free_content_ast(ast);
+	if (ast->left)
 		free_ast(ast->left);
+	if (ast->right)
 		free_ast(ast->right);
-		ft_memdel((void *)&ast);
-	}
+	free_content_ast(ast);
+	free(ast);
 }
 
-void ft_push_ast(t_token *list, t_tree **ast)
+void			ft_push_ast(t_token *list, t_tree **ast)
 {
-	t_tree  *head_node;
+	t_tree	*head_node;
 
 	if (list)
 	{

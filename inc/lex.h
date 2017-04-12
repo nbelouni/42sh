@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/11 12:30:14 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/01 20:52:20 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/04/08 21:16:20 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,15 @@
 
 # include "42sh.h"
 
+# define ISAMP(x) (x->type == DIR_L_AMP || x->type == DIR_R_AMP)
+# define NEXTISCMD(x) (x->next->type == CMD || x->next->type == ARG)
+# define PREVISCMD(x) (x->prev->type == CMD || x->prev->type == ARG)
+
 typedef struct		s_pt
 {
 	int				i;
 	int				len;
 	int				type;
-
 	int				level[2];
 }					t_pt;
 
@@ -105,6 +108,9 @@ void				ft_tokendestroy(t_token **begin);
 t_token				*ft_tokenew(int type, char *word, int *level);
 void				ft_tokenpush(t_token **begin, t_token *new);
 void				sort_list_token(t_token **list, t_completion *c, t_lst *h);
+int					ft_swap_in(t_token **list);
+int					check_error_out(t_token *elem);
+void				check_target_place(t_token **list);
 void				ft_print_token_list(t_token **list);
 
 int					return_new_prompt(int ret);
@@ -116,5 +122,6 @@ void				ft_push_ast(t_token *list, t_tree **ast);
 void				free_ast(t_tree *ast);
 void				print_tab(char **tabol);
 void				print_debug_ast(t_tree *node);
+t_list				*concate_argv(t_token *lst);
 
 #endif

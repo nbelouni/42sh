@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/19 15:29:18 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/10 21:40:05 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/22 18:44:52 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,9 @@ int			is_parse_error(t_token *tmp, t_token *prev)
 	|| is_open_group_type(prev->type)))
 		return (print_err_message(tmp->word));
 	if (tmp->type == CMD && prev && is_close_group_type(prev->type))
+		return (print_err_message(tmp->word));
+	if (is_dir_type(tmp->type) &&
+	(!prev || is_separator_type(prev->type) || is_dir_type(prev->type)))
 		return (print_err_message(tmp->word));
 	return (0);
 }

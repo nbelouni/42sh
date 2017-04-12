@@ -31,3 +31,6 @@ ls .[tab] :
 	-> 42sh : pas d'output (probablement parce qu'aucun binaire contenant '..')
 
 
+42sh.$ rm src/.[tab]42sh(37635,0x7fff71962000) malloc: *** error for object 0x7fe270c17a88: incorrect checksum for freed object - object was probably modified after being freed.
+*** set a breakpoint in malloc_error_break to debug
+zsh: abort      ./42sh

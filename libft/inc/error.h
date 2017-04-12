@@ -21,6 +21,7 @@
 # define ERR_NEW_CMD			-1
 # define ERR_EXIT				-2
 # define ERR_NEW_PROMPT			-3
+# define ERR_FD					-4
 
 /*
 ** System errors
@@ -45,6 +46,7 @@
 # define ERR_HOME_NOT_SET		": HOME not set"
 # define ERR_OLDPWD_NOT_SET		": OLDPWD not set"
 # define ERR_CMD_TOO_LONG		": command too long"
+# define ERR_FD_AMB				": ambigous redirect"
 # define ERR_EVENT_NFOUND		": event not found"
 # define ERR_SUBSTITUTION		": substitution failed"
 

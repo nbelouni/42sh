@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 14:26:10 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/08 14:43:44 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/03/22 18:38:20 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ int		is_redir(char *s, int i)
 			return (DL_DIR);
 		if (!ft_strncmp(s + i, ">>", 2))
 			return (DR_DIR);
+		if (!ft_strncmp(s + i, "<>", 2))
+			return (LR_DIR);
 		if (s[i] == '>')
 			return (SR_DIR);
 		if (s[i] == '<')
@@ -53,8 +55,10 @@ int		is_agreg(char *s, int i)
 {
 	if (i == 0 || s[i - 1] != '\\')
 	{
-		if (!ft_strncmp(s + i, ">&", 2) || !ft_strncmp(s + i, "<&", 2))
-			return (DIR_AMP);
+		if (!ft_strncmp(s + i, "<&", 2))
+			return (DIR_L_AMP);
+		if (!ft_strncmp(s + i, ">&", 2))
+			return (DIR_R_AMP);
 		if (s[i] == '&')
 			return (AMP);
 	}

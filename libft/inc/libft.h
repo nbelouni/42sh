@@ -12,6 +12,7 @@
 
 #ifndef LIBFT_H
 # define LIBFT_H
+
 # include <unistd.h>
 # include <string.h>
 # include <stdlib.h>
@@ -19,8 +20,10 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <dirent.h>
+
 # include "error.h"
 # include "color.h"
+# include "option.h"
 
 # define BUFF_SIZE 2048
 
@@ -89,6 +92,7 @@ void				ft_lstdel(t_list **alst, void (*del)(void *, size_t));
 void				ft_lstadd(t_list **alst, t_list *new);
 void				ft_lstiter(t_list *lst, void (*f)(t_list *elem));
 t_list				*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem));
+void				ft_lstpush(t_list **begin, void const *s, size_t s_size);
 int					get_next_line(int const fd, char **line);
 
 int					ft_print_error(char *cmd, char *err, int ret);
@@ -111,6 +115,5 @@ void				ft_tabdel_and_init(char ***tab);
 char				*ft_strreplace(char *o, const char *s, const char *r);
 int					ft_intlen(int n);
 void				ft_putnchar(char c, int n);
-
 
 #endif

@@ -6,11 +6,18 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/06 20:51:20 by dogokar          ###   ########.fr       */
+/*   Updated: 2017/04/12 04:19:12 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
+
+void	launch_job(t_job *j);
+void	export_job(t_tree *root, t_list **job_list);
+void	printJobList(t_list *job_list);
+
+t_list	*job_list = NULL;
+t_job	*last_job = NULL;
 
 static t_builtin_array builtin_array[] =
 {
@@ -23,9 +30,9 @@ static t_builtin_array builtin_array[] =
 	{"history", &ft_builtin_history},
 	{"unset", &ft_builtin_unset},
 	{"export", &ft_builtin_export},
-	// {"jobs", &ft_builtin_jobs},
-	// {"fg", &ft_builtin_fg},
-	// {"bg", &ft_builtin_bg},
+	{"jobs", &ft_builtin_jobs},
+	{"fg", &ft_builtin_fg},
+	{"bg", &ft_builtin_bg},
 	{NULL, NULL}
 };
 
@@ -55,8 +62,8 @@ int		parse(t_core *core, char *line, char **envp)
 	args = ft_strsplit(line, ' ');
 	if (args != NULL && args[0] != NULL)
 	{
-		if ((ret = parse_builtins(core, args[0], args + 1)) == 1)
-			ft_waitchild(args, envp);
+//		if ((ret = parse_builtins(core, args[0], args + 1)) == 1)
+//			ft_waitchild(args, envp);
 		ft_tabdel(args);
 	}
 	if ((ft_check_history_var(core->set, core->hist)) == ERR_EXIT)
@@ -109,36 +116,51 @@ int 	read_ext(t_buf *buf, t_completion *comp, t_core *core, t_token *list)
 	return (1);
 }
 
+int		investigate(char *func)
+{
+	struct termios termio;
+
+	tcgetattr(g_sh_tty, &termio);
+	if (termio.c_lflag & TOSTOP)
+		dprintf(2, "%s Dam it's there\n", func);
+	return (0);
+}
+
 int 	main(int argc, char **argv, char **envp)
 {
 	(void)argc;
-	(void)argv;
+  	(void)argv;
 	t_completion	completion = {NULL, NULL, NULL, NULL};
 	t_buf	*buf;
 	t_token	*list;
 	int		ret;
 	int		ret_read;
 	t_tree	*ast;
-	t_core	*core;
+	t_list	*job_list_bis = NULL;
+	struct termios termio;
 
+	tcgetattr(0, &termio);
+	if (termio.c_lflag & TOSTOP)
+		dprintf(2, "%s Dam it's there\n", __func__);
 	ast = NULL;
 	list = NULL;
 	core = ft_creat_core(envp);
 	if (init_completion(&completion, core) == ERR_EXIT)
 		return (-1);
-	signal(SIGWINCH, get_sigwinch);
-	signal(SIGINT, get_sigint);
 	if (!(buf = init_buf()))
 		return (ft_print_error("42sh", ERR_MALLOC, ERR_EXIT));
-	if (!isatty(0))
-		buf->istty = 1;
+//	if (!isatty(0))
+//		buf->istty = 1;
 	set_prompt(PROMPT1, ft_strlen(PROMPT1));
+	init_shell();
 	if (read_ext(buf, &completion, core, list) == 1)
 	{
 		init_curs();
 		while ((ret_read = read_line(buf, &completion, core->hist)) != ERR_EXIT)
 		{
 			close_termios();
+			investigate((char *)__func__);
+			job_list_bis = NULL;
 			if (ret_read != TAB)
 			{
 				if (is_line_ended(buf) < 0)
@@ -147,20 +169,32 @@ int 	main(int argc, char **argv, char **envp)
 				ret = parse_buf(&list, buf->final_line, &completion, core->hist);
 				if (ret > 0 && list)
 				{
-					parse(core, buf->final_line, envp);
-					/*
-					 **			ft_push_ast(list, &ast);
-					 **				. remplace $var
-					 **				. ajoute arguments si regex
-					 **				. supprime '\'', '"' , '`' et '\\'
-					 **
-					 **				. sera remplacee quqnd je saurais ou la mettre
-					 **				regexp_in_tree(ast, core);
-					 **
-					 */
-					//			print_debug_ast(ast);
-					//			free_ast(ast);
+//					parse(core, buf->final_line, envp);
+//					ft_push_ast(list, &ast);
 
+/*
+ *					enleve les quotes et les backslash -> va changer de place
+ *					edit_cmd(list, env);
+ */	
+					ft_push_ast(list, &ast);
+//					regexp_in_tree(ast, core);
+//					print_debug_ast(ast);
+//					test_func(ast);
+					export_job(ast, &job_list_bis);
+//					printJobList(job_list_bis);
+					investigate((char *)__func__);
+					list_iter(job_list_bis, (void *)launch_job);
+					delete_list(&job_list_bis, NULL);
+					free_ast(ast);
+//					free(ast);
+/*
+**				. remplace $var
+**				. ajoute arguments si regex
+**				. supprime '\'', '"' , '`' et '\\'
+**
+**				. sera remplacee quqnd je saurais ou la mettre
+**
+*/
 				}
 				if (ret != ERR_NEW_PROMPT)
 					ft_strdel(&(buf->final_line));

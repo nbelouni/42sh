@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/16 00:50:00 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/17 18:11:44 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/04/08 18:24:03 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,36 +69,36 @@ int			cut_quote(char *s, t_pt *p)
 	return (0);
 }
 
-static int	choose_pars(t_token **list, char *s, int ret, t_pt *p)
+static int	choose_pars(t_token **list, char *s, int rt, t_pt *p)
 {
 	int		r;
 	int		len;
 
-	p->type = ret;
-	if (ret > ESPACE && ret < FD_IN)
+	p->type = rt;
+	if (rt > ESPACE && rt < FD_IN)
 	{
-		len = (ret >= OR && ret <= O_BRACE) ? 2 : 1;
-		if (ret == C_BRACKET)
+		len = (rt >= OR && rt <= O_BRACE) ? 2 : 1;
+		if (rt == C_BRACKET)
 			p->level[0]--;
-		if (ret == C_BRACE)
+		if (rt == C_BRACE)
 			p->level[1]--;
 		if ((r = parse_list(list, ft_strsub(s, p->i, len), p)))
 			return (r);
-		if (ret == O_BRACE)
+		if (rt == O_BRACE)
 			p->level[1]++;
-		if (ret == O_BRACKET)
+		if (rt == O_BRACKET)
 			p->level[0]++;
-		if (ret >= OR && ret <= O_BRACE)
+		if (rt >= OR && rt <= O_BRACE)
 			p->i++;
 	}
 	p->i++;
-	if (ret == DIR_AMP && (r = check_fd_out(list, s, p)))
+	if ((rt == DIR_L_AMP || rt == DIR_R_AMP) && (r = check_fd_out(list, s, p)))
 		return (r);
 	p->i = cut_space(s, p->i);
 	return (0);
 }
 
-int			parse_buf(t_token **lst, char *s, t_completion *completion, t_lst *hist)
+int			parse_buf(t_token **lst, char *s, t_completion *compl, t_lst *hist)
 {
 	int		j;
 	int		ret;
@@ -120,7 +120,7 @@ int			parse_buf(t_token **lst, char *s, t_completion *completion, t_lst *hist)
 				return (return_new_prompt(ret_lex));
 		}
 	}
-	sort_list_token(lst, completion, hist);
+	sort_list_token(lst, compl, hist);
 	set_prompt(PROMPT1, ft_strlen(PROMPT1));
 	return (can_create_tree(*lst));
 }

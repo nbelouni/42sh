@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:09:30 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/30 15:46:08 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/04/10 21:23:36 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef enum	e_bool
 # include "read.h"
 # include "lexer_parser.h"
 # include "lex.h"
+# include "job.h"
 # include "exec.h"
 # include "globbing.h"
 
@@ -56,6 +57,7 @@ typedef struct		s_core
 	t_lst			*hist;
 	t_lst			*env;
 	t_lst			*exp;
+	t_buf			*buf;
 }					t_core;
 
 # include "builtins.h"
@@ -65,7 +67,22 @@ typedef struct		s_core
 **	ft_default_set.c
 */
 
+
+int					g_sh_tty;
+int					g_sh_is;
+pid_t				g_sh_pgid;
 t_lst				*ft_init_lstset(void);
+t_core				*core;
+extern t_list		*job_list;
+
+
+int				job_is_stopped (t_job *j);
+int				job_is_completed(t_job *j);
+void			continue_job (t_job *j, int foreground);
+t_job			*ft_get_job(char *arg);
+t_job			*get_last_job(void);
+void			sigchld_handler(int sigchld);
+void			init_signal(void);
 
 /*
 **	ft_init.c
@@ -115,4 +132,8 @@ void				ft_del_list(t_lst *lst);
 int					ft_pwd_swap(t_lst *env, char *owd, char *cwd);
 
 
+void		block_signal(int sig, sigset_t *set, sigset_t *oset);
+void		unblock_signal(sigset_t *oset);
+void		restore_originals_handler();
+	
 #endif

@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:01:52 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/20 16:55:36 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/04/08 19:16:52 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,6 @@ void			free_buf(t_buf *buf);
 */
 void			clear_buf(t_buf *buf);
 
-
 /*
 **	*********************************************************************
 */
@@ -195,7 +194,6 @@ int				init_termios(void);
 */
 int				close_termios(void);
 
-
 /*
 **	*********************************************************************
 */
@@ -208,7 +206,6 @@ int				close_termios(void);
 **	Lit et edite ligne (visuel) + buffer (buf.line) si changements necessaires
 */
 int				read_line(t_buf *buf, t_completion *completion, t_lst *hist);
-
 
 /*
 **	*********************************************************************
@@ -314,19 +311,21 @@ void			m_down(t_buf *buf);
 **	insere un caractere a curs.pos et bouge le curseur de 1 sur la droite
 */
 int				vb_insert(t_buf *buf, char *s);
+
 /*
-**	supprime le caractere a gauche de curs.pos et bouge le curseur de 1 sur la gauche
+**supprime le caractere a gauche de curs.pos et
+**bouge le curseur de 1 sur la gauche
 */
 void			vb_del(t_buf *buf, unsigned int x);
 
 /*
-**	garde en memoire le caractere / mot / bout de ligne (selon input) buf.to_paste
+**garde en memoire le caractere / mot / bout de ligne (selon input) buf.to_paste
 */
 int				vb_copy(t_buf *buf, unsigned int x);
 
 /*
-**	garde en memoire le caractere / mot / bout de ligne (selon input) buf.to_paste
-**	supprime la string de buf.line
+**garde en memoire le caractere / mot / bout de ligne (selon input) buf.to_paste
+**supprime la string de buf.line
 */
 int				vb_cut(t_buf *buf, unsigned int x);
 
@@ -335,7 +334,6 @@ int				vb_cut(t_buf *buf, unsigned int x);
 **	le curseur ne bouge pas
 */
 int				vb_paste(t_buf *buf);
-
 
 /*
 **	*********************************************************************
@@ -395,7 +393,7 @@ void			print_pre_curs(t_buf *buf);
 */
 int				is_line_ended(t_buf *buf);
 
-typedef	struct	s_token	t_token;
+typedef	struct s_token	t_token;
 
 int				complete_final_line(t_buf *buf, t_token *lst);
 int				edit_history(t_buf *buf, t_lst *history, int x);
