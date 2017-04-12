@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 18:10:58 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/10 19:57:35 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/12 04:12:06 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,20 @@ void		get_sigwinch(int sig)
 	if (sig == SIGWINCH)
 		get_win();
 	return ;
+}
+
+void		sigttou_handler(int sigttou)
+{
+	sigset_t	set;
+	sigset_t	oset;
+
+	(void)sigttou;
+	block_signal(SIGTTOU, &set, &oset);
+	if (g_sh_pgid == getpid())
+		dprintf(2, "in %s FATHER\n", __func__);
+	else
+		dprintf(2, "in %s SON\n", __func__);
+	unblock_signal(&oset);
 }
 
 void		sigchld_handler(int sigchld)

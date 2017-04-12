@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/10 22:19:21 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/12 03:05:38 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <signal.h>
+
+int		investigate(char *func);
 
 void	sigchldhandler(int sig)
 {
@@ -337,15 +339,21 @@ void	continue_job(t_job *j, int foreground)
 		put_job_in_background(j, 1);
 }
 
+extern sig_t	*g_originals;
+
+sig_t	*getOriginals();
+
 void	launch_process(t_process_p process, int dofork)
 {
+	investigate((char *)__func__);
 	list_iter(process->io_list, (void *)apply_redir);
 	if (dofork)
 	{
 		restore_originals_handler();
-		signal(SIGTTOU, SIG_IGN);
+//		signal(SIGTTOU, SIG_IGN);
 	}
 	print_process(process, (char *)__func__);
+	investigate((char *)__func__);
 	ft_check_exec(&process->argv);
 	if (dofork)
 		exit(1);
@@ -454,6 +462,7 @@ int		make_children(t_process_p p, int *pgid, int foreground)
 		fpid = getpid();
 		if (*pgid == 0) *pgid = fpid;
 		setpgid(fpid, *pgid);
+		investigate((char *)__func__);
 		give_term(*pgid, foreground);
 	}
 	else if (pid < 0)
@@ -519,6 +528,8 @@ void	do_pipeline(t_job *job, t_list *pipeline)
 		pipeline = pipeline->next;
 	}
 }
+
+extern int gc;
 
 void	launch_job(t_job *j)
 {

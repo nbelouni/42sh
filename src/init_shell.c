@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 13:08:51 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/10 19:58:02 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/12 03:57:33 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ sigset_t				g_original_set;
 
 #define MAXJOBS 30
 
-static sig_t	g_originals[NSIG];
+/*static */sig_t	g_originals[NSIG];
+//extern sig_t	*g_originals;
 
 void		block_signal(int sig, sigset_t *set, sigset_t *oset)
 {
@@ -34,15 +35,26 @@ void		unblock_signal(sigset_t *oset)
 	sigprocmask(SIG_SETMASK, oset, (sigset_t *)NULL);
 }
 
+sig_t	*getOriginals()
+{
+	return (g_originals);
+}
+
+void	sigttou_handler(int sigttou);
+
 void		save_originals_handler(void)
 {
 	int		i;
 
 	i = 1;
+	dprintf(2, "%s %p %p\n", __func__, g_originals, &g_originals);
 	while (i < NSIG)
 	{
 		if ((g_originals[i] = signal(i, SIG_IGN)) == SIG_ERR)
+		{
 			perror(__func__);
+			g_originals[i] = NULL;
+		}
 		signal(i, g_originals[i]);
 		i++;
 	}
@@ -76,8 +88,8 @@ void		init_shell(void)
 	{
 		while (tcgetpgrp(g_sh_tty) != (g_sh_pgid = getpgrp()))
 			kill(-g_sh_pgid, SIGTTIN);
-		init_signal();
 		g_sh_pgid = getpid();
+		init_signal();
 		if (setpgid(g_sh_pgid, g_sh_pgid) < 0)
 		{
 			ft_putstr_fd("Couldn't put the shell in its own process group", 2);

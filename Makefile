@@ -113,7 +113,7 @@ ODIR = ./obj/
 OBJS = $(SRCS:.c=.o)
 OBCC = $(addprefix $(ODIR),$(OBJS))
 
-FLAG =  -Wall -Werror -Wextra #-DDEBUG_F  -g -fsanitize=address
+FLAG =  -Wall -Werror -Wextra -DDEBUG_F  -g -fsanitize=address -UTOSTOP
 
 $(NAME): $(OBCC)
 	make -C ./libft/
