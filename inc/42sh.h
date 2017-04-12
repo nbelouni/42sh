@@ -73,11 +73,8 @@ int					g_sh_is;
 pid_t				g_sh_pgid;
 t_lst				*ft_init_lstset(void);
 t_core				*core;
-<<<<<<< HEAD
 extern t_list		*job_list;
-=======
-extern List_p		jobList;
->>>>>>> dea4efb92ee4538add3e5172957035e6ec1598e3
+
 
 
 int				job_is_stopped (t_job *j);

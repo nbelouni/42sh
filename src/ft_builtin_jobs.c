@@ -6,7 +6,7 @@
 /*   By: maissa-b <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/07 19:28:11 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/04/12 14:03:48 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/04/12 14:49:19 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ t_job			*ft_get_job(char *arg)
 	//			job = get_prior_job(job_list, arg[1]);
 	/*else*/if (ft_strisdigit(&(arg[1])))
 			{
-				job = list_get_nth(jobList, ft_atoi(&(arg[1])));
+				job = list_get_nth(job_list, ft_atoi(&(arg[1])));
 			}
 			else
 			{
@@ -88,11 +88,11 @@ t_job			*ft_get_job(char *arg)
 	{
 		if (ft_strisdigit(&arg[0]))
 		{
-			job = list_get_nth(jobList, ft_atoi(&arg[0]));
+			job = list_get_nth(job_list, ft_atoi(&arg[0]));
 		}
 		else
 		{
-			job = cmp_job(&(arg[0]), jobList);
+			job = cmp_job(&(arg[0]), job_list);
 		}
 	}
 	return (job);
@@ -145,7 +145,7 @@ int			ft_builtin_jobs(t_core *core, char **args)
 	if (!args || !args[0])
 	{
 		print_func = &print_no_opt;
-		list_iter(jobList, print_func);
+		list_iter(job_list, print_func);
 		return (0);
 	}
 	while ((ret = ft_getopt(ft_tablen(args), args, JOBS_OPT, &opt)) != -1)
@@ -160,7 +160,7 @@ int			ft_builtin_jobs(t_core *core, char **args)
 	else
 	{
 		if (opt.opt_arg == NULL)
-			list_iter(jobList, print_func);
+			list_iter(job_list, print_func);
 		else
 			check_all_jobs((args + opt.opt_ind - 1), print_func);
 	}
