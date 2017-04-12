@@ -6,11 +6,12 @@
 /*   By: maissa-b <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/07 19:28:11 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/04/10 21:22:37 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/12 14:03:48 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
+
 #define JOBS_OPT ":l:p:"
 
 /*
@@ -26,15 +27,14 @@ void			print_optp(t_job *j);
 void			print_optl(t_job *j);
 void			print_no_opt(t_job *j);
 void			print_pgid(t_job *j);
-void print_job(t_job *job);
+void 			print_job(t_job *job);
 /**/
 
-
-static void	put_error_job(char *bad_job)
+static void put_error_job(char *bad_job)
 {
-	write(2, "42sh: jobs: ", 12);
-	write(2, bad_job, ft_strlen(bad_job));
-	write(2, ": No such job\n", 14);
+	write(1, "42sh: jobs: ", 12);
+	write(1, bad_job, ft_strlen(bad_job));
+	write(1, ": No such job\n", 14);
 }
 
 t_job			*cmp_job(char *cmd, t_list *job_list)
@@ -49,16 +49,16 @@ t_job			*cmp_job(char *cmd, t_list *job_list)
 		job = job_list->content;
 		if (ft_strncmp(job->command, cmd, ft_strlen(cmd)) == 0)
 		{
-			count++;
+			++count;
 			if (count > 1)
+			{
+				ft_putstr("42sh: jobs: ambigous job spec: "), ft_putendl(cmd);
 				return (NULL);
+			}
 		}
 		job_list = job_list->next;
 	}
-	if (count == 0)
-		return (perror(__func__), NULL);
-	else
-		return (job);
+	return ((count == 1) ? job : NULL);
 }
 
 t_job			*ft_get_job(char *arg)
@@ -74,8 +74,10 @@ t_job			*ft_get_job(char *arg)
 		{
 	//		if (arg[1] == '+' || arg[1] == '-')   /* Partie si on decide de prendre un job par rapport a sa priorite + ou - */
 	//			job = get_prior_job(job_list, arg[1]);
-	/*else*/if (ft_strisdigit(&arg[1]))
-				job = list_get_nth(job_list, ft_atoi(&(arg[1])));
+	/*else*/if (ft_strisdigit(&(arg[1])))
+			{
+				job = list_get_nth(jobList, ft_atoi(&(arg[1])));
+			}
 			else
 			{
 				job = cmp_job(&(arg[1]), job_list);
@@ -85,9 +87,13 @@ t_job			*ft_get_job(char *arg)
 	else
 	{
 		if (ft_strisdigit(&arg[0]))
-			job = list_get_nth(job_list, ft_atoi(&arg[0]));
+		{
+			job = list_get_nth(jobList, ft_atoi(&arg[0]));
+		}
 		else
-			job = cmp_job(&(arg[0]), job_list);
+		{
+			job = cmp_job(&(arg[0]), jobList);
+		}
 	}
 	return (job);
 }
@@ -102,7 +108,7 @@ static int	check_all_jobs(char **args, void (*print_func)())
 	while (args[++i])
 	{
 		job = ft_get_job(args[i]);
-		if (job)
+		if (job != NULL)
 			print_func(job);
 		else
 			put_error_job(args[i]);
@@ -134,16 +140,29 @@ int			ft_builtin_jobs(t_core *core, char **args)
 	t_opt	opt;
 	
 	(void)core;
-	init_optstruct(&opt);
-	flag = 0; /* cas de l'option sans arg derriere flag = (int)l ou (int)p */
-	if (args && args[0])
-		while ((ret = ft_getopt(ft_tablen(args), args, JOBS_OPT, &opt)) != -1)
-			if ((flag = check_jobsopt_c(&opt, ret)) == -1)
-				return (-1);
+	opt.opt_ind = 0;
+	flag = 0;
+	if (!args || !args[0])
+	{
+		print_func = &print_no_opt;
+		list_iter(jobList, print_func);
+		return (0);
+	}
+	while ((ret = ft_getopt(ft_tablen(args), args, JOBS_OPT, &opt)) != -1)
+	{
+		printf("%d\n", opt.opt_char);
+		if ((flag = check_jobsopt_c(&opt, ret)) == -1)
+			return (-1);
+	}
 	print_func = choose_func(flag);
-	if (!(args[opt.opt_ind]) || !(args && args[0]))
-		list_iter(job_list, print_func);
+	if (flag == 0)
+		check_all_jobs(args, print_func);
 	else
-		check_all_jobs(&(args[opt.opt_ind]), print_func);
+	{
+		if (opt.opt_arg == NULL)
+			list_iter(jobList, print_func);
+		else
+			check_all_jobs((args + opt.opt_ind - 1), print_func);
+	}
 	return (0);
 }
