@@ -19,7 +19,7 @@ static int	exec_job_fg(t_job *job)
 	if (job_is_stopped(job))
 	{
 		job->foreground = 1;
-		print_job(job, (char *)__func__);
+		// print_job(job, (char *)__func__);
 		continue_job(job, job->foreground); // continue_job(j);
 	}
 	return (0);
@@ -27,14 +27,18 @@ static int	exec_job_fg(t_job *job)
 
 int      ft_builtin_fg(t_core *core, char **args)
 {
+	t_job	*job;
+
 	(void)core;
 	if (args && args[0])
 	{
-		exec_job_fg(ft_get_job(args[0]));
+		if ((job = ft_get_job(args[0])) == NULL)
+			return(ft_print_error("42sh: fg: No such job: ", args[0], -1));
 	}
 	else
 	{
-		exec_job_fg(get_last_job());
+		if ((job = get_last_job()) == NULL)
+			return (ft_print_error("42sh: fg: ", "current: No such job", -1));
 	}
-	return (0);
+	return (exec_job_fg(job));
 }

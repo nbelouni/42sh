@@ -44,7 +44,7 @@ void			print_no_opt(t_job *j)
 
 void			print_optl(t_job *j)
 {
-//	print_index();
+	// print_index();
 	print_current(j);
 	ft_putstr_fd("\t", 1);
 	print_pgid(j);
