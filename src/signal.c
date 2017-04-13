@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 18:10:58 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/12 04:12:06 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/13 19:56:30 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,24 +33,9 @@ void		get_sigwinch(int sig)
 	return ;
 }
 
-void		sigttou_handler(int sigttou)
-{
-	sigset_t	set;
-	sigset_t	oset;
-
-	(void)sigttou;
-	block_signal(SIGTTOU, &set, &oset);
-	if (g_sh_pgid == getpid())
-		dprintf(2, "in %s FATHER\n", __func__);
-	else
-		dprintf(2, "in %s SON\n", __func__);
-	unblock_signal(&oset);
-}
-
 void		sigchld_handler(int sigchld)
 {
 	(void)sigchld;
-	dprintf(2,"recceived sigchld\n");
 	do_job_notification();
 }
 

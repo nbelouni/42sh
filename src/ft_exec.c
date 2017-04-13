@@ -76,7 +76,6 @@ void			not_binary(char *s, char *s2, char **av, char **envp)
 ** recuperer l'env pour execve
 ** remplace le path pour l'envoie a execve
 */
-int			investigate(char *func);
 void			ft_exec(char **av)
 {
 	char		*s;
@@ -84,7 +83,6 @@ void			ft_exec(char **av)
 	char		**envp;
 	t_elem		*tmp;
 
-	investigate((char *)__func__);
 	close_termios();
 	envp = ft_env_to_tab(core->env);
 	if (!(tmp = ft_find_elem("PATH", core->env)))

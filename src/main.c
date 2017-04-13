@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/12 04:19:12 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/13 20:19:58 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,16 +71,6 @@ int		parse(t_core *core, char *line, char **envp)
 	return (0);
 }
 
-int		investigate(char *func)
-{
-	struct termios termio;
-
-	tcgetattr(g_sh_tty, &termio);
-	if (termio.c_lflag & TOSTOP)
-		dprintf(2, "%s Dam it's there\n", func);
-	return (0);
-}
-
 int 	main(int argc, char **argv, char **envp)
 {
 	(void)argc;
@@ -96,7 +86,6 @@ int 	main(int argc, char **argv, char **envp)
 
 	tcgetattr(0, &termio);
 	if (termio.c_lflag & TOSTOP)
-		dprintf(2, "%s Dam it's there\n", __func__);
 	ast = NULL;
 	list = NULL;
 	core = ft_init_core();
@@ -116,7 +105,6 @@ int 	main(int argc, char **argv, char **envp)
 	while ((ret_read = read_line(buf, &completion, core->hist)) != ERR_EXIT)
 	{
 		close_termios();
-		investigate((char *)__func__);
 		job_list_bis = NULL;
 		if (ret_read != TAB)
 		{
@@ -126,20 +114,15 @@ int 	main(int argc, char **argv, char **envp)
 			ret = parse_buf(&list, buf->final_line, &completion, core->hist);
 			if (ret > 0 && list)
 			{
-				dprintf(2, "===============================================\n\n\t\tExec\n===============================================\n\n");
 	//			ft_push_ast(list, &ast);
 
 /*
  *				enleve les quotes et les backslash -> va changer de place
  *				edit_cmd(list, env);
  */
+
 				ft_push_ast(list, &ast);
-//				regexp_in_tree(ast, core);
-//				print_debug_ast(ast);
-//				test_func(ast);
 				export_job(ast, &job_list_bis);
-//				printJobList(job_list_bis);
-				investigate((char *)__func__);
 				list_iter(job_list_bis, (void *)launch_job);
 				delete_list(&job_list_bis, NULL);
 				free_ast(ast);
@@ -152,7 +135,6 @@ int 	main(int argc, char **argv, char **envp)
 **				. sera remplacee quqnd je saurais ou la mettre
 **
 */
-								dprintf(2, "===============================================\n\n\n===============================================\n\n");
 
 			}
 			if (ret != ERR_NEW_PROMPT)

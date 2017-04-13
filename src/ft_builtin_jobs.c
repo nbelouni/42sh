@@ -26,7 +26,6 @@ void			print_optp(t_job *j);
 void			print_optl(t_job *j);
 void			print_no_opt(t_job *j);
 void			print_pgid(t_job *j);
-void 			print_job(t_job *job);
 /**/
 
 
