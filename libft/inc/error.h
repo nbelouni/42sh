@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:19:58 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/22 14:43:09 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/04/15 18:30:51 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,5 +49,8 @@
 # define ERR_FD_AMB				": ambigous redirect"
 # define ERR_EVENT_NFOUND		": event not found"
 # define ERR_SUBSTITUTION		": substitution failed"
+# define ERR_BADF				": Bad file descriptor"
+# define ERR_PIPE				": Error pipe"
+# define ERR_FORK				": Error fork"
 
 #endif

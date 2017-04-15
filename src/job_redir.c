@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/05 14:45:12 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/10 22:34:50 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/15 18:32:43 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,32 +54,36 @@ void		set_mode_redir(t_tree *node_redir, t_io *io, int left)
 	}
 }
 
-void		list_iter_int(t_list *list, void *(f)(void *, int), int dofork)
+int		list_iter_int(t_list *list, int (*f)(void *, int), int dofork)
 {
+	int		ret;
+
 	while (list)
 	{
-		f(list->content, dofork);
+		if ((ret = f(list->content, dofork)))
+			return (ret);
 		list = list->next;
 	}
+	return (0);
 }
 
-void		restore_fd(t_io *io, int dofork)
+int		restore_fd(t_io *io, int dofork)
 {
-	(void)dofork;
 	if (!io)
-		return ;
+		return (0);
 	if (io->tab_fd[0] != -1)
 	{
 		dup2(io->tab_fd[0], io->dup_target);
 		close(io->tab_fd[0]);
 	}
-	if (!dofork && io->mode == 0 && fcntl(io->dup_src, F_GETFL) < 0)
+	if (!dofork && io->dup_target > 2)
 		close(io->dup_target);
 	if (io->tab_fd[1] != -1)
 	{
 		dup2(io->tab_fd[1], io->dup_src);
 		close(io->tab_fd[1]);
 	}
+	return (0);
 }
 
 void		save_fd(t_io *io, int type_redir)

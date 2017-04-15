@@ -6,15 +6,15 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 13:08:51 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/12 03:57:33 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/15 18:26:53 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
-extern int				g_sh_tty;
-extern int				g_sh_is;
-extern pid_t			g_sh_pgid;
+int				g_sh_tty;
+int				g_sh_is;
+pid_t			g_sh_pgid;
 sigset_t				g_original_set;
 
 #define MAXJOBS 30

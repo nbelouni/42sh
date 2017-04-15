@@ -6,7 +6,7 @@
 /*   By: maissa-b <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/07 19:28:11 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/04/10 21:22:37 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/15 18:22:52 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,7 +168,9 @@ int			ft_builtin_jobs(t_core *core, char **args)
 			list_iter(job_list, print_func);
 		free(opt);
 	}
-	return (ret);
+	/* WHO IS RET !!! Verifie si ca compile apres PUSH !!!!*/
+//	return (ret);
+	return (0);
 }
 	// if (args && args[0])
 	// {

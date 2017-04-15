@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:09:30 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/10 21:23:36 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/15 18:28:14 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,6 @@ typedef struct		s_core
 */
 
 
-int					g_sh_tty;
-int					g_sh_is;
-pid_t				g_sh_pgid;
 t_lst				*ft_init_lstset(void);
 t_core				*core;
 extern t_list		*job_list;

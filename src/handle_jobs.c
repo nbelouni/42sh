@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/12 03:05:38 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/15 18:34:56 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 #include <signal.h>
 
 int		investigate(char *func);
+extern int				g_sh_tty;
+extern pid_t			g_sh_pgid;
 
 void	sigchldhandler(int sig)
 {
@@ -376,7 +378,7 @@ t_node_p	iter_in_order(t_node_p ptr, t_list **stock)
 	return (NULL);
 }
 
-void	apply_redir(t_io *io)
+int		apply_redir(t_io *io, int dofork)
 {
 	int		pipefd[2];
 
@@ -385,30 +387,24 @@ void	apply_redir(t_io *io)
 		if (io->flag & CLOSE && access(io->str, X_OK) == -1)
 			io->dup_src = open(io->str, io->mode, DEF_FILE);
 		if (io->dup_src < 0)
-		{
-			fputs("42sh: No such file or directory (a placer dans les error)\n", stderr);
-			exit(1);
-		}
+			exit(ft_print_error("21sh", ERR_NO_FILE, ERR_EXIT));
 	}
-	if (io->flag & WRITE)
+	if (io->flag & WRITE && pipe(pipefd) != -1)
 	{
-		pipe(pipefd);
 		io->dup_src = pipefd[0];
 		write(pipefd[1], io->str, ft_strlen(io->str));
 		close(pipefd[1]);
 	}
 	if (io->flag & DUP)
 	{
-		if (fcntl(io->dup_src, F_GETFL) < 0/* && errno == EBADF (Bad file descriptor)*/)
-		{
-			fputs("42sh: Bad file descriptor (a placer dans les error)\n", stderr);
-			exit(1);
-		}
-		else
-			dup2(io->dup_src, io->dup_target);
+		if (dup2(io->dup_src, io->dup_target) == -1 && dofork)
+			exit(ft_print_error("21sh", ERR_BADF, ERR_EXIT));
+		else if (dup2(io->dup_src, io->dup_target) == -1 && !dofork)
+			return (ft_print_error("21sh", ERR_BADF, ERR_EXIT));
 	}
 	if (io->flag & CLOSE && io->flag ^ WRITE)
 		close(io->dup_src);
+	return (0);
 }
 
 int		do_pipe(t_process_p p1, t_process_p p2, int *io_pipe)

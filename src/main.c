@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/12 04:19:12 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/15 18:26:34 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,8 @@ int 	read_ext(t_buf *buf, t_completion *comp, t_core *core, t_token *list)
 	}
 	return (1);
 }
+
+extern int				g_sh_tty;
 
 int		investigate(char *func)
 {

@@ -6,11 +6,13 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 18:10:58 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/12 04:12:06 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/15 18:25:53 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
+
+extern pid_t	g_sh_pgid;
 
 t_bool		get_win(void)
 {
@@ -21,16 +23,6 @@ t_bool		get_win(void)
 	g_curs.win_col = windows.ws_col;
 	g_curs.win_row = windows.ws_row;
 	return (TRUE);
-}
-
-void		get_sigwinch(int sig)
-{
-	int		status;
-
-	waitpid(-1, &status, 0);
-	if (sig == SIGWINCH)
-		get_win();
-	return ;
 }
 
 void		sigttou_handler(int sigttou)
@@ -69,7 +61,6 @@ void		init_signal(void)
 	signal(SIGTSTP, SIG_IGN);
 	signal(SIGTTIN, SIG_IGN);
 	signal(SIGTTOU, SIG_IGN);
-	signal(SIGWINCH, get_sigwinch);
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, get_sigint);
 }
