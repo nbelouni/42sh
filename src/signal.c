@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 18:10:58 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/13 19:56:30 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/18 06:44:05 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,13 @@ void		get_sigwinch(int sig)
 	return ;
 }
 
+void		update_status(void);
+
 void		sigchld_handler(int sigchld)
 {
 	(void)sigchld;
+//	update_status();
+	dprintf(2, "<%d> - pid <%d>\n", __LINE__, getpid());
 	do_job_notification();
 }
 

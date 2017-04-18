@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/13 20:02:30 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/18 08:40:27 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,7 @@ int	mark_process_status(pid_t pid, int status)
 {
 	t_process_p	p;
 
+	dprintf(2, "<%s><%d> - last <%d> && wai <%d> and pid <%d>\n", __func__, __LINE__, last, getpid(), pid);
 	if (pid > 0)
 	{
 		if ((p = get_process_by_pid(pid)))
@@ -146,7 +147,10 @@ int	mark_process_status(pid_t pid, int status)
 			p->status = status;
 			get_job_from_pid(pid)->status = status;
 			if (WIFSTOPPED(status))
+			{
 				p->stopped = 1;
+				last = WSTOPSIG(status);
+			}
 			else
 			{
 				p->completed = 1;
@@ -155,10 +159,11 @@ int	mark_process_status(pid_t pid, int status)
 					fprintf (stderr, "%d: Terminated by signal %d.\n",
 							(int) pid, WTERMSIG(p->status));
 			}
-			return (0);
+
 		}
-		else
-			return (fprintf (stderr, "No child process %d.\n", pid), -1);
+					return (0);
+//		else
+//			return (fprintf (stderr, "No child process %d and %d.\n", pid, getpid()), -1);
 	}
 	else if (pid == 0 || errno == ECHILD)
 		return (-1);
@@ -178,6 +183,7 @@ void	update_status(void)
 	while (true)
 	{
 		pid = waitpid(WAIT_ANY, &status, WUNTRACED | WNOHANG);
+		dprintf(2, "<%s> - pid <%d> and wpid <%d>\n", __func__, getpid(), pid);
 		if (mark_process_status(pid, status))
 			break ;
 	}
@@ -197,13 +203,16 @@ void	wait_for_job(t_job *j)
 
 	block_signal(SIGCHLD, &set, &oset);
 //	signal (SIGCHLD, SIG_DFL);
-	while (true)
+	j->notified = j->notified;
+	while (!j->notified)
 	{
 		pid = waitpid(-1, &status, WUNTRACED);// | WNOHANG);
+		dprintf(2, "<%s><%d> - pid <%d> and job : <%s> wpid <%d>\n", __func__,__LINE__, getpid(), j->command, pid);
 		if (mark_process_status(pid, status) || job_is_stopped(j)
 			|| job_is_completed(j))
 			break ;
 	}
+	dprintf(2, "<%s> - pid <%d> and job : <%s> wpid <%d> notif <%d>\n", __func__, getpid(), j->command, pid, j->notified);
 	unblock_signal(&oset);
 }
 
@@ -213,9 +222,11 @@ void	wait_for_job(t_job *j)
 
 void	format_job_info(t_job *j, const char *status)
 {
-	fprintf(stderr, "%ld (%s): %s\n", (long)j->pgid, status, j->command);
+	fprintf(stderr, "%ld (%s): %s <%d>\n", (long)j->pgid, status, j->command, getpid());
 }
 
+
+extern t_job *last_job;
 /*
 ** Notify the user about stopped or terminated jobs.
 ** Delete terminated jobs from the active job list.
@@ -231,10 +242,15 @@ void		do_job_notification(void)
 	while (*ptr)
 	{
 		j = (*ptr)->content;
+		dprintf(2, "<%s> - pid <%d> and job : <%s> wpid <%d> notif <%d>\n", __func__, getpid(), j->command, j->pgid, j->notified);
 		if (job_is_completed(j))
 		{
 			format_job_info(j, "completed");
+			if (last_job == j)
+				last_job = NULL;
+			dprintf(2, "did delete <%s>\n", j->command);
 			delete_job(POP(ptr));
+			continue ;
 		}
 		else if (job_is_stopped(j) && !j->notified)
 		{
@@ -242,15 +258,19 @@ void		do_job_notification(void)
 			j->notified = 1;
 		}
 		if (*ptr)
+		{
 			ptr = &(*ptr)->next;
+			dprintf(2, "<%s><%p>\n", __func__, *ptr);
+		}
 	}
 }
 
-extern t_job *last_job;
 
 t_job			*get_last_job(void)
 {
-	return (last_job = ((last_job) ? last_job : job_list->content));
+	if (last_job == NULL && job_list)
+		last_job = job_list->content;
+	return (last_job);
 }
 
 static void		put_job_in_background(t_job *j, int cont)
@@ -274,6 +294,7 @@ static void		put_job_in_foreground(t_job *j, int cont)
 			perror("kill (SIGCONT)");
 	}
 	wait_for_job(j);
+//	update_status();
 	tcsetpgrp(g_sh_tty, g_sh_pgid);
 //	tcgetattr (g_sh_tty, &j->tmodes);
 //	tcsetattr (g_sh_tty, TCSADRAIN, &shell_tmodes);
@@ -415,7 +436,7 @@ void	give_term(int pgid, int foreground)
 		tcsetpgrp(g_sh_tty, pgid);
 }
 
-int		make_children(t_process_p p, int *pgid, int foreground)
+int		make_children(int *pgid, int foreground)
 {
 	int	pid;
 	int	fpid;
@@ -436,7 +457,7 @@ int		make_children(t_process_p p, int *pgid, int foreground)
 	}
 	else
 	{
-		p->pid = pid;
+//		p->pid = pid;
 		if (*pgid == 0) *pgid = pid;
 		setpgid(pid, *pgid);
 	}
@@ -446,7 +467,7 @@ int		make_children(t_process_p p, int *pgid, int foreground)
 void	exec_simple_command(t_process_p p, int fg, int dofork, int *pgid)
 {
 	if (dofork)
-		if (make_children(p, pgid, fg))
+		if ((p->pid = make_children(pgid, fg)))
 			return ;
 	launch_process(p, dofork);
 }
@@ -472,13 +493,15 @@ void	do_pipeline(t_job *job, t_list *pipeline)
 	int			in;
 	int			out;
 	int			dofork = 0;
+	int			pgid;
 
 	in = STDIN_FILENO;
+	pgid = job->pgid;
 	dofork |= shouldfork(job, pipeline);
 	while (pipeline)
 	{
 		out = (pipeline->next)? do_pipe(pipeline->content, pipeline->next->content, io_pipe) : STDOUT_FILENO;
-		exec_simple_command(pipeline->content, job->foreground, dofork, &(job->pgid));
+		exec_simple_command(pipeline->content, job->foreground, dofork, &pgid);
 		list_iter_int(((t_process_p)pipeline->content)->io_list, (void *)restore_fd, dofork);
 		if (out != STDOUT_FILENO)
 			close(out);
@@ -491,29 +514,42 @@ void	do_pipeline(t_job *job, t_list *pipeline)
 	}
 }
 
-extern int gc;
+//extern int gc;
 
 void	launch_job(t_job *j)
 {
 	t_node_p	current;
 	t_list		*stack;
 
+	insert_link_bottom(&job_list, new_link(j, sizeof(*j)));
 	current = j->process_tree;
 	stack = NULL;
+	dprintf(2, "<%s><%d> - last <%d> && wai <%d> and job <%p>\n",__func__,  __LINE__, last, getpid(), j);
+	if (!j->foreground)
+		if (make_children(&j->pgid, 0))
+			return ;
 	while ((current = iter_in_order(current, &stack)))
 	{
 		if (current->type == IF)
 			current = ((((t_condition_if_p)current->data)->type == IF_OR && last) || (((t_condition_if_p)current->data)->type == IF_AND && !last)) ? current->right : NULL;
 		else
 		{
+			dprintf(2, "<%d> - last <%d> && wai <%d>\n", __LINE__, last, getpid());
 			do_pipeline(j, current->data);
 			current = current->right;
+			if (j->foreground)
+				put_job_in_foreground(j, 0);
+			else
+				wait_for_job(j);
 		}
 	}
-	insert_link_bottom(&job_list, new_link(j, sizeof(*j)));
 	if (j->foreground)
-		put_job_in_foreground(j, 0);
+//		put_job_in_foreground(j, 0);
+		update_status();
 	else
-		put_job_in_background(j, 0);
+		//put_job_in_background(j, 0);
+		exit(0);
+		dprintf(2, "<%s><%d> - last <%d> && wai <%d> and job <%p>\n",__func__,  __LINE__, last, getpid(), j);
 	do_job_notification();
+		dprintf(2, "<%s><%d> - last <%d> && wai <%d> and job <%p>\n",__func__,  __LINE__, last, getpid(), j);
 }
