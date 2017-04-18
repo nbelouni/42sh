@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/18 08:40:27 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/18 20:22:12 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -399,26 +399,34 @@ void	apply_redir(t_io *io)
 
 int		do_pipe(t_process_p p1, t_process_p p2, int *io_pipe)
 {
-	t_io	*io_in;
-	t_io	*io_out;
+	t_io	*io_in[2];
+	t_io	*io_out[2];
 
 	if (pipe(io_pipe) == -1)
 	{
 		perror("pipe");
 		exit(1);
 	}
-	io_in = new_io();
-	io_out = new_io();
-	io_in->tab_fd[0] = dup(STDOUT_FILENO);
-	io_out->tab_fd[1] = dup(STDIN_FILENO);
-	io_in->flag = DUP | CLOSE;
-	io_out->flag = DUP | CLOSE;
-	io_in->dup_src = io_pipe[1];
-	io_in->dup_target = STDOUT_FILENO;
-	io_out->dup_src = io_pipe[0];
-	io_out->dup_target = STDIN_FILENO;
-	PUSH(&(p1->io_list), io_in);
-	PUSH(&(p2->io_list), io_out);
+	io_in[0] = new_io();
+	io_in[1] = new_io();
+	io_out[0] = new_io();
+	io_out[1] = new_io();
+	io_in[0]->tab_fd[0] = dup(STDOUT_FILENO);
+	io_out[0]->tab_fd[1] = dup(STDIN_FILENO);
+	io_in[0]->flag = DUP | CLOSE;
+	io_in[1]->flag = CLOSE;
+	io_out[0]->flag = DUP | CLOSE;
+	io_out[1]->flag = CLOSE;
+	io_in[0]->dup_src = io_pipe[1];
+	io_in[0]->dup_target = STDOUT_FILENO;
+	io_in[1]->dup_src = io_pipe[0];
+	io_out[0]->dup_src = io_pipe[0];
+	io_out[0]->dup_target = STDIN_FILENO;
+	io_out[1]->dup_src = io_pipe[1];
+	PUSH(&(p1->io_list), io_in[0]);
+	PUSH(&(p1->io_list), io_in[1]);
+	PUSH(&(p2->io_list), io_out[0]);
+	PUSH(&(p2->io_list), io_out[1]);
 	return (io_pipe[1]);
 }
 
@@ -446,6 +454,7 @@ int		make_children(int *pgid, int foreground)
 	{
 //		restore_originals_handler();
 		fpid = getpid();
+		dprintf(2, "<%s><%d> - last <%d> && getpid <%d> and pid <%d>\n",__func__,  __LINE__, last, getpid(), pid);
 		if (*pgid == 0) *pgid = fpid;
 		setpgid(fpid, *pgid);
 		give_term(*pgid, foreground);
@@ -500,6 +509,7 @@ void	do_pipeline(t_job *job, t_list *pipeline)
 	dofork |= shouldfork(job, pipeline);
 	while (pipeline)
 	{
+		dprintf(2, "<%s><%d> - last <%d> && wai <%d> and job <%p>\n",__func__,  __LINE__, last, getpid(), job);
 		out = (pipeline->next)? do_pipe(pipeline->content, pipeline->next->content, io_pipe) : STDOUT_FILENO;
 		exec_simple_command(pipeline->content, job->foreground, dofork, &pgid);
 		list_iter_int(((t_process_p)pipeline->content)->io_list, (void *)restore_fd, dofork);
@@ -530,11 +540,14 @@ void	launch_job(t_job *j)
 			return ;
 	while ((current = iter_in_order(current, &stack)))
 	{
-		if (current->type == IF)
+		dprintf(2, "<%s><%d> - last <%d> && wai <%d> and type <%d>\n", __func__, __LINE__, last, getpid(), current->type == IF);
+		if (current->type == IF){
+			dprintf(2, "<%s><%d> - current <%p> && ifand <%d> and ifor right <%d>\n", __func__, __LINE__, current, ((t_condition_if_p)current->data)->type == IF_AND, ((t_condition_if_p)current->right->data)->type == IF_OR);
 			current = ((((t_condition_if_p)current->data)->type == IF_OR && last) || (((t_condition_if_p)current->data)->type == IF_AND && !last)) ? current->right : NULL;
+		}
 		else
 		{
-			dprintf(2, "<%d> - last <%d> && wai <%d>\n", __LINE__, last, getpid());
+			dprintf(2, "<%s><%d> - last <%d> && wai <%d>\n", __func__, __LINE__, last, getpid());
 			do_pipeline(j, current->data);
 			current = current->right;
 			if (j->foreground)
