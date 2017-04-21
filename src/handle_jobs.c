@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/18 20:22:12 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/20 15:50:16 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,6 +187,7 @@ void	update_status(void)
 		if (mark_process_status(pid, status))
 			break ;
 	}
+	dprintf(2, "<%s -- out> - pid <%d> and wpid <%d>\n", __func__, getpid(), pid);
 }
 
 /*
@@ -212,7 +213,7 @@ void	wait_for_job(t_job *j)
 			|| job_is_completed(j))
 			break ;
 	}
-	dprintf(2, "<%s> - pid <%d> and job : <%s> wpid <%d> notif <%d>\n", __func__, getpid(), j->command, pid, j->notified);
+	dprintf(2, "<%s -- out> - pid <%d> and job : <%s> wpid <%d> notif <%d>\n", __func__, getpid(), j->command, pid, j->notified);
 	unblock_signal(&oset);
 }
 
@@ -242,13 +243,13 @@ void		do_job_notification(void)
 	while (*ptr)
 	{
 		j = (*ptr)->content;
-		dprintf(2, "<%s> - pid <%d> and job : <%s> wpid <%d> notif <%d>\n", __func__, getpid(), j->command, j->pgid, j->notified);
+		dprintf(2, "<%s> - pid <%d> and job : <%s> pgid <%d> notif <%d>\n", __func__, getpid(), j->command, j->pgid, j->notified);
 		if (job_is_completed(j))
 		{
 			format_job_info(j, "completed");
 			if (last_job == j)
 				last_job = NULL;
-			dprintf(2, "did delete <%s>\n", j->command);
+			dprintf(2, "did delete <%s><%d>\n", j->command, getpid());
 			delete_job(POP(ptr));
 			continue ;
 		}
@@ -454,7 +455,6 @@ int		make_children(int *pgid, int foreground)
 	{
 //		restore_originals_handler();
 		fpid = getpid();
-		dprintf(2, "<%s><%d> - last <%d> && getpid <%d> and pid <%d>\n",__func__,  __LINE__, last, getpid(), pid);
 		if (*pgid == 0) *pgid = fpid;
 		setpgid(fpid, *pgid);
 		give_term(*pgid, foreground);
@@ -470,6 +470,7 @@ int		make_children(int *pgid, int foreground)
 		if (*pgid == 0) *pgid = pid;
 		setpgid(pid, *pgid);
 	}
+	dprintf(2, "<%s><%d> - last <%d> && getpid <%d> and pid <%d>\n",__func__,  __LINE__, last, getpid(), pid);
 	return (pid);
 }
 
@@ -509,7 +510,7 @@ void	do_pipeline(t_job *job, t_list *pipeline)
 	dofork |= shouldfork(job, pipeline);
 	while (pipeline)
 	{
-		dprintf(2, "<%s><%d> - last <%d> && wai <%d> and job <%p>\n",__func__,  __LINE__, last, getpid(), job);
+		dprintf(2, "<%s><%d> - last <%d> && wai <%d> and job <%s>\n",__func__,  __LINE__, last, getpid(), job->command);
 		out = (pipeline->next)? do_pipe(pipeline->content, pipeline->next->content, io_pipe) : STDOUT_FILENO;
 		exec_simple_command(pipeline->content, job->foreground, dofork, &pgid);
 		list_iter_int(((t_process_p)pipeline->content)->io_list, (void *)restore_fd, dofork);
@@ -523,9 +524,9 @@ void	do_pipeline(t_job *job, t_list *pipeline)
 		pipeline = pipeline->next;
 	}
 }
-
+t_process_p	new_process(char **argv);
 //extern int gc;
-
+//			dprintf(2, "<%s><%d> - current <%p> && ifand <%d> and ifor right <%d>\n", __func__, __LINE__, current, ((t_condition_if_p)current->data)->type == IF_AND, ((t_condition_if_p)current->right->data)->type == IF_OR);
 void	launch_job(t_job *j)
 {
 	t_node_p	current;
@@ -534,20 +535,26 @@ void	launch_job(t_job *j)
 	insert_link_bottom(&job_list, new_link(j, sizeof(*j)));
 	current = j->process_tree;
 	stack = NULL;
-	dprintf(2, "<%s><%d> - last <%d> && wai <%d> and job <%p>\n",__func__,  __LINE__, last, getpid(), j);
+	dprintf(2, "<%s><%d> - last <%d> && wai <%d> and job <%s>\n",__func__,  __LINE__, last, getpid(), j->command);
 	if (!j->foreground)
-		if (make_children(&j->pgid, 0))
+	{
+		int pid;
+		if ((pid = make_children(&j->pgid, 0)))
+		{
+			PUSH(&(j->wait_process_list), new_process(NULL));
+			((t_process_p)TOP(j->wait_process_list))->pid = pid;
 			return ;
+		}
+	}
 	while ((current = iter_in_order(current, &stack)))
 	{
-		dprintf(2, "<%s><%d> - last <%d> && wai <%d> and type <%d>\n", __func__, __LINE__, last, getpid(), current->type == IF);
+		dprintf(2, "<%s><%d> - last <%d> && wai <%d> and job <%s>\n",__func__,  __LINE__, last, getpid(), j->command);
 		if (current->type == IF){
-			dprintf(2, "<%s><%d> - current <%p> && ifand <%d> and ifor right <%d>\n", __func__, __LINE__, current, ((t_condition_if_p)current->data)->type == IF_AND, ((t_condition_if_p)current->right->data)->type == IF_OR);
 			current = ((((t_condition_if_p)current->data)->type == IF_OR && last) || (((t_condition_if_p)current->data)->type == IF_AND && !last)) ? current->right : NULL;
 		}
 		else
 		{
-			dprintf(2, "<%s><%d> - last <%d> && wai <%d>\n", __func__, __LINE__, last, getpid());
+			dprintf(2, "<%s><%d> - last <%d> && wai <%d> and job <%s>\n",__func__,  __LINE__, last, getpid(), j->command);
 			do_pipeline(j, current->data);
 			current = current->right;
 			if (j->foreground)

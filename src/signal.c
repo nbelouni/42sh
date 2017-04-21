@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 18:10:58 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/18 06:44:05 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/20 16:34:54 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,10 @@ void		update_status(void);
 void		sigchld_handler(int sigchld)
 {
 	(void)sigchld;
-//	update_status();
-	dprintf(2, "<%d> - pid <%d>\n", __LINE__, getpid());
-	do_job_notification();
+	dprintf(2, "<%s><%d> - pid <%d>\n", __func__, __LINE__, getpid());
+	update_status();
+	dprintf(2, "<%s -- out><%d> - pid <%d>\n",__func__, __LINE__, getpid());
+//	do_job_notification();
 }
 
 void		get_sigint(int sig)
