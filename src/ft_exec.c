@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 13:08:28 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/12 04:06:55 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/26 15:15:19 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void			ft_exec(char **av)
 	char		**envp;
 	t_elem		*tmp;
 
-	close_termios();
+//	close_termios();
 	envp = ft_env_to_tab(core->env);
 	if (!(tmp = ft_find_elem("PATH", core->env)))
 		s = ft_strdup("");
