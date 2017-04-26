@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/15 18:26:34 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/26 15:47:51 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,9 @@ int		parse(t_core *core, char *line, char **envp)
 	return (0);
 }
 
-
 /*
- **	  init_core initialisation des liste d'env
- */
+ *  **	  init_core initialisation des liste d'env
+ *   */
 
 t_core 		*ft_creat_core(char **envp)
 {
@@ -92,8 +91,8 @@ t_core 		*ft_creat_core(char **envp)
 }
 
 /*
- **   si l'entree est different du terminal va lire ligne par ligne GNL
- */
+ *  **   si l'entree est different du terminal va lire ligne par ligne GNL
+ *   */
 int 	read_ext(t_buf *buf, t_completion *comp, t_core *core, t_token *list)
 {
 	int i;
@@ -118,16 +117,6 @@ int 	read_ext(t_buf *buf, t_completion *comp, t_core *core, t_token *list)
 
 extern int				g_sh_tty;
 
-int		investigate(char *func)
-{
-	struct termios termio;
-
-	tcgetattr(g_sh_tty, &termio);
-	if (termio.c_lflag & TOSTOP)
-		dprintf(2, "%s Dam it's there\n", func);
-	return (0);
-}
-
 int 	main(int argc, char **argv, char **envp)
 {
 	(void)argc;
@@ -143,7 +132,6 @@ int 	main(int argc, char **argv, char **envp)
 
 	tcgetattr(0, &termio);
 	if (termio.c_lflag & TOSTOP)
-		dprintf(2, "%s Dam it's there\n", __func__);
 	ast = NULL;
 	list = NULL;
 	core = ft_creat_core(envp);
@@ -161,7 +149,6 @@ int 	main(int argc, char **argv, char **envp)
 		while ((ret_read = read_line(buf, &completion, core->hist)) != ERR_EXIT)
 		{
 			close_termios();
-			investigate((char *)__func__);
 			job_list_bis = NULL;
 			if (ret_read != TAB)
 			{
@@ -184,7 +171,6 @@ int 	main(int argc, char **argv, char **envp)
 //					test_func(ast);
 					export_job(ast, &job_list_bis);
 //					printJobList(job_list_bis);
-					investigate((char *)__func__);
 					list_iter(job_list_bis, (void *)launch_job);
 					delete_list(&job_list_bis, NULL);
 					free_ast(ast);
