@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 13:08:28 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/30 22:01:34 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/04/30 23:10:29 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,11 @@ void			not_binary(char *s, char *s2, char **av, char **envp)
 			ft_putstr_fd("21sh: exec format error: ", 2);
 		else if (lstat(av[0], &st) == 0)
 			ft_putstr_fd("21sh: permission denied: ", 2);
+		else if (!s)
+		{
+			ft_putstr_fd("21sh: command not found: ", 2);
+			ft_putendl_fd(av[0], 2);
+		}
 		else
 			ft_putstr_fd("21sh: no such file or directory: ", 2);
 		ft_putendl_fd(av[0], 2);
