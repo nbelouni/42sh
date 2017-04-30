@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 13:52:27 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/30 17:13:14 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/04/13 20:25:04 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,6 @@ void	export_job(t_tree *root, t_list **job_list)
 	if (root)
 		insert_link_bottom(job_list, new_link(create_job(root, 1), sizeof(t_job)));
 	j = TOP((*job_list));
-//	dprintf(2, "%s : j :: <%p> && PTree :: <%p>\n", __func__, j, j->process_tree);
 }
 
 t_condition_if_p		new_condition_if(t_type_if type)

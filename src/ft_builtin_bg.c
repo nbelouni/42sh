@@ -16,7 +16,6 @@ static int		exec_job_bg(t_job *job)
 {
 	if (job == NULL)
 		return (-1);
-//	dprintf(2, "state of foreground <%d> and is it stopped <%d>\n", job->foreground, job_is_stopped(job));
 	if (job_is_stopped(job) && job->foreground)
 	{
 		job->foreground = 0;

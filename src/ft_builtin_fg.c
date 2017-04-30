@@ -12,14 +12,12 @@
 
 #include "42sh.h"
 
-//void print_job(t_job *job, char* func);
 
 static int	exec_job_fg(t_job *job)
 {
 	if (job_is_stopped(job))
 	{
 		job->foreground = 1;
-		// print_job(job, (char *)__func__);
 		continue_job(job, job->foreground); // continue_job(j);
 	}
 	return (0);

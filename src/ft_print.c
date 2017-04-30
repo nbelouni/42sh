@@ -70,7 +70,6 @@ void		ft_print_token_list(t_token **list)
 
 }
 /*
-void		print_job(t_job *list)
 {
 	t_job		*job;
 	t_process	*process;

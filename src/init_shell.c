@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 13:08:51 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/30 17:12:46 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/04/13 21:15:28 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,21 +40,16 @@ sig_t	*getOriginals()
 	return (g_originals);
 }
 
-void	sigttou_handler(int sigttou);
 
 void		save_originals_handler(void)
 {
 	int		i;
 
 	i = 1;
-//	dprintf(2, "%s %p %p\n", __func__, g_originals, &g_originals);
 	while (i < NSIG)
 	{
 		if ((g_originals[i] = signal(i, SIG_IGN)) == SIG_ERR)
-		{
-//			perror(__func__);
 			g_originals[i] = NULL;
-		}
 		signal(i, g_originals[i]);
 		i++;
 	}
@@ -70,9 +65,8 @@ void		restore_originals_handler(void)
 	i = 1;
 	while (i < NSIG)
 	{
-		signal(i, g_originals[i]);
-//		if (signal(i, g_originals[i]) == SIG_ERR)
-//			perror(__func__);
+		if (signal(i, g_originals[i]) == SIG_ERR)
+			;
 		i++;
 	}
 }

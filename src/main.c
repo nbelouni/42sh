@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/30 21:26:31 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/04/30 21:57:31 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ int		parse(t_core *core, char *line, char **envp)
 	return (0);
 }
 
-
 /*
  **	  init_core initialisation des liste d'env
  */
@@ -118,17 +117,7 @@ int 	read_ext(t_buf *buf, t_completion *comp, t_core *core, t_token *list)
 }
 */
 extern int				g_sh_tty;
-/*
-int		investigate(char *func)
-{
-	struct termios termio;
 
-	tcgetattr(g_sh_tty, &termio);
-	if (termio.c_lflag & TOSTOP)
-		dprintf(2, "%s Dam it's there\n", func);
-	return (0);
-}
-*/
 int 	main(int argc, char **argv, char **envp)
 {
 	(void)argc;
@@ -177,13 +166,24 @@ int 	main(int argc, char **argv, char **envp)
  *				enleve les quotes et les backslash -> va changer de place
  *				edit_cmd(list, env);
  */	
-				ft_push_ast(list, &ast);
-				export_job(ast, &job_list_bis);
-				list_iter(job_list_bis, (void *)launch_job);
-				delete_list(&job_list_bis, NULL);
-				free_ast(ast);
-				if ((ret = ft_check_history_var(g_core->set, g_core->hist)) == ERR_EXIT)
-					return (ERR_EXIT);
+					ft_push_ast(list, &ast);
+//					regexp_in_tree(ast, core);
+//					print_debug_ast(ast);
+//					test_func(ast);
+					export_job(ast, &job_list_bis);
+//					printJobList(job_list_bis);
+					list_iter(job_list_bis, (void *)launch_job);
+					delete_list(&job_list_bis, NULL);
+					free_ast(ast);
+//					free(ast);
+/*
+**				. remplace $var
+**				. ajoute arguments si regex
+**				. supprime '\'', '"' , '`' et '\\'
+**
+**				. sera remplacee quqnd je saurais ou la mettre
+**
+*/
 			}
 			if (ret != ERR_NEW_PROMPT && g_core->buf->final_line)
 				ft_strdel(&(g_core->buf->final_line));

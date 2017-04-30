@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/03 18:22:07 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/04/30 21:23:27 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/04/30 21:49:58 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ static int	ft_exec_setenv(t_lst *env, char **args)
 
 int			ft_builtin_setenv(t_core *core, char **args)
 {
+	(void)core;
 	if (args != NULL && args[0] != NULL)
 		return (ft_exec_setenv(g_core->env, args));
 	if (g_core->env != NULL && g_core->env->head != NULL)
