@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 18:10:58 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/15 18:25:53 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/30 20:57:56 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,9 @@ void		get_sigint(int sig)
 {
 	if (sig == SIGINT)
 	{
-		ft_bzero(core->buf->line, BUFF_SIZE);
+		g_core->buf->size = 0;
+		ft_bzero(g_core->buf->line, BUFF_SIZE);
+		clean_pos_curs();
 		ft_putstr_fd("\n42sh.$ ", 1);
 	}
 	return ;

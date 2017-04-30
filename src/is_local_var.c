@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/15 20:40:34 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/16 16:47:37 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/04/30 20:14:33 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,16 +33,13 @@ int			is_var_val(char *s)
 t_token		*insert_env_export_in_list(t_token *tmp, t_token *lst)
 {
 	t_token	*new;
-	int		lvl[2];
 	char	*cmd;
 
 	if (tmp && is_text_type(tmp->type))
 		cmd = "env";
 	else
 		cmd = "export";
-	lvl[0] = lst->bt_level;
-	lvl[1] = lst->bc_level;
-	if (!(new = ft_tokenew(CMD, ft_strdup(cmd), lvl)))		
+	if (!(new = ft_tokenew(CMD, ft_strdup(cmd))))		
 		return (NULL);
 	if (lst->prev)
 		lst->prev->next = new;

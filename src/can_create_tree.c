@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/19 15:29:18 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/22 18:44:52 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/30 20:11:23 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 int			print_err_message(char *s)
 {
 	ft_putstr_fd("42sh: syntax error near unexpected token `", 2);
-	ft_putstr_fd(s, 2);
+	if (s)
+		ft_putstr_fd(s, 2);
 	ft_putstr_fd("'\n", 2);
 	set_prompt(PROMPT1, ft_strlen(PROMPT1));
 	return (ERR_NEW_CMD);
@@ -27,14 +28,13 @@ int			is_new_prompt(t_token *prev)
 	{
 		if (!(prev = prev->next))
 			return (TRUE);
-		if (prev->bt_level < 0)
+/*		if (prev->bt_level < 0)
 			return (print_err_message(")"));
 		if (prev->bc_level < 0)
 			return (print_err_message("}"));
-		if (is_dir_type(prev->type))
+*/		if (is_dir_type(prev->type))
 			return (print_err_message("newline"));
 		if ((is_separator_type(prev->type) && prev->type != DOT) ||
-		prev->bt_level > 0 || prev->bc_level > 0 ||
 		prev->word[ft_strlen(prev->word) - 1] == '\\')
 		{
 			set_prompt(PROMPT2, ft_strlen(PROMPT2));
@@ -47,7 +47,7 @@ int			is_new_prompt(t_token *prev)
 
 int			is_parse_error(t_token *tmp, t_token *prev)
 {
-	if (tmp->type == O_BRACKET && prev && !is_separator_type(prev->type)
+/*	if (tmp->type == O_BRACKET && prev && !is_separator_type(prev->type)
 	&& !is_open_group_type(prev->type))
 		return (print_err_message(tmp->word));
 	if (tmp->type == C_BRACKET &&
@@ -59,12 +59,12 @@ int			is_parse_error(t_token *tmp, t_token *prev)
 		return (print_err_message(tmp->word));
 	if (tmp->type == C_BRACE && (!prev || prev->type != DOT))
 		return (print_err_message(tmp->word));
-	if (is_separator_type(tmp->type) &&
+*/	if (is_separator_type(tmp->type) &&
 	(!prev || is_separator_type(prev->type) || is_dir_type(prev->type)
-	|| is_open_group_type(prev->type)))
+/*	|| is_open_group_type(prev->type)*/))
 		return (print_err_message(tmp->word));
-	if (tmp->type == CMD && prev && is_close_group_type(prev->type))
-		return (print_err_message(tmp->word));
+//	if (tmp->type == CMD && prev && is_close_group_type(prev->type))
+//		return (print_err_message(tmp->word));
 	if (is_dir_type(tmp->type) &&
 	(!prev || is_separator_type(prev->type) || is_dir_type(prev->type)))
 		return (print_err_message(tmp->word));
@@ -88,7 +88,7 @@ int			can_create_tree(t_token *lst)
 			return (ret);
 		tmp = tmp->next;
 	}
-	if (!prev && (lst->type == O_BRACKET || lst->type == O_BRACE ||
+	if (!prev && (/*lst->type == O_BRACKET || lst->type == O_BRACE ||*/
 	lst->word[ft_strlen(lst->word) - 1] == '\\'))
 	{
 		set_prompt(PROMPT2, ft_strlen(PROMPT2));

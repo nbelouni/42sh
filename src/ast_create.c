@@ -6,7 +6,7 @@
 /*   By: dogokar <dogokar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 14:41:10 by dogokar           #+#    #+#             */
-/*   Updated: 2017/04/15 18:50:46 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/30 20:21:41 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,6 @@ t_tree			*init_node(void)
 		return (NULL);
 	ft_memset(node, 0, sizeof(node));
 	return (node);
-}
-
-t_lvl			*initlvl(int bt_lvl, int bc_lvl)
-{
-	t_lvl *lvl;
-
-	if (!(lvl = (t_lvl*)malloc(sizeof(t_lvl))))
-		return (NULL);
-	lvl->bt_lvl = bt_lvl;
-	lvl->bc_lvl = bc_lvl;
-	return (lvl);
 }
 
 static t_lib	g_lib_op[LENLIB] =
@@ -113,29 +102,14 @@ int				compare_token_com(t_token *node_lst, t_token *tmp)
 	return (0);
 }
 
-int				test_lvl(int bt_lvl, int bc_lvl, t_lvl *lvl)
-{
-	if (bt_lvl == lvl->bt_lvl && bc_lvl == lvl->bc_lvl)
-		return (0);
-	else
-		return (1);
-}
-
 /*
 **    regle pour parser la liste et inserer les token au bon endroit
 */
 
-int				priority(t_token *node_lst, t_token *tmp, t_lvl *lvl)
+int				priority(t_token *node_lst, t_token *tmp)
 {
-	int		tmp_bt;
-	int		tmp_bc;
-
-	tmp_bt = tmp->bt_level;
-	tmp_bc = tmp->bc_level;
-	if (!node_lst && tmp->select == 0 && (test_lvl(tmp_bt, tmp_bc, lvl) == 0))
+	if (!node_lst && tmp->select == 0)
 		return (1);
-	else if (test_lvl(tmp_bt, tmp_bc, lvl) == 1)
-		return (0);
 	else if (compare_token_op(node_lst, tmp))
 		return (1);
 	else if (compare_token_com(node_lst, tmp))
@@ -149,40 +123,29 @@ int				priority(t_token *node_lst, t_token *tmp, t_lvl *lvl)
 ** ou bc lvl est incrementer
 */
 
-t_token			*search_toke(t_token *lst, t_lvl *lvl)
+t_token			*search_toke(t_token *lst)
 {
 	t_token	*tmp;
 	t_token	*node_lst;
-	t_lvl	*lvl_up;
 	int		first_time;
 
 	tmp = lst;
 	first_time = 0;
 	node_lst = NULL;
-	lvl_up = NULL;
 	if (lst == NULL)
 		return (NULL);
-	if (lvl == NULL)
-		lvl = initlvl(0, 0);
 	if (tmp->select == 1)
 		tmp = tmp->next;
 	while (tmp && tmp->select == 0)
 	{
-		if (first_time == 0 && test_lvl(tmp->bt_level, tmp->bc_level, lvl))
+		if (first_time == 0)
 		{
 			first_time = 1;
-			if (lvl_up)
-				free(lvl_up);
-			lvl_up = initlvl(tmp->bt_level, tmp->bc_level);
 		}
-		if (priority(node_lst, tmp, lvl))
+		if (priority(node_lst, tmp))
 			node_lst = tmp;
 		tmp = tmp->next;
 	}
-	if (lvl)
-		ft_memdel((void*)&lvl);
-	if (lvl_up && node_lst == NULL)
-		node_lst = search_toke(lst, lvl_up);
 	return (node_lst);
 }
 
@@ -190,7 +153,7 @@ t_token			*search_toke(t_token *lst, t_lvl *lvl)
 ** remonte la liste
 */
 
-t_token			*search_toke_prev(t_token *lst, t_lvl *lvl)
+t_token			*search_toke_prev(t_token *lst)
 {
 	t_token	*tmp;
 
@@ -201,7 +164,7 @@ t_token			*search_toke_prev(t_token *lst, t_lvl *lvl)
 		tmp = tmp->prev;
 	while (tmp && tmp->prev && tmp->select == 0)
 		tmp = tmp->prev;
-	return (search_toke(tmp, lvl));
+	return (search_toke(tmp));
 }
 
 /*
@@ -307,10 +270,10 @@ t_tree			*recurs_creat_tree(t_token *lst)
 		node->cmd = copy_fd(tmp);
 	if (tmp->type == TARGET)
 		node->cmd = copy_fd(tmp);
-	node->right = creat_right(tmp, NULL);
+	node->right = creat_right(tmp);
 	if (node->right)
 		node->right->father = node;
-	node->left = creat_left(tmp, NULL);
+	node->left = creat_left(tmp);
 	if (node->left)
 		node->left->father = node;
 	return (node);
@@ -320,12 +283,12 @@ t_tree			*recurs_creat_tree(t_token *lst)
 ** branche de gauche
 */
 
-t_tree			*creat_left(t_token *lst, t_lvl *lvl)
+t_tree			*creat_left(t_token *lst)
 {
 	t_token	*tmp;
 
 	tmp = NULL;
-	if (!(tmp = search_toke_prev(lst, lvl)))
+	if (!(tmp = search_toke_prev(lst)))
 		return (NULL);
 	tmp->select = 1;
 	return (recurs_creat_tree(tmp));
@@ -335,12 +298,12 @@ t_tree			*creat_left(t_token *lst, t_lvl *lvl)
 ** branche de droite
 */
 
-t_tree			*creat_right(t_token *lst, t_lvl *lvl)
+t_tree			*creat_right(t_token *lst)
 {
 	t_token	*tmp;
 
 	tmp = NULL;
-	if (!(tmp = search_toke(lst, lvl)))
+	if (!(tmp = search_toke(lst)))
 		return (NULL);
 	tmp->select = 1;
 	return (recurs_creat_tree(tmp));
@@ -359,7 +322,7 @@ t_tree			*new_tree(t_token *lst)
 	tmp = NULL;
 	if (lst)
 	{
-		tmp = search_toke(lst, NULL);
+		tmp = search_toke(lst);
 		tmp->select = 1;
 		node = add_tree(tmp);
 		node->token = tmp->type;
@@ -369,10 +332,10 @@ t_tree			*new_tree(t_token *lst)
 			node->cmd = copy_fd(tmp);
 		if (tmp->type == TARGET)
 			node->cmd = copy_fd(tmp);
-		node->right = creat_right(tmp, NULL);
+		node->right = creat_right(tmp);
 		if (node->right)
 			node->right->father = node;
-		node->left = creat_left(tmp, NULL);
+		node->left = creat_left(tmp);
 		if (node->left)
 			node->left->father = node;
 	}

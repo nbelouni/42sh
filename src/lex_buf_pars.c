@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 19:31:44 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/29 20:06:22 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/30 20:49:55 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,20 @@ void		reset_int_pt(t_pt *pt)
 	pt->i = 0;
 	pt->len = 0;
 	pt->type = 0;
-	pt->level[0] = 0;
-	pt->level[1] = 0;
+//	pt->level[0] = 0;
+//	pt->level[1] = 0;
 }
 
 int			parse_list(t_token **list, char *s, t_pt *p)
 {
 	t_token	*new;
 
+	new = NULL;
 	if (!s)
 		return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
 	if (find_quote_end(s) == FALSE)
 		return (ERR_NEW_PROMPT);
-	if (!(new = ft_tokenew(p->type, s, p->level)))
+	if (!(new = ft_tokenew(p->type, s)))
 		return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
 	if (!(*list))
 		*list = new;

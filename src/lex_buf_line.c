@@ -6,28 +6,26 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/16 00:50:00 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/08 18:24:03 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/30 20:17:40 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
-static int		(*g_tab_tok[15])() = {
+static int		(*g_tab_tok[13])() = {
 	[0] = is_space,
-	[1] = is_brace,
-	[2] = is_bracket,
-	[3] = is_dot,
-	[4] = is_or_and,
-	[5] = is_agreg,
-	[6] = is_redir,
-	[7] = is_btquote,
-	[8] = is_new_btquote,
-	[9] = is_dquote,
-	[10] = is_squote,
-	[11] = find_btquote_end,
-	[12] = find_new_btquote_end,
-	[13] = find_dquote_end,
-	[14] = find_squote_end,
+	[1] = is_dot,
+	[2] = is_or_and,
+	[3] = is_agreg,
+	[4] = is_redir,
+	[5] = is_btquote,
+	[6] = is_new_btquote,
+	[7] = is_dquote,
+	[8] = is_squote,
+	[9] = find_btquote_end,
+	[10] = find_new_btquote_end,
+	[11] = find_dquote_end,
+	[12] = find_squote_end,
 };
 
 int			check_tok(char *s, int l)
@@ -37,7 +35,7 @@ int			check_tok(char *s, int l)
 
 	j = 0;
 	ret = 0;
-	while (j < 7)
+	while (j < 5)
 	{
 		if ((ret = g_tab_tok[j](s, l)) != 0)
 			return (ret);
@@ -51,11 +49,11 @@ int			cut_quote(char *s, t_pt *p)
 	int		j;
 	int		ret;
 
-	j = 7;
+	j = 5;
 	ret = 0;
-	while (j < 11 && (ret = g_tab_tok[j](s, p->i + p->len)) == 0)
+	while (j < 9 && (ret = g_tab_tok[j](s, p->i + p->len)) == 0)
 		j++;
-	if (j == 11 && ret == 0)
+	if (j == 9 && ret == 0)
 		return (0);
 	else
 	{
@@ -77,18 +75,18 @@ static int	choose_pars(t_token **list, char *s, int rt, t_pt *p)
 	p->type = rt;
 	if (rt > ESPACE && rt < FD_IN)
 	{
-		len = (rt >= OR && rt <= O_BRACE) ? 2 : 1;
-		if (rt == C_BRACKET)
-			p->level[0]--;
-		if (rt == C_BRACE)
-			p->level[1]--;
+		len = (rt >= OR && rt <= DIR_R_AMP) ? 2 : 1;
+//		if (rt == C_BRACKET)
+//			p->level[0]--;
+//		if (rt == C_BRACE)
+//			p->level[1]--;
 		if ((r = parse_list(list, ft_strsub(s, p->i, len), p)))
 			return (r);
-		if (rt == O_BRACE)
-			p->level[1]++;
-		if (rt == O_BRACKET)
-			p->level[0]++;
-		if (rt >= OR && rt <= O_BRACE)
+//		if (rt == O_BRACE)
+//			p->level[1]++;
+//		if (rt == O_BRACKET)
+//			p->level[0]++;
+		if (rt >= OR && rt <= DIR_R_AMP)
 			p->i++;
 	}
 	p->i++;

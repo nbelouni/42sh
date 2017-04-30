@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/03 14:15:26 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/30 13:40:32 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/04/30 20:38:03 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	supp_dquote(char *s, int *i, int *len)
 	while (*i < j)
 	{
 		if (s[*i + 1] && (s[*i + 1] == '$' || s[*i + 1] == '\\' ||
-		s[*i + 1] == '`' || s[*i + 1] == '"'))
+					s[*i + 1] == '`' || s[*i + 1] == '"'))
 			if (supp_char(s, *i, '\\'))
 				j--;
 		(*i)++;
@@ -92,7 +92,7 @@ int		init_begin_end(char *s, int *begin, int *end)
 
 	*begin = find_next_char(s, 0, '$');
 	if (*begin < 0 || *begin + 1 >= (int)ft_strlen(s) ||
-	which_quotes(s, *begin) == S_QUOTE)
+			which_quotes(s, *begin) == S_QUOTE)
 		return (TRUE);
 	*begin += 1;
 	i = *begin;
@@ -116,6 +116,22 @@ int		init_new_value(char *var_name, t_core *core, char **new_value)
 	*new_value = (tmp && tmp->value && tmp->value[0]) ? tmp->value : NULL;
 	if (var_name)
 		ft_strdel(&var_name);
+	return (0);
+}
+int            replace_tild(char **s, t_core *core)
+{
+	t_elem  *tmp;
+	char    *new;
+	if (!(tmp = ft_find_elem("HOME", core->env)))
+		return (0);
+	if (!tmp->value)
+		return (0);
+	if (!(new = ft_strnew(ft_strlen(*s) - 1 + ft_strlen(tmp->value))))
+		return (ft_print_error("21sh: ", ERR_MALLOC, ERR_EXIT));
+	ft_strncpy(new, tmp->value, ft_strlen(tmp->value));
+	ft_strncpy(new + ft_strlen(tmp->value), *s + 1, ft_strlen(*s) - 1);
+	ft_strdel(s);
+	*s = new;
 	return (0);
 }
 
@@ -181,6 +197,11 @@ int		globb(char **s, t_core *core, t_reg_path **new_args)
 
 	i = 0;
 	ret = FALSE;
+	if (*s[0] == '~')
+	{
+		if (replace_tild(s, core) == ERR_EXIT)
+			return (ERR_EXIT);
+	}
 	while (ret == FALSE)
 	{
 		is_end(*s, &i, '\'');

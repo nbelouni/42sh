@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/19 19:27:07 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/22 18:43:03 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/30 20:14:52 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int			is_separator_type(int type)
 		return (1);
 	return (0);
 }
-
+/*
 int			is_open_group_type(int type)
 {
 	if (type == O_BRACKET || type == O_BRACE)
@@ -32,7 +32,7 @@ int			is_close_group_type(int type)
 		return (1);
 	return (0);
 }
-
+*/
 int			is_dir_type(int type)
 {
 	if (type == SR_DIR || type == DL_DIR || type == DR_DIR ||

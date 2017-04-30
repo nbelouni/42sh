@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:09:30 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/15 18:28:14 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/30 21:12:31 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ typedef struct		s_core
 
 
 t_lst				*ft_init_lstset(void);
-t_core				*core;
+t_core				*g_core;
 extern t_list		*job_list;
 
 
@@ -85,7 +85,7 @@ void			init_signal(void);
 **	ft_init.c
 */
 
-t_core				*ft_init_core(void);
+int					ft_init_core(void);
 t_lst				*ft_default_env(void);
 t_lst				*ft_init_list(void);
 t_elem				*ft_init_elem(void);

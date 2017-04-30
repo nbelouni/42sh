@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 14:13:58 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/20 14:43:44 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/04/30 21:18:10 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,14 @@
 **	ses octets a 0, puis retourne la nouvelle liste de type set.
 */
 
-t_core		*ft_init_core(void)
+int		ft_init_core(void)
 {
-	t_core			*set;
-
-	set = NULL;
-	if ((set = malloc(sizeof(t_core))) == NULL)
-		return (NULL);
-	set->env = NULL;
-	set->set = NULL;
-	set->exp = NULL;
-	set->hist = NULL;
-	return (set);
+	if ((g_core = malloc(sizeof(t_core))) == NULL)
+		return (ft_print_error("42sh :", ERR_MALLOC, ERR_EXIT));
+	g_core->env = NULL;
+	g_core->exp = NULL;
+	g_core->hist = NULL;
+	return (TRUE);
 }
 
 /*
@@ -89,9 +85,10 @@ static char	*ft_envv_to_str(t_elem *elem)
 	{
 		return (NULL);
 	}
-	ft_strcpy(res, elem->name);
+	ft_strncpy(res, elem->name, ft_strlen(elem->name));
 	res[name_len] = '=';
-	res = ft_strcat(res, elem->value);
+	if (elem->value)
+		res = ft_strcat(res, elem->value);
 	return (res);
 }
 

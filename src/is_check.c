@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 14:26:10 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/22 18:38:20 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/30 17:57:12 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,12 +84,14 @@ int		is_or_and(char *s, int i)
 
 int		is_bracket(char *s, int i)
 {
-	if (i == 0 || s[i - 1] != '\\')
-	{
-		if (s[i] == '(')
-			return (O_BRACKET);
-		if (s[i] == ')')
-			return (C_BRACKET);
-	}
+	(void)s;
+	(void)i;
+//	if (i == 0 || s[i - 1] != '\\')
+//	{
+//		if (s[i] == '(')
+//			return (O_BRACKET);
+//		if (s[i] == ')')
+//			return (C_BRACKET);
+//	}
 	return (0);
 }

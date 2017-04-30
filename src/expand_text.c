@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/01 21:40:02 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/01 21:40:55 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/04/30 20:22:54 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 t_token		*expand_text(t_exp *exp, t_token *lst)
 {
 	t_token	*new;
-	int		lvl[2];
 	int		i;
 	char	*new_w;
 
@@ -23,16 +22,14 @@ t_token		*expand_text(t_exp *exp, t_token *lst)
 	new = NULL;
 	while (i < exp->n_poss)
 	{
-		lvl[0] = lst->bt_level;
-		lvl[1] = lst->bc_level;
 		if (!(new_w = ft_strnew(ft_strlen(exp->first_word) +
 		ft_strlen(exp->last_word) + ft_strlen(exp->poss[i]) + 1)))
 			return (NULL);
 		ft_multi_concat(new_w, exp->first_word, exp->poss[i], exp->last_word);
 		if (new)
-			ft_tokenpush(&new, ft_tokenew(lst->type, new_w, lvl));
+			ft_tokenpush(&new, ft_tokenew(lst->type, new_w));
 		else
-			new = ft_tokenew(lst->type, new_w, lvl);
+			new = ft_tokenew(lst->type, new_w);
 		i++;
 	}
 	return (new);

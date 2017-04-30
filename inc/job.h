@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 17:03:19 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/10 21:16:30 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/30 18:04:06 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "42sh.h"
 # include <sys/types.h>
 # include <sys/stat.h>
+# include <sys/wait.h>
 # include <sys/uio.h>
 # include <signal.h>
 

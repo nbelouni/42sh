@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/07 18:21:51 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/29 14:45:16 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/04/30 20:42:47 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ static int	ft_cd(t_lst *env, int *opt, char *s, mode_t m)
 	}
 	ret = ft_pwd_swap(env, owd, b2);
 	(buf) ? ft_strdel(&buf) : NULL;
-	return (ft_free_and_return(ret, owd, NULL, NULL));
+	return (ft_free_and_return(ret, owd, b2, NULL));
 }
 
 /*

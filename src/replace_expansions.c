@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/13 17:30:53 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/07 17:29:34 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/04/30 20:22:06 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,11 +80,8 @@ t_token		*replace_expansions(t_token *lst)
 {
 	t_token	*head;
 	t_token	*final;
-	int		lvl[2];
 
-	lvl[0] = lst->bt_level;
-	lvl[1] = lst->bc_level;
-	if (!(head = ft_tokenew(lst->type, ft_strdup(lst->word), lvl)))
+	if (!(head = ft_tokenew(lst->type, ft_strdup(lst->word))))
 		return (NULL);
 	final = expand_word(head);
 	ft_tokendestroy(&head);

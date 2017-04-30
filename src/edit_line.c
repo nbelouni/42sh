@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/03 22:28:17 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/15 20:09:39 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/04/30 20:25:16 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int			vb_insert(t_buf *buf, char *s)
 	t_puts("im", 1);
 	t_puts("ic", 1);
 	ft_putchar_fd(*s, 1);
-	if (buf->size + ft_strlen(s) >= BUFF_SIZE)
+	if (buf->size + 1 >= BUFF_SIZE)
 		return (-1);
 	insert_in_buf(buf, cursor - get_prompt_len(), s, 1);
 	buf->size += 1;

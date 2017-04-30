@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 13:08:28 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/15 18:40:04 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/30 21:02:40 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void			not_binary(char *s, char *s2, char **av, char **envp)
 ** recuperer l'env pour execve
 ** remplace le path pour l'envoie a execve
 */
-int			investigate(char *func);
+//int			investigate(char *func);
 void			ft_exec(char **av)
 {
 	char		*s;
@@ -82,8 +82,8 @@ void			ft_exec(char **av)
 	t_elem		*tmp;
 
 	close_termios();
-	envp = ft_env_to_tab(core->env);
-	if (!(tmp = ft_find_elem("PATH", core->env)) || !tmp->value)
+	envp = ft_env_to_tab(g_core->env);
+	if (!(tmp = ft_find_elem("PATH", g_core->env)) || !tmp->value)
 		s = ft_strdup("");
 	else
 		s = ft_strdup(tmp->value);
@@ -112,9 +112,9 @@ int				ft_check_exec(char ***cmd)
 	int			ret;
 
 	ret = TRUE;
-	if (edit_cmd(cmd, core) == ERR_EXIT)
+	if (edit_cmd(cmd, g_core) == ERR_EXIT)
 		return (ERR_EXIT);
-	if ((ret = parse_builtins(core, *cmd[0], *cmd + 1)) == 1)
+	if ((ret = parse_builtins(g_core, *cmd[0], *cmd + 1)) == 1)
 		ft_exec(*cmd);
 	return (ret);
 }

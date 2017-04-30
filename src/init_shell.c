@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 13:08:51 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/15 18:26:53 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/30 17:12:46 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,12 @@ void		save_originals_handler(void)
 	int		i;
 
 	i = 1;
-	dprintf(2, "%s %p %p\n", __func__, g_originals, &g_originals);
+//	dprintf(2, "%s %p %p\n", __func__, g_originals, &g_originals);
 	while (i < NSIG)
 	{
 		if ((g_originals[i] = signal(i, SIG_IGN)) == SIG_ERR)
 		{
-			perror(__func__);
+//			perror(__func__);
 			g_originals[i] = NULL;
 		}
 		signal(i, g_originals[i]);
@@ -70,22 +70,29 @@ void		restore_originals_handler(void)
 	i = 1;
 	while (i < NSIG)
 	{
-		if (signal(i, g_originals[i]) == SIG_ERR)
-			perror(__func__);
+		signal(i, g_originals[i]);
+//		if (signal(i, g_originals[i]) == SIG_ERR)
+//			perror(__func__);
 		i++;
 	}
 }
 
 void		init_shell(void)
 {
+
+//	sigemptyset : fonction interdite (man 3)
 	sigemptyset(&g_original_set);
 	sigprocmask(SIG_BLOCK, NULL, &g_original_set);
+
+//	sigdelset : fonction interdite (man 3)
 	sigdelset(&g_original_set, SIGCHLD);
 	save_originals_handler();
 	g_sh_tty = STDIN_FILENO;
 	g_sh_is = isatty(g_sh_tty);
 	if (g_sh_is)
 	{
+
+//	tcgetpgrp : fonction interdite (man 3)
 		while (tcgetpgrp(g_sh_tty) != (g_sh_pgid = getpgrp()))
 			kill(-g_sh_pgid, SIGTTIN);
 		g_sh_pgid = getpid();
@@ -95,6 +102,8 @@ void		init_shell(void)
 			ft_putstr_fd("Couldn't put the shell in its own process group", 2);
 			exit(1);
 		}
+
+//	tcsetpgrp : fonction interdite (man 3)
 		tcsetpgrp(g_sh_tty, g_sh_pgid);
 	}
 	signal(SIGCHLD, sigchld_handler);

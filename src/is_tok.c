@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/16 13:02:54 by alallema          #+#    #+#             */
-/*   Updated: 2017/03/02 22:22:05 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/04/30 18:01:32 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int		cut_space(char *s, int i)
 
 int		is_brace(char *s, int i)
 {
-	if (i == 0 || s[i - 1] != '\\')
+/*	if (i == 0 || s[i - 1] != '\\')
 	{
 		if (s[i] == '{' && ((!s[i + 1] || s[i + 1] == ' ') &&
 		((i == 0 || is_separator(s, i - 1) || s[i - 1] == ' '
@@ -35,6 +35,9 @@ int		is_brace(char *s, int i)
 				return (C_BRACE);
 		}
 	}
+*/
+	(void)s;
+	(void)i;
 	return (0);
 }
 

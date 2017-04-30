@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 13:52:27 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/10 21:14:18 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/30 17:13:14 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,12 @@
 #include "list.h"
 #include "io.h"
 
+/*
 void	print_stack(t_tree *elem)
 {
 	printf("\tToken : <%d>\n", elem->token);
 }
-
+*/
 int	iter_post_ord(t_tree **ptr, t_list **stock)
 {
 	while (*ptr)
@@ -93,7 +94,7 @@ void	export_job(t_tree *root, t_list **job_list)
 	if (root)
 		insert_link_bottom(job_list, new_link(create_job(root, 1), sizeof(t_job)));
 	j = TOP((*job_list));
-	dprintf(2, "%s : j :: <%p> && PTree :: <%p>\n", __func__, j, j->process_tree);
+//	dprintf(2, "%s : j :: <%p> && PTree :: <%p>\n", __func__, j, j->process_tree);
 }
 
 t_condition_if_p		new_condition_if(t_type_if type)

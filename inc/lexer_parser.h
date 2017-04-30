@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 20:07:22 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/08 20:03:03 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/30 20:04:27 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,10 @@ typedef struct		s_token
 {
 	int				type;
 	char			*word;
-	int				bt_level;
-	int				bc_level;
 	int				select;
 	struct s_token	*next;
 	struct s_token	*prev;
 }					t_token;
-
-/*
-** bt_level : Parenthese
-** bc_level : Accolade
-*/
 
 enum				e_flag
 {
@@ -51,8 +44,6 @@ enum				e_token
 	NO_TOKEN,
 	CMD,
 	ESPACE,
-	O_BRACKET,
-	C_BRACKET,
 	DOT,
 	PIPE,
 	START,
@@ -66,16 +57,12 @@ enum				e_token
 	LR_DIR,
 	DIR_L_AMP,
 	DIR_R_AMP,
-	O_BRACE,
-	C_BRACE,
 	FD_IN,
 	TARGET,
 	ARG
 };
 
 /*
-** O_BRACKET,	"("
-** C_BRACKET,	")"
 ** DOT,			";"
 ** PIPE,		'|"
 ** START,		"^, debut de ligne" -> utile ?
@@ -89,8 +76,6 @@ enum				e_token
 ** LR_DIR,		"<>"
 ** DIR_L_AMP,	"<&"
 ** DIR_R_AMP,	">&"
-** O_BRACE, 	"{ "
-** C_BRACE, 	"}"
 */
 
 typedef struct		s_cmd

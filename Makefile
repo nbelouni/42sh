@@ -136,9 +136,3 @@ fclean: clean
 	/bin/rm -f $(NAME)
 
 re: fclean all
-
-#	    ft_cmdnew.c			\
-#	    ft_cmdadd.c			\
-#	    ft_cmdclear.c		\
-#	    ft_cmdestroy.c		\
-#	    ft_cmdpush.c		\

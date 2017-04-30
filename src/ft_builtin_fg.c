@@ -6,13 +6,13 @@
 /*   By: maissa-b <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/07 19:23:30 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/04/10 18:43:15 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/30 17:04:51 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
-void print_job(t_job *job, char* func);
+//void print_job(t_job *job, char* func);
 
 static int	exec_job_fg(t_job *job)
 {

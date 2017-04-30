@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/02 15:10:02 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/07 20:09:54 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/04/30 20:12:10 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int		find_word_end(char *s)
 	i = (g_curs.win_col * g_curs.row + g_curs.col) - get_prompt_len();
 	while (s[i])
 	{
-		if (is_brace(s, i) == O_BRACE || is_separator(s, i) ||
+		if (/*is_brace(s, i) == O_BRACE ||*/ is_separator(s, i) ||
 		is_redirection(s, i) || is_space(s, i) || is_any_quote(s, i))
 			return (i);
 		i++;

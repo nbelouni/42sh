@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/21 16:47:01 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/20 15:56:51 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/04/30 20:32:04 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int		mv_and_read(t_buf *buf, int x, int ret)
 {
 	if (ret < 0)
 		return (ft_print_error("\n42sh", ERR_READ, ERR_EXIT));
-	if (x == CTRL_D)
+	if (x == CTRL_D && buf->size == 0)
 		return (ERR_EXIT);
 	//if (read_modul(x, buf) == 1)
 		//return (1);
@@ -94,17 +94,17 @@ void	init_line(t_buf *buf)
 
 int		classic_read(t_buf *buf, int x)
 {
-  int tmp;
+	int tmp;
 
-  	tmp = x & 0xff;
- 	if (tmp < 31 || tmp > 127)
- 		return (1);
- 	while (x)
- 	{
- 		tmp = x & 0xff;
- 		x >>= 8;
- 		read_modul(tmp, buf);
- 	}
+	tmp = x & 0xff;
+	if (tmp < 31 || tmp > 127)
+		return (1);
+	while (x)
+	{
+		tmp = x & 0xff;
+		x >>= 8;
+		read_modul(tmp, buf);
+	}
 	return (1);
 }
 

@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/11 12:30:14 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/08 21:16:20 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/30 20:03:07 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ typedef struct		s_pt
 	int				i;
 	int				len;
 	int				type;
-	int				level[2];
 }					t_pt;
 
 typedef struct		s_tok
@@ -41,12 +40,6 @@ typedef struct		s_tree
 	struct s_tree	*left;
 	struct s_tree	*right;
 }					t_tree;
-
-typedef struct		s_lvl
-{
-	int				bt_lvl;
-	int				bc_lvl;
-}					t_lvl;
 
 typedef struct		s_lib
 {
@@ -105,7 +98,7 @@ int					check_fd_out(t_token **list, char *s, t_pt *p);
 void				ft_tokenadd(t_token **alst, t_token *new);
 void				ft_tokenclear(t_token **lst);
 void				ft_tokendestroy(t_token **begin);
-t_token				*ft_tokenew(int type, char *word, int *level);
+t_token				*ft_tokenew(int type, char *word);
 void				ft_tokenpush(t_token **begin, t_token *new);
 void				sort_list_token(t_token **list, t_completion *c, t_lst *h);
 int					ft_swap_in(t_token **list);
@@ -116,8 +109,8 @@ void				ft_print_token_list(t_token **list);
 int					return_new_prompt(int ret);
 int					here_doc(t_token *elemi, t_completion *c, t_lst *hist);
 
-t_tree				*creat_left(t_token *lst, t_lvl *lvl);
-t_tree				*creat_right(t_token *lst, t_lvl *lvl);
+t_tree				*creat_left(t_token *lst);
+t_tree				*creat_right(t_token *lst);
 void				ft_push_ast(t_token *list, t_tree **ast);
 void				free_ast(t_tree *ast);
 void				print_tab(char **tabol);
