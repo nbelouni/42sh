@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/04 14:46:22 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/20 16:55:37 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/04/30 22:57:55 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ void				ft_multi_free(char *s1, char *s2, char *s3, char *s4);
 char				*ft_multi_concat(char *s1, char *s2, char *s3, char *s4);
 char				*ft_multi_join(char *s1, char *s2, char *s3, char *s4);
 char				*ft_free_and_dup(char *dst, char *src);
+int					ft_free_and_return(int ret, void *d1, void *d2, void *d3);
 char				*ft_strlchr(char *str, char c);
 char				*ft_free_and_join(char *str1, char *str2);
 void				ft_tabdel(char **tab);

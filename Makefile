@@ -20,6 +20,7 @@ LIBS = -lft
 
 SDIR = ./src/
 SRCS = 	ft_builtin_cd.c		\
+		ft_builtin_cd2.c	\
 		ft_builtin_echo.c	\
 		ft_builtin_env.c	\
 		ft_builtin_exit.c	\
@@ -33,6 +34,7 @@ SRCS = 	ft_builtin_cd.c		\
 		ft_init.c			\
 		ft_list_tools.c		\
 		ft_list_tools2.c	\
+		ft_list_tools3.c	\
 		ft_opt_parse.c		\
 		read.c				\
 		buf.c				\
@@ -93,11 +95,15 @@ SRCS = 	ft_builtin_cd.c		\
 		ft_histopt_offset.c	\
 		ft_histopt_args.c	\
 		ft_history_opt.c	\
+		ft_history_opt2.c	\
 		ft_history_tools.c	\
+		ft_history_tools2.c	\
 		ft_builtin_history.c\
 		ft_builtin_bang.c	\
-		ft_builtin_bg.c	\
-		ft_builtin_fg.c	\
+		ft_builtin_bang2.c	\
+		ft_builtin_bang3.c	\
+		ft_builtin_bg.c		\
+		ft_builtin_fg.c		\
 		ft_builtin_jobs.c	\
 		ft_default_set.c	\
 		ft_bang_alphanum_sub.c\
@@ -106,6 +112,7 @@ SRCS = 	ft_builtin_cd.c		\
 		ft_quick_substitution.c\
 		combine_cmd.c		\
 		edit_history.c		\
+		ft_env_dup_operations.c\
 		extra_builtins.c
 
 SRCC = $(addprefix $(SDIR),$(SRCS))

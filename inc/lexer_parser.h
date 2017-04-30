@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 20:07:22 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/30 22:26:41 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/04/30 22:58:51 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,6 @@ int					can_create_tree(t_token	*lst);
 int					is_end(char *s, int *i, char c);
 int					find_quote_end(char *s);
 int					is_end(char *s, int *i, char c);
-t_token				*is_local_var(t_token *lst);
+t_token				*is_local_var(t_token *elem);
 
 #endif
