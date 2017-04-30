@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/04 15:58:54 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/10 21:19:48 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/30 22:07:15 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,11 +123,11 @@ static int	ft_builtin_jobs(t_core *core, char **args)
 	
 	print_func = choose_func(opt);
 	if (noarg)
-		listiter(t_job *job_list, &print_func);
+		listiter(t_job *g_job_list, &print_func);
 	else
 		while (arg)
 		{
-			j = list_get_nth(job_list, n);
+			j = list_get_nth(g_job_list, n);
 			if (j)
 				print_func(j);
 			else
@@ -176,7 +176,7 @@ static int      ft_builtin_fg(t_core *core, char **args)
 {
 	t_job	*j;
 	
-	j = list_get_nth(job_list, n);
+	j = list_get_nth(g_job_list, n);
 	if (job_is_stopped(j))
 	{
 		j->foreground = 1;

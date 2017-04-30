@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 15:32:23 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/24 17:42:42 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/04/30 22:20:22 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,15 +148,6 @@ char	*ft_gets_lastword(char *str)
 		return (NULL);
 	ptr = ft_strrchr(tmp, ' ');
 	ret = (ptr != NULL) ? ft_strdup(&(ptr[1])) : ft_strdup(tmp);
-	// if ((ptr = ft_strrchr(tmp, ' ')) == NULL)
-	// {
-	// 	ret = ft_strdup(tmp);
-	// }
-	// else
-	// {
-	// 	++ptr;
-	// 	ret = ft_strdup(ptr);
-	// }
 	ft_strdel(&tmp);
 	return (ret);
 }

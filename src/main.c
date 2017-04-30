@@ -6,17 +6,17 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/30 21:57:31 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/04/30 22:07:27 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
 void	launch_job(t_job *j);
-void	export_job(t_tree *root, t_list **job_list);
-void	printJobList(t_list *job_list);
+void	export_job(t_tree *root, t_list **g_job_list);
+void	printJobList(t_list *g_job_list);
 
-t_list	*job_list = NULL;
+t_list	*g_job_list = NULL;
 t_job	*last_job = NULL;
 
 static t_builtin_array g_builtin_array[] =
@@ -128,7 +128,7 @@ int 	main(int argc, char **argv, char **envp)
 	int		ret;
 	int		ret_read;
 	t_tree	*ast;
-	t_list	*job_list_bis = NULL;
+	t_list	*g_job_list_bis = NULL;
 	struct termios termio;
 
 	tcgetattr(0, &termio);
@@ -151,7 +151,7 @@ int 	main(int argc, char **argv, char **envp)
 	while ((ret_read = read_line(g_core->buf, &completion, g_core->hist)) != ERR_EXIT)
 	{
 		close_termios();
-		job_list_bis = NULL;
+		g_job_list_bis = NULL;
 		if (ret_read != TAB)
 		{
 			if (is_line_ended(g_core->buf) < 0)
@@ -170,10 +170,10 @@ int 	main(int argc, char **argv, char **envp)
 //					regexp_in_tree(ast, core);
 //					print_debug_ast(ast);
 //					test_func(ast);
-					export_job(ast, &job_list_bis);
-//					printJobList(job_list_bis);
-					list_iter(job_list_bis, (void *)launch_job);
-					delete_list(&job_list_bis, NULL);
+					export_job(ast, &g_job_list_bis);
+//					printJobList(g_job_list_bis);
+					list_iter(g_job_list_bis, (void *)launch_job);
+					delete_list(&g_job_list_bis, NULL);
 					free_ast(ast);
 //					free(ast);
 /*

@@ -6,7 +6,7 @@
 /*   By: maissa-b <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/07 19:28:11 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/04/12 21:40:02 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/04/30 22:07:15 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,16 @@ static void	put_error_job(char *bad_job)
 	write(1, ": No such job\n", 14);
 }
 
-t_job			*cmp_job(char *cmd, t_list *job_list)
+t_job			*cmp_job(char *cmd, t_list *g_job_list)
 {
 	unsigned int count;
 	t_job		*job;
 
 	count = 0;
 	job = NULL;
-	while (job_list)
+	while (g_job_list)
 	{
-		job = job_list->content;
+		job = g_job_list->content;
 		if (ft_strncmp(job->command, cmd, ft_strlen(cmd)) == 0)
 		{
 			count++;
@@ -55,7 +55,7 @@ t_job			*cmp_job(char *cmd, t_list *job_list)
 				return (NULL);
 			}
 		}
-		job_list = job_list->next;
+		g_job_list = g_job_list->next;
 	}
 	if (count == 0)
 	{
@@ -70,11 +70,11 @@ static t_job	*ft_get_job_from_arg(char *arg)
 {
 	if (ft_strisdigit(arg))
 	{
-		return (list_get_nth(job_list, ft_atoi(arg)));
+		return (list_get_nth(g_job_list, ft_atoi(arg)));
 	}
 	else
 	{
-		return (cmp_job(arg, job_list));
+		return (cmp_job(arg, g_job_list));
 	}
 }
 
@@ -134,7 +134,7 @@ static void	check_all_jobs(char **args, void (*print_func)())
 // 			check_all_jobs(args + opt->opt_ind, print_func);
 // 		}
 // 		else
-// 			(opt->opt_char == (int)'p') ? list_iter(job_list, (void *)print_optp) : list_iter(job_list, (void *)print_optl);
+// 			(opt->opt_char == (int)'p') ? list_iter(g_job_list, (void *)print_optp) : list_iter(g_job_list, (void *)print_optl);
 // 	}
 // 	else
 // 	{
@@ -150,7 +150,7 @@ int			ft_builtin_jobs(t_core *core, char **args)
 
 	(void)core;
 	if (!args || !args[0])
-		list_iter(job_list, (void *)print_no_opt);
+		list_iter(g_job_list, (void *)print_no_opt);
 	else
 	{	
 		if ((opt = ft_opt_parse(JOBS_OPT, args, 1)) == NULL)
@@ -164,7 +164,7 @@ int			ft_builtin_jobs(t_core *core, char **args)
 		if (args[opt[0]] != NULL)
 			check_all_jobs(&(args[opt[0]]), print_func);
 		else
-			list_iter(job_list, print_func);
+			list_iter(g_job_list, print_func);
 		free(opt);
 	}
 	return (0);
@@ -178,14 +178,14 @@ int			ft_builtin_jobs(t_core *core, char **args)
 	// 	}
 	// 	return (0);
 	// }
-	// list_iter(job_list, (void *)print_no_opt);
+	// list_iter(g_job_list, (void *)print_no_opt);
 	// return (0);
 
 	// flag = 0;
 	// if (!args || !args[0])
 	// {
 	// 	print_func = &print_no_opt;
-	// 	list_iter(job_list, print_func);
+	// 	list_iter(g_job_list, print_func);
 	// 	return (0);
 	// }
 	// while ((ret = ft_getopt(ft_tablen(args), args, JOBS_OPT, &opt)) != -1)
@@ -200,7 +200,7 @@ int			ft_builtin_jobs(t_core *core, char **args)
 	// {
 	// 	if ((opt.opt_arg) == NULL)
 	// 	{
-	// 		list_iter(job_list, print_func);
+	// 		list_iter(g_job_list, print_func);
 	// 	}
 	// 	else
 	// 	{

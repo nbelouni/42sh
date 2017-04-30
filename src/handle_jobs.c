@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/30 21:57:58 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/04/30 22:07:15 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	sigchldhandler(int sig)
    dprintf(2, "\tcompleted: <%d>\tstopped: <%d>\tstatus: <%d>\n", process->completed, process->stopped, process->status);
    }
 */
-extern	t_list	*job_list;
+extern	t_list	*g_job_list;
 int last = 0;
 
 t_job	*find_job(pid_t pgid)
@@ -43,7 +43,7 @@ t_job	*find_job(pid_t pgid)
 	t_job		*j;
 	t_list		*ptr;
 
-	ptr = job_list;
+	ptr = g_job_list;
 	while (ptr)
 	{
 		j = ptr->content;
@@ -106,7 +106,7 @@ t_process_p		get_process_by_pid(pid_t pid)
 	t_job		*j;
 	t_process_p	p;
 
-	ptr_job = job_list;
+	ptr_job = g_job_list;
 	while (ptr_job)
 	{
 		j = ptr_job->content;
@@ -130,7 +130,7 @@ t_job	*get_job_from_pid(pid_t pid)
 	t_job		*j;
 	t_process_p	p;
 
-	ptr_job = job_list;
+	ptr_job = g_job_list;
 	while (ptr_job)
 	{
 		j = ptr_job->content;
@@ -248,7 +248,7 @@ void		do_job_notification(void)
 	t_list	**ptr;
 
 	update_status();
-	ptr = &job_list;
+	ptr = &g_job_list;
 	while (*ptr)
 	{
 		j = (*ptr)->content;
@@ -275,8 +275,8 @@ void		do_job_notification(void)
 
 t_job			*get_last_job(void)
 {
-	if (last_job == NULL && job_list)
-		last_job = job_list->content;
+	if (last_job == NULL && g_job_list)
+		last_job = g_job_list->content;
 	return (last_job);
 }
 
@@ -529,7 +529,7 @@ void	launch_job(t_job *j)
 	t_node_p	current;
 	t_list		*stack;
 
-	insert_link_bottom(&job_list, new_link(j, sizeof(*j)));
+	insert_link_bottom(&g_job_list, new_link(j, sizeof(*j)));
 	current = j->process_tree;
 	stack = NULL;
 	if (!j->foreground)

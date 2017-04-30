@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:01:52 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/08 19:16:52 by alallema         ###   ########.fr       */
+/*   Updated: 2017/04/30 22:15:56 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <curses.h>
 # include <sys/ioctl.h>
 
+typedef _Bool	t_bool;
 /*
 ** touches de clavier
 */

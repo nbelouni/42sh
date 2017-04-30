@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/06 15:31:30 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/30 20:36:12 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/04/30 22:15:44 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "42sh.h"
 
 typedef struct s_core	t_core;
+typedef _Bool			t_bool;
 
 typedef struct			s_reg_path
 {

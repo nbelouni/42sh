@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 13:52:27 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/13 20:25:04 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/30 22:07:15 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,19 +81,19 @@ t_job	*create_job(t_tree *root, int foreground)
 	return (job);
 }
 
-void	export_job(t_tree *root, t_list **job_list)
+void	export_job(t_tree *root, t_list **g_job_list)
 {
 	t_job	*j;
 
 	while (root && (TOKEN(root) == AMP || TOKEN(root) == DOT))
 	{
-		insert_link_bottom(job_list, new_link(create_job(root->left,
+		insert_link_bottom(g_job_list, new_link(create_job(root->left,
 			(TOKEN(root) == DOT) ? 1 : 0), sizeof(t_job)));
 		root = root->right;
 	}
 	if (root)
-		insert_link_bottom(job_list, new_link(create_job(root, 1), sizeof(t_job)));
-	j = TOP((*job_list));
+		insert_link_bottom(g_job_list, new_link(create_job(root, 1), sizeof(t_job)));
+	j = TOP((*g_job_list));
 }
 
 t_condition_if_p		new_condition_if(t_type_if type)

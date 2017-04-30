@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/21 16:47:01 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/13 20:35:39 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/04/30 22:24:38 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int		cpy_cut_paste(t_buf *buf, int x)
 			return (ft_print_error("\n42sh", ERR_MALLOC, ERR_EXIT));
 		}
 	}
-	if (x == CTRL_P)
+	if (buf->size + buf->to_paste_size < BUFF_SIZE && x == CTRL_P)
 	{
 		if (vb_paste(buf) < 0)
 		{
@@ -44,7 +44,7 @@ int		cpy_cut_paste(t_buf *buf, int x)
 
 int 	read_modul(int x, t_buf *buf)
 {
-	if ((x > 31 && x < 127))
+	if (buf->size + 1 < BUFF_SIZE && (x > 31 && x < 127))
 	{
 		if (vb_insert(buf, (char *)&x) < 0)
 		{
@@ -125,8 +125,8 @@ int		read_line(t_buf *buf, t_completion *cplt, t_lst *hist)
 		 {
 			if ((err = mv_and_read(buf, x, ret)) < 0 ||
 			(err = cpy_cut_paste(buf, x)) < 0 ||
-			(err = complete_line(buf, cplt, x)) != 0 ||
-			(err = edit_history(buf, hist, x) != 0))
+			(buf->size < BUFF_SIZE && (err = complete_line(buf, cplt, x)) != 0)
+			|| (err = edit_history(buf, hist, x) != 0))
 			return (err);
 			if (x == RETR)
 			{

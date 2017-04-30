@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/09 17:03:19 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/30 18:04:06 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/04/30 22:11:14 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@
 # define IS ==
 # define TOKEN(x) (((t_tree *)x)->token)
 # define DEF_FILE 0644
-
-typedef struct s_list *List_p;
 
 typedef struct s_node *t_node_p;
 

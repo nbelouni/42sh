@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/07 18:21:51 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/04/30 20:42:47 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/04/30 22:21:37 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,6 @@ static char	*ft_cd_opt(char *path, mode_t mode, int *opt)
 **	ft_cd est l'etape finale du builtin cd, permettant de changer de dossier
 **	et actualisant/creant le PWD et l'OLDPWD
 */
-
-// A MODIFIER
 
 static int	ft_cd(t_lst *env, int *opt, char *s, mode_t m)
 {
@@ -297,7 +295,7 @@ int			ft_builtin_cd(t_core *core, char **args)
 	struct stat	st;
 	int			*opt;
 	int			i;
-	char		*path;
+	char		*s;
 
 	opt = ft_opt_parse(CD_OPT, args, 1);
 	if (opt == NULL)
@@ -310,11 +308,11 @@ int			ft_builtin_cd(t_core *core, char **args)
 		return (ft_print_error("cd", ERR_TOO_MANY_ARGS, ERR_NEW_CMD));
 	}
 	i = -1;
-	if ((path = ft_builtin_cd_norm(core->env, opt, args)) != NULL)
+	if ((s = ft_builtin_cd_norm(core->env, opt, args)) != NULL)
 	{
-		i = ((lstat(path, &st)) != -1) ? ft_cd(core->env, opt, path, st.st_mode) :\
-			ft_print_error(path, ERR_NO_FILE, ERR_NEW_CMD);
-		ft_strdel(&path);
+		i = ((lstat(s, &st)) != -1) ? ft_cd(core->env, opt, s, st.st_mode) :\
+			ft_print_error(s, ERR_NO_FILE, ERR_NEW_CMD);
+		ft_strdel(&s);
 	}
 	(opt) ? free(opt) : 0;
 	return (i);

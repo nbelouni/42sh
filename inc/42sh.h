@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:09:30 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/30 21:12:31 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/04/30 22:10:41 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,6 @@
 # include <sys/syslimits.h>
 # include "libft.h"
 # include "options.h"
-
-typedef enum	e_bool
-{
-	FALSE,
-	TRUE
-}				t_bool;
-
 # include "completion.h"
 # include "read.h"
 # include "lexer_parser.h"
@@ -31,6 +24,10 @@ typedef enum	e_bool
 # include "job.h"
 # include "exec.h"
 # include "globbing.h"
+# include "builtins.h"
+# include "history.h"
+
+typedef _Bool	t_bool;
 
 # define END_EOT	18
 
@@ -60,9 +57,6 @@ typedef struct		s_core
 	t_buf			*buf;
 }					t_core;
 
-# include "builtins.h"
-# include "history.h"
-
 /*
 **	ft_default_set.c
 */
@@ -70,7 +64,7 @@ typedef struct		s_core
 
 t_lst				*ft_init_lstset(void);
 t_core				*g_core;
-extern t_list		*job_list;
+extern t_list		*g_job_list;
 
 
 int				job_is_stopped (t_job *j);
