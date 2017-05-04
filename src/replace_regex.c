@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/30 13:41:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/01 21:10:19 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/03 16:47:18 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,25 +63,6 @@ t_reg_path	*init_curr_path(char *s)
 		is_abs = FALSE;
 	}
 	return (ft_reg_pathnew(path, out, 0, is_abs));
-}
-
-int			which_quotes(char *s, int len)
-{
-	int		w_quotes;
-	int		i;
-
-	w_quotes = 0;
-	i = -1;
-	while (++i < len)
-	{
-		if (is_char(s, i, '"'))
-			w_quotes = (w_quotes == NO_QUOTE) ? D_QUOTE : NO_QUOTE;
-		if (is_char(s, i, '\''))
-			w_quotes = (w_quotes == NO_QUOTE) ? S_QUOTE : NO_QUOTE;
-		if (is_char(s, i, '`'))
-			w_quotes = (w_quotes == NO_QUOTE) ? BT_QUOTE : NO_QUOTE;
-	}
-	return (w_quotes);
 }
 
 t_reg_path	*replace_regex(char *s)

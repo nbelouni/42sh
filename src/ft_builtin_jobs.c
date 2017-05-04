@@ -6,7 +6,7 @@
 /*   By: maissa-b <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/07 19:28:11 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/04/30 22:07:15 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/03 16:11:45 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void			print_no_opt(t_job *j);
 void			print_pgid(t_job *j);
 /**/
 
+extern t_list	*g_job_list;
 
 static void	put_error_job(char *bad_job)
 {
@@ -153,7 +154,7 @@ int			ft_builtin_jobs(t_core *core, char **args)
 		list_iter(g_job_list, (void *)print_no_opt);
 	else
 	{	
-		if ((opt = ft_opt_parse(JOBS_OPT, args, 1)) == NULL)
+		if ((opt = ft_opt_parse(JOBS_OPT, args, 1, 0)) == NULL)
 			return (ERR_EXIT);
 		if (opt[0] == -1)
 		{

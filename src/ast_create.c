@@ -6,7 +6,7 @@
 /*   By: dogokar <dogokar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 14:41:10 by dogokar           #+#    #+#             */
-/*   Updated: 2017/04/18 21:21:44 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/05/03 18:18:49 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static t_lib	g_lib_op[LENLIB] =
 {
 	{.toke = DOT, .priority = 11},
 	{.toke = OR, .priority = 10},
-	{.toke = AND, .priority = 9},
+	{.toke = AND, .priority = 10},
 	{.toke = PIPE, .priority = 8},
 	{.toke = SL_DIR, .priority = 7},
 	{.toke = SR_DIR, .priority = 7},
@@ -53,7 +53,7 @@ t_tree			*add_tree(t_token *lst)
 	return (node);
 }
 
-t_lib			*cheak_lib(t_token *node)
+static t_lib	*check_lib(t_token *node)
 {
 	int i;
 
@@ -77,9 +77,9 @@ int				compare_token_op(t_token *node_lst, t_token *tmp)
 	t_lib	*lib_tmp;
 
 	lib_lst = NULL;
-	lib_lst = cheak_lib(node_lst);
+	lib_lst = check_lib(node_lst);
 	lib_tmp = NULL;
-	lib_tmp = cheak_lib(tmp);
+	lib_tmp = check_lib(tmp);
 	if (!lib_lst && lib_tmp)
 		return (1);
 	else if (lib_lst && lib_tmp)
@@ -95,13 +95,6 @@ int				compare_token_op(t_token *node_lst, t_token *tmp)
 		return (0);
 }
 
-int				compare_token_com(t_token *node_lst, t_token *tmp)
-{
-	if (!node_lst && tmp->type == CMD)
-		return (1);
-	return (0);
-}
-
 /*
 **    regle pour parser la liste et inserer les token au bon endroit
 */
@@ -112,7 +105,7 @@ int				priority(t_token *node_lst, t_token *tmp)
 		return (1);
 	else if (compare_token_op(node_lst, tmp))
 		return (1);
-	else if (compare_token_com(node_lst, tmp))
+	else if (!node_lst && tmp->type == CMD)
 		return (1);
 	return (0);
 }
@@ -127,10 +120,8 @@ t_token			*search_toke(t_token *lst)
 {
 	t_token	*tmp;
 	t_token	*node_lst;
-	int		first_time;
 
 	tmp = lst;
-	first_time = 0;
 	node_lst = NULL;
 	if (lst == NULL)
 		return (NULL);
@@ -138,10 +129,6 @@ t_token			*search_toke(t_token *lst)
 		tmp = tmp->next;
 	while (tmp && tmp->select == 0)
 	{
-		if (first_time == 0)
-		{
-			first_time = 1;
-		}
 		if (priority(node_lst, tmp))
 			node_lst = tmp;
 		tmp = tmp->next;
@@ -204,7 +191,7 @@ char			**concate_cmd(t_token *lst)
 	if (!(argv = (char **)malloc(sizeof(char*) * (i * j + 1))))
 		return (NULL);
 	argv[i * j] = NULL;
-	while (tmp && (count <= i - 1))
+	while (tmp && tmp->word && (count <= i - 1))
 	{
 		argv[count] = ft_strdup(tmp->word);
 		++count;

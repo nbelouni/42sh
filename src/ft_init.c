@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_init.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/02/02 14:13:58 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/04/30 22:44:51 by nbelouni         ###   ########.fr       */
+/*   Created: 2017/04/26 18:06:54 by nbelouni          #+#    #+#             */
+/*   Updated: 2017/05/03 15:14:02 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,14 @@
 **	ses octets a 0, puis retourne la nouvelle liste de type set.
 */
 
-int		ft_init_core(void)
+extern t_core	*g_core;
+
+int			ft_init_core(void)
 {
 	if ((g_core = malloc(sizeof(t_core))) == NULL)
-		return (ft_print_error("42sh :", ERR_MALLOC, ERR_EXIT));
+		return (ft_print_error("21sh :", ERR_MALLOC, ERR_EXIT));
 	g_core->env = NULL;
+	g_core->set = NULL;
 	g_core->exp = NULL;
 	g_core->hist = NULL;
 	return (TRUE);

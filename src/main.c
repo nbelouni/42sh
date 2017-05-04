@@ -6,18 +6,21 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:16:24 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/30 22:07:27 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/04 16:24:59 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
 void	launch_job(t_job *j);
-void	export_job(t_tree *root, t_list **g_job_list);
-void	printJobList(t_list *g_job_list);
+void	export_job(t_tree *root, t_list **job_list);
+void	printJobList(t_list *job_list);
+
+t_job	*last_job = NULL;
 
 t_list	*g_job_list = NULL;
-t_job	*last_job = NULL;
+t_core	*g_core = NULL;
+t_bool	g_is_here_doc;
 
 static t_builtin_array g_builtin_array[] =
 {
@@ -49,142 +52,80 @@ int		parse_builtins(t_core *core, char *cmd, char **cmd_args)
 	return (1);
 }
 
-int		parse(t_core *core, char *line, char **envp)
+static int	pre_core(t_buf **buf, t_completion *completion, char **envp)
 {
-	char	**args;
-	int		ret;
+//`	struct termios termio;
 
-	(void)envp;
-	(void)core;
-	ret = 0;
-	if ((ft_cmd_to_history(core->hist, line)) == ERR_EXIT)
+	g_is_here_doc = FALSE;
+//	tcgetattr(0, &termio);
+	if (ft_creat_core(envp) == ERR_EXIT)
 		return (ERR_EXIT);
-	args = NULL;
-	args = ft_strsplit(line, ' ');
-	if (args != NULL && args[0] != NULL)
-	{
-//		if ((ret = parse_builtins(core, args[0], args + 1)) == 1)
-//			ft_waitchild(args, envp);
-		ft_tabdel(args);
-	}
-	if ((ft_check_history_var(core->set, core->hist)) == ERR_EXIT)
-		return (ERR_EXIT);
+	if (!(*buf = init_buf()))
+		return (ft_print_error("21sh", ERR_MALLOC, ERR_EXIT));
+	if (init_completion(completion, g_core) == ERR_EXIT)
+		return (-1);
+	if (!isatty(0))
+		return (ft_print_error("21sh", " : Input not from a tty", ERR_NEW_CMD));
+	set_prompt(PROMPT1, ft_strlen(PROMPT1));
+	init_shell();
+	g_core->buf = *buf;
+	signal(SIGWINCH, get_sigwinch);
+	g_curs.win_row = 0;
+	g_curs.win_col = 0;
+	g_curs.row = 0;
+	g_curs.col = 0;
+	init_curs();
 	return (0);
 }
-
-/*
- **	  init_core initialisation des liste d'env
- */
-
-int			ft_creat_core(char **envp)
-{
-	if (ft_init_core() != TRUE)
-		return (ERR_EXIT);
-	g_core->set = ft_init_lstset();
-	g_core->exp = ft_init_list();
-	if (envp != NULL && envp[0] != NULL)
-		g_core->env = ft_env_to_list(envp, g_core->env);
-	else
-		g_core->env = ft_default_env();
-	ft_histopt_r(&(g_core->hist), g_core->set, NULL);
-	return (TRUE);
-}
-
-/*
-*
- **   si l'entree est different du terminal va lire ligne par ligne GNL
- *
-int 	read_ext(t_buf *buf, t_completion *comp, t_core *core, t_token *list)
-{
-	int i;
-	char *line = NULL;
-
-	i = 0;
-	if (buf->istty == 1)
-	{
-		while (get_next_line(0, &line) > 0)
-		{
-			buf->final_line = line;
-			PUT2(buf->final_line);
-			parse_buf(&list, buf->final_line, comp, g_core->hist);
-			PUT2("\n line "); E(i);
-			ft_print_token_list(&list);
-			++i;
-		}
-		return (0);
-	}
-	return (1);
-}
-*/
-extern int				g_sh_tty;
 
 int 	main(int argc, char **argv, char **envp)
 {
 	(void)argc;
   	(void)argv;
-	t_completion	completion = {NULL, NULL, NULL, NULL};
+	t_completion	completion;
 	t_buf	*buf;
 	t_token	*list;
 	int		ret;
 	int		ret_read;
 	t_tree	*ast;
-	t_list	*g_job_list_bis = NULL;
-	struct termios termio;
+	t_list	*job_list_bis = NULL;
 
-	tcgetattr(0, &termio);
-//	if (termio.c_lflag & TOSTOP)
-//		dprintf(2, "%s Dam it's there\n", __func__);
-	ast = NULL;
-	list = NULL;
-	if (!(ft_creat_core(envp)))
-		return (ERR_EXIT);
-	if (!(buf = init_buf()))
-		return (ft_print_error("42sh", ERR_MALLOC, ERR_EXIT));
-	if (init_completion(&completion, g_core) == ERR_EXIT)
-		return (-1);
-	if (!isatty(0))
-		return (ft_print_error("21sh", "is wrong tty\n", ERR_EXIT));
-	set_prompt(PROMPT1, ft_strlen(PROMPT1));
-	init_shell();
-	g_core->buf = buf;
-	init_curs();
+	(void)argc;
+	(void)argv;
+	completion = (t_completion){NULL, NULL, NULL, NULL};
+	buf = NULL;
+	if ((ret = pre_core(&buf, &completion, envp)) < 0)
+		return (ret);
 	while ((ret_read = read_line(g_core->buf, &completion, g_core->hist)) != ERR_EXIT)
 	{
 		close_termios();
-		g_job_list_bis = NULL;
-		if (ret_read != TAB)
+		job_list_bis = NULL;
+		if (ret_read != TAB && ret_read != ERR_NEW_CMD)
 		{
+			list = NULL;
+			int	ret_subs = 0;
 			if (is_line_ended(g_core->buf) < 0)
 				return (-1);
-			bang_substitution(&(g_core->buf->final_line), g_core);
+			ret_subs = bang_substitution(&(g_core->buf->final_line), g_core);
+			if ((ft_cmd_to_history(g_core->hist, g_core->buf->final_line)) == ERR_EXIT)
+				return (ft_print_error("21sh: ", ERR_MALLOC, ERR_EXIT));
 			ret = parse_buf(&list, g_core->buf->final_line, &completion, g_core->hist);
-			if (ret > 0 && list)
+			if (ret > 0 && list && ret_subs == 0)
 			{
-				if ((ret = ft_cmd_to_history(g_core->hist, buf->final_line)) == ERR_EXIT)
-					return (ERR_EXIT);
-/*
- *				enleve les quotes et les backslash -> va changer de place
- *				edit_cmd(list, env);
- */	
-					ft_push_ast(list, &ast);
-//					regexp_in_tree(ast, core);
-//					print_debug_ast(ast);
-//					test_func(ast);
-					export_job(ast, &g_job_list_bis);
-//					printJobList(g_job_list_bis);
-					list_iter(g_job_list_bis, (void *)launch_job);
-					delete_list(&g_job_list_bis, NULL);
-					free_ast(ast);
-//					free(ast);
-/*
-**				. remplace $var
-**				. ajoute arguments si regex
-**				. supprime '\'', '"' , '`' et '\\'
-**
-**				. sera remplacee quqnd je saurais ou la mettre
-**
-*/
+				job_list_bis = NULL;
+				ast = NULL;
+				if ((ret = ft_check_history_var(g_core)) == ERR_EXIT)
+				{
+					return (ft_print_error("21sh: ", ERR_MALLOC, ERR_EXIT));
+				}
+				ft_push_ast(list, &ast);
+				export_job(ast, &job_list_bis);
+				list_iter(job_list_bis, (void *)launch_job);
+				delete_list(&job_list_bis, NULL);
+				free_ast(ast);
 			}
+			else if (ret_subs == 2)
+				ft_putendl(g_core->buf->final_line);
 			if (ret != ERR_NEW_PROMPT && g_core->buf->final_line)
 				ft_strdel(&(g_core->buf->final_line));
 			else

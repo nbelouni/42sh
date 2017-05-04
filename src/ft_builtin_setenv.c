@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_builtin_setenv.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/02/03 18:22:07 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/04/30 21:49:58 by nbelouni         ###   ########.fr       */
+/*   Created: 2017/04/26 18:07:52 by nbelouni          #+#    #+#             */
+/*   Updated: 2017/05/03 15:14:01 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,17 +56,17 @@ static int	ft_exec_setenv(t_lst *env, char **args)
 {
 	if (ft_strchr(args[0], '=') != NULL)
 	{
-		return (ft_print_error("cd", ERR_VAR_NO_ALPHA, ERR_NEW_CMD));
+		return (ft_print_error("setenv", ERR_VAR_NO_ALPHA, ERR_NEW_CMD));
 	}
 	else if (ft_isalpha(args[0][0]) == 0)
 	{
-		return (ft_print_error("cd", ERR_VAR_BEG_NO_ALPHA, ERR_NEW_CMD));
+		return (ft_print_error("setenv", ERR_VAR_BEG_NO_ALPHA, ERR_NEW_CMD));
 	}
 	else
 	{
 		if (args[1] != NULL && args[2] != NULL)
 		{
-			return (ft_print_error("cd", ERR_TOO_MANY_ARGS, ERR_NEW_CMD));
+			return (ft_print_error("setenv", ERR_TOO_MANY_ARGS, ERR_NEW_CMD));
 		}
 		return (ft_setenv(env, args[0], args[1]));
 	}
@@ -80,10 +80,11 @@ static int	ft_exec_setenv(t_lst *env, char **args)
 
 int			ft_builtin_setenv(t_core *core, char **args)
 {
-	(void)core;
 	if (args != NULL && args[0] != NULL)
-		return (ft_exec_setenv(g_core->env, args));
-	if (g_core->env != NULL && g_core->env->head != NULL)
-		ft_print_lst(g_core->env);
+		return (ft_exec_setenv(core->env, args));
+	if (core->env != NULL && core->env->head != NULL)
+	{
+		ft_print_lst(core->env);
+	}
 	return (0);
 }

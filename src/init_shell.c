@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 13:08:51 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/13 21:15:28 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/05/03 23:26:37 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,33 @@
 int				g_sh_tty;
 int				g_sh_is;
 pid_t			g_sh_pgid;
-sigset_t				g_original_set;
+sigset_t		g_original_set;
 
 #define MAXJOBS 30
 
-/*static */sig_t	g_originals[NSIG];
+/*
+** The value of this symbolic constant is the total number of signals defined.
+** Since the signal numbers are allocated consecutively,
+** NSIG is also one greater than the largest defined signal number.
+**
+** https://www.gnu.org/software/libc/manual/html_node/Standard-Signals.html
+*/
+
+#define		ORIG_SIG_LEN	23
+/*static */sig_t	g_originals[ORIG_SIG_LEN];
 //extern sig_t	*g_originals;
 
 void		block_signal(int sig, sigset_t *set, sigset_t *oset)
 {
+//	sigemptyset : fonction interdite (man 3)
 	sigemptyset(set);
+
+//	sigaddset : fonction interdite (man 3)
 	sigaddset(set, sig);
+
+//	sigemptyset : fonction interdite (man 3)
 	sigemptyset(oset);
+
 	sigprocmask(SIG_BLOCK, set, oset);
 }
 
@@ -46,7 +61,7 @@ void		save_originals_handler(void)
 	int		i;
 
 	i = 1;
-	while (i < NSIG)
+	while (i < ORIG_SIG_LEN)
 	{
 		if ((g_originals[i] = signal(i, SIG_IGN)) == SIG_ERR)
 			g_originals[i] = NULL;
@@ -63,7 +78,7 @@ void		restore_originals_handler(void)
 	int		i;
 
 	i = 1;
-	while (i < NSIG)
+	while (i < ORIG_SIG_LEN)
 	{
 		if (signal(i, g_originals[i]) == SIG_ERR)
 			;
@@ -76,10 +91,12 @@ void		init_shell(void)
 
 //	sigemptyset : fonction interdite (man 3)
 	sigemptyset(&g_original_set);
+
 	sigprocmask(SIG_BLOCK, NULL, &g_original_set);
 
 //	sigdelset : fonction interdite (man 3)
 	sigdelset(&g_original_set, SIGCHLD);
+
 	save_originals_handler();
 	g_sh_tty = STDIN_FILENO;
 	g_sh_is = isatty(g_sh_tty);

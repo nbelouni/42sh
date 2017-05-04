@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_set_history.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/03/04 17:22:15 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/16 19:28:13 by maissa-b         ###   ########.fr       */
+/*   Created: 2017/04/26 18:06:30 by nbelouni          #+#    #+#             */
+/*   Updated: 2017/05/03 15:14:02 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,15 @@
 **	cas n'est trouvé, la valeur digitale de la value est renvoyée.
 */
 
-int			ft_get_hfsize(t_lst *set)
+int			ft_get_hfsize(t_core *core)
 {
 	t_elem	*elem;
 	int		ret;
 
-	if ((elem = ft_find_elem("HISTFILESIZE", set)) == NULL)
+	if ((elem = ft_find_elem("HISTFILESIZE", core->set)) == NULL)
 	{
-		return (-1);
+		if ((elem = ft_find_elem("HISTFILESIZE", core->env)) == NULL)
+			return (-1);
 	}
 	if (elem->value == NULL || elem->value[0] == '\0')
 	{

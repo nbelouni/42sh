@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_history_opt.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/03/11 18:49:22 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/04/30 22:50:30 by nbelouni         ###   ########.fr       */
+/*   Created: 2017/04/26 18:07:01 by nbelouni          #+#    #+#             */
+/*   Updated: 2017/05/03 15:14:02 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int			ft_check_histopt_arg(t_lst *hist, char **args, int i)
 **	Se réferer a la premiere partie.
 */
 
-static int	ft_check_histopt_file2(t_lst *set, t_lst *hist, char **args, int j)
+static int	ft_check_histopt_file2(t_core *core, char **args, int j)
 {
 	int		ret;
 	char	*filename;
@@ -53,17 +53,17 @@ static int	ft_check_histopt_file2(t_lst *set, t_lst *hist, char **args, int j)
 	filename = (args[1]) ? args[1] : NULL;
 	if (args[0][1] == HIST_OPT_R)
 	{
-		if ((ret = ft_histopt_r(&hist, set, filename)) != ERR_NEW_CMD)
+		if ((ret = ft_histopt_r(core, filename)) != -1)
 			return (j);
 	}
 	if (args[0][1] == HIST_OPT_W)
 	{
-		if ((ret = ft_histopt_w(set, hist, filename)) != ERR_NEW_CMD)
+		if ((ret = ft_histopt_w(core, filename)) != ERR_NEW_CMD)
 			return (j);
 	}
 	if (args[0][1] == HIST_OPT_N)
 	{
-		if ((ret = ft_histopt_n(set, hist, filename)) != ERR_NEW_CMD)
+		if ((ret = ft_histopt_n(core, filename)) != ERR_NEW_CMD)
 			return ((ret == ERR_EXIT) ? ERR_EXIT : j);
 	}
 	return ((ret < 0) ? ret : j);
@@ -75,7 +75,7 @@ static int	ft_check_histopt_file2(t_lst *set, t_lst *hist, char **args, int j)
 **	sont concernés, cette fonction sert de gestionnaire des fonctions envoyés.
 */
 
-int			ft_check_histopt_file(t_lst *set, t_lst *hist, char **args, int i)
+int			ft_check_histopt_file(t_core *core, char **args, int i)
 {
 	int		ret;
 	int		j;
@@ -90,10 +90,10 @@ int			ft_check_histopt_file(t_lst *set, t_lst *hist, char **args, int i)
 	}
 	if (args[i][1] == HIST_OPT_A)
 	{
-		if ((ret = ft_histopt_a(set, hist, filename)) != ERR_NEW_CMD)
+		if ((ret = ft_histopt_a(core, filename)) != ERR_NEW_CMD)
 			return (j);
 	}
-	if ((ret = ft_check_histopt_file2(set, hist, &(args[i]), j)) >= 0)
+	if ((ret = ft_check_histopt_file2(core, &(args[i]), j)) >= 0)
 		return (j);
 	return (ret);
 }
@@ -103,7 +103,7 @@ int			ft_check_histopt_file(t_lst *set, t_lst *hist, char **args, int i)
 **	C'est elle qui gere l'appelle ou non des gestionnaires de ces dernieres.
 */
 
-int			ft_check_histopt(t_lst *set, t_lst *hist, char **args, int i)
+int			ft_check_histopt(t_core *core, char **args, int i)
 {
 	int		j;
 	char	c;
@@ -113,14 +113,14 @@ int			ft_check_histopt(t_lst *set, t_lst *hist, char **args, int i)
 	{
 		c = args[i][j];
 		if (c == HIST_OPT_C)
-			hist = ft_histopt_c(hist);
+			core->hist = ft_histopt_c(core->hist);
 		else if (c == HIST_OPT_D)
-			return (ft_check_histopt_offset(hist, args, i));
+			return (ft_check_histopt_offset(core->hist, args, i));
 		else if (c == HIST_OPT_P || c == HIST_OPT_S)
-			return (ft_check_histopt_arg(hist, args, i));
+			return (ft_check_histopt_arg(core->hist, args, i));
 		else if (c == HIST_OPT_A || c == HIST_OPT_N || c == HIST_OPT_R
 				|| c == HIST_OPT_W)
-			return (ft_check_histopt_file(set, hist, args, i));
+			return (ft_check_histopt_file(core, args, i));
 		else
 			return (ft_print_histopt_err(args[i][j]));
 	}
@@ -132,7 +132,7 @@ int			ft_check_histopt(t_lst *set, t_lst *hist, char **args, int i)
 **	ou renvoyer ft_check_histopt pour identifier la validité de ces dernieres.
 */
 
-int			ft_parse_histopt(t_lst *set, t_lst *hist, char **args)
+int			ft_parse_histopt(t_core *core, char **args)
 {
 	int		i;
 	int		pos;
@@ -147,7 +147,7 @@ int			ft_parse_histopt(t_lst *set, t_lst *hist, char **args)
 			else
 			{
 				pos = i;
-				if ((pos = ft_check_histopt(set, hist, args, pos)) < 0)
+				if ((pos = ft_check_histopt(core, args, pos)) < 0)
 					return (pos);
 			}
 		}

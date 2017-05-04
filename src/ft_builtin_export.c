@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_builtin_export.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/03/05 10:39:48 by dogokar           #+#    #+#             */
-/*   Updated: 2017/03/29 14:48:18 by maissa-b         ###   ########.fr       */
+/*   Created: 2017/04/26 18:08:02 by nbelouni          #+#    #+#             */
+/*   Updated: 2017/05/04 16:14:23 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,21 +21,22 @@ int			insert_to_env(t_elem *node, char *arg, t_lst *env, t_lst *type_env)
 {
 	char	*val;
 	int		ret;
+	char 	*i;
 
 	ret = 0;
 	val = NULL;
-	if ((ft_strlen(node->name) + 1) < ft_strlen(arg))
+	i = ft_strchr(arg, '=');
+	if ((ft_strlen(node->name)  + 1) < ft_strlen(arg) && i)
 	{
 		if ((val = ft_strsub(arg, ft_strlen(node->name) + 1,
-						(ft_strlen(arg) - ft_strlen(node->name) + 1))) == NULL)
-			return (ft_free_and_return(ERR_EXIT, node->name, NULL, NULL));
-	}
-	if (val)
-	{
-		ft_strdel(&node->value);
+					(ft_strlen(arg) - ft_strlen(node->name) + 1))) == NULL)
+				return (ft_free_and_return(ERR_EXIT, node->name, NULL, NULL));
+		ft_strdel(&(node->value));
 		node->value = ft_strdup(val);
 		ft_strdel(&val);
 	}
+	else if (node->value && i)
+		ft_strdel(&node->value);
 	if (type_env)
 		move_to_env(node, env, type_env);
 	return (0);
@@ -52,19 +53,12 @@ t_elem		*search_var(char *arg, t_lst *type_env)
 
 	tmp = NULL;
 	if (ft_strchr(arg, '='))
-	{
-		if (!(name = ft_strsub(arg, 0, ft_get_index_of(arg, '='))))
-			return (NULL);
-	}
+		name = ft_strsub(arg, 0, ft_get_index_of(arg, '='));
 	else
 		name = ft_strdup(arg);
 	if (name == NULL || name[0] == '\0' || name[0] == '=')
 		return (NULL);
-	if (!(tmp = ft_find_elem(name, type_env)))
-	{
-		ft_strdel(&name);
-		return (NULL);
-	}
+	tmp = ft_find_elem(name, type_env);
 	ft_strdel(&name);
 	return (tmp);
 }
@@ -93,12 +87,12 @@ int			insert_to_exp(char *argv, t_core *m_env)
 }
 
 /*
-**    va chercher dans les diffrents listes de varaiable, si la variable
-**		existe il va l'inserer dans l'env
-**		si non il va la cree avec insert_to_exp
+**	va chercher dans les diffrents listes de varaiable, si la variable
+**	existe il va l'inserer dans l'env
+**	si non il va la cree avec insert_to_exp
 */
 
-int			multi_var_cheak(char *argv, t_core *m_env)
+static int	multi_var_check(char *argv, t_core *m_env)
 {
 	t_elem	*tmp;
 
@@ -126,17 +120,20 @@ int			ft_builtin_export(t_core *m_env, char **argv)
 	int		i;
 	int		result;
 
-	if (!(opt = ft_opt_parse(EXPORT_OPT, argv, 0)))
+	if (!(opt = ft_opt_parse(EXPORT_OPT, argv, 0, 0)))
 		return (ERR_EXIT);
 	if (opt[0] == -1)
+	{
+		free(opt);
 		return (ERR_NEW_CMD);
+	}
 	i = opt[0];
 	result = 0;
-	if (argv[0] == NULL)
+	if (argv[i] == NULL)
 		ft_print_export(m_env);
 	while (argv[i] != NULL)
 	{
-		if (multi_var_cheak(argv[i], m_env) == -1)
+		if (multi_var_check(argv[i], m_env) == -1)
 			result = ERR_NEW_CMD;
 		++i;
 	}

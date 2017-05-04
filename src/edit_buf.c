@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 23:40:01 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/10 20:22:15 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/03 15:36:32 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void		paste_in_buf(t_buf *buf, int cursor)
 	tmp_len = buf->size - cursor;
 	if (buf->size + buf->to_paste_size >= BUFF_SIZE)
 		return ;
-	if (cursor < buf->size - 1)
+	if (cursor < buf->size)
 	{
 		ft_strncpy(tmp, buf->line + cursor, tmp_len + 1);
 		tmp[tmp_len] = 0;

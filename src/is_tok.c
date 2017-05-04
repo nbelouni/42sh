@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/16 13:02:54 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/30 18:01:32 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/03 18:10:09 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,31 +19,9 @@ int		cut_space(char *s, int i)
 	return (i);
 }
 
-int		is_brace(char *s, int i)
-{
-/*	if (i == 0 || s[i - 1] != '\\')
-	{
-		if (s[i] == '{' && ((!s[i + 1] || s[i + 1] == ' ') &&
-		((i == 0 || is_separator(s, i - 1) || s[i - 1] == ' '
-		|| s[i - 1] == '('))))
-			return (O_BRACE);
-		if (s[i] == '}')
-		{
-			if ((i == 0 || is_separator(s, i - 1) || s[i - 1] == ' ')
-			&& (i + 1 >= (int)ft_strlen(s) || is_separator(s, i + 1)
-			|| s[i + 1] == ' ' || s[i + 1] == ')'))
-				return (C_BRACE);
-		}
-	}
-*/
-	(void)s;
-	(void)i;
-	return (0);
-}
-
 int		is_space(char *s, int i)
 {
-	if (i == 0 || s[i - 1] != '\\')
+	if (i == 0 || count_prev_char(s, i - 1, '\\') % 2 == 0)
 	{
 		if (s[i] == ' ')
 			return (ESPACE);
@@ -53,10 +31,37 @@ int		is_space(char *s, int i)
 
 int		is_dot(char *s, int i)
 {
-	if (i == 0 || s[i - 1] != '\\')
+	if (i == 0 || count_prev_char(s, i - 1, '\\') % 2 == 0)
 	{
 		if (s[i] == ';')
 			return (DOT);
+	}
+	return (0);
+}
+
+int		is_separator(char *s, int i)
+{
+	if (i == 0 || count_prev_char(s, i - 1, '\\') % 2 == 0)
+	{
+		if (s[i] == '|' || s[i] == ';')
+			return (1);
+		if (i + 1 < (int)ft_strlen(s) &&
+		(!ft_strncmp(s + i, "||", 2) || !ft_strncmp(s + i, "&&", 2)))
+			return (2);
+	}
+	return (0);
+}
+
+int		is_redirection(char *s, int i)
+{
+	if (i == 0 || count_prev_char(s, i - 1, '\\') % 2 == 0)
+	{
+		if (s[i] == '>' || s[i] == '<' || s[i] == '&')
+			return (1);
+		if (i + 1 < (int)ft_strlen(s) &&
+		(!ft_strncmp(s + i, "<<", 2) || !ft_strncmp(s + i, ">>", 2)
+		|| !ft_strncmp(s + i, "&>", 2)))
+			return (2);
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/18 20:39:17 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/01 21:45:17 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/03 20:50:00 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ int		can_expand(char *s)
 	int			begin;
 	int			end;
 
+	if (!s)
+		return (FALSE);
 	pivot = 0;
 	begin = 0;
 	end = 0;

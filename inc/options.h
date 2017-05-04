@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   options.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/03/29 16:17:16 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/29 16:20:58 by maissa-b         ###   ########.fr       */
+/*   Created: 2017/04/26 18:12:03 by nbelouni          #+#    #+#             */
+/*   Updated: 2017/04/26 18:12:38 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,6 @@
 **	ft_opt_parse.c
 */
 
-int		*ft_opt_parse(char *opts, char **args, size_t overwrite);
+int		*ft_opt_parse(char *opts, char **av, int overwrite, int print_o);
 
 #endif

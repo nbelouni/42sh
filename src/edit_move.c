@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   edit_move.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/02/02 21:36:00 by alallema          #+#    #+#             */
-/*   Updated: 2017/02/05 16:44:02 by nbelouni         ###   ########.fr       */
+/*   Created: 2017/04/26 18:08:46 by nbelouni          #+#    #+#             */
+/*   Updated: 2017/05/03 15:36:32 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,8 @@
 
 void	m_right(size_t len)
 {
-	int		cursor;
-
-	cursor = (g_curs.win_col * g_curs.row) + g_curs.col;
+	if ((int)len <= 0)
+		return ;
 	while (len > 0)
 	{
 		if (g_curs.col + 1 < g_curs.win_col)
@@ -33,7 +32,6 @@ void	m_right(size_t len)
 		}
 		len--;
 	}
-	cursor = (g_curs.win_col * g_curs.row) + g_curs.col;
 }
 
 void	m_left(size_t len)
@@ -41,6 +39,8 @@ void	m_left(size_t len)
 	int		cursor;
 	int		w_col;
 
+	if ((int)len < 0)
+		return ;
 	w_col = g_curs.win_col;
 	cursor = (w_col * g_curs.row) + g_curs.col;
 	while (len > 0)
@@ -64,7 +64,7 @@ void	m_left(size_t len)
 
 void	m_up(void)
 {
-	if (g_curs.row > 0)
+	if (get_curs_add(-(get_prompt_len())) > g_curs.win_col)
 	{
 		t_puts("up", 1);
 		g_curs.row--;

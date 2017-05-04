@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   history.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/03/11 18:36:55 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/29 15:44:35 by maissa-b         ###   ########.fr       */
+/*   Created: 2017/04/26 18:12:19 by nbelouni          #+#    #+#             */
+/*   Updated: 2017/04/26 18:12:38 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 */
 
 char	*ft_get_hist_value(t_elem *elem, int type);
-int		ft_get_hsize(t_lst *set);
-t_lst	*ft_histfile_to_histlist(t_lst *histlist, int fd);
+int		ft_get_hsize(t_core *core);
+t_lst	*ft_histfile_to_histlist(t_lst **histlist, int fd);
 int		ft_get_histfile_content(t_lst *hist, int fd);
 t_lst	*ft_get_history(t_lst *hist, char *filename);
 
@@ -34,10 +34,10 @@ int		ft_histopt_s(t_lst *hist, char **args);
 **	ft_histopt_filename.c
 */
 
-int		ft_histopt_n(t_lst *set, t_lst *hist, char *filename);
-int		ft_histopt_w(t_lst *set, t_lst *hist, char *filename);
-int		ft_histopt_a(t_lst *set, t_lst *hist, char *filename);
-int		ft_histopt_r(t_lst **hist, t_lst *set, char *filename);
+int		ft_histopt_n(t_core *core, char *filename);
+int		ft_histopt_w(t_core *core, char *filename);
+int		ft_histopt_a(t_core *core, char *filename);
+int		ft_histopt_r(t_core *core, char *filename);
 
 /*
 **	ft_histopt_offset.c
@@ -53,9 +53,9 @@ int		ft_histopt_d(t_lst *hist, char *arg);
 t_lst	*ft_histopt_c(t_lst *hist);
 int		ft_check_histopt_arg(t_lst *hist, char **args, int i);
 int		ft_check_histopt_offset(t_lst *hist, char **args, int i);
-int		ft_check_histopt_file(t_lst *set, t_lst *hist, char **args, int i);
-int		ft_check_histopt(t_lst *set, t_lst *hist, char **args, int i);
-int		ft_parse_histopt(t_lst *set, t_lst *hist, char **args);
+int		ft_check_histopt_file(t_core *core, char **args, int i);
+int		ft_check_histopt(t_core *core, char **args, int i);
+int		ft_parse_histopt(t_core *core, char **args);
 
 /*
 **	ft_history_tools.c
@@ -63,18 +63,18 @@ int		ft_parse_histopt(t_lst *set, t_lst *hist, char **args);
 
 int		ft_truncate_histlist(t_lst *hist, size_t n);
 int		ft_truncate_histfile(char *filename, int n);
-char	*ft_get_hfname(t_lst *set);
-char	*ft_check_hist_filename(t_lst *set, char *filename);
+char	*ft_get_hfname(t_core *core);
+char	*ft_check_hist_filename(t_core *core, char *filename);
 int		ft_print_history(t_lst *hist, int start);
 int		ft_cmd_to_history(t_lst *hist, char *cmd);
-int		ft_check_history_var(t_lst *set, t_lst *hist);
+int		ft_check_history_var(t_core *core);
 int		ft_print_histopt_err(char c);
 
 /*
 **	ft_set_history.c
 */
 
-int		ft_get_hfsize(t_lst *set);
+int		ft_get_hfsize(t_core *core);
 int		ft_histlist_to_histfile(t_lst **hist, int fd);
 int		ft_check_histfile(t_lst *hist, char *filename);
 int		ft_set_history(t_lst *hist, char *filename);
@@ -100,6 +100,7 @@ int		bang_diese_sub(char **s, int i);
 **	ft_bang_substitution.c
 */
 
+int		print_sub(t_lst *hist, char **s, int *i);
 int		switch_bang(t_lst *hist, char **s, int *i);
 int		bang_substitution(char **s, t_core *core);
 

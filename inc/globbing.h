@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/06 15:31:30 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/30 22:15:44 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/03 16:16:06 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,10 @@ typedef struct			s_exp
 
 int						is_end(char *s, int *i, char c);
 int						is_begin(char *s, int *i, char c);
+int						supp_char(char *s, int i);
+void					supp_quotes(char *s);
+void					init_is_in_quote(char *s, int *is_in_quote);
+int						init_begin_end(char *s, int *begin, int *end);
 int						is_regex(char *s, int i);
 int						is_comma(int *lex, int len, int max_lvl);
 int						is_exp(char *s, int *pivot, int *begin, int *end);

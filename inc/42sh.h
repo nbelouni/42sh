@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:09:30 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/30 22:35:19 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/03 17:02:41 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,20 @@ typedef struct		s_core
 	t_buf			*buf;
 }					t_core;
 
+typedef struct		s_builtin_array
+{
+	char			*cmd;
+	int				(* const func)(t_core *, char **);
+}					t_builtin_array;
+
 /*
 **	ft_default_set.c
 */
 
 
+int					g_sh_tty;
+int					g_sh_is;
+pid_t				g_sh_pgid;
 t_lst				*ft_init_lstset(void);
 t_core				*g_core;
 extern t_list		*g_job_list;
@@ -79,6 +88,7 @@ void			init_signal(void);
 **	ft_init.c
 */
 
+int					ft_creat_core(char **envp);
 int					ft_init_core(void);
 t_lst				*ft_default_env(void);
 t_lst				*ft_init_list(void);
@@ -122,13 +132,13 @@ int					ft_export(t_lst *dup, char *arg);
 void				ft_del_list(t_lst *lst);
 int					ft_pwd_swap(t_lst *env, char *owd, char *cwd);
 
+void				ft_extract_elem(t_elem **elem, t_lst *lst);
+void				ft_clear_elem(t_elem **elem);
+void				ft_del_elem(t_elem **elem, t_lst *lst);
 
 void		block_signal(int sig, sigset_t *set, sigset_t *oset);
 void		unblock_signal(sigset_t *oset);
 void		restore_originals_handler();
-
-void		ft_extract_elem(t_elem **elem, t_lst *lst);
-void		ft_clear_elem(t_elem **elem);
-void		ft_del_elem(t_elem **elem, t_lst *lst);
 	
+int					up_shlvl(t_elem **elem);
 #endif

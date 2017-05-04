@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   ft_builtin_unset.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/03/20 15:22:49 by dogokar           #+#    #+#             */
-/*   Updated: 2017/03/29 16:08:13 by maissa-b         ###   ########.fr       */
+/*   Created: 2017/04/26 18:07:51 by nbelouni          #+#    #+#             */
+/*   Updated: 2017/05/03 15:14:01 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
 /*
- **    va suprimmer un variable dans n'importe quel list
- */
+**    va suprimmer un variable dans n'importe quel list
+*/
 
 int		ft_unset(t_core *set, char **args)
 {
@@ -40,7 +40,7 @@ int		ft_builtin_unset(t_core *set, char **args)
 
 	if (args == NULL || *args == NULL || **args == '\0')
 		return (0);
-	if ((opt = ft_opt_parse(UNSET_OPT, args, 0)) == NULL)
+	if ((opt = ft_opt_parse(UNSET_OPT, args, 0, 0)) == NULL)
 		return (ERR_EXIT);
 	ret = ft_unset(set, &(args[opt[0]]));
 	free(opt);

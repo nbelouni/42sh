@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_norm_tools.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/02/13 20:05:40 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/28 16:03:48 by maissa-b         ###   ########.fr       */
+/*   Created: 2017/04/26 18:06:46 by nbelouni          #+#    #+#             */
+/*   Updated: 2017/05/03 15:14:02 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int		ft_pwd_swap(t_lst *env, char *owd, char *cwd)
 	}
 	if ((ret = ft_modify_env(env, "OLDPWD", owd)) != 0)
 	{
-		 return (ret);
+		return (ret);
 	}
 	return (0);
 }

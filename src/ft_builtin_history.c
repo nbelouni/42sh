@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_builtin_history.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/03/04 17:21:39 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/29 14:49:23 by maissa-b         ###   ########.fr       */
+/*   Created: 2017/04/26 18:07:58 by nbelouni          #+#    #+#             */
+/*   Updated: 2017/05/03 15:14:01 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@
 **	apres avoir checké qu'un digit est bien envoyé au builtin.
 */
 
-static int	ft_exec_history(t_lst *set, t_lst *hist, char **args)
+static int	ft_exec_history(t_core *core, char **args)
 {
 	int		ret;
 
-	ret = (args[0][0] != '-') ? 1 : ft_parse_histopt(set, hist, args);
+	ret = (args[0][0] != '-') ? 1 : ft_parse_histopt(core, args);
 	if (ret == 0 || ret == ERR_NEW_CMD || ret == ERR_EXIT)
 	{
 		return (ret);
@@ -34,10 +34,10 @@ static int	ft_exec_history(t_lst *set, t_lst *hist, char **args)
 	{
 		if (!ft_strisdigit(args[0]))
 		{
-			write(2, "history: ", 9);
+			ft_putstr_fd("history: ", 2);
 			return (ft_print_error(args[0], ERR_NUM_ARG, ERR_NEW_CMD));
 		}
-		ft_print_history(hist, ft_atoi(args[0]) - 1);
+		ft_print_history(core->hist, ft_atoi(args[0]) - 1);
 	}
 	return (0);
 }
@@ -58,7 +58,7 @@ int			ft_builtin_history(t_core *core, char **args)
 	if (core->hist != NULL)
 	{
 		hsize = 0;
-		if ((hsize = ft_get_hsize(core->set)) == 0)
+		if ((hsize = ft_get_hsize(core)) == 0)
 		{
 			return (ERR_NEW_CMD);
 		}
@@ -68,7 +68,7 @@ int			ft_builtin_history(t_core *core, char **args)
 		}
 		else
 		{
-			ret = ft_exec_history(core->set, core->hist, args);
+			ret = ft_exec_history(core, args);
 		}
 	}
 	return (ret);

@@ -21,6 +21,8 @@ LIBS = -lft
 SDIR = ./src/
 SRCS = 	ft_builtin_cd.c		\
 		ft_builtin_cd2.c	\
+		ft_builtin_cd3.c	\
+		ft_builtin_locale.c	\
 		ft_builtin_echo.c	\
 		ft_builtin_env.c	\
 		ft_builtin_exit.c	\
@@ -36,6 +38,7 @@ SRCS = 	ft_builtin_cd.c		\
 		ft_list_tools2.c	\
 		ft_list_tools3.c	\
 		ft_opt_parse.c		\
+		ft_tools.c			\
 		read.c				\
 		buf.c				\
 		term.c				\
@@ -58,15 +61,20 @@ SRCS = 	ft_builtin_cd.c		\
 		lex_buf_pars.c		\
 		is_tok.c			\
 		is_check.c			\
+		is_quote.c			\
 		sort_list.c			\
 		sort_list_token.c	\
 		sort_list_token2.c	\
 		can_create_tree.c	\
 		completion.c		\
+		completion_tools.c	\
+		completion_open_path.c	\
+		edit_host_username.c	\
 		is_token_type.c		\
 		return_errors.c		\
 		ast_create.c		\
 		find_quote_end.c	\
+		supp_quotes.c		\
 		globbing.c			\
 		here_doc.c			\
 		replace_expansions.c\
@@ -102,18 +110,20 @@ SRCS = 	ft_builtin_cd.c		\
 		ft_builtin_bang.c	\
 		ft_builtin_bang2.c	\
 		ft_builtin_bang3.c	\
-		ft_builtin_bg.c		\
-		ft_builtin_fg.c		\
+		ft_builtin_bg.c	\
+		ft_builtin_fg.c	\
 		ft_builtin_jobs.c	\
 		ft_default_set.c	\
 		ft_bang_alphanum_sub.c\
 		ft_bang_special_sub.c\
 		ft_bang_substitution.c\
 		ft_quick_substitution.c\
+		ft_env_dup_operations.c\
+		home_tild.c			\
 		combine_cmd.c		\
 		edit_history.c		\
-		ft_env_dup_operations.c\
-		extra_builtins.c
+		extra_builtins.c	\
+		ft_check_env_fork.c	
 
 SRCC = $(addprefix $(SDIR),$(SRCS))
 
@@ -121,7 +131,7 @@ ODIR = ./obj/
 OBJS = $(SRCS:.c=.o)
 OBCC = $(addprefix $(ODIR),$(OBJS))
 
-FLAG =  -Wall -Werror -Wextra -DDEBUG_F  #-g -fsanitize=address -UTOSTOP
+FLAG =  -Wall -Werror -Wextra -DDEBUG_F -g #-fsanitize=address -UTOSTOP
 
 $(NAME): $(OBCC)
 	make -C ./libft/

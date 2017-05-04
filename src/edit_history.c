@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   edit_history.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/03/17 17:39:46 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/04/13 20:47:08 by llaffile         ###   ########.fr       */
+/*   Created: 2017/04/26 18:08:59 by nbelouni          #+#    #+#             */
+/*   Updated: 2017/05/03 15:36:32 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,16 +81,16 @@ int			edit_history(t_buf *buf, t_lst *hist, int x)
 {
 	if (!hist || !hist->head)
 		return (0);
-	if (x == UP)
+	if (x == UP && buf->cur_hist != hist->head)
 	{
 		if (buf->cur_hist != hist->head)
-			buf->cur_hist = (buf->cur_hist) ? buf->cur_hist->prev : hist->tail;
-		if (ft_mv_up(buf, &(buf->cur_hist), &(buf->last_cmd)) == ERR_EXIT)
 		{
-			return (ERR_EXIT);
+			buf->cur_hist = (buf->cur_hist) ? buf->cur_hist->prev : hist->tail;
 		}
+		if (ft_mv_up(buf, &(buf->cur_hist), &(buf->last_cmd)) == ERR_EXIT)
+			return (ERR_EXIT);
 	}
-	if (x == DOWN)
+	if (x == DOWN && buf->cur_hist != NULL)
 	{
 		if (buf->cur_hist != NULL)
 			buf->cur_hist = buf->cur_hist->next;

@@ -5,20 +5,20 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/03/01 17:14:54 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/03/02 22:25:51 by nbelouni         ###   ########.fr       */
+/*   Created: 2017/04/26 18:05:04 by nbelouni          #+#    #+#             */
+/*   Updated: 2017/05/03 16:34:59 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
-t_sort_list	*create_sort_list(char *s)
+t_slist		*create_sort_list(char *s)
 {
-	t_sort_list	*elem;
+	t_slist	*elem;
 
 	if (!s)
 		return (NULL);
-	if (!(elem = ft_memalloc(sizeof(t_sort_list))))
+	if (!(elem = ft_memalloc(sizeof(t_slist))))
 		return (NULL);
 	elem->s = s;
 	elem->next = NULL;
@@ -26,9 +26,9 @@ t_sort_list	*create_sort_list(char *s)
 	return (elem);
 }
 
-void		push_sort_list(t_sort_list **begin, t_sort_list *new)
+void		push_sort_list(t_slist **begin, t_slist *new)
 {
-	t_sort_list	*elem;
+	t_slist	*elem;
 
 	elem = *begin;
 	if (elem == NULL)
@@ -39,17 +39,17 @@ void		push_sort_list(t_sort_list **begin, t_sort_list *new)
 	new->prev = elem;
 }
 
-void		clear_sort_list(t_sort_list *cmd)
+void		clear_sort_list(t_slist *cmd)
 {
 	if (cmd->s)
 		free(cmd->s);
 	cmd->s = NULL;
 }
 
-void		rm_sort_list(t_sort_list **cmd)
+void		rm_sort_list(t_slist **cmd)
 {
-	t_sort_list	*tmp;
-	t_sort_list	*elem;
+	t_slist	*tmp;
+	t_slist	*elem;
 
 	if (cmd == NULL)
 		return ;
@@ -65,10 +65,10 @@ void		rm_sort_list(t_sort_list **cmd)
 	ft_memdel((void *)cmd);
 }
 
-void		destroy_sort_list(t_sort_list **begin)
+void		destroy_sort_list(t_slist **begin)
 {
-	t_sort_list	*tmp;
-	t_sort_list	*list;
+	t_slist	*tmp;
+	t_slist	*list;
 
 	list = *begin;
 	tmp = NULL;

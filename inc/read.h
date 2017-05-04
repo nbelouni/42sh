@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:01:52 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/30 22:15:56 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/03 15:31:54 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ typedef _Bool	t_bool;
 # define TAB  9
 # define CRTL  1
 # define CTRL_D  4
-# define TAB 9
+# define RET_CTRL_D  147
 
 /*
 ** cut word before
@@ -63,7 +63,7 @@ typedef _Bool	t_bool;
 /*
 ** copy word before
 */
-# define CTRL_I 9
+# define CTRL_L 12
 
 /*
 ** copy word after
@@ -85,6 +85,7 @@ typedef _Bool	t_bool;
 */
 # define CTRL_P 16
 
+# define CTRL_Y 16
 # define CTRL_T 20
 # define ALT_C  42947
 # define ALT_V  10127586
@@ -225,6 +226,8 @@ void			clean_pos_curs(void);
 */
 t_bool			init_curs(void);
 
+int				get_curs(void);
+int				get_curs_add(int n);
 /*
 **	*********************************************************************
 */
@@ -398,5 +401,8 @@ typedef	struct s_token	t_token;
 
 int				complete_final_line(t_buf *buf, t_token *lst);
 int				edit_history(t_buf *buf, t_lst *history, int x);
+void			init_line(t_buf *buf);
+int				classic_read(t_buf *buf, int x);
+int				read_modul(int x, t_buf *buf);
 
 #endif

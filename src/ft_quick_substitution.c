@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_quick_substitution.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maissa-b <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/03/24 18:15:43 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/24 18:15:44 by maissa-b         ###   ########.fr       */
+/*   Created: 2017/04/26 18:06:41 by nbelouni          #+#    #+#             */
+/*   Updated: 2017/05/03 15:14:02 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int		ft_quicksub_with_args2(t_elem *tail, char *tmp, char *p, char **s)
 	else
 	{
 		if ((*s = ft_strreplace(tail->name, tmp, tmp2)) == NULL)
-			ret = ft_print_error("42sh", ERR_SUBSTITUTION, ERR_NEW_CMD);
+			ret = ft_print_error("21sh", ERR_SUBSTITUTION, ERR_NEW_CMD);
 		ft_strdel(&tmp2);
 	}
 	return (ret);
@@ -42,7 +42,7 @@ int		ft_quicksub_with_args(t_elem *tail, char **s, int *i)
 	if (ptr[1] == '^')
 	{
 		if ((*s = ft_strreplace(tail->name, tmp2, "")) == NULL)
-			ret = ft_print_error("42sh", ERR_SUBSTITUTION, ERR_NEW_CMD);
+			ret = ft_print_error("21sh", ERR_SUBSTITUTION, ERR_NEW_CMD);
 	}
 	else
 		ret = ft_quicksub_with_args2(tail, tmp2, ptr, s);
@@ -58,12 +58,12 @@ int		ft_exec_quick_sub(t_elem *tail, char **s, int *i)
 	*i += 1;
 	ret = 0;
 	if ((*s)[*i] == '^')
-		return (ft_print_error("42sh", ERR_SUBSTITUTION, ERR_NEW_CMD));
+		return (ft_print_error("21sh", ERR_SUBSTITUTION, ERR_NEW_CMD));
 	tmp = *s;
 	if (ft_strchr(&((*s)[*i]), '^') == NULL)
 	{
 		if ((*s = ft_strreplace(tail->name, &(*s)[*i], "")) == NULL)
-			ret = ft_print_error("42sh", ERR_SUBSTITUTION, ERR_NEW_CMD);
+			ret = ft_print_error("21sh", ERR_SUBSTITUTION, ERR_NEW_CMD);
 	}
 	else
 		ret = ft_quicksub_with_args(tail, s, i);

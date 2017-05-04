@@ -6,13 +6,13 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/02 18:10:58 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/30 21:50:40 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/03 17:03:27 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
-extern pid_t	g_sh_pgid;
+extern t_core	*g_core;
 
 t_bool		get_win(void)
 {

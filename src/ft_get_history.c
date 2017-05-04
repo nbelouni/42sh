@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_get_history.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/03/04 17:06:09 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/20 13:05:15 by maissa-b         ###   ########.fr       */
+/*   Created: 2017/04/26 18:07:11 by nbelouni          #+#    #+#             */
+/*   Updated: 2017/05/03 15:14:02 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,18 @@
 **	la valeur digitale de la value est renvoyée.
 */
 
-int		ft_get_hsize(t_lst *set)
+int		ft_get_hsize(t_core *core)
 {
 	int			ret;
 	t_elem		*elem;
 
 	elem = NULL;
-	if ((elem = ft_find_elem("HISTSIZE", set)) == NULL)
+	if ((elem = ft_find_elem("HISTSIZE", core->set)) == NULL)
 	{
-		return (-1);
+		if ((elem = ft_find_elem("HISTSIZE", core->env)) == NULL)
+		{
+			return (-1);
+		}
 	}
 	if (elem->value == NULL || elem->value[0] == '\0')
 	{
@@ -53,7 +56,7 @@ int		ft_get_hsize(t_lst *set)
 **	afin de les ajouter a la liste histlist.
 */
 
-t_lst	*ft_histfile_to_histlist(t_lst *histlist, int fd)
+t_lst	*ft_histfile_to_histlist(t_lst **histlist, int fd)
 {
 	t_elem		*elem;
 	char		*buf;
@@ -61,18 +64,25 @@ t_lst	*ft_histfile_to_histlist(t_lst *histlist, int fd)
 	buf = NULL;
 	while (get_next_line(fd, &buf) > 0)
 	{
-		if ((elem = ft_init_elem()) == NULL)
-			return (NULL);
-		if ((elem->name = ft_strdup(buf)) == NULL)
+		if (ft_strlen(buf) < BUFF_SIZE)
 		{
-			ft_del_elem(&elem, histlist);
-			return (NULL);
+			if ((elem = ft_init_elem()) == NULL)
+				return (NULL);
+			if ((elem->name = (buf)) == NULL)
+			{
+				(buf) ? ft_strdel(&buf) : 0;
+				ft_del_elem(&elem, *histlist);
+				return (NULL);
+			}
+			elem->is_appended = 1 + ft_char_replace(elem->name, '\t', ' ');
+			ft_insert_elem(elem, *histlist);
 		}
-		elem->is_appended = 1;
-		ft_insert_elem(elem, histlist);
-		ft_strdel(&buf);
+		else
+			(buf) ? ft_strdel(&buf) : 0;
+		buf = NULL;
 	}
-	return (histlist);
+	(buf) ? ft_strdel(&buf) : 0;
+	return (*histlist);
 }
 
 /*
@@ -83,7 +93,7 @@ t_lst	*ft_histfile_to_histlist(t_lst *histlist, int fd)
 
 int		ft_get_histfile_content(t_lst *hist, int fd)
 {
-	if ((hist = ft_histfile_to_histlist(hist, fd)) == NULL)
+	if ((hist = ft_histfile_to_histlist(&hist, fd)) == NULL)
 	{
 		return (ERR_EXIT);
 	}
@@ -114,11 +124,11 @@ t_lst	*ft_get_history(t_lst *hist, char *filename)
 	}
 	if ((lstat(filename, &st)) == -1)
 		return (hist);
-	if (st.st_size > 0)
+	if (st.st_size && st.st_size > 0)
 	{
 		if ((ft_get_histfile_content(hist, fd)) == ERR_EXIT)
 		{
-			ft_del_list(hist);
+			(hist) ? ft_del_list(hist) : 0;
 			hist = NULL;
 		}
 	}

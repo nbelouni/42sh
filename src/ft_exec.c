@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 13:08:28 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/30 23:10:29 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/03 17:04:59 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 /*
 ** decoupe la path pour effectue l'execution du binaire dans chaque dossier
 */
+
+extern t_core	*g_core;
 
 static char		*ft_cut_path(char **s, char *av)
 {
@@ -56,16 +58,16 @@ void			not_binary(char *s, char *s2, char **av, char **envp)
 	if (!s)
 	{
 		if (lstat(av[0], &st) == 0 && st.st_mode & S_IXUSR)
-			ft_putstr_fd("21sh: exec format error: ", 2);
+			ft_putstr_fd("42sh: exec format error: ", 2);
 		else if (lstat(av[0], &st) == 0)
-			ft_putstr_fd("21sh: permission denied: ", 2);
+			ft_putstr_fd("42sh: permission denied: ", 2);
 		else if (!s)
 		{
-			ft_putstr_fd("21sh: command not found: ", 2);
+			ft_putstr_fd("42sh: command not found: ", 2);
 			ft_putendl_fd(av[0], 2);
 		}
 		else
-			ft_putstr_fd("21sh: no such file or directory: ", 2);
+			ft_putstr_fd("42sh: no such file or directory: ", 2);
 		ft_putendl_fd(av[0], 2);
 		free(s);
 		free(s2);
@@ -85,9 +87,9 @@ void			ft_exec(char **av)
 	char		**envp;
 	t_elem		*tmp;
 
-	close_termios();
+//	close_termios();
 	envp = ft_env_to_tab(g_core->env);
-	if (!(tmp = ft_find_elem("PATH", g_core->env)) || !tmp->value)
+	if (!(tmp = ft_find_elem("PATH", g_core->env)))
 		s = ft_strdup("");
 	else
 		s = ft_strdup(tmp->value);
@@ -118,7 +120,7 @@ int				ft_check_exec(char ***cmd)
 	ret = TRUE;
 	if (edit_cmd(cmd, g_core) == ERR_EXIT)
 		return (ERR_EXIT);
-	if ((ret = parse_builtins(g_core, *cmd[0], *cmd + 1)) == 1)
+	if ((ret = parse_builtins(g_core, *cmd[0], *cmd + 1)) != 0)
 		ft_exec(*cmd);
 	return (ret);
 }

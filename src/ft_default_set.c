@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_default_set.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maissa-b <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/03/20 14:39:57 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/20 14:40:25 by maissa-b         ###   ########.fr       */
+/*   Created: 2017/04/26 18:07:20 by nbelouni          #+#    #+#             */
+/*   Updated: 2017/05/03 15:14:02 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,11 @@
 /*
 ** env par defaut
 */
+
 t_lst	*ft_default_env(void)
 {
 	t_lst	*env;
-	char *pwd;
+	char	*pwd;
 
 	pwd = NULL;
 	if (!(env = ft_init_list()))
@@ -29,7 +30,7 @@ t_lst	*ft_default_env(void)
 		return (NULL);
 	}
 	ft_setenv(env, "PWD", pwd);
-	ft_setenv(env, "SHLVL", "1");
+	ft_setenv(env, "SHLVL", "2");
 	ft_setenv(env, "_", NULL);
 	ft_strdel(&pwd);
 	return (env);
@@ -57,7 +58,7 @@ t_lst	*ft_init_lstset(void)
 		free(set);
 		return (NULL);
 	}
-	if ((histfilepath = ft_strnew((ft_strlen(pwd) + 15))) == NULL)
+	if ((histfilepath = ft_strnew((ft_strlen(pwd) + 18))) == NULL)
 		return (NULL);
 	ft_strcpy(histfilepath, pwd);
 	histfilepath = ft_strcat(histfilepath, "/.42sh_history");
@@ -65,5 +66,6 @@ t_lst	*ft_init_lstset(void)
 	ft_multi_free(pwd, histfilepath, NULL, NULL);
 	ft_setenv(set, "HISTSIZE", "500");
 	ft_setenv(set, "HISTFILESIZE", "500");
+	ft_add_elem(set, "?=0");
 	return (set);
 }

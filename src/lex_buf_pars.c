@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/17 19:31:44 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/30 20:49:55 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/03 17:55:47 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@ void		reset_int_pt(t_pt *pt)
 	pt->i = 0;
 	pt->len = 0;
 	pt->type = 0;
-//	pt->level[0] = 0;
-//	pt->level[1] = 0;
 }
 
 int			parse_list(t_token **list, char *s, t_pt *p)
@@ -29,7 +27,10 @@ int			parse_list(t_token **list, char *s, t_pt *p)
 	if (!s)
 		return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
 	if (find_quote_end(s) == FALSE)
+	{
+		ft_strdel(&s);
 		return (ERR_NEW_PROMPT);
+	}
 	if (!(new = ft_tokenew(p->type, s)))
 		return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
 	if (!(*list))
@@ -66,8 +67,16 @@ static int	check_fd_in(t_token **list, char *s, t_pt *p)
 
 	(void)list;
 	j = 0;
-	ret = is_redir(s, p->i + p->len);
-	ret2 = is_agreg(s, p->i + p->len);
+	if (p->i + p->len < (int)ft_strlen(s))
+	{
+		ret = is_redir(s, p->i + p->len);
+		ret2 = is_agreg(s, p->i + p->len);
+	}
+	else
+	{
+		ret = NO_TOKEN;
+		ret2 = NO_TOKEN;
+	}
 	if (ret != SR_DIR && ret != SL_DIR && ret2 != DIR_L_AMP &&
 		ret2 != DIR_R_AMP && ret != DR_DIR && ret != LR_DIR && ret != DL_DIR)
 		return (0);
@@ -86,7 +95,8 @@ int			cut_cmd(t_token **list, char *s, t_pt *p)
 	j = 0;
 	ret = 0;
 	p->i = cut_space(s, p->i);
-	while (s[p->i + p->len] && check_tok(s, p->i + p->len) == NO_TOKEN)
+	while (p->i + p->len < (int)ft_strlen(s) && s[p->i + p->len] &&
+	check_tok(s, p->i + p->len) == NO_TOKEN)
 	{
 		cut_quote(s, p);
 		p->len++;
