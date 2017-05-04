@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/05/04 19:06:41 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/04 20:12:10 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,7 +214,7 @@ void	wait_for_job(t_job *j)
 //	sigset_t	oset;
 
 //	block_signal(SIGCHLD, &set, &oset);
-	signal (SIGCHLD, SIG_DFL);
+	signal (SIGCHLD, SIG_IGN);
 	j->notified = j->notified;
 	while (!j->notified)
 	{
@@ -224,7 +224,7 @@ void	wait_for_job(t_job *j)
 			break ;
 	}
 //	unblock_signal(&oset);
-	signal (SIGCHLD, SIG_IGN);
+	signal (SIGCHLD, SIG_DFL);
 }
 
 /*
@@ -339,7 +339,6 @@ void			mark_job_as_running(t_job *j)
 void	continue_job(t_job *j, int foreground)
 {
 	mark_job_as_running(j);
-	PUT2("foreground : ");E(foreground);X('\n');
 	if (foreground)
 		put_job_in_foreground(j, 1);
 	else

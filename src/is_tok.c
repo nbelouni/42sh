@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/16 13:02:54 by alallema          #+#    #+#             */
-/*   Updated: 2017/05/03 18:10:09 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/04 20:38:17 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,9 @@ int		is_dot(char *s, int i)
 	{
 		if (s[i] == ';')
 			return (DOT);
+		if (s[i] == '&' && (i + 1 == (int)ft_strlen(s) ||
+		(s[i + 1] != '&' && s[i + 1] != '>')))
+			return (AMP);
 	}
 	return (0);
 }
@@ -56,12 +59,12 @@ int		is_redirection(char *s, int i)
 {
 	if (i == 0 || count_prev_char(s, i - 1, '\\') % 2 == 0)
 	{
-		if (s[i] == '>' || s[i] == '<' || s[i] == '&')
-			return (1);
 		if (i + 1 < (int)ft_strlen(s) &&
 		(!ft_strncmp(s + i, "<<", 2) || !ft_strncmp(s + i, ">>", 2)
 		|| !ft_strncmp(s + i, "&>", 2)))
 			return (2);
+		if (s[i] == '>' || s[i] == '<' || s[i] == '&')
+			return (1);
 	}
 	return (0);
 }
