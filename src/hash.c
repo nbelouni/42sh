@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/20 20:06:57 by llaffile          #+#    #+#             */
-/*   Updated: 2017/03/29 17:30:21 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/05/04 17:04:58 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@ t_table *new_table(size_t len)
 	t_table *t;
 
 	t = malloc(sizeof(t_table));
-	bzero(t, sizeof(t_table));
+	ft_bzero(t, sizeof(t_table));
 	t->len = len;
 	t->cnt = 0;
 	HASH(t) = malloc(len * sizeof(*HASH(t)));
-	bzero(HASH(t), LEN(t) * sizeof(*HASH(t)));
+	ft_bzero(HASH(t), LEN(t) * sizeof(*HASH(t)));
 	return (t);
 }
 
@@ -78,7 +78,7 @@ t_entry		*lookup_into_table(t_table *t, t_entry *kv)
 	while (ptr)
 	{
 		k = (t_entry *)ptr->content;
-		if (strcmp(CDATA(kv), CDATA(k)) == 0)
+		if (ft_strcmp(CDATA(kv), CDATA(k)) == 0)
 			return (k);
 		ptr = ptr->next;
 	}
@@ -97,7 +97,7 @@ t_entry *delete_from_table(t_table *t, t_entry *kv)
 	return (NULL);
 }
 
-
+/*
 void print_entry(t_entry *n)
 {
 	printf("\t[%x][%s]\n", KEY(n), CDATA(n));
@@ -111,7 +111,7 @@ void print_table(t_table *t)
 		list_iter(*(HASH(t) + i), (void *)print_entry);
 	}
 }
-
+*/
 t_entry *new_entry(unsigned int key, void *data)
 {
 	t_entry *n;

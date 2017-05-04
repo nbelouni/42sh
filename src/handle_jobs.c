@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/05/03 16:10:29 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/04 18:35:06 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,12 +229,12 @@ void	wait_for_job(t_job *j)
 /*
 ** Format information about job status for the user to look at.
 */
-
+/*
 void	format_job_info(t_job *j, const char *status)
 {
 	fprintf(stderr, "%ld (%s): %s <%d>\n", (long)j->pgid, status, j->command, getpid());
 }
-
+*/
 
 extern t_job *last_job;
 /*
@@ -254,7 +254,7 @@ void		do_job_notification(void)
 		j = (*ptr)->content;
 		if (job_is_completed(j))
 		{
-			format_job_info(j, "completed");
+//			format_job_info(j, "completed");
 			if (last_job == j)
 				last_job = NULL;
 			delete_job(POP(ptr));
@@ -262,7 +262,7 @@ void		do_job_notification(void)
 		}
 		else if (job_is_stopped(j) && !j->notified)
 		{
-			format_job_info(j, "stopped");
+//			format_job_info(j, "stopped");
 			j->notified = 1;
 		}
 		if (*ptr)
@@ -293,7 +293,11 @@ static void		put_job_in_foreground(t_job *j, int cont)
 	if (!(j->flag & WAIT))
 		return ;
 	last_job = j;
-	tcsetpgrp(g_sh_tty, j->pgid);
+
+	ioctl(g_sh_tty, TIOCSPGRP, &(j->pgid));
+//	tcsetpgrp(g_sh_tty, j->pgid);
+
+
 	if (cont)
 	{
 		//		tcsetattr (g_sh_tty, TCSADRAIN, &j->tmodes);
@@ -302,8 +306,13 @@ static void		put_job_in_foreground(t_job *j, int cont)
 	}
 	wait_for_job(j);
 //	update_status();
-	tcsetpgrp(g_sh_tty, g_sh_pgid);
-	//	tcgetattr (g_sh_tty, &j->tmodes);
+
+
+	ioctl(g_sh_tty, TIOCSPGRP, &g_sh_pgid);
+//	tcsetpgrp(g_sh_tty, g_sh_pgid);
+	
+
+//	tcgetattr (g_sh_tty, &j->tmodes);
 	//	tcsetattr (g_sh_tty, TCSADRAIN, &shell_tmodes);
 }
 
@@ -442,7 +451,10 @@ void	give_term(int pgid, int foreground)
 	sigaddset(&set, SIGCHLD);
 	sigemptyset(&set);
 	if (foreground)
-		tcsetpgrp(g_sh_tty, pgid);
+	{
+		ioctl(g_sh_tty, TIOCSPGRP, &pgid);
+	//	tcsetpgrp(g_sh_tty, pgid);
+	}
 }
 
 int		make_children(int *pgid, int foreground)
@@ -518,7 +530,7 @@ void	do_pipeline(t_job *job, t_list *pipeline)
 			close(in);
 		in = io_pipe[0];
 		delete_list(&(((t_process_p)pipeline->content)->io_list), &free);
-		insert_link_bottom(&job->wait_process_list, new_link(memcpy(malloc(pipeline->content_size), pipeline->content, pipeline->content_size), pipeline->content_size));
+		insert_link_bottom(&job->wait_process_list, new_link(ft_memcpy(malloc(pipeline->content_size), pipeline->content, pipeline->content_size), pipeline->content_size));
 		pipeline = pipeline->next;
 	}
 }

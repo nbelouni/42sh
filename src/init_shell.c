@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 13:08:51 by alallema          #+#    #+#             */
-/*   Updated: 2017/05/03 23:26:37 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/04 18:35:29 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,18 +104,31 @@ void		init_shell(void)
 	{
 
 //	tcgetpgrp : fonction interdite (man 3)
-		while (tcgetpgrp(g_sh_tty) != (g_sh_pgid = getpgrp()))
-			kill(-g_sh_pgid, SIGTTIN);
-		g_sh_pgid = getpid();
-		init_signal();
-		if (setpgid(g_sh_pgid, g_sh_pgid) < 0)
-		{
-			ft_putstr_fd("Couldn't put the shell in its own process group", 2);
-			exit(1);
-		}
+//	while (tcgetpgrp(g_sh_tty) != (g_sh_pgid = getpgrp()))
+//	{
+//			kill(-g_sh_pgid, SIGTTIN);
+//	}
+	while (true)
+	{
+		pid_t p1;
+	   	ioctl(g_sh_tty, TIOCGPGRP, &p1);
+		g_sh_pgid = getpgrp();
+		if (p1 == g_sh_pgid)
+			break;
+		kill(-g_sh_pgid, SIGTTIN);
+	}
+	g_sh_pgid = getpid();
+	init_signal();
+	if (setpgid(g_sh_pgid, g_sh_pgid) < 0)
+	{
+		ft_putstr_fd("Couldn't put the shell in its own process group", 2);
+		exit(1);
+	}
 
+	ioctl(g_sh_tty, TIOCSPGRP, &g_sh_pgid);
 //	tcsetpgrp : fonction interdite (man 3)
-		tcsetpgrp(g_sh_tty, g_sh_pgid);
+	//	tcsetpgrp(g_sh_tty, g_sh_pgid);
 	}
 	signal(SIGCHLD, sigchld_handler);
 }
+

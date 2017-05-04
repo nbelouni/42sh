@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/20 20:01:32 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/10 20:03:34 by alallema         ###   ########.fr       */
+/*   Updated: 2017/05/04 17:06:35 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	*new_link(void *content, size_t content_size)
 	t_list	*link;
 
 	link = malloc(sizeof(*link));
-	bzero(link, sizeof(*link));
+	ft_bzero(link, sizeof(*link));
 	link->content = content;
 	link->content_size = content_size;
 	return (link);

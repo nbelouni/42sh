@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 13:52:27 by llaffile          #+#    #+#             */
-/*   Updated: 2017/04/30 22:07:15 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/04 17:06:15 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ t_job	*create_job(t_tree *root, int foreground)
 	t_job	*job;
 
 	job = ft_memalloc(sizeof(t_job));
-	bzero(job, sizeof(*job));
+	ft_bzero(job, sizeof(*job));
 	job->foreground = foreground;
 	job->process_tree = create_process_tree(root);
 	job->command = iter_cmd(job->process_tree);
@@ -101,7 +101,7 @@ t_condition_if_p		new_condition_if(t_type_if type)
 	t_condition_if_p	ptr;
 
 	ptr = malloc(sizeof(*ptr));
-	bzero(ptr, sizeof(*ptr));
+	ft_bzero(ptr, sizeof(*ptr));
 	ptr->type = type;
 	return (ptr);
 }
@@ -111,7 +111,7 @@ t_node_p		new_node(t_type_node type, size_t size)
 	t_node_p	ptr;
 
 	ptr = malloc(sizeof(*ptr));
-	bzero(ptr, sizeof(*ptr));
+	ft_bzero(ptr, sizeof(*ptr));
 	ptr->type = type;
 	ptr->size = size;
 	return (ptr);
@@ -131,7 +131,7 @@ t_process_p	new_process(char **argv)
 	t_process_p ptr;
 
 	ptr = malloc(sizeof(*ptr));
-	bzero(ptr, sizeof(*ptr));
+	ft_bzero(ptr, sizeof(*ptr));
 	ptr->argv = argv;
 	if (is_builtin(argv))
 		ptr->flag |= BUILTIN;
