@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/05/04 18:35:06 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/04 19:06:41 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,11 +210,11 @@ void	wait_for_job(t_job *j)
 {
 	int			status;
 	pid_t		pid;
-	sigset_t	set;
-	sigset_t	oset;
+//	sigset_t	set;
+//	sigset_t	oset;
 
-	block_signal(SIGCHLD, &set, &oset);
-//	signal (SIGCHLD, SIG_DFL);
+//	block_signal(SIGCHLD, &set, &oset);
+	signal (SIGCHLD, SIG_DFL);
 	j->notified = j->notified;
 	while (!j->notified)
 	{
@@ -223,7 +223,8 @@ void	wait_for_job(t_job *j)
 				|| job_is_completed(j))
 			break ;
 	}
-	unblock_signal(&oset);
+//	unblock_signal(&oset);
+	signal (SIGCHLD, SIG_IGN);
 }
 
 /*
@@ -338,6 +339,7 @@ void			mark_job_as_running(t_job *j)
 void	continue_job(t_job *j, int foreground)
 {
 	mark_job_as_running(j);
+	PUT2("foreground : ");E(foreground);X('\n');
 	if (foreground)
 		put_job_in_foreground(j, 1);
 	else
@@ -353,8 +355,9 @@ void	launch_process(t_process_p process, int dofork)
 	list_iter(process->io_list, (void *)apply_redir);
 	if (dofork)
 	{
-		restore_originals_handler();
-		//		signal(SIGTTOU, SIG_IGN);
+		//init_signal();
+//		restore_originals_handler();
+				signal(SIGTTOU, SIG_IGN);
 	}
 	ft_check_exec(&process->argv);
 	if (dofork)
@@ -442,7 +445,7 @@ int		do_pipe(t_process_p p1, t_process_p p2, int *io_pipe)
 
 void	give_term(int pgid, int foreground)
 {
-	sigset_t	set;
+/*	sigset_t	set;
 
 	sigemptyset(&set);
 	sigaddset(&set, SIGTTOU);
@@ -450,6 +453,11 @@ void	give_term(int pgid, int foreground)
 	sigaddset(&set, SIGTSTP);
 	sigaddset(&set, SIGCHLD);
 	sigemptyset(&set);
+*/
+//	signal(SIGTTOU, SIG_DFL);
+	signal(SIGTTIN, SIG_DFL);
+	signal(SIGTSTP, SIG_DFL);
+	signal(SIGCHLD, SIG_DFL);
 	if (foreground)
 	{
 		ioctl(g_sh_tty, TIOCSPGRP, &pgid);

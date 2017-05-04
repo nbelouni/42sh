@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 13:08:51 by alallema          #+#    #+#             */
-/*   Updated: 2017/05/04 18:35:29 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/04 19:20:01 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,6 @@ sigset_t		g_original_set;
 
 #define MAXJOBS 30
 
-/*
-** The value of this symbolic constant is the total number of signals defined.
-** Since the signal numbers are allocated consecutively,
-** NSIG is also one greater than the largest defined signal number.
-**
-** https://www.gnu.org/software/libc/manual/html_node/Standard-Signals.html
-*/
-
-#define		ORIG_SIG_LEN	23
 /*static */sig_t	g_originals[ORIG_SIG_LEN];
 //extern sig_t	*g_originals;
 
@@ -61,7 +52,7 @@ void		save_originals_handler(void)
 	int		i;
 
 	i = 1;
-	while (i < ORIG_SIG_LEN)
+	while (i < NSIG)
 	{
 		if ((g_originals[i] = signal(i, SIG_IGN)) == SIG_ERR)
 			g_originals[i] = NULL;
@@ -78,14 +69,14 @@ void		restore_originals_handler(void)
 	int		i;
 
 	i = 1;
-	while (i < ORIG_SIG_LEN)
+	while (i < NSIG)
 	{
 		if (signal(i, g_originals[i]) == SIG_ERR)
 			;
 		i++;
 	}
 }
-
+/*
 void		init_shell(void)
 {
 
@@ -131,4 +122,41 @@ void		init_shell(void)
 	}
 	signal(SIGCHLD, sigchld_handler);
 }
+*/
+void		init_shell(void)
+{
+	pid_t p1;
+/*
+//	sigemptyset : fonction interdite (man 3)
+	sigemptyset(&g_original_set);
 
+	sigprocmask(SIG_BLOCK, NULL, &g_original_set);
+
+//	sigdelset : fonction interdite (man 3)
+	sigdelset(&g_original_set, SIGCHLD);
+
+	save_originals_handler();
+*/
+	g_sh_tty = STDIN_FILENO;
+	g_sh_is = isatty(g_sh_tty);
+	if (g_sh_is)
+	{
+		while (true)
+		{
+			ioctl(g_sh_tty, TIOCGPGRP, &p1);
+			g_sh_pgid = getpgrp();
+			if (p1 == g_sh_pgid)
+				break;
+			kill(-g_sh_pgid, SIGTTIN);
+		}
+		g_sh_pgid = getpid();
+		init_signal();
+		if (setpgid(g_sh_pgid, g_sh_pgid) < 0)
+		{
+			ft_putstr_fd("Couldn't put the shell in its own process group", 2);
+			exit(1);
+		}
+		ioctl(g_sh_tty, TIOCSPGRP, &g_sh_pgid);
+	}
+	signal(SIGCHLD, sigchld_handler);
+}
