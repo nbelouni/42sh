@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/05/05 18:24:39 by alallema         ###   ########.fr       */
+/*   Updated: 2017/05/05 20:04:02 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,7 +214,7 @@ void	wait_for_job(t_job *j)
 //	sigset_t	oset;
 
 //	block_signal(SIGCHLD, &set, &oset);
-	signal (SIGCHLD, SIG_DFL);
+//	signal (SIGCHLD, SIG_DFL);
 	j->notified = j->notified;
 	while (!j->notified)
 	{
@@ -224,7 +224,7 @@ void	wait_for_job(t_job *j)
 			break ;
 	}
 //	unblock_signal(&oset);
-	signal (SIGCHLD, SIG_IGN);
+//	signal (SIGCHLD, SIG_IGN);
 }
 
 /*
