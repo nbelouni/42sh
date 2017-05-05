@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/05 14:45:12 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/15 18:32:43 by alallema         ###   ########.fr       */
+/*   Updated: 2017/05/05 18:52:10 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,11 +86,13 @@ int		restore_fd(t_io *io, int dofork)
 	return (0);
 }
 
-void		save_fd(t_io *io, int type_redir)
+int			save_fd(t_io *io, int type_redir, int dofork)
 {
-	io->tab_fd[0] = dup(io->dup_target);
-	if (type_redir == DIR_L_AMP || type_redir == DIR_R_AMP)
+	if (io->dup_target >= 0 && !dofork)
+		io->tab_fd[0] = dup(io->dup_target);
+	if ((type_redir == DIR_L_AMP || type_redir == DIR_R_AMP) && !dofork)
 		io->tab_fd[1] = dup(io->dup_src);
+	return (0);
 }
 
 t_node_p	create_redir(t_tree *node_redir, t_node_p left_node)
@@ -109,7 +111,7 @@ t_node_p	create_redir(t_tree *node_redir, t_node_p left_node)
 		left = ft_atoi((node_redir->cmd)[0]);
 	io->dup_target = left;
 	set_mode_redir(node_redir, io, left);
-	save_fd(io, TOKEN(node_redir));
+//	save_fd(io, TOKEN(node_redir));
 	process = ((t_list *)left_node->data)->content;
 	insert_link_bottom(&(process->io_list), new_link(io, sizeof(*io)));
 	return (left_node);

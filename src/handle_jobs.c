@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/05/03 16:10:29 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/05 18:50:49 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -341,7 +341,9 @@ sig_t	*getOriginals();
 
 void	launch_process(t_process_p process, int dofork)
 {
-	list_iter(process->io_list, (void *)apply_redir);
+	if (list_int2(process->io_list,
+				(void *)apply_redir, dofork, process->token))
+		return ;
 	if (dofork)
 	{
 		restore_originals_handler();
@@ -369,45 +371,13 @@ t_node_p	iter_in_order(t_node_p ptr, t_list **stock)
 	return (NULL);
 }
 
-int		apply_redir(t_io *io, int dofork)
-{
-	int		pipefd[2];
-
-	if (io->flag & OPEN)
-	{
-		if (io->flag & CLOSE && access(io->str, X_OK) == -1)
-			io->dup_src = open(io->str, io->mode, DEF_FILE);
-		if (io->dup_src < 0)
-			exit(ft_print_error("21sh", ERR_NO_FILE, ERR_EXIT));
-	}
-	if (io->flag & WRITE && pipe(pipefd) != -1)
-	{
-		io->dup_src = pipefd[0];
-		write(pipefd[1], io->str, ft_strlen(io->str));
-		close(pipefd[1]);
-	}
-	if (io->flag & DUP)
-	{
-		if (dup2(io->dup_src, io->dup_target) == -1 && dofork)
-			exit(ft_print_error("21sh", ERR_BADF, ERR_EXIT));
-		else if (dup2(io->dup_src, io->dup_target) == -1 && !dofork)
-			return (ft_print_error("21sh", ERR_BADF, ERR_EXIT));
-	}
-	if (io->flag & CLOSE && io->flag ^ WRITE)
-		close(io->dup_src);
-	return (0);
-}
-
 int		do_pipe(t_process_p p1, t_process_p p2, int *io_pipe)
 {
 	t_io	*io_in[2];
 	t_io	*io_out[2];
 
 	if (pipe(io_pipe) == -1)
-	{
-		(ft_putstr_fd("42sh: error pipe \n", 2));
-		exit(-1);
-	}
+		exit(ft_print_error("21sh", ERR_PIPE, ERR_EXIT));
 	io_in[0] = new_io();
 	io_in[1] = new_io();
 	io_out[0] = new_io();
@@ -509,6 +479,8 @@ void	do_pipeline(t_job *job, t_list *pipeline)
 	dofork |= shouldfork(job, pipeline);
 	while (pipeline)
 	{
+		list_int2(((t_process_p)pipeline->content)->io_list, (void *)save_fd,
+					((t_process_p)pipeline->content)->token, dofork);
 		out = (pipeline->next)? do_pipe(pipeline->content, pipeline->next->content, io_pipe) : STDOUT_FILENO;
 		exec_simple_command(pipeline->content, job->foreground, dofork, &pgid);
 		list_iter_int(((t_process_p)pipeline->content)->io_list, (void *)restore_fd, dofork);
@@ -518,7 +490,7 @@ void	do_pipeline(t_job *job, t_list *pipeline)
 			close(in);
 		in = io_pipe[0];
 		delete_list(&(((t_process_p)pipeline->content)->io_list), &free);
-		insert_link_bottom(&job->wait_process_list, new_link(memcpy(malloc(pipeline->content_size), pipeline->content, pipeline->content_size), pipeline->content_size));
+		insert_link_bottom(&job->wait_process_list, new_link(ft_memcpy(malloc(pipeline->content_size), pipeline->content, pipeline->content_size), pipeline->content_size));
 		pipeline = pipeline->next;
 	}
 }
