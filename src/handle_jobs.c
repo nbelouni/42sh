@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/05/04 19:06:41 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/05 18:24:39 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -496,8 +496,10 @@ int		make_children(int *pgid, int foreground)
 void	exec_simple_command(t_process_p p, int fg, int dofork, int *pgid)
 {
 	if (dofork)
+	{
 		if ((p->pid = make_children(pgid, fg)))
 			return ;
+	}
 	launch_process(p, dofork);
 }
 
@@ -522,15 +524,15 @@ void	do_pipeline(t_job *job, t_list *pipeline)
 	int			in;
 	int			out;
 	int			dofork = 0;
-	int			pgid;
+	int			*pgid;
 
 	in = STDIN_FILENO;
-	pgid = job->pgid;
+	pgid = &(job->pgid);
 	dofork |= shouldfork(job, pipeline);
 	while (pipeline)
 	{
 		out = (pipeline->next)? do_pipe(pipeline->content, pipeline->next->content, io_pipe) : STDOUT_FILENO;
-		exec_simple_command(pipeline->content, job->foreground, dofork, &pgid);
+		exec_simple_command(pipeline->content, job->foreground, dofork, pgid);
 		list_iter_int(((t_process_p)pipeline->content)->io_list, (void *)restore_fd, dofork);
 		if (out != STDOUT_FILENO)
 			close(out);

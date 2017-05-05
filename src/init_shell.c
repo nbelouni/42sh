@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 13:08:51 by alallema          #+#    #+#             */
-/*   Updated: 2017/05/04 19:20:01 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/05 17:14:28 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ sigset_t		g_original_set;
 
 #define MAXJOBS 30
 
-/*static */sig_t	g_originals[ORIG_SIG_LEN];
+/*static */sig_t	g_originals[NSIG];
 //extern sig_t	*g_originals;
 
 void		block_signal(int sig, sigset_t *set, sigset_t *oset)
