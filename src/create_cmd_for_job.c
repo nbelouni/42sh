@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/23 16:03:43 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/10 22:34:48 by alallema         ###   ########.fr       */
+/*   Updated: 2017/05/05 20:59:40 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,14 +87,15 @@ char		*copy_process(t_process_p process)
 	i = 0;
 	len = 0;
 	s = NULL;
+	tmp = NULL;
 	while (process->argv && process->argv[i])
 	{
 		tmp = s;
 		s = ft_strjoin(tmp, process->argv[i]);
-		free(tmp);
+		ft_memdel((void *)&tmp);
 		tmp = s;
 		s = ft_strjoin(tmp, " ");
-		free(tmp);
+		ft_memdel((void *)&tmp);
 		i++;
 	}
 	s = ft_fix_join(s, iter_iolist_cmd(process->io_list));

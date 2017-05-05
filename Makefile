@@ -89,6 +89,7 @@ SRCS = 	ft_builtin_cd.c		\
 		expand.c			\
 		job.c				\
 		job_redir.c			\
+		apply_redir.c		\
 		is_local_var.c		\
 		ft_print.c			\
 		hash.c				\

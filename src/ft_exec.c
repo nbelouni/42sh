@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 13:08:28 by alallema          #+#    #+#             */
-/*   Updated: 2017/05/03 17:04:59 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/05 21:00:22 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ void			ft_exec(char **av)
 		if (ft_strcmp(s, "") == 0)
 			break ;
 	}
-	ft_putstr_fd("21sh: command not found: ", 2);
+	ft_putstr_fd("42sh: command not found: ", 2);
 	free(s);
 	free(s2);
 	free(envp);
