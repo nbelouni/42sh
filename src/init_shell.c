@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 13:08:51 by alallema          #+#    #+#             */
-/*   Updated: 2017/05/05 17:14:28 by alallema         ###   ########.fr       */
+/*   Updated: 2017/05/05 19:14:40 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,13 @@
 int				g_sh_tty;
 int				g_sh_is;
 pid_t			g_sh_pgid;
-sigset_t		g_original_set;
+//sigset_t		g_original_set;
 
 #define MAXJOBS 30
 
-/*static */sig_t	g_originals[NSIG];
+///*static */sig_t	g_originals[NSIG];
 //extern sig_t	*g_originals;
-
+/*
 void		block_signal(int sig, sigset_t *set, sigset_t *oset)
 {
 //	sigemptyset : fonction interdite (man 3)
@@ -76,7 +76,7 @@ void		restore_originals_handler(void)
 		i++;
 	}
 }
-/*
+
 void		init_shell(void)
 {
 
