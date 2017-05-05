@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 16:51:24 by alallema          #+#    #+#             */
-/*   Updated: 2017/05/04 16:27:08 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/05 22:40:27 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int		create_cmd(t_token **list)
 	int			ret;
 
 	ret = 1;
-	if ((*list)->prev && (PREVISCMD((*list)) || (*list)->prev->type == TARGET))
+	if ((*list)->prev && !is_separator_type((*list)->prev->type))
 		return (1);
 	tmp = ft_tokenew(CMD, NULL);
 	if ((*list)->prev)
@@ -70,7 +70,7 @@ int		sort_list_token(t_token **list, t_completion *completion, t_lst *hist)
 		if (is_dir_type(elem->type) && ft_find_fd(elem))
 			create_cmd(&elem) ? *list : (*list = elem);
 		if (ISAMP(elem) && elem->next && check_error_out(elem->next))
-			return (0);
+			return (ft_print_error("42sh", ERR_FD_AMB, ERR_NEW_CMD));
 		sort_list(elem);
 		if (elem->type == CMD && elem->prev && PREVISCMD(elem))
 			elem->type = ARG;
