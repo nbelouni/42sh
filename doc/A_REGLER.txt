@@ -1,0 +1,12 @@
+pwd >| cat -e
+pwd |> cat -e --- SEGFAULT
+echo lolilol >>| test					DONE
+echo lolilol |>> test --- SEGFAULT
+echo ls > > lol							DONE
+ls -j 2>&lol							DONE
+ls -j &2>lol --- SEGFAULT
+ls >> << EOF
+ls >> >> >> << EOF
+<< EOF --- SEGFAULT
+> << ls
+> < ls									DONE

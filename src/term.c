@@ -59,13 +59,15 @@ int			init_termios(void)
 int			close_termios(void)
 {
 	t_term			*st_term;
-	sigset_t		set,oset;
+//	sigset_t		set,oset;
 
-	block_signal(SIGTTOU, &set, &oset);
+//	block_signal(SIGTTOU, &set, &oset);
+	signal (SIGTTOU, SIG_DFL);
 	st_term = get_term();
 	st_term->old.c_lflag &= ~TOSTOP;
 	if (tcsetattr(0, TCSADRAIN, &st_term->old) == -1)
 		return (perror(__func__), -1);
-	unblock_signal(&oset);
+//	unblock_signal(&oset);
+	signal (SIGTTOU, SIG_IGN);
 	return (0);
 }

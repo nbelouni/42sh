@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/05/04 20:12:10 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/05 21:02:35 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,7 +214,8 @@ void	wait_for_job(t_job *j)
 //	sigset_t	oset;
 
 //	block_signal(SIGCHLD, &set, &oset);
-	signal (SIGCHLD, SIG_IGN);
+//	TROUVER OU SIGNAL DEPACE
+//	signal (SIGCHLD, SIG_DFL);
 	j->notified = j->notified;
 	while (!j->notified)
 	{
@@ -224,7 +225,7 @@ void	wait_for_job(t_job *j)
 			break ;
 	}
 //	unblock_signal(&oset);
-	signal (SIGCHLD, SIG_DFL);
+//	signal (SIGCHLD, SIG_IGN);
 }
 
 /*
@@ -339,6 +340,7 @@ void			mark_job_as_running(t_job *j)
 void	continue_job(t_job *j, int foreground)
 {
 	mark_job_as_running(j);
+//	PUT2("foreground : ");E(foreground);X('\n');
 	if (foreground)
 		put_job_in_foreground(j, 1);
 	else
@@ -351,7 +353,9 @@ sig_t	*getOriginals();
 
 void	launch_process(t_process_p process, int dofork)
 {
-	list_iter(process->io_list, (void *)apply_redir);
+	if (list_int2(process->io_list,
+				(void *)apply_redir, dofork, process->token))
+		return ;
 	if (dofork)
 	{
 		//init_signal();
@@ -380,45 +384,13 @@ t_node_p	iter_in_order(t_node_p ptr, t_list **stock)
 	return (NULL);
 }
 
-int		apply_redir(t_io *io, int dofork)
-{
-	int		pipefd[2];
-
-	if (io->flag & OPEN)
-	{
-		if (io->flag & CLOSE && access(io->str, X_OK) == -1)
-			io->dup_src = open(io->str, io->mode, DEF_FILE);
-		if (io->dup_src < 0)
-			exit(ft_print_error("21sh", ERR_NO_FILE, ERR_EXIT));
-	}
-	if (io->flag & WRITE && pipe(pipefd) != -1)
-	{
-		io->dup_src = pipefd[0];
-		write(pipefd[1], io->str, ft_strlen(io->str));
-		close(pipefd[1]);
-	}
-	if (io->flag & DUP)
-	{
-		if (dup2(io->dup_src, io->dup_target) == -1 && dofork)
-			exit(ft_print_error("21sh", ERR_BADF, ERR_EXIT));
-		else if (dup2(io->dup_src, io->dup_target) == -1 && !dofork)
-			return (ft_print_error("21sh", ERR_BADF, ERR_EXIT));
-	}
-	if (io->flag & CLOSE && io->flag ^ WRITE)
-		close(io->dup_src);
-	return (0);
-}
-
 int		do_pipe(t_process_p p1, t_process_p p2, int *io_pipe)
 {
 	t_io	*io_in[2];
 	t_io	*io_out[2];
 
 	if (pipe(io_pipe) == -1)
-	{
-		(ft_putstr_fd("42sh: error pipe \n", 2));
-		exit(-1);
-	}
+		exit(ft_print_error("42sh", ERR_PIPE, ERR_EXIT));
 	io_in[0] = new_io();
 	io_in[1] = new_io();
 	io_out[0] = new_io();
@@ -495,8 +467,10 @@ int		make_children(int *pgid, int foreground)
 void	exec_simple_command(t_process_p p, int fg, int dofork, int *pgid)
 {
 	if (dofork)
+	{
 		if ((p->pid = make_children(pgid, fg)))
 			return ;
+	}
 	launch_process(p, dofork);
 }
 
@@ -521,15 +495,18 @@ void	do_pipeline(t_job *job, t_list *pipeline)
 	int			in;
 	int			out;
 	int			dofork = 0;
-	int			pgid;
+	//	verifier ca
+	int			*pgid;
 
 	in = STDIN_FILENO;
-	pgid = job->pgid;
+	pgid = &(job->pgid);
 	dofork |= shouldfork(job, pipeline);
 	while (pipeline)
 	{
+		list_int2(((t_process_p)pipeline->content)->io_list, (void *)save_fd,
+					((t_process_p)pipeline->content)->token, dofork);
 		out = (pipeline->next)? do_pipe(pipeline->content, pipeline->next->content, io_pipe) : STDOUT_FILENO;
-		exec_simple_command(pipeline->content, job->foreground, dofork, &pgid);
+		exec_simple_command(pipeline->content, job->foreground, dofork, pgid);
 		list_iter_int(((t_process_p)pipeline->content)->io_list, (void *)restore_fd, dofork);
 		if (out != STDOUT_FILENO)
 			close(out);

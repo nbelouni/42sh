@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/08 20:40:53 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/08 21:09:03 by alallema         ###   ########.fr       */
+/*   Updated: 2017/05/05 22:37:28 by alallema         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int				check_error_out(t_token *elem)
 		while (elem->word[i])
 		{
 			if (ft_isdigit(elem->word[i]) == 0)
-				return (ERR_FD);
+				return (ERR_NEW_CMD);
 			i++;
 		}
 	}

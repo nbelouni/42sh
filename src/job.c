@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 13:52:27 by llaffile          #+#    #+#             */
-/*   Updated: 2017/05/04 20:33:29 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/07 16:03:41 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,6 +153,8 @@ int			is_builtin(char **args)
 		else if (!ft_strcmp(args[0], "echo"))
 			return (TRUE);
 		else if (!ft_strcmp(args[0], "cd"))
+			return (TRUE);
+		else if (!ft_strcmp(args[0], "history"))
 			return (TRUE);
 		else if (!ft_strcmp(args[0], "fg"))
 			return (TRUE);
