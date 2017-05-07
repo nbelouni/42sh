@@ -3,81 +3,80 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maissa-b <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/03/20 14:33:52 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/03/20 14:33:54 by maissa-b         ###   ########.fr       */
+/*   Created: 2017/04/26 18:13:34 by nbelouni          #+#    #+#             */
+/*   Updated: 2017/04/26 18:14:32 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "get_next_line.h"
 
-static char		*ft_join(char *tmp, char *buf)
+int			ft_sub_reloaded(t_str *s_str, char **line, int const fd)
 {
-	int			i;
-	int			len;
-	char		*s;
+	char			*tmp;
 
-	i = 0;
-	if (tmp == NULL && buf == NULL)
-		return (NULL);
-	len = ft_strlen(tmp) + ft_strlen(buf);
-	if (!(s = ft_memalloc(sizeof(char *) * (len + 1))))
-		return (NULL);
-	while (tmp && tmp[i])
-	{
-		s[i] = tmp[i];
-		i++;
-	}
-	free(tmp);
 	tmp = NULL;
-	while (*buf && i < len)
+	if (s_str->fd != fd)
 	{
-		s[i] = *buf;
-		i++;
-		buf++;
+		s_str->i = 0;
+		s_str->j = 0;
+		s_str->fd = fd;
 	}
-	s[i] = '\0';
-	return (s);
+	while (s_str->s[s_str->i])
+	{
+		if (s_str->s[s_str->i] == '\n')
+		{
+			tmp = ft_strsub(s_str->s, s_str->j, (s_str->i - s_str->j));
+			*line = ft_free_and_dup(*line, tmp);
+			ft_strdel(&tmp);
+			s_str->i++;
+			s_str->j = s_str->i;
+			return (1);
+		}
+		s_str->i++;
+	}
+	return (0);
 }
 
-static void		ft_cpytmp(char *tmp, char **line)
+static int	exec_get_next_line(t_str *s_str, char **s, int const fd, char *buf)
 {
-	int			i;
-	int			len;
+	char			*tmp;
 
-	i = 0;
-	len = ft_strlen(tmp);
-	while (tmp[i] && tmp[i] != '\n')
-		i++;
-	if (tmp[i] == '\n')
-	{
-		*line = ft_memalloc(sizeof(char *) * ft_strlen(*line) + i + 1);
-		*line = ft_strncpy(*line, (const char *)tmp, (size_t)i);
-	}
-	if (len - i != 0)
-		tmp = ft_strncpy(tmp, (const char *)&tmp[i + 1], (size_t)len - i);
-	else
-		free(tmp);
 	tmp = NULL;
-}
-
-int				get_next_line(const int fd, char **line)
-{
-	char		buf[BUFF_SIZE + 1];
-	static char	*tmp;
-	int			ret;
-
-	ret = read(fd, &buf, BUFF_SIZE);
-	buf[ret] = '\0';
-	if (fd < 0 || ret < 0 || BUFF_SIZE <= 0 || !line)
+	while ((s_str->read = read(fd, buf, BUFF_SIZE)) > 0)
+	{
+		buf[s_str->read] = '\0';
+		tmp = s_str->s;
+		s_str->s = ft_strjoin(tmp, buf);
+		if (tmp)
+			ft_strdel(&tmp);
+	}
+	if (s_str->read == -1)
 		return (-1);
-	if (ret == 0 && ft_strcmp(tmp, "") == 0)
-		return (0);
-	tmp = ft_join(tmp, buf);
-	if (!ft_strchr(tmp, '\n'))
-		get_next_line(fd, line);
-	else
-		ft_cpytmp(tmp, line);
-	return (1);
+	if (ft_sub_reloaded(s_str, s, fd) == 1)
+		return (1);
+	tmp = ft_strsub(s_str->s, s_str->j, (s_str->i - s_str->j));
+	*s = ft_free_and_dup(*s, tmp);
+	ft_strdel(&tmp);
+	return (0);
+}
+
+int			get_next_line(int const fd, char **line)
+{
+	int				ret;
+	char			buf[BUFF_SIZE + 1];
+	static t_str	s_str;
+
+	if (BUFF_SIZE <= 0 || !line || fd < 0)
+		return (-1);
+	if (!s_str.s)
+		s_str.fd = fd;
+	if (!s_str.s || s_str.fd != fd)
+	{
+		if ((s_str.s = (char *)malloc(sizeof(s_str.s))))
+			s_str.s[0] = '\0';
+	}
+	ret = exec_get_next_line(&s_str, line, fd, buf);
+	return (ret);
 }

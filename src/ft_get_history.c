@@ -64,7 +64,7 @@ t_lst	*ft_histfile_to_histlist(t_lst **histlist, int fd)
 	buf = NULL;
 	while (get_next_line(fd, &buf) > 0)
 	{
-		if (ft_strlen(buf) < BUFF_SIZE)
+		if (buf && ft_strlen(buf) < BUFF_SIZE)
 		{
 			if ((elem = ft_init_elem()) == NULL)
 				return (NULL);
@@ -117,13 +117,13 @@ t_lst	*ft_get_history(t_lst *hist, char *filename)
 		if ((hist = ft_init_list()) == NULL)
 			return (NULL);
 	}
+	if ((lstat(filename, &st)) == -1)
+		return (hist);
 	if ((fd = open(filename, O_RDWR | O_CREAT, 0777)) == -1)
 	{
 		ft_print_error(filename, ERR_NO_ACCESS, -1);
 		return (hist);
 	}
-	if ((lstat(filename, &st)) == -1)
-		return (hist);
 	if (st.st_size && st.st_size > 0)
 	{
 		if ((ft_get_histfile_content(hist, fd)) == ERR_EXIT)
