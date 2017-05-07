@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/26 18:12:03 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/26 18:12:38 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/07 20:08:17 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # define UNSET_OPT			"fv"
 # define EXPORT_OPT			"p"
 # define HIST_OPTS			"cpsdanrw"
+# define ECHO_OPT			"n"
 
 # define HIST_OPT_C			99
 # define HIST_OPT_P			112

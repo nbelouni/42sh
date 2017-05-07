@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 16:51:24 by alallema          #+#    #+#             */
-/*   Updated: 2017/05/05 22:40:27 by alallema         ###   ########.fr       */
+/*   Updated: 2017/05/07 20:41:11 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,20 +33,24 @@ int		ft_find_fd(t_token *list)
 int		create_cmd(t_token **list)
 {
 	t_token		*tmp;
+	t_token		*tmp2;
 	int			ret;
 
 	ret = 1;
 	if ((*list)->prev && !is_separator_type((*list)->prev->type))
 		return (1);
-	tmp = ft_tokenew(CMD, NULL);
+	tmp = ft_tokenew(CMD, ft_strdup("echo"));
+	tmp2 = ft_tokenew(ARG, ft_strdup("-n"));
+	tmp->next = tmp2;
+	tmp2->prev = tmp;
 	if ((*list)->prev)
 	{
 		(*list)->prev->next = tmp;
 		tmp->prev = (*list)->prev;
 		ret = 0;
 	}
-	(*list)->prev = tmp;
-	tmp->next = (*list);
+	(*list)->prev = tmp2;
+	tmp2->next = (*list);
 	return (ret);
 }
 
@@ -76,7 +80,8 @@ int		sort_list_token(t_token **list, t_completion *completion, t_lst *hist)
 			elem->type = ARG;
 		if (elem->type == CMD)
 			elem = is_local_var(elem);
-		if (elem->type == DL_DIR && elem->next && elem->next->type == TARGET)
+		if (elem->type == DL_DIR && elem->next && elem->next->type == TARGET &&
+		(!elem->prev || !is_dir_type(elem->prev->type)))
 		{
 			if (here_doc(elem->next, completion, hist) == ERR_NEW_CMD)
 				return (ERR_NEW_CMD);
