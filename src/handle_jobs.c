@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/05/05 21:02:35 by alallema         ###   ########.fr       */
+/*   Updated: 2017/05/07 17:22:27 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,7 +214,6 @@ void	wait_for_job(t_job *j)
 //	sigset_t	oset;
 
 //	block_signal(SIGCHLD, &set, &oset);
-//	TROUVER OU SIGNAL DEPACE
 //	signal (SIGCHLD, SIG_DFL);
 	j->notified = j->notified;
 	while (!j->notified)
@@ -495,7 +494,6 @@ void	do_pipeline(t_job *job, t_list *pipeline)
 	int			in;
 	int			out;
 	int			dofork = 0;
-	//	verifier ca
 	int			*pgid;
 
 	in = STDIN_FILENO;

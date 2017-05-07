@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/06 16:52:53 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/08 17:58:03 by alallema         ###   ########.fr       */
+/*   Updated: 2017/05/07 17:20:25 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@
 ** iter sur la pipeline et join les commandes pour les retourner a l'iterateur
 */
 
+//	PROBLEME DE LEAKS DANS CETTE FONCTION,
+//	COMPORTEMENT INDETERMINE SI FREE PROPRE
 static char		*listiter_cmd(t_list *lst, char *(*f)(t_list *elem), int i)
 {
 	char	*s;
@@ -37,10 +39,12 @@ static char		*listiter_cmd(t_list *lst, char *(*f)(t_list *elem), int i)
 		if (lst->next && i)
 		{
 			s = ft_strjoin(tmp, "| ");
-			free(tmp);
+			ft_strdel(&tmp);
 		}
 		lst = lst->next;
 	}
+	//
+	ft_strdel(&s);
 	return (s);
 }
 
@@ -84,8 +88,9 @@ char			*iter_cmd(t_node_p process_tree)
 		else
 			tmp = ft_strdup("&& ");
 		s = ft_fix_join(iter_cmd(process_tree->left), tmp);
-		tmp = s;
-		s = ft_fix_join(tmp, iter_cmd(process_tree->right));
+		s = ft_fix_join(s, iter_cmd(process_tree->right));
+		//
+		ft_strdel(&s);
 	}
 	return (s);
 }

@@ -1,4 +1,4 @@
-pwd >| cat -e
+pwd >| cat -e 							A GERER SI TMP
 pwd |> cat -e --- SEGFAULT
 echo lolilol >>| test					DONE
 echo lolilol |>> test --- SEGFAULT

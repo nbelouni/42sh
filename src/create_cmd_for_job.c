@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/23 16:03:43 by alallema          #+#    #+#             */
-/*   Updated: 2017/05/05 20:59:40 by alallema         ###   ########.fr       */
+/*   Updated: 2017/05/07 17:07:02 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,10 @@ char		*ft_fix_join(char *s, char *buf)
 
 	tmp = s;
 	s = ft_strjoin(tmp, buf);
-	free(tmp);
-	free(buf);
+	if (tmp)
+		ft_strdel(&tmp);
+	if (buf)
+		ft_strdel(&buf);
 	return (s);
 }
 
