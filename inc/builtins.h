@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/26 18:11:47 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/26 18:11:50 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/08 18:41:04 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ int		ft_builtin_echo(t_core *core, char **args);
 */
 
 int		ft_builtin_env(t_core *core, char **args);
+int		ft_env_binary(char **args);
 
 /*
 **	ft_builtin_exit.c

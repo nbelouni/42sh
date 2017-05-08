@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/10 13:52:27 by llaffile          #+#    #+#             */
-/*   Updated: 2017/05/08 16:00:47 by maissa-b         ###   ########.fr       */
+/*   Updated: 2017/05/08 18:40:10 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,7 @@ int			is_builtin(char **args)
 	{
 		if (!ft_strcmp(args[0], "exit"))
 			return (TRUE);
-		else if (!ft_strcmp(args[0], "env"))
+		else if (!ft_strcmp(args[0], "env") && !ft_env_binary(args))
 			return (TRUE);
 		else if (!ft_strcmp(args[0], "setenv"))
 			return (TRUE);
