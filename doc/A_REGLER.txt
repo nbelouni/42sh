@@ -10,7 +10,7 @@ pwd >| cat -e 							A GERER SI TMP
 
 echo lolilol |>> test --- SEGFAULT
 
-ls -j &2>lol --- SEGFAULT
+ls -j &2>lol 							DONE
 
 << EOF --- SEGFAULT
 

@@ -18,7 +18,7 @@
 # define ISAMP(x) (x->type == DIR_L_AMP || x->type == DIR_R_AMP)
 # define NEXTISCMD(x) (x->next->type == CMD || x->next->type == ARG)
 # define PREVISCMD(x) (x->prev->type == CMD || x->prev->type == ARG)
-# define ISREDIR(x) ((x > START && x < OR) || (x > AND && x < DIR_L_AMP))
+# define ISREDIR(x) ((x > START && x < AMP) || (x > AND && x < DIR_L_AMP))
 
 typedef struct		s_pt
 {
