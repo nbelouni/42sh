@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/03 14:15:26 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/05/03 16:41:01 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/08 17:26:34 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,19 +165,25 @@ char	**add_in_args(char **args, t_reg_path *reg_args)
 		return (NULL);
 	i = -1;
 	j = -1;
-	while (++i < (int)ft_tablen(args))
+	while (args[++i])
 	{
 		if (args[i][0])
+		{	
 			if (!(new[++j] = ft_strdup(args[i])))
 				return (NULL);
+		}
 	}
 	tmp = reg_args;
 	while (tmp)
 	{
-		if (!(new[++j] = ft_strdup(tmp->out)))
-			return (NULL);
+		if (tmp->out[0])
+		{
+			if (!(new[++j] = ft_strdup(tmp->out)))
+				return (NULL);
+		}
 		tmp = tmp->next;
 	}
+	new[j + 1] = NULL;
 	return (new);
 }
 
@@ -198,7 +204,6 @@ int		edit_cmd(char ***args, t_core *core)
 	{
 		if (!(tmp = add_in_args(*args, new_args)))
 			return (ERR_EXIT);
-		ft_tabdel(*args);
 		*args = tmp;
 		ft_reg_pathdestroy(&new_args);
 	}

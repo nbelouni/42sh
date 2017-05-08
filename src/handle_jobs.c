@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/05/07 17:22:27 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/08 17:12:56 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -361,7 +361,7 @@ void	launch_process(t_process_p process, int dofork)
 //		restore_originals_handler();
 				signal(SIGTTOU, SIG_IGN);
 	}
-	ft_check_exec(&process->argv);
+	ft_check_exec(process);
 	if (dofork)
 		exit(1);
 	else

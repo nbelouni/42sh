@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 18:19:58 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/05/05 18:39:13 by alallema         ###   ########.fr       */
+/*   Updated: 2017/05/08 17:32:54 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,5 +53,6 @@
 # define ERR_PIPE				": Error pipe"
 # define ERR_FORK				": Error fork"
 # define ERR_IS_DIR				": Is a directory"
+# define ERR_AMBIGUOUS_RDIR		"*?[] : ambiguous redirect"
 
 #endif

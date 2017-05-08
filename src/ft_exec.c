@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/15 13:08:28 by alallema          #+#    #+#             */
-/*   Updated: 2017/05/07 20:31:52 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/08 17:14:53 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,17 +113,17 @@ void			ft_exec(char **av)
 ** sert a retourner si la cmd c'est un builtin
 */
 
-int				ft_check_exec(char ***cmd)
+int				ft_check_exec(t_process *process)
 {
 	int			ret;
 
 	ret = TRUE;
-	if (edit_cmd(cmd, g_core) == ERR_EXIT)
+	if (edit_cmd(&(process->argv), g_core) == ERR_EXIT)
 		return (ERR_EXIT);
-	if ((ret = parse_builtins(g_core, *cmd[0], *cmd + 1)) == 1)
+	if ((ret = parse_builtins(g_core, process->argv[0], process->argv + 1)) == 1)
 	{
-		if (*cmd && *cmd[0])
-			ft_exec(*cmd);
+		if (process->argv && process->argv[0])
+			ft_exec(process->argv);
 	}
 	return (ret);
 }

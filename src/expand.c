@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/18 20:39:17 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/05/03 20:50:00 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/08 17:25:50 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,33 +63,4 @@ void	expand_args(t_token **list, t_token **elem)
 		*elem = ((*elem)->prev) ? tail : *list;
 		clean_elem(&to_del);
 	}
-}
-
-int		regexp_in_tree(t_tree *node, t_core *env)
-{
-	if (!node)
-	{
-		PUT2("\n node = NULL");
-		return (0);
-	}
-	if (node->left)
-	{
-		PUT2(" \n node->left");
-		print_debug_ast(node->left);
-	}
-	PUT2("\n node ======>>>>>> ");
-	if (node->token == CMD)
-	{
-		print_tab(node->cmd);
-		if (edit_cmd(&(node->cmd), env) == ERR_EXIT)
-			return (ERR_EXIT);
-	}
-	else
-		PUT2(node->token_or->word);
-	if (node->right)
-	{
-		PUT2(" \n node->right");
-		print_debug_ast(node->right);
-	}
-	return (0);
 }
