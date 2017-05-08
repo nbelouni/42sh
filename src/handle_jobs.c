@@ -214,7 +214,7 @@ void	wait_for_job(t_job *j)
 //	sigset_t	oset;
 
 //	block_signal(SIGCHLD, &set, &oset);
-//	signal (SIGCHLD, SIG_DFL);
+	signal (SIGCHLD, SIG_DFL);
 	j->notified = j->notified;
 	while (!j->notified)
 	{
@@ -224,7 +224,7 @@ void	wait_for_job(t_job *j)
 			break ;
 	}
 //	unblock_signal(&oset);
-//	signal (SIGCHLD, SIG_IGN);
+	signal (SIGCHLD, SIG_IGN);
 }
 
 /*
