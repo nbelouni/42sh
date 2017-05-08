@@ -147,4 +147,6 @@ int		ft_builtin_unset(t_core *core, char **args);
 int		ft_unsetenv(t_lst *env, char *var);
 int		ft_builtin_unsetenv(t_core *core, char **args);
 
+int		ft_builtin_locale(t_core *core, char **args);
+
 #endif

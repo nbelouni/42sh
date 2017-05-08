@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/30 22:50:44 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/30 22:53:50 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/08 15:55:27 by dogokar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static int	ft_truncate_histfile2(t_lst *tmp_hist, int n, int fd)
 	tmp_elem = tmp_hist->head;
 	while (tmp_elem != NULL)
 	{
-		if (--i <= 0)
+		if (--i < 0)
 			ft_putendl_fd(tmp_elem->name, fd);
 		tmp_elem = tmp_elem->next;
 	}
@@ -83,22 +83,17 @@ static int	ft_truncate_histfile2(t_lst *tmp_hist, int n, int fd)
 int			ft_truncate_histfile(char *filename, int n)
 {
 	int		fd;
-	t_lst	*tmp_hist;
+	t_lst	*tmp;
 
-	tmp_hist = NULL;
-	if ((tmp_hist = ft_get_history(tmp_hist, filename)) == NULL)
+	tmp = NULL;
+	if ((tmp = ft_get_history(tmp, filename)) == NULL)
 		return (ERR_EXIT);
-	if (tmp_hist->head == NULL)
+	if (!tmp->head || (fd = open(filename, O_RDWR | O_TRUNC | O_APPEND)) == -1)
 	{
-		free(tmp_hist);
+		ft_del_list(tmp);
 		return (ERR_NEW_CMD);
 	}
-	if ((fd = open(filename, O_RDWR | O_TRUNC | O_APPEND)) == -1)
-	{
-		ft_del_list(tmp_hist);
-		return (ERR_NEW_CMD);
-	}
-	ft_truncate_histfile2(tmp_hist, n, fd);
+	ft_truncate_histfile2(tmp, n, fd);
 	close(fd);
 	return (0);
 }

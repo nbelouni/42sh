@@ -124,7 +124,7 @@ SRCS = 	ft_builtin_cd.c		\
 		combine_cmd.c		\
 		edit_history.c		\
 		extra_builtins.c	\
-		ft_check_env_fork.c	
+		ft_check_env_fork.c	\
 
 SRCC = $(addprefix $(SDIR),$(SRCS))
 

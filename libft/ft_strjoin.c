@@ -6,7 +6,7 @@
 /*   By: nbelouni <nbelouni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/06 01:40:01 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/02/21 19:20:25 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/08 15:50:37 by dogokar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,12 @@ char		*ft_strjoin(char const *s1, char const *s2)
 		return (NULL);
 	else if (!s1)
 	{
-		if (!(new = (char *)malloc(sizeof(char) * ft_strlen(s2) + 1)))
+		if (!(new = (char *)malloc(sizeof(char) * ft_strlen(s2) + 2)))
 			return (NULL);
 	}
 	else if (!s2)
 	{
-		if (!(new = (char *)malloc(sizeof(char) * ft_strlen(s1) + 1)))
+		if (!(new = (char *)malloc(sizeof(char) * ft_strlen(s1) + 2)))
 			return (NULL);
 	}
 	else

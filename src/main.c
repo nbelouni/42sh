@@ -36,6 +36,7 @@ static t_builtin_array g_builtin_array[] =
 	{"jobs", &ft_builtin_jobs},
 	{"fg", &ft_builtin_fg},
 	{"bg", &ft_builtin_bg},
+	{"loc", &ft_builtin_locale},
 	{NULL, NULL}
 };
 
@@ -112,7 +113,7 @@ int 	main(int argc, char **argv, char **envp)
 				return (-1);
 			ret_subs = bang_substitution(&(g_core->buf->final_line), g_core);
 			if ((ft_cmd_to_history(g_core->hist, g_core->buf->final_line)) == ERR_EXIT)
-				return (ft_print_error("21sh: ", ERR_MALLOC, ERR_EXIT));
+				return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
 			ret = parse_buf(&list, g_core->buf->final_line, &completion, g_core->hist);
 			if (ret > 0 && list && ret_subs == 0)
 			{
@@ -120,7 +121,7 @@ int 	main(int argc, char **argv, char **envp)
 				ast = NULL;
 				if ((ret = ft_check_history_var(g_core)) == ERR_EXIT)
 				{
-					return (ft_print_error("21sh: ", ERR_MALLOC, ERR_EXIT));
+					return (ft_print_error("42sh: ", ERR_MALLOC, ERR_EXIT));
 				}
 				ft_push_ast(list, &ast);
 				export_job(ast, &job_list_bis);

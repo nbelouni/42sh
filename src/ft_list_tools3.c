@@ -40,6 +40,8 @@ void		ft_extract_elem(t_elem **elem, t_lst *lst)
 		lst->tail = NULL;
 		lst->head = NULL;
 	}
+	(*elem)->next = NULL;
+	(*elem)->prev = NULL;
 }
 
 /*
