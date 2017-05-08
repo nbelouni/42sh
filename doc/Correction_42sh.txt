@@ -152,3 +152,4 @@ Navigation dans la pagination
 On peut naviguer dans la pagination avec shift+ PAGE UP / PAGE DOWN
 
 Yes No
+
