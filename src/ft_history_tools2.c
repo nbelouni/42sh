@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/30 22:50:44 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/05/08 15:55:27 by dogokar          ###   ########.fr       */
+/*   Updated: 2017/05/08 16:18:10 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int			ft_truncate_histfile(char *filename, int n)
 	tmp = NULL;
 	if ((tmp = ft_get_history(tmp, filename)) == NULL)
 		return (ERR_EXIT);
-	if (!tmp->head || (fd = open(filename, O_RDWR | O_TRUNC | O_APPEND)) == -1)
+	if (!tmp->head || (fd = open(filename, O_RDWR | O_TRUNC | O_APPEND, 0666)) == -1)
 	{
 		ft_del_list(tmp);
 		return (ERR_NEW_CMD);

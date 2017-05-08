@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/26 18:06:30 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/05/03 15:14:02 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/08 16:18:39 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,22 +82,26 @@ int			ft_histlist_to_histfile(t_lst **hist, int fd)
 int			ft_check_histfile(t_lst *hist, char *filename)
 {
 	int		fd;
+	int		ret;
 
-	if ((fd = open(filename, O_CREAT | O_EXCL)) == ERR_NEW_CMD)
+	if ((fd = open(filename, O_CREAT | O_EXCL, 0666)) == ERR_NEW_CMD)
 	{
-		fd = open(filename, O_RDWR | O_TRUNC);
+		fd = open(filename, O_RDWR | O_TRUNC, 0666);
 	}
 	else
 	{
-		fd = open(filename, O_RDWR | O_CREAT);
+		fd = open(filename, O_RDWR | O_CREAT, 0666);
 	}
 	if (fd == ERR_NEW_CMD)
 	{
-		return (ERR_NEW_CMD);
+		ret = ERR_NEW_CMD;
 	}
-	ft_histlist_to_histfile(&hist, fd);
+	else
+	{
+		ret = ft_histlist_to_histfile(&hist, fd);
+	}
 	close(fd);
-	return (0);
+	return (ret);
 }
 
 /*

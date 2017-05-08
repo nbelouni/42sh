@@ -18,10 +18,10 @@
 
 int			ft_print_histopt_err(char c)
 {
-	write(2, "history: ", 9);
+	ft_putstr_fd("history: ", 2);
 	write(2, &c, 1);
-	write(2, ": invalid option \nhistory: usage: history [-c] [-d offset] [n] \
-or history -awrn [filename] or history -ps arg [arg...]\n", 121);
+	ft_putstr_fd(": invalid option \nhistory: usage: history [-c] [-d offset]\
+[n] or history -awrn [filename] or history -ps arg [arg...]\n", 2);
 	return (-1);
 }
 

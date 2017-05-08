@@ -68,7 +68,7 @@ t_lst	*ft_histfile_to_histlist(t_lst **histlist, int fd)
 		{
 			if ((elem = ft_init_elem()) == NULL)
 				return (NULL);
-			if ((elem->name = (buf)) == NULL)
+			if ((elem->name = ft_strdup(buf)) == NULL)
 			{
 				(buf) ? ft_strdel(&buf) : 0;
 				ft_del_elem(&elem, *histlist);
@@ -77,9 +77,7 @@ t_lst	*ft_histfile_to_histlist(t_lst **histlist, int fd)
 			elem->is_appended = 1 + ft_char_replace(elem->name, '\t', ' ');
 			ft_insert_elem(elem, *histlist);
 		}
-		else
-			(buf) ? ft_strdel(&buf) : 0;
-		buf = NULL;
+		(buf) ? ft_strdel(&buf) : 0;
 	}
 	(buf) ? ft_strdel(&buf) : 0;
 	return (*histlist);

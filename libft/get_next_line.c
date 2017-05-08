@@ -74,6 +74,8 @@ int			get_next_line(int const fd, char **line)
 		s_str.fd = fd;
 	if (!s_str.s || s_str.fd != fd)
 	{
+		if (s_str.s)
+			ft_strdel(&(s_str.s));
 		if ((s_str.s = (char *)malloc(sizeof(s_str.s))))
 			s_str.s[0] = '\0';
 	}

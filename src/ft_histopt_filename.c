@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/26 18:07:07 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/05/03 15:14:02 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/08 16:17:33 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int			ft_histopt_n(t_core *core, char *filename)
 
 	if ((filename = ft_check_hist_filename(core, filename)) == NULL)
 		return (ERR_NEW_CMD);
-	if ((fd = open(filename, O_RDWR)) == -1)
+	if ((fd = open(filename, O_RDWR, 0666)) == -1)
 		return (ft_print_error("history", ERR_NO_ACCESS, ERR_NEW_CMD));
 	buf = NULL;
 	while (get_next_line(fd, &buf) > 0)
@@ -67,7 +67,7 @@ int			ft_histopt_a(t_core *core, char *filename)
 	fd = 0;
 	if ((filename = ft_check_hist_filename(core, filename)) == NULL)
 		return (ERR_NEW_CMD);
-	if ((fd = open(filename, O_RDWR | O_CREAT | O_APPEND)) == -1)
+	if ((fd = open(filename, O_RDWR | O_CREAT | O_APPEND, 0666)) == -1)
 		return (ft_print_error("history", ERR_NO_ACCESS, ERR_NEW_CMD));
 	tmp = core->hist->head;
 	while (tmp != NULL)
