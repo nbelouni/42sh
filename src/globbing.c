@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/03 14:15:26 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/05/03 16:41:01 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/08 20:06:16 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,7 +198,6 @@ int		edit_cmd(char ***args, t_core *core)
 	{
 		if (!(tmp = add_in_args(*args, new_args)))
 			return (ERR_EXIT);
-		ft_tabdel(*args);
 		*args = tmp;
 		ft_reg_pathdestroy(&new_args);
 	}

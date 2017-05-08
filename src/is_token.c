@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/12 18:15:50 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/05/03 18:22:04 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/08 20:06:57 by nbelouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ int		count_prev_char(char *s, int i, char c)
 {
 	int len;
 
+	if (i >= (int)ft_strlen(s))
+		return (0);
 	len = 0;
 	while (i - len >= 0 && s[i - len] == c)
 	{
