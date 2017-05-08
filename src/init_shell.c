@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 13:08:51 by alallema          #+#    #+#             */
-/*   Updated: 2017/04/13 21:15:28 by llaffile         ###   ########.fr       */
+/*   Updated: 2017/05/08 15:39:21 by maissa-b         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void		save_originals_handler(void)
 	i = 1;
 	while (i < NSIG)
 	{
-		if ((g_originals[i] = signal(i, SIG_IGN)) == SIG_ERR)
+		if ((g_originals[i] = signal(i, SIG_DFL)) == SIG_ERR)
 			g_originals[i] = NULL;
 		signal(i, g_originals[i]);
 		i++;
