@@ -46,7 +46,7 @@ int		is_separator(char *s, int i)
 {
 	if (i == 0 || count_prev_char(s, i - 1, '\\') % 2 == 0)
 	{
-		if (s[i] == '|' || s[i] == ';')
+		if (s[i] == '|' || s[i] == ';' || s[i] == '&')
 			return (1);
 		if (i + 1 < (int)ft_strlen(s) &&
 		(!ft_strncmp(s + i, "||", 2) || !ft_strncmp(s + i, "&&", 2)))

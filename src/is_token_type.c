@@ -14,7 +14,7 @@
 
 int			is_separator_type(int type)
 {
-	if (type == DOT || type == PIPE || type == OR || type == AND)
+	if (type == DOT || type == PIPE || type == OR || type == AND || type == AMP)
 		return (1);
 	return (0);
 }
