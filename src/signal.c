@@ -53,10 +53,6 @@ void		sigchld_handler(int sigchld)
 
 void		get_sigint(int sig)
 {
-	int status;
-	int pid;
-
-	pid = waitpid(-1, &status, WUNTRACED);
 	if (sig == SIGINT)
 	{
 		m_right(calc_len(g_core->buf, END));

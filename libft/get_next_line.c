@@ -6,7 +6,7 @@
 /*   By: nbelouni <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/26 18:13:34 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/04/26 18:14:32 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/08 17:30:49 by dogokar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int			get_next_line(int const fd, char **line)
 	if (!s_str.s || s_str.fd != fd)
 	{
 		if (s_str.s)
-			ft_strdel(&(s_str.s));
+			ft_strdel(&s_str.s);
 		if ((s_str.s = (char *)malloc(sizeof(s_str.s))))
 			s_str.s[0] = '\0';
 	}
