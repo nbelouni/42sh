@@ -6,7 +6,7 @@
 /*   By: maissa-b <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/07 19:13:35 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/04/30 17:04:32 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/09 09:45:04 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static int		exec_job_bg(t_job *job)
 {
 	if (job == NULL)
 		return (-1);
-	if (job_is_stopped(job) && job->foreground)
+	if (job_is_stopped(job))
 	{
 		job->foreground = 0;
 		continue_job(job, job->foreground); // continue_job(j);

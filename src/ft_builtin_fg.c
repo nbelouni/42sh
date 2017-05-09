@@ -6,20 +6,21 @@
 /*   By: maissa-b <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/07 19:23:30 by maissa-b          #+#    #+#             */
-/*   Updated: 2017/04/30 17:04:51 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/09 09:32:13 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "42sh.h"
 
+void		put_job_in_foreground(t_job *j, int cont);
 
 static int	exec_job_fg(t_job *job)
 {
+	job->foreground = 1;
 	if (job_is_stopped(job))
-	{
-		job->foreground = 1;
 		continue_job(job, job->foreground); // continue_job(j);
-	}
+	else
+		put_job_in_foreground(job, 0);
 	return (0);
 }
 

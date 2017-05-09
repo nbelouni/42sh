@@ -6,7 +6,7 @@
 /*   By: llaffile <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 18:15:02 by llaffile          #+#    #+#             */
-/*   Updated: 2017/05/08 17:12:56 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/09 10:12:55 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,6 @@ void	sigchldhandler(int sig)
 /*
    void	print_process(t_process_p process, char *func)
    {
-   dprintf(2, "In %s\n", func);
-   dprintf(2, "[PROCESS]\n");
-   dprintf(2, "\tself: <%p>\n", process);
-   dprintf(2, "\tpid: <%d>\n", process->pid);
-   dprintf(2, "\tcompleted: <%d>\tstopped: <%d>\tstatus: <%d>\n", process->completed, process->stopped, process->status);
    }
 */
 extern	t_list	*g_job_list;
@@ -210,11 +205,10 @@ void	wait_for_job(t_job *j)
 {
 	int			status;
 	pid_t		pid;
-//	sigset_t	set;
-//	sigset_t	oset;
+	sigset_t	set;
+	sigset_t	oset;
 
-//	block_signal(SIGCHLD, &set, &oset);
-	signal (SIGCHLD, SIG_DFL);
+	block_signal(SIGCHLD, &set, &oset);
 	j->notified = j->notified;
 	while (!j->notified)
 	{
@@ -223,8 +217,7 @@ void	wait_for_job(t_job *j)
 				|| job_is_completed(j))
 			break ;
 	}
-//	unblock_signal(&oset);
-	signal (SIGCHLD, SIG_IGN);
+	unblock_signal(&oset);
 }
 
 /*
@@ -289,12 +282,11 @@ static void		put_job_in_background(t_job *j, int cont)
 			perror("kill (SIGCONT)");
 }
 
-static void		put_job_in_foreground(t_job *j, int cont)
+void		put_job_in_foreground(t_job *j, int cont)
 {
 	if (!(j->flag & WAIT))
 		return ;
 	last_job = j;
-
 	ioctl(g_sh_tty, TIOCSPGRP, &(j->pgid));
 //	tcsetpgrp(g_sh_tty, j->pgid);
 
@@ -339,7 +331,6 @@ void			mark_job_as_running(t_job *j)
 void	continue_job(t_job *j, int foreground)
 {
 	mark_job_as_running(j);
-//	PUT2("foreground : ");E(foreground);X('\n');
 	if (foreground)
 		put_job_in_foreground(j, 1);
 	else
@@ -480,7 +471,7 @@ int		shouldfork(t_job *j, t_list *pipeline)
 
 	dofork = 0;
 	p = pipeline->content;
-	if (j->foreground == 0 || pipeline->next || !(p->flag & BUILTIN))
+	if (pipeline->next || !(p->flag & BUILTIN))
 	{
 		dofork = 1;
 		j->flag = WAIT;
@@ -494,17 +485,17 @@ void	do_pipeline(t_job *job, t_list *pipeline)
 	int			in;
 	int			out;
 	int			dofork = 0;
-	int			*pgid;
+	int			pgid;
 
 	in = STDIN_FILENO;
-	pgid = &(job->pgid);
+	pgid = job->pgid;
 	dofork |= shouldfork(job, pipeline);
 	while (pipeline)
 	{
 		list_int2(((t_process_p)pipeline->content)->io_list, (void *)save_fd,
 					((t_process_p)pipeline->content)->token, dofork);
 		out = (pipeline->next)? do_pipe(pipeline->content, pipeline->next->content, io_pipe) : STDOUT_FILENO;
-		exec_simple_command(pipeline->content, job->foreground, dofork, pgid);
+		exec_simple_command(pipeline->content, job->foreground, dofork, &job->pgid);
 		list_iter_int(((t_process_p)pipeline->content)->io_list, (void *)restore_fd, dofork);
 		if (out != STDOUT_FILENO)
 			close(out);
@@ -515,6 +506,7 @@ void	do_pipeline(t_job *job, t_list *pipeline)
 		insert_link_bottom(&job->wait_process_list, new_link(ft_memcpy(malloc(pipeline->content_size), pipeline->content, pipeline->content_size), pipeline->content_size));
 		pipeline = pipeline->next;
 	}
+//	job->pgid = pgid;
 }
 t_process_p	new_process(char **argv);
 //extern int gc;
@@ -533,6 +525,7 @@ void	launch_job(t_job *j)
 		{
 			PUSH(&(j->wait_process_list), new_process(NULL));
 			((t_process_p)TOP(j->wait_process_list))->pid = pid;
+			j->flag = WAIT;
 			return ;
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: maissa-b <maissa-b@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/01 17:09:30 by nbelouni          #+#    #+#             */
-/*   Updated: 2017/05/03 17:02:41 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/09 10:40:35 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,12 @@ typedef struct		s_builtin_array
 /*
 **	ft_default_set.c
 */
+
+#define	msigaddset(set, signo)	(*(set) |= 1 << ((signo) - 1), 0)
+#define	msigdelset(set, signo)	(*(set) &= ~(1 << ((signo) - 1)), 0)
+#define	msigemptyset(set)	(*(set) = 0, 0)
+#define	msigfillset(set)		(*(set) = ~(sigset_t)0, 0)
+#define	msigismember(set, signo)	((*(set) & (1 << ((signo) - 1))) != 0)
 
 
 int					g_sh_tty;

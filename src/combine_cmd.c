@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/06 16:52:53 by alallema          #+#    #+#             */
-/*   Updated: 2017/05/07 17:20:25 by nbelouni         ###   ########.fr       */
+/*   Updated: 2017/05/09 09:25:19 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static char		*listiter_cmd(t_list *lst, char *(*f)(t_list *elem), int i)
 		lst = lst->next;
 	}
 	//
-	ft_strdel(&s);
+//	ft_strdel(&s);
 	return (s);
 }
 

@@ -6,7 +6,7 @@
 /*   By: alallema <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/03/17 13:08:51 by alallema          #+#    #+#             */
-/*   Updated: 2017/05/05 19:14:40 by alallema         ###   ########.fr       */
+/*   Updated: 2017/05/09 10:43:30 by llaffile         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,23 @@
 int				g_sh_tty;
 int				g_sh_is;
 pid_t			g_sh_pgid;
-//sigset_t		g_original_set;
+sigset_t		g_original_set;
 
 #define MAXJOBS 30
 
-///*static */sig_t	g_originals[NSIG];
+/*static */sig_t	g_originals[NSIG];
 //extern sig_t	*g_originals;
-/*
+
 void		block_signal(int sig, sigset_t *set, sigset_t *oset)
 {
 //	sigemptyset : fonction interdite (man 3)
-	sigemptyset(set);
+	msigemptyset(set);
 
 //	sigaddset : fonction interdite (man 3)
-	sigaddset(set, sig);
+	msigaddset(set, sig);
 
 //	sigemptyset : fonction interdite (man 3)
-	sigemptyset(oset);
+	msigemptyset(oset);
 
 	sigprocmask(SIG_BLOCK, set, oset);
 }
@@ -81,12 +81,12 @@ void		init_shell(void)
 {
 
 //	sigemptyset : fonction interdite (man 3)
-	sigemptyset(&g_original_set);
+	msigemptyset(&g_original_set);
 
 	sigprocmask(SIG_BLOCK, NULL, &g_original_set);
 
 //	sigdelset : fonction interdite (man 3)
-	sigdelset(&g_original_set, SIGCHLD);
+	msigdelset(&g_original_set, SIGCHLD);
 
 	save_originals_handler();
 	g_sh_tty = STDIN_FILENO;
@@ -122,11 +122,12 @@ void		init_shell(void)
 	}
 	signal(SIGCHLD, sigchld_handler);
 }
-*/
+
+/*
 void		init_shell(void)
 {
 	pid_t p1;
-/*
+
 //	sigemptyset : fonction interdite (man 3)
 	sigemptyset(&g_original_set);
 
@@ -136,7 +137,7 @@ void		init_shell(void)
 	sigdelset(&g_original_set, SIGCHLD);
 
 	save_originals_handler();
-*/
+
 	g_sh_tty = STDIN_FILENO;
 	g_sh_is = isatty(g_sh_tty);
 	if (g_sh_is)
@@ -160,3 +161,4 @@ void		init_shell(void)
 	}
 	signal(SIGCHLD, sigchld_handler);
 }
+*/
